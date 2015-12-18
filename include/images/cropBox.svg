@@ -1,0 +1,20 @@
+<svg version="1.1"
+	baseProfile="full"
+	width="150" height="150"
+	xmlns="http://www.w3.org/2000/svg">
+
+	<g stroke="hsl(200,80%,30%)" stroke-width="3">
+		<!-- vertical line -->
+		<line x1="15" y1="135" x2="120" y2="135" />
+		
+		<!-- horizontal line -->
+		<line x1="135" y1="15" x2="135" y2="120" />
+		
+		<g  stroke-width="2" fill="hsl(200,80%,30%)" stroke-linecap="round" stroke-linejoin="round">
+			<polyline points="15,130 15,140 5,135 15,130" />
+			<polyline points="120,130 120,140 130,135 120,130" />
+			<polyline points="130,15 140,15 135,5 130,15" />
+			<polyline points="130,120 140,120 135,130 130,120" />
+		</g>
+	</g>
+</svg>

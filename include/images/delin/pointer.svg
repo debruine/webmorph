@@ -1,0 +1,17 @@
+<svg version="1.1"
+     baseProfile="full"
+     width="21" height="16"
+     xmlns="http://www.w3.org/2000/svg">
+     
+	<g fill="none" stroke="hsl(200,80%,30%)" stroke-width="5.0" stroke-linecap="round">
+		<line x1="2.5" y1="8" x2="18.5" y2="8" />
+		<line x1="13" y1="2.5" x2="18.5" y2="8" />
+		<line x1="13" y1="13.5" x2="18.5" y2="8" />
+	</g>
+	
+	<g fill="none" stroke="white" stroke-width="3.0" stroke-linecap="round">
+		<line x1="3" y1="8" x2="18.5" y2="8" />
+		<line x1="13" y1="2.5" x2="18.5" y2="8" />
+		<line x1="13" y1="13.5" x2="18.5" y2="8" />
+	</g>
+</svg>
