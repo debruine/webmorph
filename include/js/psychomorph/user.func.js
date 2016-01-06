@@ -267,7 +267,7 @@ function projectList() { console.time('projectList()');
     $.ajax({
         url: 'scripts/projListGet',
         type: 'GET',
-        async: false,
+        async: true,
         success: function(data) {
             if (data.error) { return false; }
             // add projects
@@ -303,11 +303,16 @@ function projectList() { console.time('projectList()');
                 var tr = '<tr data-id="' + p.id + '"><td><a class="go_to_project">[Go]</a>'
                          + '</td><td>' + p.name 
                          + '</td><td>' + p.notes 
-                         + '</td><td>' + (p.files - p.tmp) + ' files<br>' + p.size 
+                         + '</td><td><img src="/include/images/menu/queue_loading.svg" />'
                          + '</td><td>' + owners + '</td></tr>';
                 $('#project_list tbody').append(tr);
             });
             $('#project_list').show().stripe();
+            
+            PM.account_size = 0;
+            $.each(data.projects, function(i, p) {
+	            projSizeGet(p.id, data.userAllocation.allocation);
+	        });
             
             
             // set up user list
@@ -336,18 +341,6 @@ function projectList() { console.time('projectList()');
             }).autocomplete( "instance" )._renderItem = function( ul, item ) {
                 return $( "<li>" ).append( item.name + "<br>&nbsp;&nbsp;<i>" + item.email + '</i>').appendTo( ul );
             };
-                                        
-            // set warning about total space allocation
-            var ts = "Projects you own are using " + round(data.userAllocation.size/1024,1)
-                   + " GB of your allocated " + round(data.userAllocation.allocation/1024,1) + " GB. ";
-            if (data.userAllocation.size > data.userAllocation.allocation) {
-                ts += "Please reduce your account by emptying the trash and/or removing files. "
-                    + "After 1 January 2016, I will disable accounts that are over their space allocation.";
-                $('#total_space').addClass('warning');
-            } else {
-                $('#total_space').removeClass('warning');
-            }
-            $('#total_space').html(ts);
         },
         complete: function() {
             console.timeEnd('projectList()');
@@ -355,6 +348,31 @@ function projectList() { console.time('projectList()');
         }
     });
 }
+
+function projSizeGet(proj_id, alloc) {
+	var td = $('tr[data-id=' + proj_id + '] td').eq(3);
+	$.ajax({
+        url: 'scripts/projSizeGet',
+        type: 'POST',
+        data: {proj_id: proj_id},
+        success: function(data) {
+	        td.html((data.files - data.tmp) + ' files<br>' + data.size);
+	        PM.account_size += data.mysize;
+	        
+	        // set warning about total space allocation
+            var ts = "Projects you own are using " + round(PM.account_size/1024/1024/1024,1)
+                   + " GB of your allocated " + round(alloc/1024,1) + " GB. ";
+            if (PM.account_size/1024/1024 > alloc) {
+                ts += "Please reduce your account by emptying the trash and/or removing files. "
+                    + "After 15 January 2016, I will disable accounts that are over their space allocation.";
+                $('#total_space').addClass('warning');
+            } else {
+                $('#total_space').removeClass('warning');
+            }
+            $('#total_space').html(ts);
+	    }
+	});
+} 
 
 function prefSet() {  console.log('prefSet()');
 	$('#footer').html('Saving Preferences...');

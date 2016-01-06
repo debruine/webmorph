@@ -9,6 +9,7 @@ var $queue_n = $('#queue_n');
 var $delin = $('#delin');
 
 var PM = {
+	account_size: 0,
     queue: null,
     interface : 'login',
     no_onbeforeunload : false,
