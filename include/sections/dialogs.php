@@ -45,7 +45,7 @@
 		</tr>
 		<tr>
     		<td></td>
-			<td><label for='pref_use'>I use psychomorph for</label></td>
+			<td><label for='pref_use'>I use WebMorph for</label></td>
 			<td><div id='pref_use'>
 				<input type='checkbox' id='pref_use_research' name='pref_use_research' value='research' />
 				<label for='pref_use_research'>research</label><br>
@@ -741,21 +741,23 @@
 </div>
 
 <!-- !- about Dialog -->
-<div id='aboutDialog' class='modal' title='About Online Psychomorph'>
-	<p>Online Psychomorph is made possible by the kind help of Bernie Tiddeman, 
-	who developed and maintains the downloadable 
+<div id='aboutDialog' class='modal' title='About WebMorph'>
+	<p>WebMorph is a web-based version of Psychomorph, with several additional function. 
+	WebMorph is made possible by the kind help of Bernie Tiddeman, who developed and maintains the downloadable 
 	<a href="http://users.aber.ac.uk/bpt/jpsychomorph/" target="_blank">Psychomorph</a>. 
-	Online Psychomorph uses the open-source Java library 
+	WebMorph uses the open-source Java library 
 	<a href="http://users.aber.ac.uk/bpt/jpsychomorph/version4/javadoc/" target="_blank">FaceMorphLib</a> 
 	and is maintained by <a href="http://facelab.org/debruine" target="_blank">Lisa DeBruine</a>.</p>
 	
-	<p>Online Psychomorph is currently in alpha testing and is likely to remain so for some time. 
+	<p>WebMorph is currently in alpha testing and is likely to remain so for some time. 
 	This means that there will be bugs and you cannot rely on the website being functional 100% of the time. 
 	Lisa will try to fix any problems as fast as possible, but she is the only person working on this project, so please be patient.</p>
 	
-	<p>To cite Psychomorph Online:<br>
-		DeBruine, L. M. &amp; Tiddeman, B. P. (<?= date("Y, F j", filemtime(DOC_ROOT . $_SERVER['PHP_SELF'])) ?>). <i>Psychomorph Online</i>. Retrieved from http://<?= $_SERVER['SERVER_NAME'] ?></p>
-	<p>To cite provided images:<br>
-		DeBruine, L. M. &amp; Jones, B. C. (2015, October 13). Average Faces. <i>Open Science Framework</i>. <a href="http://osf.io/gzy7m " target="_blank">osf.io/gzy7m</a></p>
+	<h3>To cite WebMorph</h3>
+	<p>DeBruine, L. M. &amp; Tiddeman, B. P. (<?= date("Y, F j", filemtime(DOC_ROOT . $_SERVER['PHP_SELF'])) ?>). <i>WebMorph</i>. Retrieved from http://<?= $_SERVER['SERVER_NAME'] ?></p>
+	<p>Access the code at <a href="https://github.com/debruine/webmorph">GitHub</a>.</p>
 	<p>To cite the methods, see <a href="http://users.aber.ac.uk/bpt/jpsychomorph/" target="_blank">Bernie Tiddeman's webpage</a>.</p>
+	<h3>To cite provided images</h3>
+	<p>DeBruine, L. M. &amp; Jones, B. C. (2015, October 13). Average Faces. <i>Open Science Framework</i>. <a href="http://osf.io/gzy7m " target="_blank">osf.io/gzy7m</a></p>
+	
 </div>

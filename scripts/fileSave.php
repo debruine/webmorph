@@ -141,7 +141,7 @@ if (array_key_exists('imgBase64', $_POST)) {
 	// add EXIF data
 	$exifdata = array(
 		PelTag::IMAGE_DESCRIPTION => 'Image uploaded from webcam',
-		PelTag::COPYRIGHT => "psychomorph.facelab.org: " . $_SESSION['email'] . ': IMG_ID: ' . $imgid,
+		PelTag::COPYRIGHT => "webmorph.org: " . $_SESSION['email'] . ': IMG_ID: ' . $imgid,
 		PelTag::USER_COMMENT => ''
 	);
 	addExif($filename, $exifdata);
@@ -161,14 +161,14 @@ if (array_key_exists('imgBase64', $_POST)) {
 	}
 	
 	// move tem
-	$tem = str_replace(array("http://", "test.psychomorph", "psychomorph.facelab.org"), "", $_POST['tem']);
+	$tem = str_replace(array("http://", "test.psychomorph", "webmorph.org"), "", $_POST['tem']);
 	$source = str_replace("/tomcat/", TOMCAT, $tem);
 	$destination = "{$mydir}$imgname.tem";
 	copy($source, $destination);
 	$temcontents = implode("", file($destination));
 
 	// move image
-	$img = str_replace(array("http://", "test.psychomorph", "psychomorph.facelab.org"), "", $_POST['img']);
+	$img = str_replace(array("http://", "test.psychomorph", "webmorph.org"), "", $_POST['img']);
 	$source = str_replace("/tomcat/", TOMCAT, $img);
 	$destination = "{$mydir}{$imgname}.jpg";
 	copy($source, $destination);
@@ -180,7 +180,7 @@ if (array_key_exists('imgBase64', $_POST)) {
 	// add EXIF data
 	$exifdata = array(
 		PelTag::IMAGE_DESCRIPTION => $_POST['desc'],
-		PelTag::COPYRIGHT => "psychomorph.facelab.org: " . $_SESSION['email'] . ': IMG_ID: ' . $imgid,
+		PelTag::COPYRIGHT => "webmorph.org: " . $_SESSION['email'] . ': IMG_ID: ' . $imgid,
 		PelTag::USER_COMMENT => $temcontents
 	);
 	addExif($filename, $exifdata);
@@ -244,7 +244,7 @@ if (array_key_exists('imgBase64', $_POST)) {
 				// add EXIF data
 				$exifdata = array(
 					PelTag::IMAGE_DESCRIPTION => $_POST['desc'],
-					PelTag::COPYRIGHT => "psychomorph.facelab.org: " . $_SESSION['email'] . ': IMG_ID: ' . $imgid,
+					PelTag::COPYRIGHT => "webmorph.org: " . $_SESSION['email'] . ': IMG_ID: ' . $imgid,
 					PelTag::USER_COMMENT => $temcontents
 				);
 				addExif($filename, $exifdata);

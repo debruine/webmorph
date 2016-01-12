@@ -18,7 +18,7 @@ if (empty($email)) {
 	$return['errorText'] .= '<li>' .$email . ' is an invalid email address</li>';
 } else if ($_POST['invite'] !== 'faces94') {		// check invite
 	$return['error'] = true;
-	$return['errorText'] .=  '<li>Your invitation code is not valid. Access to online psychomorph is currently restricted. Ask Lisa for an invite code if you would like to be an alpha tester.</li>';	
+	$return['errorText'] .=  '<li>Your invitation code is not valid. Access to WebMorph is currently restricted. Ask Lisa for an invite code if you would like to be an alpha tester.</li>';	
 } else {
 	// check if email is already in use
 	$q = new myQuery("SELECT id FROM user WHERE LCASE(email)=LCASE('$email')");
@@ -53,7 +53,7 @@ if (empty($email)) {
 		$message = 	"<html><body style='color: rgb(50,50,50); font-family:\"Lucida Grande\"';>" .
 					"<p>Hi $firstname $lastname,</p>\n" .
 					"<p>You (or someone) just created an account at " . 
-					"<a href='http://psychomorph.facelab.org'>Online Psychomorph</a>.</p>\n" .
+					"<a href='http://webmorph.org'>WebMorph</a>.</p>\n" .
 					"<div style='border: 3px solid hsl(200,100%,30%); " . 
 					"	box-shadow: 2px 2px 4px rgba(0,0,0,0.5);border-radius: 1em; padding: 1em; " . 
 					"	text-align: center; width: 18em; margin: auto;'>\n" .
@@ -66,7 +66,7 @@ if (empty($email)) {
 					"</body></html>\n.";
 		
 		$text_message = "Hi  $firstname $lastname,\n" .
-						"You (or someone) just created an account at <a href='http://psychomorph.facelab.org'>Online Psychomorph</a>.\n\n" .
+						"You (or someone) just created an account at <a href='http://webmorph.org'>WebMorph</a>.\n\n" .
 						"Your new password: $password \n\n" . 
 						"You can reset your password after logging in by going to the Preferences menu option.</p>\n\n" .
 						"Kind regards,\n" .
@@ -84,7 +84,7 @@ if (empty($email)) {
 		$mail->setFrom('lisa.debruine@glasgow.ac.uk', 'Lisa DeBruine');
 		//$mail->addReplyTo('lisa.debruine@glasgow.ac.uk', 'Lisa DeBruine');
 		$mail->addAddress($email, $email);
-		$mail->Subject = 'Psychomorph.facelab.org password change';
+		$mail->Subject = 'WebMorph password change';
 		$mail->msgHTML($message);
 		$mail->AltBody = $text_message;
 		

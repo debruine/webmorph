@@ -6,7 +6,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . '/include/main_func.php';
 
 <html lang="en">
 <head>
-	<title>Psychomorph Online</title>
+	<title>WebMorph</title>
 	<meta charset='utf-8'>
 	<meta name='author' content='Lisa DeBruine and Bernard Tiddeman' />
 	<meta name='description' content='Online tools for manipulating faces' />
@@ -39,8 +39,6 @@ require_once $_SERVER['DOCUMENT_ROOT'] . '/include/main_func.php';
 <!-- START CONTENT -->
 
 <div data-role="content" id="content">
-
-<div id='instructions'>Welcome to Psychomorph Online for the Face Research Lab.</div>
 
 <!-- !- loginInterface -->
 <?php include 'include/sections/login.php'; ?>

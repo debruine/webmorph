@@ -3,10 +3,10 @@
 	<!--<li class='menucategory'><span style='background: center center no-repeat url(/include/images/favicon.gif); width: 22px;'>&nbsp;</span></li>-->
 
 	<li class='menucategory'>
-		<span>Psychomorph</span>
+		<span>WebMorph</span>
 		<ul>
 			<li class='finder delineate average transform login project' id='aboutPsychomorph'>
-				About Psychomorph
+				About WebMorph
 			</li>
 			<li class='separator'></li>
 			<?php
@@ -33,7 +33,8 @@
 	<li class='menucategory'>
 		<span>File</span>
 		<ul>
-			<li class="finder average transform project">Current Project
+			<li class="finder average transform project">
+				Current Project
 				<span class="shortcut">&#9654;</span>
 				<ul class='submenu' id="currentProject">
 				</ul>

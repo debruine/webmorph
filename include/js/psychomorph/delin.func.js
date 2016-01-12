@@ -1401,7 +1401,7 @@ SKY Biometry Photo Tags
 {
     "status":"success",
     "photos":[{
-        "url":"http://psychomorph.facelab.org/scripts/skyBioAccess?file=/1/lisa.jpg",
+        "url":"http://webmorph.org/scripts/skyBioAccess?file=/1/lisa.jpg",
         "pid":"F@02e5e0675e51462f6c37bf214fb0c7f5_35271850a738e",
         "width":640,"height":480,
         "tags":[{
@@ -1497,7 +1497,7 @@ function skyBio(img) {
     };
     
     if (img.substr(0,7) !== 'http://') {
-        img = 'http://psychomorph.facelab.org/scripts/skyBioAccess?file=/' + PM.userid + img;
+        img = 'http://psychomorph.facelab.org/scripts/skyBioAccess?file=/' + PM.project + img;
     }
     
     client.facesDetect(img, null, options, function(data) {

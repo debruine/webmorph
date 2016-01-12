@@ -29,7 +29,7 @@ if ($q->get_num_rows() == 1) {
 	// email new password to the user
 	$to = $email;
 
-	$subject = 'Psychomorph.facelab.org password change';
+	$subject = 'WebMorph.org password change';
 	
 	$headers = "From: lisa.debruine@glasgow.ac.uk\r\n";
 	$headers .= "Reply-To: lisa.debruine@glasgow.ac.uk\r\n";
@@ -38,7 +38,7 @@ if ($q->get_num_rows() == 1) {
 	
 	$message = 	"<html><body style='color: rgb(50,50,50); font-family:\"Lucida Grande\"';>" .
 				"<p>Hi $email,</p>\n" .
-				"<p>You (or someone) just reset your password at <a href='http://psychomorph.facelab.org'>Online Psychomorph</a>.</p>\n" .
+				"<p>You (or someone) just reset your password at <a href='http://webmorph.org'>WebMorph</a>.</p>\n" .
 				"<div style='border: 3px solid hsl(200,100%,20%); " . 
 				"	box-shadow: 2px 2px 4px rgba(0,0,0,0.5);border-radius: 1em; padding: 1em; " . 
 				"	text-align: center; width: 18em; margin: auto;'>\n" .
@@ -50,7 +50,7 @@ if ($q->get_num_rows() == 1) {
 				"<p>Lisa DeBruine</p>\n" .
 				"</body></html>\n.";
 	$text_message = "Hi $email,\n" .
-				"You (or someone) just reset your password at <a href='http://psychomorph.facelab.org'>Online Psychomorph</a>.\n\n" .
+				"You (or someone) just reset your password at <a href='http://webmorph.org'>WebMorph</a>.\n\n" .
 				"Your new password: $password \n\n" . 
 				"You can reset your password after logging in by going to the Preferences menu option.</p>\n\n" .
 				"Kind regards,\n" .
@@ -70,7 +70,7 @@ if ($q->get_num_rows() == 1) {
 	$mail->setFrom('lisa.debruine@glasgow.ac.uk', 'Lisa DeBruine');
 	//$mail->addReplyTo('lisa.debruine@glasgow.ac.uk', 'Lisa DeBruine');
 	$mail->addAddress($email, $email);
-	$mail->Subject = 'Psychomorph.facelab.org password change';
+	$mail->Subject = 'WebMorph.org password change';
 	$mail->msgHTML($message);
 	$mail->AltBody = $text_message;
 	

@@ -1072,10 +1072,6 @@ li.disabled span.checkmark, li.disabled:hover > span.checkmark {
 	display: none;
 	width: 15em;
 }
-#instructions {
-	margin-bottom: .5em; 
-	display: none;
-}
 #imgsize {
 	width: 15em; 
 	height: 15px; 

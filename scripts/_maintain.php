@@ -59,10 +59,12 @@ function recursive_delete($deletedir) {
 	}
 }
 
-// rename a dir
-//$source = IMAGEBASEDIR . '177';
-//$dest = '/data1/facefacts/images/uploads/rssse';
+// copy a dir
+//$source = IMAGEBASEDIR . '.032125120';
+//$dest = IMAGEBASEDIR . '171';
 //recursive_copy($source, $dest);
+
+echo rename(IMAGEBASEDIR . '.032125120', IMAGEBASEDIR . '171');
 
 // delete a specific directory
 $deletedir = IMAGEBASEDIR . '1/nikon';

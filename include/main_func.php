@@ -3,6 +3,11 @@
 /***************************************************/
 /* !Functions and code for every page */
 /***************************************************/
+	/*if ($_SERVER['SERVER_NAME'] == 'psychomorph.facelab.org') {
+		header('Location: http://webmorph.org');
+		die();
+	}*/
+
 	$initime=microtime(true);
 
 	// set php environment variables and start the session

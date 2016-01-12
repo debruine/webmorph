@@ -459,7 +459,7 @@ class PsychoMorph_Image extends PsychoMorph_File {
 			
 			$exifdata = array(
 				PelTag::IMAGE_DESCRIPTION => $this->getDescription(),
-				PelTag::COPYRIGHT => "psychomorph.facelab.org: " 
+				PelTag::COPYRIGHT => "webmorph.org: " 
 									. $_SESSION['user_id'] 
 									. ': IMG_ID: ' ,
 									//. $this->_id,
