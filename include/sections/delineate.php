@@ -38,7 +38,7 @@
 	</div>
 	
 	<div id="mask_builder_box">
-		<textarea id="custom_mask"></textarea>
+		<textarea id="custom_mask_builder"></textarea>
 		<p>Select template points to add them to the mask. Separate points with commas, lines with semicolons, and mask areas with colons (e.g. 18,19,20,21,22 ; 22,30,29,28,18 : 23,24,25,26,27 ; 27,33,32,31,23)</p>
 	</div>
 

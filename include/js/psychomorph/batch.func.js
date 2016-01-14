@@ -841,7 +841,9 @@ function batchMask() {
             },
 
             "Custom Mask": function() {
+	    
                 var cm = $('#custom_mask').val().replace(/\s/g, '');
+                console.log('custom mask: ' + $('#custom_mask').val());
                 var cm_match = cm.match(/^(\d{1,3},)+\d{1,3}(;(\d{1,3},)+\d{1,3})*(:(\d{1,3},)+\d{1,3}(;(\d{1,3},)+\d{1,3})*)*$/);
                 // check if custom mask is properly formatted
                 if ($('#custom_mask_box:visible').length === 0) {

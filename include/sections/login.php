@@ -30,7 +30,7 @@
 				<td><label for='reg_org'>organisation</label></td>
 				<td><input type='text' id='reg_org' /></td>
 			</tr>
-				<tr class='reg_item'>
+			<tr class='reg_item'>
 				<td><label for='reg_sex'>sex</label></td>
 				<td><div id='reg_sex'>
 					<input type='radio' id='reg_sex_female' name='reg_sex' value='female' />
@@ -41,8 +41,7 @@
 					<label for='reg_sex_other'>other</label>
 				</div></td>
 			</tr>
-			</tr>
-				<tr class='reg_item'>
+			<tr class='reg_item'>
 				<td><label for='reg_use'>I plan to use psychomorph for</label></td>
 				<td><div id='reg_use'>
 					<input type='checkbox' id='reg_use_research' name='reg_use_research' value='research' />

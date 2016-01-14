@@ -767,8 +767,8 @@ table.pca td:nth-child(3) {
 
 #custom_mask_box { 
 	display: block; 
-	width: 100%;
-	font-size: 75%;
+	width: 90%;
+	font-size: 100%;
 }
 #maskExample {
 	width: 300px;

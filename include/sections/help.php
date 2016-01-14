@@ -212,16 +212,19 @@
 			<!--<li>TPS: Thin plate spline warp</li>-->
 			<li>Multiscale RB: Implements multi-scale rigid body interpolation for image warping. 
 			This decreases image artifacts in some circumstances, but is much slower.</li>
+	    </ul>
 	    <h2 data-topic='mask color'>Mask Color</h2>
 	    <p>This is the default color for masking, cropping, and rotation. 
     	    Don't worry, you can always change it in the batch mask, crop and rotate dialogs.</p>
+    </div>
+    
     <div class='project'>
         <h1 data-topic='project window'>Project Window</h1>
         <h2 data-topic='new project'>Creating a new project</h2>
 		<ul>
 			<li>If you want to make a new project, choose 'New Project' from 
 			the File menu, or click <span class="cmd">P</span>.</li>
-			<li>You can edit a project by double-clicking</span> on the name or notes.</li>
+			<li>You can edit a project by double-clicking on the name or notes.</li>
 		</ul>
 		<h2 data-topic='switch project'>Switching projects</h2>
 		<ul>

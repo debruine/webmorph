@@ -962,7 +962,7 @@ function drawTemOld() { console.time('drawTem()');
 }
 
 function addToCustomMask(i) {
-    var $cm = $('#custom_mask');
+    var $cm = $('#custom_mask_builder');
     var v = $cm.val();
     var lv = v.trim().substr(v.trim().length - 1);
     if (i == ";" || i == ":") {
