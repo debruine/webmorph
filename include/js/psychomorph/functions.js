@@ -45,10 +45,36 @@ $.fn.stripe = function() {
 };
 
 // set defaults for ajax
-$.ajaxSetup({
+/*$.ajaxSetup({
     dataType: 'json',
     type: 'POST',
+});*/
+
+$.xhrPool = []; // array of uncompleted requests
+$.xhrPool.abortAll = function() { // our abort function
+    $(this).each(function(idx, jqXHR) { 
+        jqXHR.abort();
+    });
+    $.xhrPool.length = 0
+};
+ 
+$.ajaxSetup({
+	dataType: 'json',
+    type: 'POST',
+    beforeSend: function(jqXHR) { // before jQuery send the request we will push it to our array
+        $.xhrPool.push(jqXHR);
+    },
+    complete: function(jqXHR) { // when some of the requests completed it will splice from the array
+        var index = $.xhrPool.indexOf(jqXHR);
+        if (index > -1) {
+            $.xhrPool.splice(index, 1);
+        }
+    }
 });
+
+
+
+
 
 // check if an array a contains an item obj
 function contains(a, obj) {

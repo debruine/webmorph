@@ -390,13 +390,11 @@ function getTransform(tVars, addToQueue) {
         ? tVars.endTexturePcnt/100    
         : parseFloat($("#endTexturePcnt").val()) / 100;
     var sampleContours = (typeof tVars.sampleContours === 'boolean') 
-        ? tVars.sampleContours/100
+        ? tVars.sampleContours
         : ($('#sample_contours').prop('checked')) ? "true" : "false";
     var steps = (typeof tVars.steps === 'number') 
         ? parseInt(tVars.steps)
         : ($('#transMovieSteps').filter(':visible').length) ? parseInt($("#transMovieSteps").val()) : 0;
-        
-    if (steps > 0) { tVars.async = false; }
     
     if (transimage == "" || fromimage == "" || toimage == "") {
         growl("You must drag images to each of the first three boxes");
@@ -420,6 +418,9 @@ function getTransform(tVars, addToQueue) {
         };
         var images = []; // array for image list if movie
         var imagelength = 0;
+        var framename = $('#transMovieFileName').val();
+        if (framename.substr(0,1) !== "/") { framename = "/" + framename; }
+                    				
             
         for (var i = 0; i <= steps; i++) {
 	        var tnumber = (steps>0) ? " " + (i+1) : "";
@@ -446,11 +447,13 @@ function getTransform(tVars, addToQueue) {
             $('#transButton, #trans-save-button').button({ disabled: true });
             
             var thisStep = i;
-            
+          
             // continuum setting
             if (steps > 0) {
-                if ($('#transMovieFileName').val().length) {
-                    tVars.outname = PM.project + $('#transMovieFileName').val() + '_' + 
+	            //tVars.async = false; 
+				addToQueue = true;
+                if (framename.length) {
+                    tVars.outname = framename + '_' + 
                                     pad(thisStep, steps.toString().length, '0') + '.' + 
                                     $('#default_imageformat').val();
                 } else {
@@ -461,11 +464,17 @@ function getTransform(tVars, addToQueue) {
             
             // add to queue or run now
             if (typeof addToQueue == 'boolean' && addToQueue === true) {
+	            var thisData = $.extend(true, {}, theData);
                 var q = new queueItem({
                     url: 'tcTransform',
-                    ajaxdata: { theData: theData, outname: tVars.outname },
+                    ajaxdata: { theData: thisData, outname: tVars.outname },
                     msg: 'Transform: ' + tVars.outname,
                 });
+                
+                if (i == steps) {
+	            	$('#footer').html("Continuum queued");
+	            	$('#transButton').button({ disabled: false });
+	            }
             } else {
                 // get image dimensions and estimate transform time
                 var transTimer = null;
@@ -927,18 +936,18 @@ function getPCA() {  console.log('getPCA()');
                     
                     var theData = {
                         pca:            !$('#skipPCA').prop('checked'),
-                        usepca:            $('#usePCA').prop('checked'),
+                        usepca:         $('#usePCA').prop('checked'),
                         pcafile:        pcafile,
-                        analysepca:        analysepca,
-                        sanalysisfile:    $('#sanalysisfilename').val().replace(/\.shape\.csv$/, '').replace(/\.csv$/, ''),
+                        analysepca:     analysepca,
+                        sanalysisfile:  $('#sanalysisfilename').val().replace(/\.shape\.csv$/, '').replace(/\.csv$/, ''),
                         pci:            !$('#skipPCI').prop('checked'),
-                        usepci:            $('#usePCI').prop('checked'),
+                        usepci:         $('#usePCI').prop('checked'),
                         pcifile:        pcifile,
-                        analysepci:        analysepci,
-                        canalysisfile:    $('#canalysisfilename').val().replace(/\.color\.csv$/, '').replace(/\.csv$/, ''),
-                        images:            imgfiles,
+                        analysepci:     analysepci,
+                        canalysisfile:  $('#canalysisfilename').val().replace(/\.color\.csv$/, '').replace(/\.csv$/, ''),
+                        images:         imgfiles,
                         texture:        ($('#texture').prop('checked') == 1) ? true : false,
-                        mask:            $('#pci_mask').val()
+                        mask:           $('#pci_mask').val()
                     };
                     
                     var q = new queueItem({
@@ -955,23 +964,87 @@ function getPCA() {  console.log('getPCA()');
 
 }
 
+function createContinua() {
+	// check data
+    var imgList = [];
+    $('#continua-imgs img:visible').each( function(i, v) {
+	    var imgname = urlToName($(this).attr('src'));
+	    if (imgname != PM.blankImg) {
+	    	imgList.push(imgname);
+	    }
+	});
+    
+    if (imgList.length < 2) {
+	    growl("You need to specify at least 2 images.");
+	    return false;
+	}
+	
+	var nImgs = imgList.length;
+	var csteps = parseInt($('#csteps').val());
+	if (csteps < 1) {
+		growl("You need at least 2 steps per continuum.");
+	    return false;
+	} else if (csteps > 101) {
+		growl("You cannot have more than 101 steps per continuum.");
+	    return false;
+	}
+	
+	var savedir = $('#continuaSaveDir').val();
+    if (savedir.substr(0, 1) != '/') savedir = '/' + savedir;
+    if (savedir.substr(-1) == '/') savedir = savedir.substr(0, savedir.length - 1);
+    
+    var shape = ($('#continua-shape').val() == 'on') ? 1 : 0;
+    var color = ($('#continua-color').val() == 'on') ? 1 : 0;
+    var texture = ($('#continua-texture').val() == 'on') ? 1 : 0;
+    
+    
+    
+    var cData = [];
+    $.each(imgList, function(j) {
+	    
+	    var fromImg = imgList[j];
+	    var toImg = imgList[(j+1)%nImgs];
+	    
+	    for (var i = 0; i < csteps; i++) {
+	        var pcnt = i * 100 / (csteps - 1);
+	        // top row
+	        var name = savedir + '/' + pad(j,2) + '_' + pad(i, 2) + '.jpg';
+	        var tVars = {
+	            transimage: fromImg,
+	            fromimage: fromImg,
+	            toimage: toImg,
+	            shapePcnt: pcnt * shape,
+	            colorPcnt: pcnt * color,
+	            texturePcnt: pcnt * texture,
+	            outname: name
+	        };
+	        getTransform(tVars, true);
+	    }
+	});
+}
+
 function createGrid() {
     // check data
     var hsteps = parseInt($('#hsteps').val());
     var vsteps = parseInt($('#vsteps').val());
     var hdim = $('#hdim').val();
     var vdim = $('#vdim').val();
-    var savedir = $('#gridSaveDir').val();
+    
     var topL = urlToName($('#topleft').attr('src'));
     var topR = urlToName($('#topright').attr('src'));
     var botL = urlToName($('#bottomleft').attr('src'));
     var botR = urlToName($('#bottomright').attr('src'));
+    
     var shape = ($('#grid-shape').val() == 'on') ? 1 : 0;
     var color = ($('#grid-color').val() == 'on') ? 1 : 0;
     var texture = ($('#grid-texture').val() == 'on') ? 1 : 0;
-    // make sure savedir is valid
+    
+    var savedir = $('#gridSaveDir').val();
+    
+    // make sure savedir is valid 
     if (savedir.substr(0, 1) != '/') savedir = '/' + savedir;
     if (savedir.substr(-1) == '/') savedir = savedir.substr(0, savedir.length - 1);
+    
     // make sure steps are sensible
     if (hsteps < 3 && vsteps < 3) {
         growl('At least one dimension must have 3 or more steps');
@@ -999,7 +1072,7 @@ function createGrid() {
             'shapePcnt': pcnt * shape,
             'colorPcnt': pcnt * color,
             'texturePcnt': pcnt * texture,
-            'outname': name
+            'outname': PM.project + name
         });
         if (vsteps > 1) {
             //bottom row
@@ -1012,7 +1085,7 @@ function createGrid() {
                 'shapePcnt': pcnt * shape,
                 'colorPcnt': pcnt * color,
                 'texturePcnt': pcnt * texture,
-                'outname': name
+                'outname': PM.project + name
             });
         }
     }
@@ -1029,7 +1102,7 @@ function createGrid() {
                 'shapePcnt': pcnt * shape,
                 'colorPcnt': pcnt * color,
                 'texturePcnt': pcnt * texture,
-                'outname': name
+                'outname': PM.project + name
             });
         }
     });
@@ -1066,6 +1139,7 @@ function createGrid() {
                 async: false,
                 url: '/scripts/imgConcat',
                 data: {
+	                project: PM.project,
                     gridNames: gridNames,
                     savedir: savedir,
                     topL: topL,

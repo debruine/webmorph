@@ -6,38 +6,104 @@ function loginGoogle(authResult) {
     growl(JSON.stringify(authResult));
 }
 
-function registerUser() {
-    // register a new user
+function resetPassword() {
+	var email = $('#login_email').val();
+    
+    if (email == '') {
+        $('#login_error').html("<li>Please fill in your email address first.</li>");
+        return false;
+    }
+    $('#login_error').html("<li>Checking for your account...</li>");
+
     $.ajax({
-        url: 'scripts/userRegister',
-        async: false,
-        data: {
-            email: $('#login_email').val(),
-            //password: $('#login_password').val(),
-            invite: $('#login_auth').val(),
-            //login_keep: $('#login_keep').prop('checked'),
-            firstname: $('#reg_firstname').val(),
-            lastname: $('#reg_lastname').val(),
-            org: $('#reg_org').val(),
-            sex: $('input[name=reg_sex]').val(),
-            research: $('#reg_use_research').prop('checked'),
-            business: $('#reg_use_business').prop('checked'),
-            school: $('#reg_use_school').prop('checked'),
-            art: $('#reg_use_art').prop('checked'),
-            personal: $('#reg_use_personal').prop('checked'),
-        },
+        url: 'scripts/userPasswordReset',
+        data: { email: email },
         success: function(data) {
             if (data.error) {
-                $('#login_error').html(data.errorText);
-                $('#login_email').focus().select();
+                $('#login_error').html('<li>' + data.errorText + '</li>');
             } else {
-                $('#login_error').html("<li>Check your email for your password.</li>");
-                $('#loginInterface .reg_item').hide();
-                $('#loginInterface .login_item').show();
-                $('#login_password').focus().select();
+                $('#login_error').html("<li>Check your email for the new password.</li>");
             }
         }
     });
+}
+
+function registerUser(e) { 
+	if ($('#loginInterface .reg_item:visible').length) {
+        // check validity
+        var error = false;
+        $('#login_error').html('');
+        
+        if ($('#login_email').val().length < 7) {
+            error = true;
+            $('#login_error').append('<li>Your email address needs to be an email address</li>');
+            $('#login_email').addClass('error').focus().select();
+        } else {
+            $('#login_email').removeClass('error');
+        }
+    
+        /*if ($('#login_auth').val().length != 7) {
+            error = true;
+            $('#login_error').append('<li>Please enter the correct invite code. Access to online psychomorph is currently restricted. Ask Lisa for an invite code if you would like to be an alpha tester.</li>');
+            $('#login_auth').addClass('error').focus().select();
+        } else {
+            $('#login_auth').removeClass('error');
+        }*/
+        
+        if (error) { return false; }
+        
+        $('#login_error').append('<li>Checking your registration details...</li>');
+        
+        // register a new user
+	    $.ajax({
+	        url: 'scripts/userRegister',
+	        async: false,
+	        data: {
+	            email: $('#login_email').val(),
+	            //password: $('#login_password').val(),
+	            invite: $('#login_auth').val(),
+	            //login_keep: $('#login_keep').prop('checked'),
+	            firstname: $('#reg_firstname').val(),
+	            lastname: $('#reg_lastname').val(),
+	            org: $('#reg_org').val(),
+	            sex: $('input[name=reg_sex]').val(),
+	            research: $('#reg_use_research').prop('checked'),
+	            business: $('#reg_use_business').prop('checked'),
+	            school: $('#reg_use_school').prop('checked'),
+	            art: $('#reg_use_art').prop('checked'),
+	            personal: $('#reg_use_personal').prop('checked'),
+	        },
+	        success: function(data) {
+	            if (data.error) {
+	                $('#login_error').html(data.errorText);
+	                $('#login_email').focus().select();
+	            } else {
+	                $('#login_error').html("<li>Check your email.</li>");
+	                $('#loginInterface .reg_item').hide();
+	                $('#loginInterface .login_item').show();
+	                $('#login_password').focus().select();
+	            }
+	        }
+	    });
+    } else {
+        $('#loginInterface .reg_item').show();
+        $('#loginInterface .login_item').hide();
+        $('#register-button').addClass('ui-state-focus');
+        $('#login-button').removeClass('ui-state-focus');
+        
+        
+        var $la = $('#login_auth').closest('tr');
+		if (e.ctrlKey || e.metaKey) {
+			$la.show();
+			$('#loginBox thead th').html('Register for an Account');
+			$('#register-button').button('option', 'label', 'Register');
+		} else {
+			$la.hide();
+			$('#loginBox thead th').html('Request an Account');
+			$('#register-button').button('option', 'label', 'Request Account');
+		}
+        
+    }
 }
 
 function loginUser() {
@@ -45,7 +111,7 @@ function loginUser() {
     if ($('#loginInterface .reg_item:visible').length) {
         $('#loginInterface .reg_item').hide();
         $('#loginInterface .login_item').show();
-        $('#register-button').removeClass('ui-state-focus');
+        $('#register-button').removeClass('ui-state-focus').button('option', 'label', 'Request Account');
         $('#login-button').addClass('ui-state-focus');
         $('#loginBox thead th').html('Log in to access Psychomorph');
         return true;
@@ -271,7 +337,9 @@ function projectList() { console.time('projectList()');
         success: function(data) {
             if (data.error) { return false; }
             // add projects
-            $('#project_list').hide().find('tbody').html('');
+            //$('#project_list').hide().find('tbody').html('');
+            $('#project_list').show();
+            $('#project_list tbody tr').hide();
             $('#default_project').html('');
             $('#currentProject').html('');
             $.each(data.projects, function(i, p) {
@@ -300,18 +368,32 @@ function projectList() { console.time('projectList()');
                 });
                 owners += '</ul>';
                 
-                var tr = '<tr data-id="' + p.id + '"><td><a class="go_to_project">[Go]</a>'
-                         + '</td><td>' + p.name 
-                         + '</td><td>' + p.notes 
-                         + '</td><td><img src="/include/images/menu/queue_loading.svg" />'
-                         + '</td><td>' + owners + '</td></tr>';
-                $('#project_list tbody').append(tr);
+                var tr = $('tr[data-id=' + p.id + ']');
+                
+                if (tr.length == 0) {
+	                tr = '<tr data-id="' + p.id + '"><td><a class="go_to_project">[Go]</a>'
+	                         + '</td><td>' + p.name 
+	                         + '</td><td>' + p.notes 
+	                         + '</td><td><img src="/include/images/menu/queue_loading.svg" />'
+	                         + '</td><td>' + owners + '</td></tr>';
+	                $('#project_list tbody').append(tr);
+                } else {
+	               var td = tr.find(td);
+	               td.eq(2).html(p.name);
+	               td.eq(3).html(p.notes);
+	               td.eq(5).html(p.owners);
+	               tr.show();
+	            }
             });
             $('#project_list').show().stripe();
             
             PM.account_size = 0;
             $.each(data.projects, function(i, p) {
-	            projSizeGet(p.id, data.userAllocation.allocation);
+				if (p.filemtime == $('tr[data-id=' + p.id + ']').data('filemtime')) {
+					projSizeUpdate(p.id, data.userAllocation.allocation);
+				} else {
+	            	projSizeGet(p.id, data.userAllocation.allocation);
+	            }
 	        });
             
             
@@ -325,6 +407,7 @@ function projectList() { console.time('projectList()');
                     email: user.email
                 });
             });
+            $('input.projectOwnerAdd').closest('li').remove();
             $('ul.project_owners').append('<li><input class="projectOwnerAdd" '
                                         + 'placeholder="Type Name to Add" /></li>');
                                         
@@ -350,29 +433,44 @@ function projectList() { console.time('projectList()');
 }
 
 function projSizeGet(proj_id, alloc) {
-	var td = $('tr[data-id=' + proj_id + '] td').eq(3);
 	$.ajax({
         url: 'scripts/projSizeGet',
         type: 'POST',
-        data: {proj_id: proj_id},
-        success: function(data) {
-	        td.html((data.files - data.tmp) + ' files<br>' + data.size);
-	        PM.account_size += data.mysize;
+        data: {
+	        proj_id: proj_id
+        },
+        success: function(data) {  
+	        var tr = $('tr[data-id=' + proj_id + ']'); 
+	        tr.data('filemtime', data.filemtime);
+	        tr.data('files', data.files);
+	        tr.data('tmp', data.tmp);
+	        tr.data('size', data.size);
+	        tr.data('mysize', data.mysize);
 	        
-	        // set warning about total space allocation
-            var ts = "Projects you own are using " + round(PM.account_size/1024/1024/1024,1)
-                   + " GB of your allocated " + round(alloc/1024,1) + " GB. ";
-            if (PM.account_size/1024/1024 > alloc) {
-                ts += "Please reduce your account by emptying the trash and/or removing files. "
-                    + "After 15 January 2016, I will disable accounts that are over their space allocation.";
-                $('#total_space').addClass('warning');
-            } else {
-                $('#total_space').removeClass('warning');
-            }
-            $('#total_space').html(ts);
+	        projSizeUpdate(proj_id, alloc);
 	    }
 	});
 } 
+
+function projSizeUpdate(proj_id, alloc) {
+	var tr = $('tr[data-id=' + proj_id + ']');
+	var td =  tr.find('td').eq(3);
+
+    td.html((tr.data('files') - tr.data('tmp')) + ' files<br>' + tr.data('size'));
+    PM.account_size += tr.data('mysize');
+    
+    // set warning about total space allocation
+    var ts = "Projects you own are using " + round(PM.account_size/1024/1024/1024,1)
+           + " GB of your allocated " + round(alloc/1024,1) + " GB. ";
+    if (PM.account_size/1024/1024 > alloc) {
+        ts += "Please reduce your account by emptying the trash and/or removing files. "
+            + "After 15 January 2016, I will disable accounts that are over their space allocation.";
+        $('#total_space').addClass('warning');
+    } else {
+        $('#total_space').removeClass('warning');
+    }
+    $('#total_space').html(ts);
+}
 
 function prefSet() {  console.log('prefSet()');
 	$('#footer').html('Saving Preferences...');

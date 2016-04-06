@@ -742,16 +742,18 @@
 
 <!-- !- about Dialog -->
 <div id='aboutDialog' class='modal' title='About WebMorph'>
-	<p>WebMorph is a web-based version of Psychomorph, with several additional function. 
-	WebMorph is made possible by the kind help of Bernie Tiddeman, who developed and maintains the downloadable 
-	<a href="http://users.aber.ac.uk/bpt/jpsychomorph/" target="_blank">Psychomorph</a>. 
-	WebMorph uses the open-source Java library 
-	<a href="http://users.aber.ac.uk/bpt/jpsychomorph/version4/javadoc/" target="_blank">FaceMorphLib</a> 
-	and is maintained by <a href="http://facelab.org/debruine" target="_blank">Lisa DeBruine</a>.</p>
+	<p>WebMorph is made possible by the kind help of 
+		<a href="http://users.aber.ac.uk/bpt/">Bernie Tiddeman</a>, who developed and maintains the desktop 
+		version of <a href="http://users.aber.ac.uk/bpt/jpsychomorph/">Psychomorph</a>. WebMorph uses the 
+		open-source Java library <a href="http://users.aber.ac.uk/bpt/jpsychomorph/version6/javadoc/">FaceMorphLib</a> 
+		and is developed and maintained by <a href="http://facelab.org/debruine/">Lisa DeBruine</a>.</p>
 	
 	<p>WebMorph is currently in alpha testing and is likely to remain so for some time. 
-	This means that there will be bugs and you cannot rely on the website being functional 100% of the time. 
-	Lisa will try to fix any problems as fast as possible, but she is the only person working on this project, so please be patient.</p>
+		This means that there will be bugs and you cannot rely on the website being functional 
+		100% of the time. Lisa will try to fix any problems as fast as possible, but she is the 
+		only person working on this project, so please be patient. If you're curious about the 
+		code or want to help with development, this project is open source at 
+		<a href="https://github.com/debruine/webmorph">https://github.com/debruine/webmorph</a>.</p>
 	
 	<h3>To cite WebMorph</h3>
 	<p>DeBruine, L. M. &amp; Tiddeman, B. P. (<?= date("Y, F j", filemtime(DOC_ROOT . $_SERVER['PHP_SELF'])) ?>). <i>WebMorph</i>. Retrieved from http://<?= $_SERVER['SERVER_NAME'] ?></p>

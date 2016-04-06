@@ -14,11 +14,12 @@ $return = array(
 
 ini_set('memory_limit','256M');
 
+$project_id = $_POST['project'];
 $grid = $_POST['gridNames'];
 $savedir = $_POST['savedir'];
 
 //get first image to set image dimensions
-$filename = IMAGEBASEDIR . $grid[0][0] . '.jpg';
+$filename = IMAGEBASEDIR . $project_id . $grid[0][0] . '.jpg';
 
 if (!file_exists($filename)) {
 	$return['errorText'] .= "$filename does not exist.";
@@ -42,7 +43,7 @@ if (!file_exists($filename)) {
 	// add each image to the concat image
 	foreach ($grid as $c => $col) {
 		foreach ($col as $r => $img) {
-			$filename = IMAGEBASEDIR. $img . '.jpg';
+			$filename = IMAGEBASEDIR . $project_id . $img . '.jpg';
 			if (!file_exists($filename)) {
 				$return['errorText'] .= "$filename does not exist.";
 			} else if (!$gridimg = imagecreatefromjpeg($filename)) {
@@ -72,24 +73,29 @@ if (!file_exists($filename)) {
 	}
 	
 	// save concat image
-	$newfilename = IMAGEBASEDIR . $savedir . '/_array.jpg';
-	imagejpeg($concatimg, $newfilename, 80);
+	$newfilename = IMAGEBASEDIR . $project_id . $savedir . '/_grid.jpg';
+	$savegrid = imagejpeg($concatimg, $newfilename, 80);
 	imagedestroy($concatimg);
 	
-	include_once DOC_ROOT . '/include/classes/psychomorph.class.php';
-
-	$img = new PsychoMorph_Image($newfilename);
-	$img->setDescription(array('concat' => array(
-		'top left' => $_POST['topL'],
-		'top right' => $_POST['topR'],
-		'bottom left' => $_POST['botL'],
-		'bottom right' => $_POST['botR'],
-	)));
-	$img->save($newfilename);
+	if ($savegrid) {
+		include_once DOC_ROOT . '/include/classes/psychomorph.class.php';
+	
+		$img = new PsychoMorph_Image($newfilename);
+		$img->setDescription(array('concat' => array(
+			'top left' => $_POST['topL'],
+			'top right' => $_POST['topR'],
+			'bottom left' => $_POST['botL'],
+			'bottom right' => $_POST['botR'],
+		)));
+		$img->save($newfilename);
+		$return['error'] = false;
+	} else {
+		$return['errorText'] .= "Grid was not saved.";
+	}
 	
 	// return concat file name
-	$return['newfilename'] = $savedir . '/_array.jpg';
-	$return['error'] = false;
+	$return['newfilename'] = $project_id . $savedir . '/_grid.jpg';
+	
 }
 
 scriptReturn($return);

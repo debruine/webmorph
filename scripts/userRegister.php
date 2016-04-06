@@ -16,9 +16,6 @@ $email = my_clean($_POST['email']);
 if (empty($email)) {
 	$return['error'] = true;
 	$return['errorText'] .= '<li>' .$email . ' is an invalid email address</li>';
-} else if ($_POST['invite'] !== 'faces94') {		// check invite
-	$return['error'] = true;
-	$return['errorText'] .=  '<li>Your invitation code is not valid. Access to WebMorph is currently restricted. Ask Lisa for an invite code if you would like to be an alpha tester.</li>';	
 } else {
 	// check if email is already in use
 	$q = new myQuery("SELECT id FROM user WHERE LCASE(email)=LCASE('$email')");
@@ -41,36 +38,58 @@ if (empty($email)) {
 		$personal = ($_POST['personal'] == 'true') ? 1 : 0;
 		$school = ($_POST['school'] == 'true') ? 1 : 0;
 		$art = ($_POST['art'] == 'true') ? 1 : 0;
+		$status = ($_POST['invite'] === 'faces94') ? 'user' : 'requested';
 					
 		$q = new myQuery("INSERT INTO user 
-			(email, password, firstname, lastname, organisation, sex, research, business, personal, art, school, regdate) 
-			VALUES ('$email', '$hash', '$firstname', '$lastname', '$org', '$sex', $research, $business, $personal, $art, $school, NOW())");
+			(email, password, firstname, lastname, organisation, sex, research, business, personal, art, school, status, regdate) 
+			VALUES ('$email', '$hash', '$firstname', '$lastname', '$org', '$sex', $research, $business, $personal, $art, $school, '$status', NOW())");
 		
 		date_default_timezone_set('Europe/London');
 		include DOC_ROOT . '/include/classes/PHPMailer/PHPMailerAutoload.php';
 		
-		// mail pasword to user
-		$message = 	"<html><body style='color: rgb(50,50,50); font-family:\"Lucida Grande\"';>" .
-					"<p>Hi $firstname $lastname,</p>\n" .
-					"<p>You (or someone) just created an account at " . 
-					"<a href='http://webmorph.org'>WebMorph</a>.</p>\n" .
-					"<div style='border: 3px solid hsl(200,100%,30%); " . 
-					"	box-shadow: 2px 2px 4px rgba(0,0,0,0.5);border-radius: 1em; padding: 1em; " . 
-					"	text-align: center; width: 18em; margin: auto;'>\n" .
-					"		Your new password:\n" . 
-					"		<div style='font-size: 200%; margin-top: 0.5em;'>$password</div>\n" . 
-					"</div>\n" .
-					"<p>You can reset your password after logging in by going to the Preferences menu option.</p>\n" .
-					"<p>Kind regards,</p>\n" .
-					"<p>Lisa DeBruine</p>\n" .
-					"</body></html>\n.";
+		if ($status == "requested") {
+			$q = new myQuery("SELECT COUNT(*) as c FROM user WHERE status='requested'");
+			$wait_list = $q->get_one();
+			
+			$message = 	"<html><body style='color: rgb(50,50,50); font-family:\"Lucida Grande\"';>" .
+						"<p>Hi $firstname $lastname,</p>\n" .
+						"<p>You (or someone) just created an account at <a href='http://webmorph.org'>WebMorph</a>.</p>\n" .
+						"<p>You will receive an email with your password when your account is authorized. 
+						Because WebMorph is in alpha testing, we are limiting the number of users. 
+						You are number {$wait_list} on the wait list.</p>\n" .
+						"<p>Kind regards,</p>\n" .
+						"<p>Lisa DeBruine</p>\n" .
+						"</body></html>\n.";
 		
-		$text_message = "Hi  $firstname $lastname,\n" .
+			$text_message = "Hi  $firstname $lastname,\n" .
+						"You (or someone) just created an account at <a href='http://webmorph.org'>WebMorph</a>.\n\n" .
+						"You will receive an email with your password when your account is authorized. Because WebMorph is in alpha testing, we are limiting the number of users. You are number {$wait_list} on the wait list.\n" .
+						"Kind regards,\n" .
+						"Lisa DeBruine\n.";			
+		} else {
+			// mail pasword to user
+			$message = 	"<html><body style='color: rgb(50,50,50); font-family:\"Lucida Grande\"';>" .
+						"<p>Hi $firstname $lastname,</p>\n" .
+						"<p>You (or someone) just created an account at " . 
+						"<a href='http://webmorph.org'>WebMorph</a>.</p>\n" .
+						"<div style='border: 3px solid hsl(200,100%,30%); " . 
+						"	box-shadow: 2px 2px 4px rgba(0,0,0,0.5);border-radius: 1em; padding: 1em; " . 
+						"	text-align: center; width: 18em; margin: auto;'>\n" .
+						"		Your new password:\n" . 
+						"		<div style='font-size: 200%; margin-top: 0.5em;'>$password</div>\n" . 
+						"</div>\n" .
+						"<p>You can reset your password after logging in by going to the Preferences menu option.</p>\n" .
+						"<p>Kind regards,</p>\n" .
+						"<p>Lisa DeBruine</p>\n" .
+						"</body></html>\n.";
+		
+			$text_message = "Hi  $firstname $lastname,\n" .
 						"You (or someone) just created an account at <a href='http://webmorph.org'>WebMorph</a>.\n\n" .
 						"Your new password: $password \n\n" . 
-						"You can reset your password after logging in by going to the Preferences menu option.</p>\n\n" .
+						"You can reset your password after logging in by going to the Preferences menu option.\n\n" .
 						"Kind regards,\n" .
 						"Lisa DeBruine\n.";
+		}
 	
 		$mail = new PHPMailer();	//Create a new PHPMailer instance
 		/*
@@ -84,7 +103,7 @@ if (empty($email)) {
 		$mail->setFrom('lisa.debruine@glasgow.ac.uk', 'Lisa DeBruine');
 		//$mail->addReplyTo('lisa.debruine@glasgow.ac.uk', 'Lisa DeBruine');
 		$mail->addAddress($email, $email);
-		$mail->Subject = 'WebMorph password change';
+		$mail->Subject = 'WebMorph account creation';
 		$mail->msgHTML($message);
 		$mail->AltBody = $text_message;
 		
@@ -118,9 +137,14 @@ CREATE TABLE user (
 	school BOOL,
 	art BOOL,
 	regdate DATETIME,
+	allocation INT(8) UNSIGNED,
+	status ENUM("requested", "disabled", "user", "admin", "superuser") DEFAULT "requested"
 	PRIMARY KEY (id),
 	UNIQUE INDEX (email)
 );
+
+ALTER TABLE user ADD status ENUM("requested", "disabled", "user", "admin", "superuser") DEFAULT "requested";
+UPDATE user SET status="user";
 
 */
 

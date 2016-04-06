@@ -74,6 +74,7 @@ foreach($return['projects'] as $i => $proj) {
 	    $mysize += $res['size'];
 	}
     if ($res) {
+	    $return['projects'][$i]['filemtime'] = filemtime(IMAGEBASEDIR . $proj['id']);
 		$return['projects'][$i]['files'] = $res['files'] | 0;
 		$return['projects'][$i]['trash'] = $res['trash'] | 0;
 		$return['projects'][$i]['tmp'] = $res['tmp'] | 0;

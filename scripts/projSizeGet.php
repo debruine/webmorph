@@ -33,13 +33,16 @@ $q = new myQuery("SELECT project.user_id as owner
                   WHERE project_user.user_id='$user' AND project_id='$proj_id'");
 
 if ($q->get_num_rows() > 0) {
-    $res = countFilesProc(IMAGEBASEDIR . $proj_id);
-    if ($res) {
-	    $return['mysize'] = ($q->get_one() == $user) ? $res['size'] : 0;
-		$return['files'] = $res['files'] | 0;
-		$return['trash'] = $res['trash'] | 0;
-		$return['tmp'] = $res['tmp'] | 0;
-		$return['size'] = formatBytes($res['size']);
+	$return['filemtime'] = filemtime(IMAGEBASEDIR . $proj_id);
+	if ($return['filemtime'] != $_POST['filemtime']) {
+	    $res = countFilesProc(IMAGEBASEDIR . $proj_id);
+	    if ($res) {
+		    $return['mysize'] = ($q->get_one() == $user) ? $res['size'] : 0;
+			$return['files'] = $res['files'] | 0;
+			$return['trash'] = $res['trash'] | 0;
+			$return['tmp'] = $res['tmp'] | 0;
+			$return['size'] = formatBytes($res['size']);
+		}
 	}
 }
 

@@ -182,8 +182,6 @@ function threePtDelin(e) {
                 var name = PM.project + urlToName(url);
                 delinImage(name, false);
                 PM.eye_clicks = [];
-                PM.stage.clear();
-                PM.stage.hide();
                 PM.delinfunc = '3pt';
             }
         } else {

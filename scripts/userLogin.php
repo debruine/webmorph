@@ -18,16 +18,28 @@ if (empty($email)) {
 	$return['error'] = true;
 	$return['errorText'] .=  '<li>Your password is not valid</li>';
 } else {
-	$q = new myQuery("SELECT id, firstname, lastname, email, password FROM user WHERE LCASE(email)=LCASE('$email')");
+	$q = new myQuery("SELECT id, firstname, lastname, email, password, status FROM user WHERE LCASE(email)=LCASE('$email')");
 	
 	if ($q->get_num_rows() == 1) {
 		$res = $q->get_one_array();
-		$id = $res['id'];
+		$id = intval($res['id']);
 		$hash = $res['password'];
 		$salt = substr($hash, 0, 28) . '$';
 		$hash_check = crypt($password, $salt);
 		
-		if ($hash == $hash_check) {
+		
+		if ($res['status'] == 'requested') {
+			$q = new myQuery("SELECT COUNT(*) as c, COUNT(IF(id <= $id,1,NULL)) as me FROM user WHERE status='requested'");
+			$wait_list = $q->get_one_row();
+			
+			$return['error'] = true;
+			$return['errorText'] .=  "<li>Your account has not been authorized yet. 
+										Because WebMorph is in alpha testing, we are limiting the number of users. 
+										You are number {$wait_list['me']} of {$wait_list['c']} on the wait list.</li>";
+		} else if ($res['status'] == 'disabled') {
+			$return['error'] = true;
+			$return['errorText'] .=  "<li>Your account has been disabled.</li>";
+		} else if ($hash == $hash_check) {
 			$return['user'] = $id;
 			
 			$q = new myQuery("INSERT INTO login (user_id, logintime) VALUES ($id, NOW())");

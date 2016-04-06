@@ -43,7 +43,7 @@
 		</li>
 		<li class='movie_settings'>
 			<label for='transMovieSteps'>Steps:</label>
-			<input type='number' step='1' id="transMovieSteps" size='3' max='101' min='3' value='20' />
+			<input type='number' step='1' id="transMovieSteps" size='3' max='101' min='2' value='20' />
 			<span id='transMovieStepsDisplay'>(21 images in 5% steps)</span>
 		</li>
 		<li class='movie_settings'>	
@@ -81,5 +81,54 @@
 		<li><label for="gridSaveDir">Save to Directory:</label> <input type="text" id="gridSaveDir" /></li>
 		</div>
 		<li><input type='button' value='Create Grid' id='createGrid' />
+	</ul>
+	
+	<!-- MultiContinua Interface -->
+	<ul id='continua' class='feature'>
+		<li>Multiple Continua <button id="cancel-continua">X</button></li>
+		<li>Drag images to the faces below</li>
+		<li id="continua-imgs">
+			<img src='/include/images/blankface.php' />
+			<img src='/include/images/blankface.php' />
+			<img src='/include/images/blankface.php' />
+			<img src='/include/images/blankface.php' />
+			<img src='/include/images/blankface.php' />
+			<img src='/include/images/blankface.php' />
+			<img src='/include/images/blankface.php' />
+			<img src='/include/images/blankface.php' />
+			<img src='/include/images/blankface.php' />
+			<img src='/include/images/blankface.php' />
+			<img src='/include/images/blankface.php' />
+			<img src='/include/images/blankface.php' />
+			<img src='/include/images/blankface.php' />
+			<img src='/include/images/blankface.php' />
+			<img src='/include/images/blankface.php' />
+			<img src='/include/images/blankface.php' />
+			<img src='/include/images/blankface.php' />
+			<img src='/include/images/blankface.php' />
+			<img src='/include/images/blankface.php' />
+			<img src='/include/images/blankface.php' />
+			<img src='/include/images/blankface.php' />
+			<img src='/include/images/blankface.php' />
+			<img src='/include/images/blankface.php' />
+			<img src='/include/images/blankface.php' />
+			<img src='/include/images/blankface.php' />
+			<img src='/include/images/blankface.php' />
+			<img src='/include/images/blankface.php' />
+			<img src='/include/images/blankface.php' />
+			<img src='/include/images/blankface.php' />
+			<img src='/include/images/blankface.php' />
+		</li>
+		<li id="continua-options">
+			<input type="checkbox" id="continua-shape" checked="checked" /><label for="continua-shape">Shape</label>
+			<input type="checkbox" id="continua-color" checked="checked" /><label for="continua-color">color</label>
+			<input type="checkbox" id="continua-texture" checked="checked" /><label for="continua-texture">Texture</label>
+		</li>
+		<div class='dim'>
+		<li><label for="cimgs">Images:</label> <input type='number' id='cimgs' min='2' max='30' value='3' /></li>
+		<li><label for="csteps">Steps/continuum:</label> <input type='number' id='csteps' min='0' max='101' value='20' /></li>
+		<li><label for="continuaSaveDir">Save to Directory:</label> <input type="text" id="continuaSaveDir" /></li>
+		</div>
+		<li><input type='button' value='Create Continua' id='createContinua' />
 	</ul>
 </div>

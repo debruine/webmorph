@@ -186,6 +186,7 @@ $('#project_list').on('click', '.projectOwnerDelete', function() {
 }).on('keydown', '.projectOwnerAdd', function(e) {
     if (e.which == KEYCODE.enter) { projectOwnerAdd(this); }
 }).on('click', '.go_to_project', function() {
+	$.xhrPool.abortAll();
     var proj_id = $(this).closest('tr').data('id');
     PM.project = proj_id;
     $('#currentProject li span.checkmark').hide();
@@ -248,7 +249,7 @@ $(document).mousedown(function(e) {
         cursor('auto');
         quickhelp();
     }
-    if (e.which == KEYCODE.ctrl || e.which == KEYCODE.cmd) {
+    if (PM.interface == 'delineate' && (e.which == KEYCODE.ctrl || e.which == KEYCODE.cmd)) {
         // cursor is hovering over a delin point
         $('.pt').removeClass('couldselect');
         drawTem();
@@ -320,6 +321,8 @@ $(document).mousedown(function(e) {
         if (e.shiftKey) {
             if (e.which == KEYCODE.a) {
                 $('#batchAverage').click();          // shift-cmd-A
+            } else if (e.which == KEYCODE.c) {   
+                $('#multiContinua').click();          // shift-cmd-C
             } else if (e.which == KEYCODE.d) {
                 $('#batchModDelin').click();         // shift-cmd-D
             } else if (e.which == KEYCODE.e) {
@@ -591,61 +594,11 @@ $('ul.menubar li.menucategory').mouseleave(function() {
 $('#menu_username').click( function() {
     $('#prefs').click();
 });
-$('#register-button').button().click(function() {
-    if ($('#loginInterface .reg_item:visible').length) {
-        // check validity
-        var error = false;
-        $('#login_error').html('');
-        
-        if ($('#login_email').val().length < 7) {
-            error = true;
-            $('#login_error').append('<li>Your email address needs to be an email address</li>');
-            $('#login_email').addClass('error').focus().select();
-        } else {
-            $('#login_email').removeClass('error');
-        }
-    
-        if ($('#login_auth').val().length != 7) {
-            error = true;
-            $('#login_error').append('<li>Please enter the correct invite code. Access to online psychomorph is currently restricted. Ask Lisa for an invite code if you would like to be an alpha tester.</li>');
-            $('#login_auth').addClass('error').focus().select();
-        } else {
-            $('#login_auth').removeClass('error');
-        }
-        
-        if (error) { return false; }
-        
-        $('#login_error').append('<li>Checking your registration details...</li>');
-        
-        registerUser();
-    } else {
-        $('#loginInterface .reg_item').show();
-        $('#loginInterface .login_item').hide();
-        $('#register-button').addClass('ui-state-focus');
-        $('#login-button').removeClass('ui-state-focus');
-        $('#loginBox thead th').html('Register for an Account');
-    }
+$('#register-button').button().click(function(e) {
+	registerUser(e);
 });
 $('#reset-password-button').button().click( function() {
-    var email = $('#login_email').val();
-    
-    if (email == '') {
-        $('#login_error').html("<li>Please fill in your email address first.</li>");
-        return false;
-    }
-    $('#login_error').html("<li>Checking for your account...</li>");
-
-    $.ajax({
-        url: 'scripts/userPasswordReset',
-        data: { email: email },
-        success: function(data) {
-            if (data.error) {
-                $('#login_error').html('<li>' + data.errorText + '</li>');
-            } else {
-                $('#login_error').html("<li>Check your email for the new password.</li>");
-            }
-        }
-    });
+	resetPassword();
 });
 $('#login_password').keyup( function(e) {
     if (e.which === KEYCODE.enter) {
@@ -739,6 +692,10 @@ $('#transform, #average').draggable({
 
 $('#cancel-grid').button().click(function() {
     $('#grid').hide();
+    $('#destimages').show();
+});
+$('#cancel-continua').button().click(function() {
+    $('#continua').hide();
     $('#destimages').show();
 });
 $('#view-average-button').button().click(function() {
@@ -1068,7 +1025,7 @@ $('#showTransform').click(function() {
         menubar('transform');
         loadFiles(currentDir()); 
         var padwidth = $('#destimages').outerWidth(true) + 20;
-        $('#individual_image_box').insertAfter($('#grid')).css("padding-left", padwidth);
+        $('#individual_image_box').insertAfter($('#continua')).css("padding-left", padwidth);
         $finder.appendTo($('#individual_image_box'));
         $finder.find('li.file').filter('.image.hasTem').show().draggable('option', 'containment', 'window');
         $('#recent_creations').insertAfter($('#individual_image_box')).show();
@@ -1655,7 +1612,7 @@ $('#fitTemplate').click(function() {
             $('#footer').html('0 of ' + files.length + ' image' + ((files.length == 1) ? '' : 's') + ' fitted to template <code>' + $('#current_tem_name').text() + '</code>');
             PM.selectedFile = 0;
             var url = files[0];
-            var name = urlToName(url);
+            var name = PM.project + urlToName(url);
             delinImage(name, false);
             PM.eye_clicks = [];
             $('#template').hide();
@@ -1893,7 +1850,7 @@ $('#movieOriginalHeight').click( function() {
     $.ajax({
         url: 'scripts/imgDimensions',
         type: 'GET',
-        data: { img: urlToName($('#movieBox').attr('src')) },
+        data: { img: PM.project + urlToName($('#movieBox').attr('src')) },
         success: function(data) {
             $('#movieHeight').slider('value', data.h);
             $('#movieBox').css({
@@ -2001,13 +1958,40 @@ $('#SBTdialog').delegate('textarea', 'keydown', function(e) {
 $('#gridFaces').click(function() {
     if ($(this).hasClass('disabled')) { return false; }
     $('#showTransform').click();
-    $('#destimages').hide();
+    $('#destimages, #continua').hide();
     $('#grid').show();
 });
 //$('#grid-options').buttonset();
 $('#createGrid').button().click( function() {
     createGrid();
 });
+
+//!multiContinua
+$('#multiContinua').click(function() {
+	if ($(this).hasClass('disabled')) { return false; }
+    $('#showTransform').click();
+    $('#destimages, #grid').hide();
+    $('#continua').show();
+});
+$('#createContinua').button().click( function() {
+    createContinua();
+});
+$('#cimgs').change(function() {
+	var c = $('#cimgs').val();
+	if (c < 2) { c = 2; $('#cimgs').val(2); }
+	if (c > 30) { c = 30; $('#cimgs').val(30); }
+	$('#continua-imgs img').hide().slice(0,c).show();
+});
+$('#cimgs').val(4).change();
+$('#continua-imgs img').droppable({
+    hoverClass: 'hoverdrag',
+    tolerance: "pointer",
+    drop: function(event, ui) {
+        // ! [FIX] png and gif images don't show up in transform drop
+        this.src = fileAccess($(ui.draggable).attr('url').replace('.tem', '.jpg'));
+    }
+});
+
 // !batchTag
 $('#batchTag').click(function() {
     if ($(this).hasClass('disabled')) { return false; }
@@ -2300,7 +2284,7 @@ $('#show_thumbs').change(function() {
             $(this).css('background-image', 'url(/scripts/fileAccess?thumb&file=' + $(this).attr('url') + ')');
         });
     } else {
-        $finder.find('li.image').css('background-image', 'url(/include/images/finder/imgicon.svg)');
+        $finder.find('li.image').css('background-image', 'url(/include/images/finder/imgicon.php)');
     }
 });
 // !input[type=number]

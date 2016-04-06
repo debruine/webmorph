@@ -64,10 +64,8 @@ function recursive_delete($deletedir) {
 //$dest = IMAGEBASEDIR . '171';
 //recursive_copy($source, $dest);
 
-echo rename(IMAGEBASEDIR . '.032125120', IMAGEBASEDIR . '171');
-
 // delete a specific directory
-$deletedir = IMAGEBASEDIR . '1/nikon';
+$deletedir = IMAGEBASEDIR . '71/self_res';
 //recursive_delete($deletedir);
 
 // remake .tmp directories

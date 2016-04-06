@@ -1,0 +1,25 @@
+/*-------------------------------*
+ * To add a new script to tomcat *
+ * edit local_web.xml & then...  *
+ *-------------------------------*/
+
+cp ~/Dropbox/html/psychomorph/tomcat/tomcat_files/local_web.xml $PM_HOME/../web.xml
+
+/*-------------------*
+ * To compile a file *
+ *-------------------*/
+
+javac -d $PM_HOME ~/Dropbox/html/psychomorph/tomcat/pca1.java
+
+tcstop
+
+tcstart
+
+--------\
+
+/*-------------------*
+ * ADD TO ~/.profile *
+ *-------------------*/
+
+export PM_HOME=/usr/local/tomcat/webapps/psychomorph/WEB-INF/classes/
+export CLASSPATH=$CLASSPATH:"/usr/local/tomcat/lib/facemorphlib.jar":"/usr/local/tomcat/lib/servlet-api.jar"

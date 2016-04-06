@@ -1010,7 +1010,7 @@ function webcamPhoto() {
         }
     }
     
-    $('#webcamFolder').html(currentDir());
+    $('#webcamFolder').html(urlToName(currentDir()));
     
     $('#webcamDialog').dialog({
         width: 670,
@@ -1088,5 +1088,5 @@ function webcamPhoto() {
                 }
             }
         }
-    });
+    }).css('max-height', '600px');
 }

@@ -76,6 +76,11 @@ PAGE BODY and LAYOUT
     margin:0; 
     padding:0; 
     border:0;
+    box-sizing: border-box;
+	-o-box-sizing: border-box;
+	-ms-box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
 }
 
 .shadow { <?= shadow() ?> }
@@ -561,9 +566,22 @@ table.pca td:nth-child(3) {
 
 .interface {display: none;}
 
+#gif_demos {
+	max-width: 60em;
+	margin: 0 auto;
+	text-align: center;
+}
+
+#gif_demos img {
+	display: inline;
+	width: 150px;
+	height: 200px;
+}
+
 #loginBox { 
 	margin 2em; auto;
 }
+
 #login-button, #register-button, #reset-password-button { 
 	float: right; 
 	margin-left: 0.5em; 
@@ -818,7 +836,7 @@ table.pca td:nth-child(3) {
 	bottom: 0;
 	right: 0; 
 	z-index: 1000;
-	height: 22px;
+	height: 26px;
 	background: -webkit-linear-gradient(top, rgba(250,250,250,0.8) 0%, rgba(206,206,206,0.8) 100%);
 	background: -moz-linear-gradient(top, rgba(250,250,250,0.8) 0%, rgba(206,206,206,0.8) 100%);
 	border-top: 1px solid rgba(255,255,255,0.5);
@@ -1019,7 +1037,6 @@ li.disabled span.checkmark, li.disabled:hover > span.checkmark {
 }
 
 .pt {
-	box-sizing: border-box;
 	width: 15px;
 	height: 15px;
 	z-index: 90;
@@ -1197,6 +1214,10 @@ button.unsaved {
 	white-space: nowrap;
 }
 
+#finder span {
+	cursor: default;
+}
+
 .imghelper { 
 	width: 50px;
 	z-index: 9000;
@@ -1223,6 +1244,7 @@ button.unsaved {
 .filehelper li span {
 	padding: 2px 0 2px 3px !important;
 	margin-left: 0px;
+	cursor: grabbing;
 }
 
 #finder li.folder ul.folderDrop {
@@ -1405,9 +1427,6 @@ span.shiftopt:before {
 #individual_image_box {
 	width: 100%; 
 	padding-left: 330px; 
-	-moz-box-sizing: border-box; 
-	-webkit-box-sizing: border-box; 
-	box-sizing: border-box;
 }
 #avginfo p {
 	max-width: 100em; 
@@ -1431,17 +1450,17 @@ span.shiftopt:before {
 .chosen {background-color: <?= $bgcolor ?>;}
 .disabled {color: #666;}
 
-#grid { display: none; }
-#grid .dim { text-align: left; }
-#grid .dim input { float: right; }
-#grid .dim label, #grid .dim input { width: 45%; }
+#grid, #continua { display: none; }
+.dim { text-align: left; }
+.dim input { float: right; }
+.dim label, .dim input { width: 45%; }
 
 #transform {
 	object-fit: contain;
 	overflow: hidden;
 }
 
-#destimages, #grid, #avg_image_box {
+#destimages, #grid, #continua, #avg_image_box {
 	margin: 0px 0px 0 0;
 	font-size:75%; 
 	position: absolute; 
@@ -1470,7 +1489,6 @@ span.shiftopt:before {
 }
 #destimages img, #grid img {
 	width: 100%; 
-	box-sizing: border-box; 
 	height: auto; 
 	border: <?= $border ?>; 
 	padding:0;
@@ -1478,11 +1496,15 @@ span.shiftopt:before {
 .hoverdrag, #destimages li.hoverdrag  {
     border-color: <?= $theme ?>;
 }
-#destimages li, #grid li {
+#destimages li, #grid li, #continua li {
 	padding: 1% 0; 
 	display: block; 
 	clear: both;
 }
+#continua img {
+	width: 24%;	
+}
+
 #destimages li > div, #grid li div {
 	width: 45%; 
 	text-align: center; 
@@ -2240,11 +2262,6 @@ button.unsaved, .ui-button.ui-state-error, .ui-button.ui-state-error:hover {
 	-ms-animation: rainbow-loader 5000ms cubic-bezier(.175, .885, .32, 1.275) infinite;
 	-webkit-animation: rainbow-loader 5000ms cubic-bezier(.175, .885, .32, 1.275) infinite;
 	-moz-animation: rainbow-loader 5000ms cubic-bezier(.175, .885, .32, 1.275) infinite;
-	box-sizing: border-box;
-	-o-box-sizing: border-box;
-	-ms-box-sizing: border-box;
-	-webkit-box-sizing: border-box;
-	-moz-box-sizing: border-box;
 	height: 0.5em;
 	left: 0;
 	overflow: hidden;
@@ -2265,11 +2282,6 @@ button.unsaved, .ui-button.ui-state-error, .ui-button.ui-state-error:hover {
 	-ms-border-radius: 100%;
 	-webkit-border-radius: 100%;
 	-moz-border-radius: 100%;
-	box-sizing: border-box;
-	-o-box-sizing: border-box;
-	-ms-box-sizing: border-box;
-	-webkit-box-sizing: border-box;
-	-moz-box-sizing: border-box;
 	height: 1em;
 	left: 0;
 	margin: 0 auto;

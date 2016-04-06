@@ -9,10 +9,10 @@ require_once $_SERVER['DOCUMENT_ROOT'] . '/include/main_func.php';
 	<title>WebMorph</title>
 	<meta charset='utf-8'>
 	<meta name='author' content='Lisa DeBruine and Bernard Tiddeman' />
-	<meta name='description' content='Online tools for manipulating faces' />
-	<meta name='keywords' content='face research,faces,psychology,research,computer graphics,psychomorph' />
+	<meta name='Description' content='Online tools for manipulating faces by morphing and transforming.' />
+	<meta name='keywords' content='webmorph,morphing,psychomorph,face research,faces,psychology,research,computer graphics' />
 	<!--<meta name='verify-v1' content='oCEvWF1olBQ+/+nyyAZfRnSeVVGeEVlD0Qw8aHTRvAU=' />-->
-	<meta property='og:site_name' content='Psychomorph'/>
+	<meta property='og:site_name' content='WebMorph'/>
 	<meta property='og:image' content='/include/images/logo.png'/>
 	<meta name="viewport" id="vp" content="initial-scale=1.0,user-scalable=no,maximum-scale=1" media="(device-height: 568px)" />
 	<meta name='apple-mobile-web-app-capable' content='yes' />

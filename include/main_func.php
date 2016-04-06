@@ -3,10 +3,10 @@
 /***************************************************/
 /* !Functions and code for every page */
 /***************************************************/
-	/*if ($_SERVER['SERVER_NAME'] == 'psychomorph.facelab.org') {
+	if ($_SERVER['SERVER_NAME'] == 'psychomorph.facelab.org' || $_SERVER['SERVER_NAME'] == 'psychomorph.psy.gla.ac.uk') {
 		header('Location: http://webmorph.org');
 		die();
-	}*/
+	}
 
 	$initime=microtime(true);
 

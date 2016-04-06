@@ -1,6 +1,20 @@
 <!-- !- what's new Dialog -->
 <div id='whatsnewDialog' class='modal' title='What&apos;s New?'>
 	<dl>
+		<dt>(2016-04-06) Continuum and Grid</dt>
+    	<dd>I fixed several bugs in the continuum and grid transforms. I also added 
+    	a new batch function for multiple continua (e.g., morph from A to B to C to D...).
+    	Watch out, it might still be a bit buggy.</dd>
+    	
+		<dt>(2016-04-04) Account Registration</dt>
+    	<dd>Account registration is now done automatically through the website and account requests 
+    	are put on a wait list.</dd>
+    	
+		<dt>(2016-03-21) Project Size</dt>
+    	<dd>Project sizes are now only calculated once at the beginning of a session 
+    	and after changes are made to the project. This prevents long delays when switching
+    	between the project window and other windows.</dd>
+		
     	<dt>(2015-11-15) Making Averages</dt>
     	<dd>You can now drag files to the average face in the Average Window to 
     	add them to an average. This is useful if you want to average images 
@@ -12,7 +26,7 @@
     	<dd>Your files are now organised into shareable projects. For now:
     	<ul>
         	<li><strong>All group members can add and delete both members and files.</strong></li>
-        	<li>Any Psychomorph user can be added to a project by their email or name.</li>
+        	<li>Any WebMorph user can be added to a project by their email or name.</li>
         	<li>The original owner cannot be removed from the project.</li>
         	<li>The original owner is the only person who can delete a project.</li>
         	<li>All files in a project count towards the project owner's space allocation.</li>
@@ -121,13 +135,13 @@
 
 
 <!-- !- help Dialog -->
-<div id='help' class='modal' title='Psychomorph Help'>
+<div id='help' class='modal' title='WebMorph Help'>
     <div class='prefs'>
         <h1 data-topic='preferences'>Preferences</h1>
         <h2>Personal</h2>
         <p>We ask for your personal information to help with the development of 
-            Psychomorph Online. We're always happy to hear from you about what 
-            sort of things would make Psychomorph better or easier to use.</p>
+            WebMorph Online. We're always happy to hear from you about what 
+            sort of things would make WebMorph better or easier to use.</p>
         
         <h2 data-topic='default project'>Default project</h2>
         <p>Set a default project to use if you go straight to the Finder, 
@@ -302,7 +316,7 @@
 		<h2 data-topic='new template'>Setting up a new template</h2>
 		<ul>
 			<li>You can register a template you uploaded from another version of 
-			Psychomorph or a new one you created here. Registering a template 
+			WebMorph or a new one you created here. Registering a template 
 			allows you to use it to delineate new images and lets you set the 
 			point names and symmetry points.</li>
 			<li>First, load an image with the new template into the Delineation 

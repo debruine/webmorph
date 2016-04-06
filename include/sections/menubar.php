@@ -270,6 +270,11 @@
 				Calculate FacialMetrics
 				<span class="shortcut shiftcmd">F</span>
 			</li>
+			<li class='delineate finder average transform' id='multiContinua'
+				title="Morph along a series of images in 2-20 continua">		
+				Multiple Continua
+				<span class="shortcut shiftcmd">C</span>
+			</li>
 			<li class='delineate finder average transform' id='gridFaces'
 				title="Create a 1D or 2D array of faces in a continuum">		
 				Grid
