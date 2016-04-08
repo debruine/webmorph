@@ -1,6 +1,15 @@
 <!-- !- what's new Dialog -->
 <div id='whatsnewDialog' class='modal' title='What&apos;s New?'>
 	<dl>
+		<dt>(2016-04-08) Multiple Directory Fnctions</dt>
+    	<dd>You can now select folders and apply batch functions 
+		(and deletion) to several folders at once. You can also bypass the  
+		confirmation dialog when deleting files and folders by using 
+		<span class="shortcut shiftcmd">&#x232b;</span> or 
+		<span class="shortcut shiftcmd">-backspace</span>. This is likely to 
+		be a little buggy at first, so make sure you back up your important 
+		files regularly (which you should already be doing).</dd>
+    	
 		<dt>(2016-04-06) Continuum and Grid</dt>
     	<dd>I fixed several bugs in the continuum and grid transforms. I also added 
     	a new batch function for multiple continua (e.g., morph from A to B to C to D...).

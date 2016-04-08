@@ -1,4 +1,13 @@
 <div id='finderInterface' class='interface'>
+	<p class="devnote">You can now select folders and apply batch functions 
+		(and deletion) to several folders at once. You can also bypass the  
+		confirmation dialog when deleting files and folders by using 
+		<span class="shortcut shiftcmd">&#x232b;</span> or 
+		<span class="shortcut shiftcmd">-backspace</span>. This is likely to 
+		be a little buggy at first, so make sure you back up your important 
+		files regularly (which you should already be doing).
+		<br><span style="float: right; font-size:50%;">[double-click this notice to close it]</span></p>
+		
 	<input type="search" id="searchbar">
 	
 	<ul id='imagebox'>

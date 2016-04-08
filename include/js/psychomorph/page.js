@@ -319,10 +319,14 @@ $(document).mousedown(function(e) {
     } else if (e.ctrlKey || e.metaKey) {
         // ! shift-cmd shortcuts
         if (e.shiftKey) {
-            if (e.which == KEYCODE.a) {
+	        if (e.which == KEYCODE.backspace || e.which == KEYCODE.delete) {
+                if ($finder.filter(':visible').length) { // shift-cmd-delete or shift-cmd-backspace
+			        fileDelete(false); // delete with no confirm
+			    }           
+            } else if (e.which == KEYCODE.a) {
                 $('#batchAverage').click();          // shift-cmd-A
             } else if (e.which == KEYCODE.c) {   
-                $('#multiContinua').click();          // shift-cmd-C
+                $('#multiContinua').click();         // shift-cmd-C
             } else if (e.which == KEYCODE.d) {
                 $('#batchModDelin').click();         // shift-cmd-D
             } else if (e.which == KEYCODE.e) {
@@ -612,6 +616,7 @@ $('#logout').click(function() {
     if ($(this).hasClass('disabled')) { return false; }
     logoutUser();
 });
+
 // set events for tag list
 /*
 $('#taglist').on('click', 'a', function() {
@@ -760,8 +765,8 @@ $('#save-button, #trans-save-button').button({
     });
 });
 
-// remove growl notifications on double-click
-$('body').on('dblclick', '.growl', function() {
+// remove growl and devnotes notifications on double-click
+$('body').on('dblclick', '.growl,.devnote', function() {
     $(this).remove();
 });
 
@@ -788,10 +793,10 @@ $finder.on('dblclick', 'li.file.image, li.file.tem', function() {
         $('li.file.selected').removeClass('selected');
     } else if (e.shiftKey) {
         // select all files between this one and the nearest selected one
-        var $prevUnSel = $(this).prevUntil('li.selected');
-        var $nextUnSel = $(this).nextUntil('li.selected');
-        var $prevAll = $(this).prevAll('li');
-        var $nextAll = $(this).nextAll('li');
+        var $prevUnSel = $(this).prevUntil('li.file.selected');
+        var $nextUnSel = $(this).nextUntil('li.file.selected');
+        var $prevAll = $(this).prevAll('li.file');
+        var $nextAll = $(this).nextAll('li.file');
         if ($prevUnSel.length < $prevAll.length) {
             $prevUnSel.addClass('selected');
         } else if ($nextUnSel.length < $nextAll.length) {
@@ -799,7 +804,7 @@ $finder.on('dblclick', 'li.file.image, li.file.tem', function() {
         }
     }
     $(this).toggleClass('selected');
-    $(this).siblings('li.folder').addClass('closed').find('li.folder').addClass('closed');
+    $(this).siblings('li.folder').addClass('closed').removeClass('selected').find('li.folder').addClass('closed');
     updateSelectedFiles();
 }).on('click', 'li.file.image', function(e) {
     // show image in imgbox on click
@@ -899,11 +904,40 @@ $finder.on('dblclick', 'li.file.image, li.file.tem', function() {
         $imagebox.css('margin-left', $(this).width())
     );
 }).on('click', 'li.folder > span', function(e) { 
-    $theFolder = $(this).parent('li.folder').removeClass('closed')         // open this folder on click
-    $theFolder.siblings('li.folder:not(.closed)').addClass('closed');     // close sibling folders 
-    $finder.find('input').blur();                                         // blur any open inputs for folder name changes
-    $theFolder.find('li.folder:not(.closed)').addClass('closed');         // close all folders below this level
-    $finder.find('li.file.selected').removeClass('selected');             // unselect all files
+    $finder.find('input').blur();                                         	// blur any open inputs for folder name changes
+    
+    $theFolder = $(this).parent('li.folder');        						// folder to open    
+    $theFolder.find('li.folder:not(.closed)').addClass('closed');         	// close all folders below this level   
+    $theFolder.parents('li.folder.selected').removeClass('selected');  		// unselect all folders above this level
+    
+    if (e.shiftKey) {
+		$theFolder.addClass('closed');
+        // select all folders between this one and the nearest selected one
+        var $prevUnSel = $theFolder.prevUntil('li.folder.selected');
+        var $nextUnSel = $theFolder.nextUntil('li.folder.selected');
+        var $prevAll = $theFolder.prevAll('li.folder');
+        var $nextAll = $theFolder.nextAll('li.folder');
+        if ($prevUnSel.length < $prevAll.length) {
+            $prevUnSel.addClass('selected');
+        } else if ($nextUnSel.length < $nextAll.length) {
+            $nextUnSel.addClass('selected');
+        }
+    } else if (e.ctrlKey || e.metaKey) {
+	    $theFolder.addClass('closed');
+	} else {
+		// keep other selected folders if ctrl/cmd/shift held down
+		$finder.find('li.folder').removeClass('selected');
+		$theFolder.removeClass('closed');
+	}
+	
+    $theFolder.toggleClass('selected');
+    $theFolder.siblings('li.folder:not(.closed)').addClass('closed'); 	  	// close sibling folders
+    
+    var $selFolders = $finder.find('li.folder.selected');
+    if ($selFolders.length == 1) {
+	    $selFolders.removeClass('closed');         						  	// if 1 remaining selected folder, open it
+	    $finder.find('li.file.selected').removeClass('selected');         	// unselect all files
+	}
     
     if ($finder.hasClass('imageView')) {
         $finder.find('ul').css({
@@ -912,7 +946,7 @@ $finder.on('dblclick', 'li.file.image, li.file.tem', function() {
         $theFolder.find('> ul').css('width', $finder.width());
     }
     
-    $finder.scrollLeft($finder.width());    // scroll all the way to the right
+    $finder.scrollLeft($finder.width());    								// scroll all the way to the right
     updateSelectedFiles();
 });
 
@@ -1499,7 +1533,7 @@ $('#deleteItems').click(function() {
     if ($(this).hasClass('disabled')) { return false; }
     
     if ($finder.filter(':visible').length) {
-        fileDelete();
+        fileDelete(true);
     } else if (PM.interface == 'delineate') {
         var ptArray = getSelPts();
         if (ptArray.length) {
@@ -1713,26 +1747,45 @@ $('#alignEyes').click(function() {
     if ($(this).hasClass('disabled')) { return false; }
     batchAlign();
 });
-$('.batch_name span').click(function() {
+
+//!.batch_name toggles
+$('.batch_name').on('change', 'input.toggle_superfolder, input.toggle_subfolder, input.toggle_prefix, input.toggle_suffix', function() {
+	batchToggle(this);
+});
+
+$('.batch_name').on('click', 'span:not(.multibatch)', function() {
     var $this = $(this);
     var w = $this.width();
     var current_val = $this.html();
-    if (current_val.substr(0, 4) == '[no ') current_val = '';
     var $input = $('<input type="text" />').val(current_val).width(w + 10).keydown(function(e) {
         if (e.which == KEYCODE.enter) $(this).blur();
     }).blur(function() {
         var val = $(this).val();
-        if ($this.hasClass('batch_subfolder')) {
+        
+        if ($this.hasClass('batch_superfolder')) {
             if (val.length === 0) {
-                val = '[no subfolder]';
+                $(this).closest('div.batch_name').find('.toggle_superfolder').prop('checked', false);
             } else {
                 if (val.substr(0, 1) != '/') val = '/' + val;
-                if (val.substr(-1) == '/') val = val.substr(0, val.length - 1);
+                if (val.substr(-1) != '/') val = val + '/';
+            }
+        } else if ($this.hasClass('batch_subfolder')) {
+            if (val.length === 0) {
+                $(this).closest('div.batch_name').find('.toggle_subfolder').prop('checked', false);
+            } else {
+                if (val.substr(0, 1) != '/') val = '/' + val;
+                if (val.substr(-1) != '/') val = val + '/';
             }
         } else if ($this.hasClass('batch_prefix')) {
-            if (val.length === 0) val = '[no prefix]';
+	        val = val.replace(/\//g, '');
+            if (val.length === 0) {
+				$(this).closest('div.batch_name').find('.toggle_prefix').prop('checked', false);
+			}
         } else if ($this.hasClass('batch_suffix')) {
-            if (val.length === 0) val = '[no suffix]';
+	        val = val.replace(/\//g, '');
+            if (val.length === 0) {
+				$(this).closest('div.batch_name').find('.toggle_suffix').prop('checked', false);
+			}
         }
         $this.html(val).show();
         $(this).remove();
@@ -1740,6 +1793,7 @@ $('.batch_name span').click(function() {
     $this.hide().after($input);
     $input.focus();
 });
+
 //!#colorCalibrate
 $('#colorCalibrate').click( function() {
     if ($(this).hasClass('disabled')) { return false; }
@@ -2149,10 +2203,12 @@ $('#select').click(function() {
     if ($(this).hasClass('disabled')) { return false; }
     if ($finder.filter(':visible').length) {
         // (un)select all files in the open folder
-        var $allfiles = $finder.find('li.folder')
+        var $openFolder = $finder.find('li.folder')
                                .filter(':not(.closed)')
-                               .filter(':last')
-                               .find('> ul > li.file')
+                               .filter(':last');
+        $openFolder.find('li.folder.selected').removeClass('selected'); // unselect selected folders
+        
+        var $allfiles = $openFolder.find('> ul > li.file')
                                .filter(':visible:not(.nosearch)');
         if ($allfiles.length == $allfiles.filter('.selected').length) {
             // all files are already selected, so unselect instead

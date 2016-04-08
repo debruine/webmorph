@@ -189,10 +189,12 @@ function menubar(currentInterface) { console.log('menubar('+currentInterface+')'
 }
 
 function urlToName(url) { //console.debug('urlToName(' + url + ')');
-    var name = url.replace(/^\s*(http:\/\/)?(test\.psychomorph|psychomorph\.facelab\.org)?/, '');
+    var name = url.replace(/^\s*(http:\/\/)?(webmorph\.org|webmorph\.test|test\.psychomorph|psychomorph\.facelab\.org)?/, '');
     name = name.replace(/^\/scripts\/fileAccess\?file=/, '');
-    name = name.replace('/scripts/fileAccess?file=', '');
-    name = name.replace(PM.project + '/', '/');
+    //name = name.replace('/scripts/fileAccess?file=', '');
+    var regex = new RegExp('^' + PM.project + '\/', 'g');
+    name = name.replace(regex, '/');
+    
     return name;
 }
 

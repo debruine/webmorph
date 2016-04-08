@@ -188,83 +188,133 @@ function fileUpload() {
     });
 }
 
-function fileDelete() {
+function fileDelete(confirm) {
 	var files = filesGetSelected();
-    var $fileItems = $finder.find('li.file.selected').filter(':visible');
+    var $fileItems = $finder.find('li.file.selected'); //.filter(':visible');
     var nFiles = files.length;
-    if (nFiles) {
+    if (nFiles) {	// at least one file is selected
         var fileList = $('<ul class="file" />').css('max-height', '15em');
         $.each(files, function(i, url) {
             var fileName = urlToName(url);
             fileList.append('<li>' + fileName + '</li>');
         });
-        $('<div />').html('Move these ' + nFiles + ' files to the Trash?').append(fileList).dialog({
-            title: "Delete Files",
-            buttons: {
-                Cancel: function() {
-                    $(this).dialog("close");
+        if (confirm) {
+	        $('<div />').html('Move these ' + nFiles + ' files to the Trash?').append(fileList).dialog({
+	            title: "Delete Files",
+	            buttons: {
+	                Cancel: function() {
+	                    $(this).dialog("close");
+	                },
+	                "Delete Files": function() {
+	                    $(this).dialog("close");
+	                    $.ajax({
+	                        url: 'scripts/fileDelete',
+	                        data: {
+	                            files: files
+	                        },
+	                        success: function(data) {
+	                            if (data.error) {
+	                                $('<div />').html(data.errorText).dialog({
+	                                    title: 'Error Deleting Files'
+	                                });
+	                            } else {
+	                                loadFiles($fileItems.closest('li.folder').attr('path')); // reload so trash is updated
+	                            }
+	                            updateSelectedFiles();
+	                        }
+	                    });
+	                },
+	            }
+	        });
+        } else {
+	        $.ajax({
+                url: 'scripts/fileDelete',
+                data: {
+                    files: files
                 },
-                "Delete Files": function() {
-                    $(this).dialog("close");
-                    $.ajax({
-                        url: 'scripts/fileDelete',
-                        data: {
-                            files: files
-                        },
-                        success: function(data) {
-                            if (data.error) {
-                                $('<div />').html(data.errorText).dialog({
-                                    title: 'Error Deleting Files'
-                                });
-                            } else {
-                                // modify enclosing folder contents so it will be reloaded on next finder refresh
-                                //$fileItems.closest('li.folder').data('contents', '');
-                                //$fileItems.remove();
-                                loadFiles($fileItems.closest('li.folder').attr('path')); // reload so trash is updated
-                            }
-                            updateSelectedFiles();
-                        }
-                    });
-                },
-            }
-        });
-    } else {
-        var $lastFolder = $finder.find('li.folder:not(.closed):last');
-        if ($lastFolder.length) {
-            dirToDelete = $lastFolder.attr('path').replace(PM.project + '/', '/');
-            if (dirToDelete == '/') {
-                return false;
-            } else if ($lastFolder.find('li').length) {
-                growl('Delete all files in this folder first.', 2000);
-                return false;
-            }
-            $('<div />').html('Delete directory <code>' + dirToDelete + '</code>?').dialog({
-                title: 'Delete Folder',
-                buttons: {
-                    Cancel: function() {
-                        $(this).dialog("close");
-                    },
-                    "Delete Folder": function() {
-                        $(this).dialog("close");
-                        $.ajax({
-                            url: 'scripts/dirDelete',
-                            data: { dirname: PM.project + dirToDelete },
-                            success: function(data) {
-                                if (data.error) {
-                                    $('<div />').html(data.errorText).dialog({
-                                        title: 'Error Deleting ' + dirToDelete
-                                    });
-                                } else {
-                                    // modify enclosing folder contents so it will be reloaded on next finder refresh
-									$lastFolder.closest('li.folder').data('contents', ''); 
-									$lastFolder.remove();
-                                    //loadFiles(PM.project + dirToDelete, true);
-                                }
-                            }
+                success: function(data) {
+                    if (data.error) {
+                        $('<div />').html(data.errorText).dialog({
+                            title: 'Error Deleting Files'
                         });
-                    },
+                    } else {
+                        loadFiles($fileItems.closest('li.folder').attr('path')); // reload so trash is updated
+                    }
+                    updateSelectedFiles();
                 }
             });
+        }
+    } else {  // no files are selected, check if there are subfolders
+        //var $lastFolder = $finder.find('li.folder:not(.closed):last');
+        var $selFolders = $finder.find('li.folder.selected, li.folder.selected li.folder');
+        
+        if ($selFolders.length) {
+            var dirToDelete = [];
+            $selFolders.each( function() {
+	            var path = $(this).attr('path');
+	            if (path !== PM.project +  + '/') {
+	            	dirToDelete.unshift(path);
+	            }
+	        });
+            
+            if (dirToDelete.length == 0) {
+                return false;
+            } else if ($selFolders.find('li.file').length) {
+	            // there are still files in the folders, select them and check if they should be deleted
+                $selFolders.find('li.file, li.folder').addClass('selected');
+                fileDelete(true);
+                return false;
+            }
+            
+            
+            if (confirm) {
+	            var delTitle = (dirToDelete.length == 1) ? 
+	            			   'Delete directory <code>' + urlToName(dirToDelete[0]) + '</code>?' : 
+	            			   'Delete ' + dirToDelete.length + ' directories?';
+	            
+	            $('<div />').html(delTitle).dialog({
+	                title: 'Delete Directory',
+	                buttons: {
+	                    Cancel: function() {
+	                        $(this).dialog("close");
+	                    },
+	                    "Delete Directory": function() {
+	                        $(this).dialog("close");
+	                        $.ajax({
+	                            url: 'scripts/dirDelete',
+	                            data: { dirname: dirToDelete },
+	                            success: function(data) {
+	                                if (data.error) {
+	                                    $('<div />').html(data.errorText).dialog({
+	                                        title: 'Error Deleting ' + dirToDelete.join()
+	                                    });
+	                                } else {
+	                                    // modify enclosing folder contents so it will be reloaded on next finder refresh
+										$selFolders.closest('li.folder').data('contents', ''); 
+										$selFolders.remove();
+	                                }
+	                            }
+	                        });
+	                    },
+	                }
+	            });
+	        } else {
+		        $.ajax({
+                    url: 'scripts/dirDelete',
+                    data: { dirname: dirToDelete },
+                    success: function(data) {
+                        if (data.error) {
+                            $('<div />').html(data.errorText).dialog({
+                                title: 'Error Deleting ' + dirToDelete.join()
+                            });
+                        } else {
+                            // modify enclosing folder contents so it will be reloaded on next finder refresh
+							$selFolders.closest('li.folder').data('contents', ''); 
+							$selFolders.remove();
+                        }
+                    }
+                });
+		    }
         }
     }
 }
@@ -433,8 +483,14 @@ function filesGetSelected(filter, replaced) { console.log('filesGetSelected(' + 
     var sf = [];
     if (filter == null) filter = '';
     if (replaced == null) replaced = '';
-    $finder.find('li.file.selected').filter(':visible' + filter).each(function(i, v) {
-        sf.push($(this).attr('url').replace(replaced, ''));
+    var $selFiles = '';
+    if ($finder.find('li.folder.selected').length > 1) { 
+	    $selFiles = $finder.find('li.folder.selected li').filter('.file' + filter);
+	} else {
+	    $selFiles = $finder.find('li.file.selected').filter(':visible' + filter);
+	}
+	$selFiles.each(function(i, v) {
+	    sf.push($(this).attr('url').replace(replaced, ''));
     });
     return sf;
 }
@@ -464,11 +520,18 @@ function fileListGet() {
 }
 
 function updateSelectedFiles() { //console.log('updateSelectedFiles()');
-    var cdir = currentDir();
-    var s = $finder.find('li.file.selected').filter(':visible').length;
-    var vFiles = $finder.find('li.folder[path="' + cdir + '"] > ul > li.file').length;
-    
-    $('#footer').html('<code>' + urlToName(cdir) + '</code> (' + s + ' of ' + vFiles + ' file' + (vFiles == 1 ? '' : 's') + ' selected)');
+	var $selFolders = $finder.find('li.folder.selected').filter(':visible');
+	
+	if ($selFolders.length > 1) {
+		var nFiles = $selFolders.find('li.file').length;
+		$('#footer').html($selFolders.length + ' folders selected containing ' + nFiles + ' files');
+	} else {
+	    var cdir = currentDir();
+	    var s = $finder.find('li.file.selected').filter(':visible').length;
+	    var vFiles = $finder.find('li.folder[path="' + cdir + '"] > ul > li.file').length;
+	    
+	    $('#footer').html('<code>' + urlToName(cdir) + '</code> (' + s + ' of ' + vFiles + ' file' + (vFiles == 1 ? '' : 's') + ' selected)');
+    }
     
     if (PM.interface == 'average') { 
         checkAvgAbility(); 

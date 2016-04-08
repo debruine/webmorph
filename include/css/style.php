@@ -429,6 +429,16 @@ table.pca td:nth-child(3) {
 
 /***** PSYCHOMORPH *****/
 
+.batch_cd { border: 1px solid red; }
+.batch_superfolder { border: 1px solid orange; }
+.multibatch { border: 1px solid yellow; }
+.batch_subfolder { border: 1px solid green; }
+.batch_prefix { border: 1px solid blue; }
+.batch_suffix { border: 1px solid purple; }
+
+
+
+
 .growl {
 	position: absolute;
 	z-index: 1000;
@@ -455,6 +465,11 @@ table.pca td:nth-child(3) {
 }
 .growl p:first-child { margin: 0 0 0.5em 0; }
 .growl p:last-child { margin: 0.5em 0 0; }
+
+p.devnote {
+	border: 1px solid <?= $theme ?>;
+	padding-bottom: 1em;	
+}
 
 #footer {
 	margin: 0; 
@@ -1161,6 +1176,11 @@ button.unsaved {
 	background-color: transparent; 
 	background-image: url("/include/images/finder/folder.php?h=<?= $theme_hue ?>"), url("/include/images/finder/folder_arrow_grey.svg");
 	color: <?= $text ?>;
+}
+#finder li.folder.selected, #finder li.folder.closed.selected {
+	background-color: <?= $highlight ?>;
+	background-image: url("/include/images/finder/folder.php?h=<?= $theme_hue ?>"), url("/include/images/finder/folder_arrow_white.svg");
+	color: <?= $text_on_theme ?>;
 }
 #finder li.file:hover {
 	background-color: <?= $shade ?>;

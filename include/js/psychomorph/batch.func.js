@@ -23,11 +23,20 @@ function batchWatch(files, scriptName, theData) {  console.log('batchWatch(' + f
         // each file is added to myData.img
         myData.img = filename;
         
+        // if **DIRECTORY** is in subfolder, replace with the image directory
+        if (myData.subfolder.indexOf('**DIRECTORY**') > -1) {
+	        var cd = currentDir(); //.replace(/([.*+?^=!:${}()|\[\]\/\\])/g, "\\$1");
+	        var regex = new RegExp('^' + cd + '(.+)\/[^\/]+$');
+	        var imgdir = filename.match(regex);	// matches 
+	        console.log('imgdir (' + filename + ') = ' + imgdir[1]);
+	        myData.subfolder = myData.subfolder.replace('**DIRECTORY**', imgdir[1]);
+	    }
+        
         // process is added to the queue
         var q = new queueItem({
             url: scriptName,
             ajaxdata: myData,
-            msg: scriptName.replace(/^img/,'') + ': ' + filename.replace(PM.project + '/', '/'),
+            msg: scriptName.replace(/^img/,'') + ': ' + urlToName(filename),
         });
     });
 }
@@ -39,37 +48,118 @@ function nameIsAvailable(name) {
     return available;
 }
 
+function batchToggle(toggle) {
+	var theClass = toggle.className.replace('toggle_', '');
+	
+	//console.debug('toggle ' + theClass);
+	
+	var $bn = $(toggle).closest('div.batch_name');
+	var $n = $bn.find('.batch_' + theClass);
+	var mb = ($finder.find('li.folder.selected').length > 1); // part of a multibatch
+	var cd = urlToName(currentDir());
+	
+	if ($(toggle).prop('checked')) {
+		$n.show();
+
+		if (theClass == 'subfolder' && mb) {
+			$bn.find('input.toggle_superfolder').prop('checked', false).change(); 
+		} else if (theClass == 'superfolder' && mb) {
+			$bn.find('input.toggle_subfolder').prop('checked', false).change(); 
+			$bn.find('.multibatch').html('**DIRECTORY**');
+		}
+		
+		if ($n.html() == cd || $n.html() == '') {
+			var defaultName = $bn.attr('default');
+			if (theClass == 'superfolder') {
+				$n.html(cd + defaultName + '/');
+			} else if (theClass == 'subfolder') {
+				$n.html( (mb ? '/' : cd) + defaultName + '/');
+			} else if (theClass == 'prefix') {
+				$n.html(defaultName + '_');
+			} else if (theClass == 'suffix') {
+				$n.html('_' + defaultName);
+			}
+		}
+	} else if (!mb && theClass == 'subfolder' ) {
+		$n.show().html(cd);	
+	} else if (mb && theClass == 'superfolder' ) {
+		$bn.find('.multibatch').html(cd + '**DIRECTORY**');
+		$n.hide();
+	} else {
+		$n.hide();
+	}
+}
+
 function batchNewName(theDialog, theType) {
     var bn = $('#batch_names').val();
-    var cd = urlToName(currentDir());
-    var cd2 = cd.replace(/\/$/, '');
-    $(theDialog).find('.batch_project').html(PM.project);
-    if (bn == 'prefix') {
-        $(theDialog).find('.batch_prefix').html(theType + '_');
-        $(theDialog).find('.batch_suffix').html('[no suffix]');
-        $(theDialog).find('.batch_subfolder').html(cd2);
-    } else if (bn == 'suffix') {
-        $(theDialog).find('.batch_prefix').html('[no prefix]');
-        $(theDialog).find('.batch_suffix').html('_' + theType);
-        $(theDialog).find('.batch_subfolder').html(cd2);
-    } else {
-        $(theDialog).find('.batch_prefix').html('[no prefix]');
-        $(theDialog).find('.batch_suffix').html('[no suffix]');
-        $(theDialog).find('.batch_subfolder').html(cd + theType);
-    }
+    
+    if (typeof theType !== 'string') theType = $(theDialog).find('.batch_name').attr('default');
+    
+    if ($(theDialog).find('.batch_name code').length == 0) {
+	 	var bnn_interface = "<code>\n" + 
+			"	<span class='batch_superfolder'></span>" + 
+				"<span class='multibatch'>**DIRECTORY**</span>" + 
+				"<span class='batch_subfolder'></span>" + 
+				"<span class='batch_prefix'></span>" + 
+				"**IMAGE**" + 
+				"<span class='batch_suffix'></span>." + 
+				"<select class='batch_ext'>\n" + 
+			"		<option value='jpg'>jpg</option>\n" + 
+			"		<option value='png'>png</option>\n" + 
+			"		<option value='gif'>gif</option>\n" + 
+			"	</select>\n" + 
+			"</code><br>\n" + 
+			"<label><input type='checkbox' class='toggle_superfolder'> Superfolder</label>\n" + 
+			"<label><input type='checkbox' class='toggle_subfolder'> Subfolder</label>\n" + 
+			"<label><input type='checkbox' class='toggle_prefix'> Prefix</label>\n" + 
+			"<label><input type='checkbox' class='toggle_suffix'> Suffix</label>\n";
+			
+		$(theDialog).find('.batch_name').append(bnn_interface);
+	}
+	
+	var $tp = $(theDialog).find('.toggle_prefix');
+	var $ts = $(theDialog).find('.toggle_suffix');
+	var $tsub = $(theDialog).find('.toggle_subfolder');
+	var $tsup = $(theDialog).find('.toggle_superfolder');
+
+	// toggle startup
+    $tp.prop('checked', (bn == 'prefix')).change();
+    $ts.prop('checked', (bn == 'suffix')).change();
+	$tsub.prop('checked', (bn == 'folder')).change();
+    
+    if ($finder.find('li.folder.selected').length > 1) {
+	    $tsup.parent().show();
+	    $(theDialog).find('.batch_superfolder').show();
+	    $tsup.prop('checked', (bn == 'folder')).change();
+	    $(theDialog).find('.multibatch').show();
+	} else {
+		$tsup.parent().hide();
+		$(theDialog).find('.batch_superfolder').hide();
+		$(theDialog).find('.multibatch').hide();
+	}
 }
 
 function batchNewNameGet(theDialog) {
     var d = $(theDialog);
-    var sub = d.find('.batch_subfolder').html();
-    var pre = d.find('.batch_prefix').html();
-    var suf = d.find('.batch_suffix').html();
+    var mb = ($finder.find('li.folder.selected').length > 1);
+    
+    var sup 	= d.find('.toggle_superfolder').prop('checked') 	? d.find('.batch_superfolder').html() : '';
+    var sub 	= d.find('.toggle_subfolder').prop('checked') 		? d.find('.batch_subfolder').html() : '';
+    var pre 	= d.find('.toggle_prefix').prop('checked') 			? d.find('.batch_prefix').html() 	: '';
+    var suf 	= d.find('.toggle_suffix').prop('checked') 			? d.find('.batch_suffix').html() 	: '';
+    var dir     = mb												? d.find('.multibatch').html() 		: '';
+    
+    var subfolder = PM.project + '/' + sup + '/' + dir + '/' + sub;
+    subfolder = subfolder.replace(/[\/]+/g, '/').replace(/\/$/, ''); // remove  multiple slashes and trailing slash
+    
     var name = {
-        subfolder: PM.project + ((sub.substr(0, 4) == '[no ') ? '' : sub),
-        prefix: (pre.substr(0, 4) == '[no ') ? '' : pre,
-        suffix: (suf.substr(0, 4) == '[no ') ? '' : suf,
+        subfolder: subfolder,
+        prefix: pre,
+        suffix: suf,
         ext: d.find('.batch_ext').val()
     };
+    
+    //console.debug(subfolder);
     
     return name;
 }
@@ -150,7 +240,7 @@ function batchColorCalibrate() {
                 class: 'ui-state-focus',
                 click: function() {
                     $(this).dialog("close");
-                    $('#colorCalibrateDialog input').blur(); // make sure all inputs are blurred so batch name is valid
+                    $('#colorCalibrateDialog input[type!=checkbox]').blur(); // make sure all inputs are blurred so batch name is valid
                     var theData = batchNewNameGet('#colorCalibrateDialog');
                     theData.img = null;
 
@@ -210,7 +300,7 @@ function batchModDelin() {
                     $('#modDelinPoints input:checked').each(function(i) {
                         dp.push($(this).attr('tem'));
                     });
-                    $('#modifyDelineation input').blur(); // make sure all inputs are blurred so batch name is valid
+                    $('#modifyDelineation input[type!=checkbox]').blur(); // make sure all inputs are blurred so batch name is valid
                     
                     var theData = batchNewNameGet('#modifyDelineation');
                     theData.img = null;
@@ -517,7 +607,7 @@ function batchCrop() {
             $dimList = $('<table><thead><tr><th>Image</th><th colspan="2">original w x h</th><th colspan="2">new w x h</th></tr></thead><tbody></tbody></table>');
             $dimListBody = $dimList.find('tbody');
             $.each(data.w, function(i, w) {
-                $dimListBody.append('<tr><td>' + files[i] + '</td><td>' + w + '</td><td>' + data.h[i] + '</td><td>' + w + '</td><td>' + data.h[i] + '</td></tr>');
+                $dimListBody.append('<tr><td>' + urlToName(files[i]) + '</td><td>' + w + '</td><td>' + data.h[i] + '</td><td>' + w + '</td><td>' + data.h[i] + '</td></tr>');
             });
             $dimList.stripe();
             
@@ -585,7 +675,7 @@ function batchAlign() {
                 class: 'ui-state-focus',
                 click: function() {
                     $(this).dialog("close");
-                    $('#alignDialog input').blur(); // make sure all inputs are blurred so batch name is valid
+                    $('#alignDialog input[type!=checkbox]').blur(); // make sure all inputs are blurred so batch name is valid
                     
                     var theData = batchNewNameGet('#alignDialog');
                     theData.img = null;
@@ -642,7 +732,7 @@ function batchResize() {
             $dimList = $('<table><thead><tr><th>Image</th><th colspan="2">original w x h</th><th colspan="2">new w x h</th></tr></thead><tbody></tbody></table>');
             $dimListBody = $dimList.find('tbody');
             $.each(data.w, function(i, w) {
-                $dimListBody.append('<tr><td>' + files[i] + '</td><td>' + w + '</td><td>' + data.h[i] + '</td><td>' + w + '</td><td>' + data.h[i] + '</td></tr>');
+                $dimListBody.append('<tr><td>' + urlToName(files[i]) + '</td><td>' + w + '</td><td>' + data.h[i] + '</td><td>' + w + '</td><td>' + data.h[i] + '</td></tr>');
             });
             $dimList.stripe();
 
@@ -661,17 +751,21 @@ function batchResize() {
                 text: "Resize",
                 class: "ui-state-focus",
                 click: function() {
-                    $(this).dialog("close");
-                    $rsd.find('input').blur(); // make sure all inputs are blurred so batch name is valid
                     
+                    $rsd.find('input[type!=checkbox]').blur(); // make sure all inputs are blurred so batch name is valid
                     var theData = batchNewNameGet('#resizeDialog');
                     theData.img = null;
                     theData.x = $rsd.find('input[name=x]').val();
                     theData.y = $rsd.find('input[name=y]').val();
                     theData.w = $rsd.find('input[name=w]').val();
                     theData.h = $rsd.find('input[name=h]').val();
-
-                    batchWatch(files, 'imgResize', theData);
+                    
+                    if (theData.x || theData.y || theData.w || theData.h) {
+                    	$(this).dialog("close");
+                    	batchWatch(files, 'imgResize', theData);
+                    } else {
+	                    growl('Please specify at least one dimension to resize.', 2000);
+	                }
                 }
             }
         }
@@ -757,7 +851,7 @@ function batchRotate() {
                 class: "ui-state-focus",
                 click: function() {
                     $(this).dialog("close");
-                    $rsd.find('input').blur(); // make sure all inputs are blurred so batch name is valid
+                    $rsd.find('input[type!=checkbox]').blur(); // make sure all inputs are blurred so batch name is valid
                     var theData = batchNewNameGet('#rotateDialog');
                     theData.img = null;
                     theData.rgb = $('#rotate_color').slider('values');
@@ -888,7 +982,7 @@ function maskImages(masktype, custom) {  console.log('maskImages(' + masktype + 
         }
         masktype = checked_mask.join(',');
     }
-    $('#maskDialog input').blur(); // make sure all inputs are blurred so batch name is valid
+    $('#maskDialog input[type!=checkbox]').blur(); // make sure all inputs are blurred so batch name is valid
     var theData = batchNewNameGet('#maskDialog');
     theData.img = null;
     theData.rgb = $('#batch_mask_color').slider('values');

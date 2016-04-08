@@ -232,16 +232,7 @@
 
 <!-- !- resizeDialog -->
 <div id='resizeDialog' class='modal'>
-	<div class='batch_name'>
-		Resized image name:
-		<code>
-			<span class='batch_subfolder'></span>/<span class='batch_prefix'>[no prefix]</span>imageName<span class='batch_suffix'>[no suffix]</span>.<select class='batch_ext'>
-				<option value='jpg'>jpg</option>
-				<option value='png'>png</option>
-				<option value='gif'>gif</option>
-			</select>
-		</code>
-	</div>
+	<div class='batch_name' default='resized'>Resized image name:</div>
 	
 	<table id='resizer'>
 		<tr><td></td><td>width</td><td>height</td></tr>
@@ -261,16 +252,7 @@
 
 <!-- !- rotateDialog -->
 <div id='rotateDialog' class='modal'>
-	<div class='batch_name'>
-		Resized image name:
-		<code>
-			<span class='batch_subfolder'></span>/<span class='batch_prefix'>[no prefix]</span>imageName<span class='batch_suffix'>[no suffix]</span>.<select class='batch_ext'>
-				<option value='jpg'>jpg</option>
-				<option value='png'>png</option>
-				<option value='gif'>gif</option>
-			</select>
-		</code>
-	</div>
+	<div class='batch_name' default='rotated'>Rotated image name:</div>
 	
 	<div id='rotate_color' class='rgb_chooser mask_color'></div>
 	
@@ -283,28 +265,12 @@
 <div id='convertDialog' class='modal'>
 	<!--<div class='batch_name'>
 		Cropped image name:
-		<code>
-			<span class='batch_subfolder'></span>/<span class='batch_prefix'>[no prefix]</span>imageName<span class='batch_suffix'>[no suffix]</span>.<select class='batch_ext'>
-				<option value='jpg'>jpg</option>
-				<option value='png'>png</option>
-				<option value='gif'>gif</option>
-			</select>
-		</code>
 	</div>-->
 </div>
 
 <!-- !- cropDialog -->
 <div id='cropDialog' class='modal'>
-	<div class='batch_name'>
-		Cropped image name:
-		<code>
-			<span class='batch_subfolder'></span>/<span class='batch_prefix'>[no prefix]</span>imageName<span class='batch_suffix'>[no suffix]</span>.<select class='batch_ext'>
-				<option value='jpg'>jpg</option>
-				<option value='png'>png</option>
-				<option value='gif'>gif</option>
-			</select>
-		</code>
-	</div>
+	<div class='batch_name' default='cropped'>Cropped image name:</div>
 	
 	<div id='crop_color' class='rgb_chooser mask_color'></div>
 	
@@ -328,48 +294,19 @@
 
 <!-- !- mirrorDialog -->
 <div id='mirrorDialog' class='modal'>
-	<div class='batch_name'>
-		Mirrored image name:
-		<code>
-			<span class='batch_subfolder'></span>/<span class='batch_prefix'>[no prefix]</span>imageName<span class='batch_suffix'>[no suffix]</span>.<select class='batch_ext'>
-				<option value='jpg'>jpg</option>
-				<option value='png'>png</option>
-				<option value='gif'>gif</option>
-			</select>
-		</code>
-	</div>
-	
+	<div class='batch_name' default='mirror'>Mirrored image name:</div>
 	<p></p>
 </div>
 
 <!-- !- temConvertDialog -->
 <div id='temConvertDialog' class='modal'>
-	<div class='batch_name'>
-		Converted image name:
-		<code>
-			<span class='batch_subfolder'></span>/<span class='batch_prefix'>[no prefix]</span>imageName<span class='batch_suffix'>[no suffix]</span>.<select class='batch_ext'>
-				<option value='jpg'>jpg</option>
-				<option value='png'>png</option>
-				<option value='gif'>gif</option>
-			</select>
-		</code>
-	</div>
-	
+	<div class='batch_name' default='convert'>Converted image name:</div>
 	<p></p>
 </div>
 
 <!-- !- symDialog -->
 <div id='symDialog' class='modal'>
-	<div class='batch_name'>
-		Symmetrised image name:
-		<code>
-			<span class='batch_subfolder'></span>/<span class='batch_prefix'>[no prefix]</span>imageName<span class='batch_suffix'>[no suffix]</span>.<select class='batch_ext'>
-				<option value='jpg'>jpg</option>
-				<option value='png'>png</option>
-				<option value='gif'>gif</option>
-			</select>
-		</code>
-	</div>
+	<div class='batch_name' default='sym'>Symmetrised image name:</div>
 	
 	<ul>
 		<li><input type='checkbox' id='sym_shape' checked='checked' /> 	<label for='sym_shape'>Shape</label></li>
@@ -380,16 +317,7 @@
 
 <!-- !- alignDialog -->
 <div id='alignDialog' class='modal'>
-	<div class='batch_name'>
-		Aligned image name:
-		<code>
-			<span class='batch_subfolder'></span>/<span class='batch_prefix'>[no prefix]</span>imageName<span class='batch_suffix'>[no suffix]</span>.<select class='batch_ext'>
-				<option value='jpg'>jpg</option>
-				<option value='png'>png</option>
-				<option value='gif'>gif</option>
-			</select>
-		</code>
-	</div>
+	<div class='batch_name' default='aligned'>Aligned image name:</div>
 	
 	<div id='align_color' class='rgb_chooser mask_color'></div>
 	
@@ -417,30 +345,14 @@
 
 <!-- !- colorCalibrateDialog -->
 <div id='colorCalibrateDialog' class='modal'>
-	<div class='batch_name'>
+	<div class='batch_name' default='color_calibrated'>
 		color calibrated image name:
-		<code>
-			<span class='batch_subfolder'></span>/<span class='batch_prefix'>[no prefix]</span>imageName<span class='batch_suffix'>[no suffix]</span>.<select class='batch_ext'>
-				<option value='jpg'>jpg</option>
-				<option value='png'>png</option>
-				<option value='gif'>gif</option>
-			</select>
-		</code>
 	</div>
 </div>
 
 <!-- !- maskDialog -->
 <div id='maskDialog' class='modal'>
-	<div class='batch_name'>
-		Masked image name: 
-		<code>
-			<span class='batch_subfolder'></span>/<span class='batch_prefix'>[no prefix]</span>imageName<span class='batch_suffix'>[no suffix]</span>.<select class='batch_ext'>
-				<option value='jpg'>jpg</option>
-				<option value='png'>png</option>
-				<option value='gif'>gif</option>
-			</select>
-		</code>
-	</div>
+	<div class='batch_name' default='masked'>Masked image name:</div>
 	<div id='batch_mask_color' class='rgb_chooser mask_color'></div>
 	<div id='maskExample'>
 		<img id='mask_demo_teeth' src='/include/images/masks/teeth' />
@@ -567,7 +479,7 @@
 	<div class='batch_name'>
 		Save new delineations as: 
 		<code>
-			<span class='batch_subfolder'></span>/<span class='batch_prefix'>[no prefix]</span>imageName<span class='batch_suffix'>[no suffix]</span>.tem
+			<span class='multibatch'></span><span class='batch_subfolder'></span>/<span class='batch_prefix'>[no prefix]</span>**IMAGE**<span class='batch_suffix'>[no suffix]</span>.tem
 		</code>
 	</div>
 	<p>Select the delineation points to delete</p>
