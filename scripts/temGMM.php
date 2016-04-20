@@ -8,8 +8,8 @@ auth();
 include_once DOC_ROOT . '/include/classes/psychomorph.class.php';
 
 $return = array(
-	'error' => true,
-	'errorText' => '',
+    'error' => true,
+    'errorText' => '',
 );
 
 $filename = $_POST['tem'];
@@ -20,25 +20,25 @@ $points = $tem->getPoints();
 
 $tps = 'LM=' . count($points) . "\n";
 foreach ($points as $p) {
-	$tps .=$p[0] . ' ' . $p[1] . "\n";
+    $tps .=$p[0] . ' ' . $p[1] . "\n";
 }
 $tps .= 'IMAGE=' . $filename . "\n";
 $tps .= "SCALE=1.0\n";
 
 
-$newfilename = array(
-	'subfolder' => $_POST['subfolder'],
-	'prefix' => $_POST['prefix'],
-	'suffix' => $_POST['suffix'],
-	'ext' => $ext
+$newFileName = array(
+    'subfolder' => $_POST['subfolder'],
+    'prefix' => $_POST['prefix'],
+    'suffix' => $_POST['suffix'],
+    'ext' => $ext
 );
 
 if () {
-	$return['error'] = false;
-	$return['newfilename'] = $tem->getURL();
+    $return['error'] = false;
+    $return['newFileName'] = $tem->getURL();
 } else {
-	$return['errorText'] .= 'The tem file was not saved. ';
-	$return['newfilename'] = '';
+    $return['errorText'] .= 'The tem file was not saved. ';
+    $return['newFileName'] = '';
 }
 
 scriptReturn($return);

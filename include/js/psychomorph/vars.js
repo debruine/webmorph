@@ -1,3 +1,13 @@
+// From the Google Closure Library Style Guide
+
+//functionNamesLikeThis;
+//variableNamesLikeThis;
+//$jQueryObjectNamesLikeThis;
+//ConstructorNamesLikeThis;
+//EnumNamesLikeThis;
+//methodNamesLikeThis;
+//SYMBOLIC_CONSTANTS_LIKE_THIS;
+
 //====================================
 // !GLOBAL VARIABLES
 //====================================
@@ -9,46 +19,53 @@ var $queue_n = $('#queue_n');
 var $delin = $('#delin');
 
 var PM = {
-	account_size: 0,
+    user: {
+        id: null,
+        accountSize: 0
+    },
     queue: null,
-    interface : 'login',
-    no_onbeforeunload : false,
+    interfaceWindow : 'login',
+    noOnBeforeUnload : false,
     showThumbs: false,
-    userid : null,
-    project: null,
+    project: {
+        id: null,
+        perm: 'read-only'
+    },
     blankBG : "url(/include/images/blankface.php)",
     blankImg : "/include/images/blankface.php", 
     loadImg: "/include/images/loaders/circle.svg",
-    clickbox: 0,
-    eye_clicks : [],
-    dcontext: $('#template').get(0).getContext('2d'),
-    lineWidth: 1,
+    
+    delinContext: $('#template').get(0).getContext('2d'),
     originalHeight : 400,
     originalWidth : 300,
     faceimg: "",
-    selected_pts : [],
+    
     showTem: true,
     delinfunc: 'move',
     symPts: [],
-    ptLabels: [],
     fitPoints: [0, 1, 96],
-    default_tem_id: 0,
-    default_tem: [],
-    default_lines: [],
-    default_line_color: 'rgba(0,0,255, 0.9)',
-    default_line_width: 1,
+    delin: {
+        temId: 0,
+        tem: [],
+        lines: [],
+        lineColors: [],
+        lineWidths: []
+    },
     temRatio: 1,
-    line_colors: [],
-    line_widths: [],
     pts: [],
-    current_tem: [],
-    undo_tem: [],
-    current_lines: [],
-    undo_lines: [],
-    undo_level: 0,
-    pasteBoard: [],         // file array for cut/copy/paste actions
-    selectedFile: 0,         // file array pointer
-    selected_images: [],
+    eyeClicks : [],
+    selectedPts : [],
+    current: {
+        tem: [],
+        lines: []
+    },
+    undo: {
+        tem: [],
+        lines: [],
+        level: 0
+    },
+    pasteBoard: [],
+    selectedFile: 0,
     pageEvents: {
         mousebutton: {},
         key: {}

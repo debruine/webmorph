@@ -9,8 +9,8 @@ auth();
 include_once DOC_ROOT . '/include/classes/psychomorph.class.php';
 
 $return = array(
-	'error' => true,
-	'errorText' => '',
+    'error' => true,
+    'errorText' => '',
 );
 
 $filename = $_POST['img'];
@@ -22,17 +22,17 @@ $img_png = preg_replace('@\.tem$@', '.png', $temfile);
 $img_gif = preg_replace('@\.tem$@', '.gif', $temfile);
 
 if (file_exists($img_jpg)) {
-	$tem = new PsychoMorph_ImageTem($img_jpg);
-	$ext = 'jpg';
+    $tem = new PsychoMorph_ImageTem($img_jpg);
+    $ext = 'jpg';
 } else if (file_exists($img_png)) {
-	$tem = new PsychoMorph_ImageTem($img_png);
-	$ext = 'png';
+    $tem = new PsychoMorph_ImageTem($img_png);
+    $ext = 'png';
 } else if (file_exists($img_gif)) {
-	$tem = new PsychoMorph_ImageTem($img_gif);
-	$ext = 'gif';
+    $tem = new PsychoMorph_ImageTem($img_gif);
+    $ext = 'gif';
 } else {
-	$tem = new PsychoMorph_Tem($temfile);
-	$ext = 'tem';
+    $tem = new PsychoMorph_Tem($temfile);
+    $ext = 'tem';
 }
 
 // modify tem file
@@ -40,19 +40,19 @@ $dp = array_key_exists('deletePoints', $_POST) ? $_POST['deletePoints'] : array(
 $tem->deletePoints($dp);
 if (array_key_exists('newLines', $_POST)) $tem->setLines($_POST['newLines']);
 
-$newfilename = array(
-	'subfolder' => $_POST['subfolder'],
-	'prefix' => $_POST['prefix'],
-	'suffix' => $_POST['suffix'],
-	'ext' => $ext
+$newFileName = array(
+    'subfolder' => $_POST['subfolder'],
+    'prefix' => $_POST['prefix'],
+    'suffix' => $_POST['suffix'],
+    'ext' => $ext
 );
 
-if ($tem->save($newfilename)) {
-	$return['error'] = false;
-	$return['newfilename'] = $tem->getURL();
+if ($tem->save($newFileName)) {
+    $return['error'] = false;
+    $return['newFileName'] = $tem->getURL();
 } else {
-	$return['errorText'] .= 'The tem file was not saved. ';
-	$return['newfilename'] = '';
+    $return['errorText'] .= 'The tem file was not saved. ';
+    $return['newFileName'] = '';
 }
 
 scriptReturn($return);

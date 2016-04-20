@@ -1,7 +1,7 @@
 //====================================
 // !AVERAGE AND TRANSFORM FUNCTIONS
 //====================================
-
+    
 function addToRecents(data) {
     //console.log('addToRecents(' + JSON.stringify(data) + ')');
     if (typeof data !== 'object' || typeof data.img !== 'string' || typeof data.tem !== 'string') {
@@ -99,13 +99,13 @@ function saveImage(data) { console.log('saveImage(' + (typeof data === 'object' 
 function loadRecentCreation(img) {
     // show image in main window when clicked
     var $imgBox;
-    if (PM.interface == 'average') {
+    if (PM.interfaceWindow == 'average') {
         $imgBox = $('#average');
         $imgBox.css('background-image', "url(" + $(img).attr('src') + ")");
         $('#save-button').button({
             disabled: false
         });
-    } else if (PM.interface == 'transform') {
+    } else if (PM.interfaceWindow == 'transform') {
         $imgBox = $('#transform');
         $imgBox.attr('src', $(img).attr('src'));
         $('#trans-save-button').button({
@@ -119,7 +119,7 @@ function loadRecentCreation(img) {
     $imgBox.data($(img).data()); // add all data for this image
     
     if ($(img).attr('averaged') != null) {
-        if (PM.interface == 'transform') {
+        if (PM.interfaceWindow == 'transform') {
             // blank the transform interface
             $("#transimage").attr('src', PM.blankImg);
             $("#toimage").attr('src', PM.blankImg);
@@ -127,7 +127,7 @@ function loadRecentCreation(img) {
         }
     } else if ($(img).attr('transimage') != null) {
 
-        if (PM.interface == 'transform') {
+        if (PM.interfaceWindow == 'transform') {
             // set up transform interface        
             $("#transimage").attr('src', fileAccess($(img).data('transimg')));
             $("#toimage").attr('src', fileAccess($(img).data('toimg')));
@@ -143,11 +143,11 @@ function loadRecentCreation(img) {
 }
 
 function averageListCheck() {
-    var $avgList = $('#average_list li');
+    var $avgList = $('#average-list li');
     
     $avgList.each( function() {
         var url = $(this).data('url'); console.debug(url);
-        var $dup =  $('#average_list li[data-url="'+url+'"]'); console.debug($dup.length);
+        var $dup =  $('#average-list li[data-url="'+url+'"]'); console.debug($dup.length);
             
         if ($dup.length > 1) {
             $(this).addClass('dupavg');
@@ -165,7 +165,7 @@ function averageListCheck() {
 function checkAvgAbility() {
     var canDo = true;
     
-    canDo = canDo && (filesGetSelected().length > 1 ||  $('#average_list li').length > 1);
+    canDo = canDo && (filesGetSelected().length > 1 ||  $('#average-list li').length > 1);
     
     $('#view-average-button').button({ disabled: !canDo });
 }
@@ -209,8 +209,8 @@ function getAverage(tVars, addToQueue) {
     if (typeof tVars.images === 'object') {
         theData.images0 = tVars.images;
     } else {
-        // get images from average_list or (if empty) selected files in finder
-        $('#average_list li').each(function() {
+        // get images from average-list or (if empty) selected files in finder
+        $('#average-list li').each(function() {
             theData.images0.push(urlToName($(this).data('url')));
         });
         
@@ -249,7 +249,7 @@ function getAverage(tVars, addToQueue) {
         'margin-top': ($average.height() - (min * 0.85) ) / 2
     });
     $average.hide().after($spinner);
-    $('#average_list').hide();
+    $('#average-list').hide();
                 
     // add to queue or create average now
     if (typeof addToQueue == 'boolean' && addToQueue === true) {
@@ -301,7 +301,7 @@ function getAverage(tVars, addToQueue) {
                     $('<div title="There was an error with your average" />').html(data[0].errorText).dialog();
                 } else {
                     addToRecents(data[0]);
-                    $('#average_list li').remove();
+                    $('#average-list li').remove();
                     
                     if (typeof tVars.outname === 'string') {
                         var saveData = {
@@ -420,12 +420,12 @@ function getTransform(tVars, addToQueue) {
         var imagelength = 0;
         var framename = $('#transMovieFileName').val();
         if (framename.substr(0,1) !== "/") { framename = "/" + framename; }
-                    				
+                                    
             
         for (var i = 0; i <= steps; i++) {
-	        var tnumber = (steps>0) ? " " + (i+1) : "";
-	        $('#footer').html("Starting Transform" + tnumber + "...");
-	        
+            var tnumber = (steps>0) ? " " + (i+1) : "";
+            $('#footer').html("Starting Transform" + tnumber + "...");
+            
             newShapePcnt = (steps === 0) ? shapePcnt : startShapePcnt + (i * (endShapePcnt - startShapePcnt) / steps);
             newColorPcnt = (steps === 0) ? colorPcnt : startColorPcnt + (i * (endColorPcnt - startColorPcnt) / steps);
             newTexturePcnt = (steps === 0) ? texturePcnt : startTexturePcnt + (i * (endTexturePcnt - startTexturePcnt) / steps);
@@ -450,8 +450,8 @@ function getTransform(tVars, addToQueue) {
           
             // continuum setting
             if (steps > 0) {
-	            //tVars.async = false; 
-				addToQueue = true;
+                //tVars.async = false; 
+                addToQueue = true;
                 if (framename.length) {
                     tVars.outname = framename + '_' + 
                                     pad(thisStep, steps.toString().length, '0') + '.' + 
@@ -464,7 +464,7 @@ function getTransform(tVars, addToQueue) {
             
             // add to queue or run now
             if (typeof addToQueue == 'boolean' && addToQueue === true) {
-	            var thisData = $.extend(true, {}, theData);
+                var thisData = $.extend(true, {}, theData);
                 var q = new queueItem({
                     url: 'tcTransform',
                     ajaxdata: { theData: thisData, outname: tVars.outname },
@@ -472,16 +472,16 @@ function getTransform(tVars, addToQueue) {
                 });
                 
                 if (i == steps) {
-	            	$('#footer').html("Continuum queued");
-	            	$('#transButton').button({ disabled: false });
-	            }
+                    $('#footer').html("Continuum queued");
+                    $('#transButton').button({ disabled: false });
+                }
             } else {
                 // get image dimensions and estimate transform time
                 var transTimer = null;
                 var $transform = $("#transform");
                 var min = Math.min($transform.width(), $transform.height());
                 var max = Math.max($transform.width(), $transform.height());
-	            var spinSize = min * 0.85;
+                var spinSize = min * 0.85;
                 var $spinner = spinner({
                     'font-size':  spinSize,
                     'margin-left': ($transform.width() - spinSize ) / 2,
@@ -653,7 +653,7 @@ function getPCvis() {
     var pcafiles = filesGetSelected('.pca');
     
     if (imgfiles.length == 1 && pcafiles.length == 1) {
-        $('#pcVisDialog textarea').val(currentDir() + "newfilename.jpg, " + pcafiles[0] + ", " + imgfiles[0] + ", 1.0");
+        $('#pcVisDialog textarea').val(currentDir() + "newFileName.jpg, " + pcafiles[0] + ", " + imgfiles[0] + ", 1.0");
     }
     
     $('#pcVisDialog p.warning').remove();
@@ -685,7 +685,7 @@ function getPCvis() {
                         }
                         
                         var d = {
-                            subfolder: '', // PM.userid,
+                            subfolder: '', // PM.user.id,
                             pcafile: cols[1],
                             avgfile: cols[2],
                             pc_weights: ws.join(",")
@@ -965,31 +965,31 @@ function getPCA() {  console.log('getPCA()');
 }
 
 function createContinua() {
-	// check data
+    // check data
     var imgList = [];
     $('#continua-imgs img:visible').each( function(i, v) {
-	    var imgname = urlToName($(this).attr('src'));
-	    if (imgname != PM.blankImg) {
-	    	imgList.push(imgname);
-	    }
-	});
+        var imgname = urlToName($(this).attr('src'));
+        if (imgname != PM.blankImg) {
+            imgList.push(imgname);
+        }
+    });
     
     if (imgList.length < 2) {
-	    growl("You need to specify at least 2 images.");
-	    return false;
-	}
-	
-	var nImgs = imgList.length;
-	var csteps = parseInt($('#csteps').val());
-	if (csteps < 1) {
-		growl("You need at least 2 steps per continuum.");
-	    return false;
-	} else if (csteps > 101) {
-		growl("You cannot have more than 101 steps per continuum.");
-	    return false;
-	}
-	
-	var savedir = $('#continuaSaveDir').val();
+        growl("You need to specify at least 2 images.");
+        return false;
+    }
+    
+    var nImgs = imgList.length;
+    var csteps = parseInt($('#csteps').val());
+    if (csteps < 1) {
+        growl("You need at least 2 steps per continuum.");
+        return false;
+    } else if (csteps > 101) {
+        growl("You cannot have more than 101 steps per continuum.");
+        return false;
+    }
+    
+    var savedir = $('#continuaSaveDir').val();
     if (savedir.substr(0, 1) != '/') savedir = '/' + savedir;
     if (savedir.substr(-1) == '/') savedir = savedir.substr(0, savedir.length - 1);
     
@@ -1001,26 +1001,26 @@ function createContinua() {
     
     var cData = [];
     $.each(imgList, function(j) {
-	    
-	    var fromImg = imgList[j];
-	    var toImg = imgList[(j+1)%nImgs];
-	    
-	    for (var i = 0; i < csteps; i++) {
-	        var pcnt = i * 100 / (csteps - 1);
-	        // top row
-	        var name = savedir + '/' + pad(j,2) + '_' + pad(i, 2) + '.jpg';
-	        var tVars = {
-	            transimage: fromImg,
-	            fromimage: fromImg,
-	            toimage: toImg,
-	            shapePcnt: pcnt * shape,
-	            colorPcnt: pcnt * color,
-	            texturePcnt: pcnt * texture,
-	            outname: name
-	        };
-	        getTransform(tVars, true);
-	    }
-	});
+        
+        var fromImg = imgList[j];
+        var toImg = imgList[(j+1)%nImgs];
+        
+        for (var i = 0; i < csteps; i++) {
+            var pcnt = i * 100 / (csteps - 1);
+            // top row
+            var name = savedir + '/' + pad(j,2) + '_' + pad(i, 2) + '.jpg';
+            var tVars = {
+                transimage: fromImg,
+                fromimage: fromImg,
+                toimage: toImg,
+                shapePcnt: pcnt * shape,
+                colorPcnt: pcnt * color,
+                texturePcnt: pcnt * texture,
+                outname: name
+            };
+            getTransform(tVars, true);
+        }
+    });
 }
 
 function createGrid() {
@@ -1139,7 +1139,7 @@ function createGrid() {
                 async: false,
                 url: '/scripts/imgConcat',
                 data: {
-	                project: PM.project,
+                    project: PM.project,
                     gridNames: gridNames,
                     savedir: savedir,
                     topL: topL,
@@ -1151,9 +1151,9 @@ function createGrid() {
                     if (data.error) {
                         $updatebox.html(JSON.stringify(data));
                     } else {
-                        $updatebox.html('<h2>' + savedImages + ' images saved</h2><img src="' + fileAccess(data.newfilename) + '" style="width: 300px" />');
+                        $updatebox.html('<h2>' + savedImages + ' images saved</h2><img src="' + fileAccess(data.newFileName) + '" style="width: 300px" />');
                         $updatebox.dialog('option', 'position', 'center');
-                        loadFiles(data.newfilename);
+                        loadFiles(data.newFileName);
                     }
                 }
             });
@@ -1163,9 +1163,9 @@ function createGrid() {
 
 function getDesc() {
     var $imgBox;
-    if (PM.interface == 'transform') {
+    if (PM.interfaceWindow == 'transform') {
         $imgBox = $('#transform');
-    } else if (PM.interface == 'average') {
+    } else if (PM.interfaceWindow == 'average') {
         $imgBox = $('#average');
     } else {
         return '';
@@ -1189,9 +1189,14 @@ function getDesc() {
 }
 
 function movingGif() {
-    var files = filesGetSelected('.image');
+    var files,
+    incImage,
+        imgN = 0,
+        $mbox;
+    
+    files = filesGetSelected('.image');
     if (files.length === 0) { 
-        growl('No files were selected', 1000);
+        growl('No image files were selected', 1000);
         return false; 
     }
     
@@ -1201,24 +1206,65 @@ function movingGif() {
         $('#moviePauseSection').hide();
     }
     calcMovieLen();
-    $('#movieBox').attr("src", fileAccess(files[0]));
-    $('#newfilename').val(files[0].replace(/\.(jpg|gif|png)$/, '-movie'));
+    $mbox = $('#movieBox');
+    $mbox.attr("src", fileAccess(files[0]));
+    
+    incImage = setInterval(function() {
+        var idx,
+            modFL,
+            modFL2;
+        
+        // handle image reversal
+        imgN++;
+        modFL = imgN%files.length;
+        modFL2 = imgN%(2*files.length);
+        
+        if ($('#movieRev').prop('checked') && modFL !== modFL2) {
+            idx = modFL2 - (modFL*2) - 1;
+        } else {
+            idx = modFL;
+        }
+        
+        $mbox.attr("src", fileAccess(files[idx]));
+    }, 500);
+    
+    $('#movieFileName').val(urlToName(currentDir()) + '_movie');
     
     $('#movieDialog').dialog({
         title: "Make Moving Gif",
+        beforeClose: function() {
+            clearInterval(incImage);
+            $('#refresh').click();
+        },
         buttons: {
             Cancel: function() {
-                $('#refresh').click();
                 $(this).dialog("close");
             },
             "Make Movie": function() {
+                var $spinner,
+                    newFileName;
+                    
+                clearInterval(incImage);
                 $('#footer').html('Making movie...');
-                var $mbox = $('#movieBox');
-                var $spinner = spinner({
+                
+                $spinner = spinner({
                     'font-size':  $mbox.height(),
                     'margin': 'auto'
                 });
                 $mbox.hide().after($spinner);
+                
+                // clean the filename
+                newFileName = $('#movieFileName').val();
+                if (!newFileName.length) {
+                    newFileName = currentDir() + '_movie';
+                    $('#movieFileName').val(urlToName(currentDir()) + '_movie');
+                } else if (newFileName[0] !== '/') {
+                    newFileName = PM.project + '/' + newFileName;
+                    $('#movieFileName').val('/' + newFileName);
+                } else {
+                    newFileName = PM.project + newFileName;
+                }
+                newFileName = newFileName.replace(/\.(gif|png|jpg)$/, '');
                 
                 $.ajax({
                     url: 'scripts/img2Movie',
@@ -1229,13 +1275,17 @@ function movingGif() {
                         loops: 0,
                         new_height: $('#movieHeight').slider('value'),
                         rev: ($('#movieRev').prop('checked') ? 'true' : 'false'),
-                        newfilename: $('#newfilename').val()
+                        newFileName: newFileName
                     },
                     success: function(data) {
                         $mbox.attr("src", fileAccess(data.gif)).show();
                         $spinner.remove();
                         loadFiles(data.gif);
                         $('#footer').html('Movie created');
+                    },
+                    error: function() {
+                        $spinner.remove();
+                        $('#footer').html('Error creating movie');
                     }
                 });
             },

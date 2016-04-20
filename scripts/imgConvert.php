@@ -7,8 +7,8 @@ auth();
 checkAllocation();
 
 $return = array(
-	'error' => false,
-	'errorText' => '',
+    'error' => false,
+    'errorText' => '',
 );
 
 include_once DOC_ROOT . '/include/classes/psychomorph.class.php';
@@ -18,15 +18,15 @@ $img = new PsychoMorph_ImageTem($_POST['img']);
 $allowed_ext = array('jpg', 'png', 'gif');
 
 if (in_array($_POST['to'], $allowed_ext)) {
-	if ($img->convert($_POST['to'])) {
-		$return['newfilename'] = $img->getURL();
-	} else {
-		$return['error'] = true;
-		$return['errorText'] = 'The converted image did not save.';
-	}
+    if ($img->convert($_POST['to'])) {
+        $return['newFileName'] = $img->getURL();
+    } else {
+        $return['error'] = true;
+        $return['errorText'] = 'The converted image did not save.';
+    }
 } else {
-	$return['error'] = true;
-	$return['errorText'] = $_POST['to'] . ' is not an allowed filetype.';
+    $return['error'] = true;
+    $return['errorText'] = $_POST['to'] . ' is not an allowed filetype.';
 }
 
 scriptReturn($return);

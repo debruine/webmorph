@@ -7,7 +7,7 @@ function loginGoogle(authResult) {
 }
 
 function resetPassword() {
-	var email = $('#login_email').val();
+    var email = $('#login_email').val();
     
     if (email == '') {
         $('#login_error').html("<li>Please fill in your email address first.</li>");
@@ -29,7 +29,7 @@ function resetPassword() {
 }
 
 function registerUser(e) { 
-	if ($('#loginInterface .reg_item:visible').length) {
+    if ($('#loginInterface .reg_item:visible').length) {
         // check validity
         var error = false;
         $('#login_error').html('');
@@ -55,36 +55,36 @@ function registerUser(e) {
         $('#login_error').append('<li>Checking your registration details...</li>');
         
         // register a new user
-	    $.ajax({
-	        url: 'scripts/userRegister',
-	        async: false,
-	        data: {
-	            email: $('#login_email').val(),
-	            //password: $('#login_password').val(),
-	            invite: $('#login_auth').val(),
-	            //login_keep: $('#login_keep').prop('checked'),
-	            firstname: $('#reg_firstname').val(),
-	            lastname: $('#reg_lastname').val(),
-	            org: $('#reg_org').val(),
-	            sex: $('input[name=reg_sex]').val(),
-	            research: $('#reg_use_research').prop('checked'),
-	            business: $('#reg_use_business').prop('checked'),
-	            school: $('#reg_use_school').prop('checked'),
-	            art: $('#reg_use_art').prop('checked'),
-	            personal: $('#reg_use_personal').prop('checked'),
-	        },
-	        success: function(data) {
-	            if (data.error) {
-	                $('#login_error').html(data.errorText);
-	                $('#login_email').focus().select();
-	            } else {
-	                $('#login_error').html("<li>Check your email.</li>");
-	                $('#loginInterface .reg_item').hide();
-	                $('#loginInterface .login_item').show();
-	                $('#login_password').focus().select();
-	            }
-	        }
-	    });
+        $.ajax({
+            url: 'scripts/userRegister',
+            async: false,
+            data: {
+                email: $('#login_email').val(),
+                //password: $('#login_password').val(),
+                invite: $('#login_auth').val(),
+                //login_keep: $('#login_keep').prop('checked'),
+                firstname: $('#reg_firstname').val(),
+                lastname: $('#reg_lastname').val(),
+                org: $('#reg_org').val(),
+                sex: $('input[name=reg_sex]').val(),
+                research: $('#reg_use_research').prop('checked'),
+                business: $('#reg_use_business').prop('checked'),
+                school: $('#reg_use_school').prop('checked'),
+                art: $('#reg_use_art').prop('checked'),
+                personal: $('#reg_use_personal').prop('checked'),
+            },
+            success: function(data) {
+                if (data.error) {
+                    $('#login_error').html(data.errorText);
+                    $('#login_email').focus().select();
+                } else {
+                    $('#login_error').html("<li>Check your email.</li>");
+                    $('#loginInterface .reg_item').hide();
+                    $('#loginInterface .login_item').show();
+                    $('#login_password').focus().select();
+                }
+            }
+        });
     } else {
         $('#loginInterface .reg_item').show();
         $('#loginInterface .login_item').hide();
@@ -93,21 +93,21 @@ function registerUser(e) {
         
         
         var $la = $('#login_auth').closest('tr');
-		if (e.ctrlKey || e.metaKey) {
-			$la.show();
-			$('#loginBox thead th').html('Register for an Account');
-			$('#register-button').button('option', 'label', 'Register');
-		} else {
-			$la.hide();
-			$('#loginBox thead th').html('Request an Account');
-			$('#register-button').button('option', 'label', 'Request Account');
-		}
+        if (e.ctrlKey || e.metaKey) {
+            $la.show();
+            $('#loginBox thead th').html('Register for an Account');
+            $('#register-button').button('option', 'label', 'Register');
+        } else {
+            $la.hide();
+            $('#loginBox thead th').html('Request an Account');
+            $('#register-button').button('option', 'label', 'Request Account');
+        }
         
     }
 }
 
 function loginUser() {
-	$('#footer').html('Checking Login Details...');
+    $('#footer').html('Checking Login Details...');
     if ($('#loginInterface .reg_item:visible').length) {
         $('#loginInterface .reg_item').hide();
         $('#loginInterface .login_item').show();
@@ -157,10 +157,8 @@ function loginUser() {
                 $('#footer').html('');
             } else {
                 console.log('Logged in as user ' + data.user);
-                //$('#loginBox').fadeOut(1000);
                 $('#login_password').val('');
-                
-                //$('#showProjects').click();
+                msgGet();
                 var $spinner = bodySpinner();
                 $('.interface:visible').not('#projectInterface').hide('fade', {}, 300, function() { 
                     menubar('project');
@@ -185,7 +183,7 @@ function logoutUser() {
                 $.ajax({
                     url: 'scripts/userLogout',
                     success: function(data) {
-                        PM.no_onbeforeunload = true;
+                        PM.noOnBeforeUnload = true;
                         location.reload(true);
                     }
                 });
@@ -195,12 +193,12 @@ function logoutUser() {
 }
 
 function rgbToArray(rgb) { 
-	if (typeof rgb !== 'string') return [127,127,127];
+    if (typeof rgb !== 'string') return [127,127,127];
     return rgb.replace('rgb(', '').replace(')','').split(',');
 }
 
 function prefGet(callback) {  console.time('prefGet()');
-	$('#footer').html('Loading Preferences...');
+    $('#footer').html('Loading Preferences...');
     $.ajax({
         url: 'scripts/userPrefGet',
         type: 'GET',
@@ -208,7 +206,7 @@ function prefGet(callback) {  console.time('prefGet()');
         success: function(data) {
             if (data.error) { return false; }
             
-            PM.userid = data.user;
+            PM.user.id = data.user;
             $('#pref_email').val(data.prefs.email);
             $('#pref_firstname').val(data.prefs.firstname);
             $('#pref_lastname').val(data.prefs.lastname);
@@ -236,11 +234,11 @@ function prefGet(callback) {  console.time('prefGet()');
             $('#normalisation').val(data.prefs.normalisation);
             $('#warp').val(data.prefs.warp);
             $('#default_imageformat').val(data.prefs.default_imageformat);
-            $('#default_line_width').val(data.prefs.default_line_width);
+            $('#defaultLineWidth').val(data.prefs.defaultLineWidth);
             $('#default_project').val(data.prefs.default_project);
-            if (PM.project == null) { PM.project = data.prefs.default_project; }
+            if (PM.project.id == null) { PM.project.id = data.prefs.default_project; }
             
-            PM.default_line_color = data.prefs.line_color;
+            PM.delin.lineColor = data.prefs.line_color;
             $('#line_color').slider('values', rgbToArray(data.prefs.line_color));
             $('#cross_color').slider('values', rgbToArray(data.prefs.cross_color));
             $('#selcross_color').slider('values', rgbToArray(data.prefs.selcross_color));
@@ -253,16 +251,16 @@ function prefGet(callback) {  console.time('prefGet()');
                 $('body').removeClass('dark');
             }
             PM.blankBG = "url(/include/images/blankface.php?h="+data.prefs.theme+")";
-			PM.blankImg = "/include/images/blankface.php?h="+data.prefs.theme;
+            PM.blankImg = "/include/images/blankface.php?h="+data.prefs.theme;
             
             // preload new stylesheet to prevent flashing
-            var newstylesheet = "/include/css/style.php?t=" + Date.now()
+            var newstylesheet = "/include/css/style.php?t=" + Date.now();
             $.ajax({
                 url: newstylesheet, 
                 type: 'GET',
                 dataType: 'html',
                 success: function(html) {
-	                $('#page').hide();
+                    $('#page').hide();
                     $('#css').replaceWith("<link rel='stylesheet' type='text/css' href='" 
                             + newstylesheet + "' id='css' onload='$(\"#page\").show();' />");
                 }
@@ -270,7 +268,7 @@ function prefGet(callback) {  console.time('prefGet()');
             $('head > style').remove();
             
             var cc = rgbToArray(data.prefs.cross_color);
-            var sc = rgbToArray(data.prefs.selcross_color)
+            var sc = rgbToArray(data.prefs.selcross_color);
             $('<style>.pt { background-image: url(/include/images/delin/cross.php?r=' + cc[0] + '&g=' + cc[1] + '&b=' + cc[2] + '); }'
             + '       .pt:hover, .pt.selected { background-image: url(/include/images/delin/cross.php?r=' + sc[0] + '&g=' + sc[1] + '&b=' + sc[2] + '); }'
             + '</style>').appendTo('head');
@@ -297,15 +295,15 @@ function prefGet(callback) {  console.time('prefGet()');
             }
             
             // default templates
-            $('#default_template').html('');
+            $('#defaultTemplate').html('');
             $('#currentTem').html('');
-            $.each(data.default_templates, function(i, t) {
+            $.each(data.defaultTemplates, function(i, t) {
                 var $opt = $('<option />').val(t.id)
                                           .html(t.name)
                                           .attr('title', t.notes)
                                           .attr('data-points', t.points)
                                           .attr('data-lines', t.lines);
-                $('#default_template').append($opt);
+                $('#defaultTemplate').append($opt);
                 
                 var $menuopt = $('<li />').addClass('delineate finder')
                                           .attr('title', t.notes)
@@ -316,20 +314,42 @@ function prefGet(callback) {  console.time('prefGet()');
                 $('#currentTem').append($menuopt);
                 $menuopt.find('span.checkmark').hide();
             });
-            $('#default_template').val(data.prefs.default_tem);
-            if (PM.default_tem_id == 0) { setCurrentTem(data.prefs.default_tem); }
+            $('#defaultTemplate').val(data.prefs.defaultTem);
+            if (PM.delin.temId == 0) { setCurrentTem(data.prefs.defaultTem); }
             drawTem();
         },
         complete: function() {
-	        $('#footer').html('Preferences Loaded');
+            $('#footer').html('Preferences Loaded');
             console.timeEnd('prefGet()');
             callback;
         }
     });
 }
 
+function msgGet(msg_id) { console.log('msgGet('+msg_id+')');
+    var theData = {};
+    
+    if (msg_id != null) {
+        theData.msg_id = msg_id;
+    }
+    
+    $.ajax({
+        url: 'scripts/userMessages',
+        type: 'POST',
+        data: theData,
+        success: function(data) {  
+            if (data.hasOwnProperty('read_msg_ids')) {
+                $.each(data.read_msg_ids, function(i, id) {
+                    $('.msg[data-msg_id="' + id + '"]').remove();
+                });
+                sizeToViewport();
+            }
+        }
+    });
+}
+
 function projectList() { console.time('projectList()');
-	$('#footer').html('Loading Project List...');
+    $('#footer').html('Loading Project List...');
     $.ajax({
         url: 'scripts/projListGet',
         type: 'GET',
@@ -337,65 +357,86 @@ function projectList() { console.time('projectList()');
         success: function(data) {
             if (data.error) { return false; }
             // add projects
-            //$('#project_list').hide().find('tbody').html('');
-            $('#project_list').show();
-            $('#project_list tbody tr').hide();
             $('#default_project').html('');
             $('#currentProject').html('');
             $.each(data.projects, function(i, p) {
-                var $opt = $('<option />').val(p.id)
-                                          .html(p.name)
-                                          .attr('title', p.notes);
+                var $opt,
+                    $menuopt,
+                    owners,
+                    tr,
+                    td;
+
+                $opt = $('<option />').val(p.id)
+                                      .html(p.name)
+                                      .attr('title', p.notes);
+                if (p.perm == 'read-only') {
+                    $opt.addClass('readOnly');
+                }
                 $('#default_project').append($opt);
                 
-                var $menuopt = $('<li />').addClass('finder average transform project')
-                                          .attr('title', p.notes)
-                                          .attr('data-id', p.id)
-                                          .html('<span class="checkmark">&nbsp;</span>' + p.name);
+                $menuopt = $('<li />').addClass('finder average transform project')
+                                      .attr('title', p.notes)
+                                      .attr('data-id', p.id)
+                                      .html('<span class="checkmark">&nbsp;</span>' + p.name);
                 $('#currentProject').append($menuopt);
                 $menuopt.find('span.checkmark').hide();
                 
-                var owners = '<ul class="project_owners">';
+                owners = '<ul class="project_owners">';
                 $.each(p.owners, function() {
-                    owners += '<li title="' + this.email + '">';
-                    owners += this.firstname + ' ' + this.lastname;
+                    var permAbbrev;
+                    
+                    owners += '<li title="' + this.email + '" class="' + this.perm + '">';
+                    if (this.firstname == '' && this.lastname == '') {
+                        owners += this.email + ' ';
+                    } else {
+                        owners += this.firstname + ' ' + this.lastname + ' ';
+                    }
+                    
+                    // add permission toggle
+                    permAbbrev = (this.perm == 'all') ? 'A' : 'R';
+                    if (p.user_id == PM.user.id || (p.perm == 'all' && p.user_id !== this.id)) {
+                        owners += '<span data-id="'+ this.id +'" class="tinybutton ownerPermToggle" title="permissions = ' + this.perm + '">' + permAbbrev + '</span>';
+                    } else {
+                        owners += '<span class="tinybutton" title="permissions = ' + this.perm + '">' + permAbbrev + '</span>';
+                    }
+                    
+                    // add delete button
                     if (this.id == p.user_id) {
                         owners += ' *';
-                    } else if (p.owners.length > 1) {
-                        owners += ' <span data-id="'+ this.id +'" class="projectOwnerDelete" title="Remove">-</span>';
+                    } else if (p.owners.length > 1 && p.perm == 'all') {
+                        owners += ' <span data-id="'+ this.id +'" class="tinybutton projectOwnerDelete" title="Remove">-</span>';
                     }
                     owners += '</li>';
                 });
                 owners += '</ul>';
                 
-                var tr = $('tr[data-id=' + p.id + ']');
+                tr = $('tr[data-id=' + p.id + ']');
                 
                 if (tr.length == 0) {
-	                tr = '<tr data-id="' + p.id + '"><td><a class="go_to_project">[Go]</a>'
-	                         + '</td><td>' + p.name 
-	                         + '</td><td>' + p.notes 
-	                         + '</td><td><img src="/include/images/menu/queue_loading.svg" />'
-	                         + '</td><td>' + owners + '</td></tr>';
-	                $('#project_list tbody').append(tr);
+                    tr = '<tr data-id="' + p.id + '" data-perm="' + p.perm + '"><td><span class="go_to_project tinybutton">Go</span>'
+                             + '</td><td>' + p.name 
+                             + '</td><td>' + p.notes 
+                             + '</td><td><img src="/include/images/menu/queue_loading.svg" />'
+                             + '</td><td>' + owners + '</td></tr>';
+                    $('#project_list tbody').append(tr);
                 } else {
-	               var td = tr.find(td);
-	               td.eq(2).html(p.name);
-	               td.eq(3).html(p.notes);
-	               td.eq(5).html(p.owners);
-	               tr.show();
-	            }
+                    tr.attr('data-perm', p.perm);
+                    td = tr.find('td');
+                    td.eq(1).html(p.name);
+                    td.eq(2).html(p.notes);
+                    td.eq(4).html(owners);
+                }
             });
             $('#project_list').show().stripe();
             
-            PM.account_size = 0;
+            PM.user.accountSize = 0;
             $.each(data.projects, function(i, p) {
-				if (p.filemtime == $('tr[data-id=' + p.id + ']').data('filemtime')) {
-					projSizeUpdate(p.id, data.userAllocation.allocation);
-				} else {
-	            	projSizeGet(p.id, data.userAllocation.allocation);
-	            }
-	        });
-            
+                if (p.filemtime == $('tr[data-id=' + p.id + ']').data('filemtime')) {
+                    projSizeUpdate(p.id, data.userAllocation.allocation);
+                } else {
+                    projSizeGet(p.id, data.userAllocation.allocation);
+                }
+            });
             
             // set up user list
             userlist = [];
@@ -408,7 +449,7 @@ function projectList() { console.time('projectList()');
                 });
             });
             $('input.projectOwnerAdd').closest('li').remove();
-            $('ul.project_owners').append('<li><input class="projectOwnerAdd" '
+            $('tr[data-perm=all] ul.project_owners').append('<li><input class="projectOwnerAdd" '
                                         + 'placeholder="Type Name to Add" /></li>');
                                         
             $('.projectOwnerAdd').autocomplete({
@@ -433,36 +474,36 @@ function projectList() { console.time('projectList()');
 }
 
 function projSizeGet(proj_id, alloc) {
-	$.ajax({
+    $.ajax({
         url: 'scripts/projSizeGet',
         type: 'POST',
         data: {
-	        proj_id: proj_id
+            proj_id: proj_id
         },
         success: function(data) {  
-	        var tr = $('tr[data-id=' + proj_id + ']'); 
-	        tr.data('filemtime', data.filemtime);
-	        tr.data('files', data.files);
-	        tr.data('tmp', data.tmp);
-	        tr.data('size', data.size);
-	        tr.data('mysize', data.mysize);
-	        
-	        projSizeUpdate(proj_id, alloc);
-	    }
-	});
+            var tr = $('tr[data-id=' + proj_id + ']'); 
+            tr.data('filemtime', data.filemtime);
+            tr.data('files', data.files);
+            tr.data('tmp', data.tmp);
+            tr.data('size', data.size);
+            tr.data('mysize', data.mysize);
+            
+            projSizeUpdate(proj_id, alloc);
+        }
+    });
 } 
 
 function projSizeUpdate(proj_id, alloc) {
-	var tr = $('tr[data-id=' + proj_id + ']');
-	var td =  tr.find('td').eq(3);
+    var tr = $('tr[data-id=' + proj_id + ']');
+    var td =  tr.find('td').eq(3);
 
     td.html((tr.data('files') - tr.data('tmp')) + ' files<br>' + tr.data('size'));
-    PM.account_size += tr.data('mysize');
+    PM.user.accountSize += tr.data('mysize');
     
     // set warning about total space allocation
-    var ts = "Projects you own are using " + round(PM.account_size/1024/1024/1024,1)
+    var ts = "Projects you own are using " + round(PM.user.accountSize/1024/1024/1024,1)
            + " GB of your allocated " + round(alloc/1024,1) + " GB. ";
-    if (PM.account_size/1024/1024 > alloc) {
+    if (PM.user.accountSize/1024/1024 > alloc) {
         ts += "Please reduce your account by emptying the trash and/or removing files. "
             + "After 15 January 2016, I will disable accounts that are over their space allocation.";
         $('#total_space').addClass('warning');
@@ -473,7 +514,7 @@ function projSizeUpdate(proj_id, alloc) {
 }
 
 function prefSet() {  console.log('prefSet()');
-	$('#footer').html('Saving Preferences...');
+    $('#footer').html('Saving Preferences...');
     var prefData = {
         email: $('#pref_email').val(),
         password: $('#pref_password').val(),
@@ -491,7 +532,7 @@ function prefSet() {  console.log('prefSet()');
         selcross_color: $('#selcross_color').slider('values'),
         line_color: $('#line_color').slider('values'),
         theme: $('#pref_theme').slider('value'),
-        default_line_width: $('#default_line_width').val(),
+        defaultLineWidth: $('#defaultLineWidth').val(),
         texture: $('#texture').prop('checked'),
         sample_contours: $('#sample_contours').prop('checked'),
         show_thumbs: $('#show_thumbs').prop('checked'),
@@ -504,7 +545,7 @@ function prefSet() {  console.log('prefSet()');
         align_y2: $('#align_y2').val(),
         align_w: $('#align_w').val(),
         align_h: $('#align_h').val(),
-        default_tem: $('#default_template').val(),
+        defaultTem: $('#defaultTemplate').val(),
         normalisation: $('#normalisation').val(),
         warp: $('#warp').val(),
         default_imageformat: $('#default_imageformat').val(),
@@ -523,8 +564,8 @@ function prefSet() {  console.log('prefSet()');
             }
         },
         complete: function() {
-	        $('#footer').html('Preferences Saved');
-	    }
+            $('#footer').html('Preferences Saved');
+        }
     });
 }
 
@@ -567,10 +608,36 @@ function fmAddEquation() {
 }
 
 function projectSet(id) {
-    PM.project = id;
-    loadFiles(PM.project);
-    $('#currentProject li span.checkmark').hide();
-    $('#currentProject li[data-id=' + id + '] span.checkmark').show();
+    $.ajax({
+        url: 'scripts/projSet',
+        data: {
+            project: id
+        },
+        success: function(data) {
+            if (data.error) {
+                $('<div title="Error Changing Project" />').html(data.errorText).dialog();
+            } else {
+                PM.project.id = id;
+                PM.project.perm = data.perm;
+                $('#currentProject li span.checkmark').hide();
+                $('#currentProject li[data-id=' + id + '] span.checkmark').show();
+                
+                 if (PM.interfaceWindow == 'project') {
+                    $('#showFinder').click();
+                } else {
+                    loadFiles(PM.project.id);
+                }
+                
+                // clean up things
+                $('#average-list li').remove();
+                
+                // check project permissions
+                if (PM.project.perm == 'read-only') {
+                    growl('This project is read-only. You can copy folders to your own projects by right-clicking on them. Contact the owner if you need permission to save images to this project.', 5000);
+                }
+            }
+        }
+    });
 }
 
 function projectNew() {
@@ -598,9 +665,9 @@ function projectNew() {
                             if (data.error) {
                                 $('<div title="Error Creating Project" />').html(data.errorText).dialog();
                             } else {
-                                PM.project = data.project;
+                                PM.project.id = data.project;
                                 projectList();
-                                projectSet(PM.project);
+                                projectSet(PM.project.id);
                             }
                         }
                     });
@@ -611,7 +678,7 @@ function projectNew() {
 }
 
 function projectOwnerDeleteConfirmed(project, owner) { console.log('projectOwnerDeleteConfirmed('+project+', '+owner+')');
-	$('#footer').html('Deleting Owner...');
+    $('#footer').html('Deleting Owner...');
     $.ajax({
         url: 'scripts/projOwnerDelete',
         data: {
@@ -631,7 +698,7 @@ function projectOwnerDeleteConfirmed(project, owner) { console.log('projectOwner
 }
 
 function projectOwnerDelete(project, owner) { console.log('projectOwnerDelete('+project+', '+owner+')');
-    if (owner == PM.userid) {
+    if (owner == PM.user.id) {
         $('<div />').html("Are you sure you want to leave this project? You will not be able to undo this without having another owner re-add you.").dialog({
             title: 'Remove Yourself from Project',
             buttons: {
@@ -651,24 +718,24 @@ function projectOwnerDelete(project, owner) { console.log('projectOwnerDelete('+
 }
 
 function projectEdit(td, category) {
-	$('#footer').html('Editing Project...');
+    $('#footer').html('Editing Project...');
     var oldname = $(td).text();
     var w = $(td).width();
     var $newnameinput;
     
     if (category == "name") {
-	    $newnameinput = $('<input />').val(oldname).attr('type', 'text').width(w);
-	} else {
-		$newnameinput = $('<textarea />').val(oldname).width(w).height($(td).height());
-	}
+        $newnameinput = $('<input />').val(oldname).attr('type', 'text').width(w);
+    } else {
+        $newnameinput = $('<textarea />').val(oldname).width(w).height($(td).height());
+    }
     
     $newnameinput.keydown(function(e) {
         if (e.which == KEYCODE.enter) { 
-	        e.stopPropagation();
-	        $(this).blur(); 
-	    }
+            e.stopPropagation();
+            $(this).blur(); 
+        }
     }).dblclick(function(e) {
-	    e.stopPropagation();
+        e.stopPropagation();
     }).blur(function() {
         var newname = $(this).val();
         $(td).html(newname);
@@ -699,7 +766,7 @@ function projectEdit(td, category) {
             $('#footer').html('');
         }
     }).focusout(function() {
-	    $(this).blur(); 
+        $(this).blur(); 
     });
     
     $(td).html('').append($newnameinput);
@@ -707,7 +774,7 @@ function projectEdit(td, category) {
 }
 
 function projectOwnerAdd(button) {
-	$('#footer').html('Adding Project Owner...');
+    $('#footer').html('Adding Project Owner...');
     var $input = $(button);
     var project = $input.closest('tr').data('id'); 
     

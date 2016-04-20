@@ -35,28 +35,28 @@ function recursive_copy($source, $dest){
 }
 
 function recursive_delete($deletedir) {
-	global $return;
-	
-	if (is_dir($deletedir)) {
-		$handle = opendir($deletedir);
-		while (false !== ($entry = readdir($handle))) {
-		    if ($entry != "." && $entry != "..") {
-		    	$ext = pathinfo($entry, PATHINFO_EXTENSION);
-		    	$path = $deletedir . '/' . $entry;
-		    	if (!is_dir($path)) {
-		    		unlink($path);
-		    		$return['deleted files'][] = $path;
-				} else {
-		        	recursive_delete($path);
-		        }
-		    }
-		}
-		closedir($handle);
-		rmdir($deletedir);
-		$return['deleted dirs'][] = $deletedir;
-	} else {
-		$return[$deletedir] = 'does not exist';
-	}
+    global $return;
+    
+    if (is_dir($deletedir)) {
+        $handle = opendir($deletedir);
+        while (false !== ($entry = readdir($handle))) {
+            if ($entry != "." && $entry != "..") {
+                $ext = pathinfo($entry, PATHINFO_EXTENSION);
+                $path = $deletedir . '/' . $entry;
+                if (!is_dir($path)) {
+                    unlink($path);
+                    $return['deleted files'][] = $path;
+                } else {
+                    recursive_delete($path);
+                }
+            }
+        }
+        closedir($handle);
+        rmdir($deletedir);
+        $return['deleted dirs'][] = $deletedir;
+    } else {
+        $return[$deletedir] = 'does not exist';
+    }
 }
 
 // copy a dir

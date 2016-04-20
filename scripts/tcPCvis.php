@@ -7,64 +7,64 @@ auth();
 ini_set('max_execution_time', 6000);
 
 $return = array(
-	'error' => true,
-	'errorText' => '',
-	'newfilename' => ''
+    'error' => true,
+    'errorText' => '',
+    'newFileName' => ''
 );
 
 if (!perm('pca')) {
-	$return['errorText'] .= 'You do not have permission to create a PC visualisation';
+    $return['errorText'] .= 'You do not have permission to create a PC visualisation';
 } else {
-	$url = 'http://' . $_SERVER["SERVER_NAME"] . '/tomcat/psychomorph/pcvis?';
-	
-	// set up data
-	$theData = $_POST['theData'];
-	$paramsJoined = array();
-	foreach($theData as $param => $value) {
-	   $paramsJoined[] = "$param=$value";
-	}
-	$query = implode('&', $paramsJoined);
-	
-	$ch = curl_init();
-	curl_setopt($ch, CURLOPT_URL, $url . $query);
-	curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-	curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 30);
-	curl_setopt($ch, CURLOPT_TIMEOUT, 6000);
-	$data = curl_exec($ch);
-	curl_close($ch);
-	
-	$visdata = json_decode($data, true);
-	if (!array_key_exists('img', $visdata)) {
-		$return['errorText'] .= 'The transform was not created';
-	} else {
-		// save image and associated tem
-		$return['data'] = $visdata;
-		
-		include_once DOC_ROOT . '/include/classes/psychomorph.class.php';
-		$transimg = $visdata['savefolder'] . $visdata['img'];
-		$transtem = $visdata['savefolder'] . $visdata['tem'];
-		$img = new PsychoMorph_ImageTem($transimg, $transtem);
-		
-		// put the weights back into proportion notation
-		foreach($visdata['weights'] as $w) {
-			$weights[] = $w/100; 
-		}
-		
-		$img->setDescription(array(
-			'PCA model' => $visdata['pcafile'],
-			'avg' => $visdata['avgfile'],
-			'PC weights' => "[" . implode(",", $weights) . "]"
-		));
-		
-		$newfilename = $_POST['outname'];
-		
-		if ($img->save($newfilename)) {
-			$return['error'] = false;
-			$return['newfilename'] = $img->getImg()->getURL();
-		} else {
-			$return['errorText'] .= 'The image was not saved. ';
-		}
-	}
+    $url = 'http://' . $_SERVER["SERVER_NAME"] . '/tomcat/psychomorph/pcvis?';
+    
+    // set up data
+    $theData = $_POST['theData'];
+    $paramsJoined = array();
+    foreach($theData as $param => $value) {
+       $paramsJoined[] = "$param=$value";
+    }
+    $query = implode('&', $paramsJoined);
+    
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL, $url . $query);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+    curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 30);
+    curl_setopt($ch, CURLOPT_TIMEOUT, 6000);
+    $data = curl_exec($ch);
+    curl_close($ch);
+    
+    $visdata = json_decode($data, true);
+    if (!array_key_exists('img', $visdata)) {
+        $return['errorText'] .= 'The transform was not created';
+    } else {
+        // save image and associated tem
+        $return['data'] = $visdata;
+        
+        include_once DOC_ROOT . '/include/classes/psychomorph.class.php';
+        $transimg = $visdata['savefolder'] . $visdata['img'];
+        $transtem = $visdata['savefolder'] . $visdata['tem'];
+        $img = new PsychoMorph_ImageTem($transimg, $transtem);
+        
+        // put the weights back into proportion notation
+        foreach($visdata['weights'] as $w) {
+            $weights[] = $w/100; 
+        }
+        
+        $img->setDescription(array(
+            'PCA model' => $visdata['pcafile'],
+            'avg' => $visdata['avgfile'],
+            'PC weights' => "[" . implode(",", $weights) . "]"
+        ));
+        
+        $newFileName = $_POST['outname'];
+        
+        if ($img->save($newFileName)) {
+            $return['error'] = false;
+            $return['newFileName'] = $img->getImg()->getURL();
+        } else {
+            $return['errorText'] .= 'The image was not saved. ';
+        }
+    }
 }
 
 scriptReturn($return);

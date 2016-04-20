@@ -320,6 +320,22 @@
 	}
 	
 	function checkAllocation() {
+    	// check permissions for this project
+    	$q = new myQuery("SELECT perm
+                          FROM project_user
+                          WHERE user_id='{$_SESSION['user_id']}'
+                            AND project_id='{$_SESSION['project_id']}'");
+        $perm = $q->get_one();
+        if ($perm !== 'all') {
+            $return = array(
+                "error" => true,
+                "errorText" => "You do not have permission to save files to this project."
+            );
+            scriptReturn($return);
+            exit;
+        }
+
+        // check overall allocation
     	$ua = userAllocation($_SESSION['user_id']);
 
         if ($ua['size'] > $ua['allocation']) {
@@ -331,9 +347,10 @@
             );
             scriptReturn($return);
             exit;
-        } else {
-            return true;
         }
+        
+        // return true if all fine
+        return true;
 	}
 	
 	// rotate an array

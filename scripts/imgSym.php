@@ -7,9 +7,9 @@ auth();
 checkAllocation();
 
 $return = array(
-	'error' => true,
-	'errorText' => '',
-	'post' => $_POST
+    'error' => true,
+    'errorText' => '',
+    'post' => $_POST
 );
 
 include_once DOC_ROOT . '/include/classes/psychomorph.class.php';
@@ -23,9 +23,10 @@ $img->mirror($tem_id);
 $tmpfilename = IMAGEBASEDIR . $project_id . '/.tmp/mirror_' . time() . '.' . $_POST['ext'];
 
 if ($img->save($tmpfilename)) {
-	$mirrored_image = str_replace(IMAGEBASEDIR . $project_id, '', $tmpfilename);
+    $mirrored_image = str_replace(IMAGEBASEDIR . $project_id, '', $tmpfilename);
+    $return['mirror'] = $mirrored_image;
 } else {
-	$return['errorText'] .= 'The mirrored image was not saved. ';
+    $return['errorText'] .= 'The mirrored image was not saved. ';
 }
 
 /*
@@ -39,23 +40,24 @@ $q = new myQuery("SELECT pref, prefval FROM pref WHERE user_id='{$_SESSION['user
 $myprefs = $q->get_assoc(false, 'pref', 'prefval');
 $shape = ($_POST['shape'] == 'false') ? 0 : 0.5;
 $colortex = ($_POST['color'] == 'false') ? 0 : 0.5;
+$ext = in_array($_POST['ext'], array('jpg', 'png', 'gif')) ? $_POST['ext'] : $myprefs['default_imageformat'];
 
 $theData = array(
-	'subfolder' => $project_id,
-	'savefolder' =>  '/.tmp/',
-	'count' => 1,
-	'shape0' => $shape,
-	'color0' => $colortex,
-	'texture0' => $colortex,
-	'sampleContours0' => $myprefs['sample_contours'],
-	'transimage0' => preg_replace("/^(\d{1,11}\/)/", "/", $_POST['img']),
-	'fromimage0' => preg_replace("/^(\d{1,11}\/)/", "/", $_POST['img']),
-	'toimage0' => preg_replace("/^(\d{1,11}\/)/", "/", $mirrored_image),
-	'norm0' => 'none', // $myprefs['normalisation'], // other norms can produce tilted images
-	'warp0' => $myprefs['warp'],
-	'normPoint0_0' => $myprefs['align_pt1'], // doesn't matter
-	'normPoint1_0' => $myprefs['align_pt2'], // doesn't matter
-	'format' => $myprefs['default_imageformat'],
+    'subfolder' => $project_id,
+    'savefolder' =>  '/.tmp/',
+    'count' => 1,
+    'shape0' => $shape,
+    'color0' => $colortex,
+    'texture0' => $colortex,
+    'sampleContours0' => $myprefs['sample_contours'],
+    'transimage0' => preg_replace("/^(\d{1,11}\/)/", "/", $_POST['img']),
+    'fromimage0' => preg_replace("/^(\d{1,11}\/)/", "/", $_POST['img']),
+    'toimage0' => preg_replace("/^(\d{1,11}\/)/", "/", $mirrored_image),
+    'norm0' => 'none', // $myprefs['normalisation'], // other norms can produce tilted images
+    'warp0' => $myprefs['warp'],
+    'normPoint0_0' => $myprefs['align_pt1'], // doesn't matter
+    'normPoint1_0' => $myprefs['align_pt2'], // doesn't matter
+    'format' => $ext,
 );
 
 $paramsJoined = array();
@@ -75,8 +77,8 @@ $transdata = json_decode($data, true);
 // save image and associated tem
 
 $symtype = ($shape == 0) ? 
-	(($colortex == 0) ? 'Un-' : 'Color-only ') : 
-	(($colortex == 0) ? 'Shape-only ' : 'Shape & color ');
+    (($colortex == 0) ? 'Un-' : 'Color-only ') : 
+    (($colortex == 0) ? 'Shape-only ' : 'Shape & color ');
 
 include_once DOC_ROOT . '/include/classes/psychomorph.class.php';
 $symimg = $project_id . '/.tmp/' . $transdata[0]['img'];
@@ -87,20 +89,20 @@ $return['transdata'] = $transdata[0];
 $img = new PsychoMorph_ImageTem($symimg, $symtem);
 $img->setDescription($symtype . 'symmetrised version of ' . $_POST['img']);
 
-$newfilename = array(
-	'subfolder' => $_POST['subfolder'],
-	'prefix' => $_POST['prefix'],
-	'suffix' => $_POST['suffix'],
-	'name' => pathinfo($_POST['img'], PATHINFO_FILENAME),
-	'ext' => $_POST['ext']
+$newFileName = array(
+    'subfolder' => $_POST['subfolder'],
+    'prefix' => $_POST['prefix'],
+    'suffix' => $_POST['suffix'],
+    'name' => pathinfo($_POST['img'], PATHINFO_FILENAME),
+    'ext' => $_POST['ext']
 );
 
-if ($img->save($newfilename)) {
-	$return['error'] = false;
-	$return['newfilename'] = $img->getImg()->getURL();
+if ($img->save($newFileName)) {
+    $return['error'] = false;
+    $return['newFileName'] = $img->getImg()->getURL();
 } else {
-	$return['errorText'] .= 'The image was not saved. ';
-	$return['newfilename'] = '';
+    $return['errorText'] .= 'The image was not saved. ';
+    $return['newFileName'] = '';
 }
 
 // delete the tmp files

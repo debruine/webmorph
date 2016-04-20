@@ -7,14 +7,53 @@ if (navigator.userAgent.indexOf('Mac OS X') != -1) {
 }
 
 // !contextmenu functions
-$(document).on('contextmenu', '*', function(e) {
+$(document).on('contextmenu', '#finder *, #delin', function(e) {
     e.preventDefault();
-}).on('contextmenu', '#trash > span', function(e) {
+}).on('contextmenu', '#delin', function(e) {
+    var item_info;
+    
     e.stopPropagation();
     
-    var item_info = [
+    item_info = [
+        {
+            name: 'Download Tem SVG',
+            func: function() { 
+                temSVG(true, 'plus', false); 
+                $('.context_menu').remove(); 
+            }
+        },
+        {
+            name: 'Download Lines SVG',
+            func: function() { 
+                temSVG(true, false, false); 
+                $('.context_menu').remove(); 
+            }
+        },
+        {
+            name: 'Download Points SVG',
+            func: function() { 
+                temSVG(false, 'circle', false); 
+                $('.context_menu').remove(); 
+            }
+        },
+        {
+            name: 'Download Numbered SVG',
+            func: function() { 
+                temSVG(true, 'numbers', false); 
+                $('.context_menu').remove(); 
+            }
+        }
+    ];
+    context_menu(item_info, e);
+}).on('contextmenu', '#trash > span', function(e) {
+    var item_info = [];
+    
+    e.stopPropagation();
+    
+    item_info = [
         {
             name: 'Empty Trash',
+            readOnly: true,
             func: function() { 
                 emptyTrash(); 
                 $('.context_menu').remove(); 
@@ -28,13 +67,18 @@ $(document).on('contextmenu', '*', function(e) {
             }
         }
     ];
+    
     context_menu(item_info, e);
 }).on('contextmenu', '#finder li.folder:not(#trash)', function(e) {
+    var folder_name,
+        item_info = [],
+        upload = {},
+        cutlist = 0,
+        pasteName;
+        
     e.stopPropagation();
     
-    var folder = $(this);
-    var folder_name = $(this).find('> span').click().text();
-    var item_info = [];
+    folder_name = $(this).find('> span').click().text();
     
     if ($finder.find('>ul> li.folder:eq(0) > span').text() == folder_name) {
         // folder is base directory
@@ -42,6 +86,7 @@ $(document).on('contextmenu', '*', function(e) {
     } else {
         item_info.push({
             name: 'Rename',
+            readOnly: true,
             func: function() {
                 folderRename();
                 $('.context_menu').remove();
@@ -59,27 +104,21 @@ $(document).on('contextmenu', '*', function(e) {
         item_info.push('break');
     }
     
-    var upload = {
-        name: 'Upload to ' + folder_name,
-        func: function() {
-            $('#upload').click();
-            $('.context_menu').remove(); 
-        }
-    };
-    
     if (PM.pasteBoard.length) {
-        var cutlist = 0;
         $.each(PM.pasteBoard, function(i, v) {
-            if ($('li.to_cut[url="' + v + '"]').length) cutlist++;
+            if ($('li.to_cut[url="' + v + '"]').length) {
+                cutlist++;   
+            }
         });
         
-        var pasteName = (PM.pasteBoard.length == cutlist) ? 'Move ' : 'Copy ';
+        pasteName = (PM.pasteBoard.length == cutlist) ? 'Move ' : 'Copy ';
         pasteName += PM.pasteBoard.length + ' file';
         pasteName += (PM.pasteBoard.length>1 ? 's' : '');
-        pasteName += ' to ' + folder_name
+        pasteName += ' to ' + folder_name;
             
         item_info.push({
             name: pasteName,
+            readOnly: true,
             func: function() {
                 $('#pasteItems').click();
                 $('.context_menu').remove(); 
@@ -88,59 +127,75 @@ $(document).on('contextmenu', '*', function(e) {
         item_info.push('break');
     }
     
-    item_info.push(upload);
+    item_info.push({
+        name: 'Upload to ' + folder_name,
+        readOnly: true,
+        func: function() {
+            $('#upload').click();
+            $('.context_menu').remove(); 
+        }
+    });
     
     context_menu(item_info, e);
 }).on('contextmenu', '#finder li.file > span', function(e) {
+    var $file,
+        tf,
+        total_files,
+        func = {},
+        item_info = [];
+    
     e.stopPropagation();
     
-    var file = $(this).closest('li.file');
-    file.addClass('selected');
+    $file = $(this).closest('li.file').addClass('selected');
     updateSelectedFiles();
-    var tf = $finder.find('li.file.selected').filter(':visible').length;
-    var total_files = (tf > 1) ? ' ' + tf + ' Files' : '';    
+    tf = $finder.find('li.file.selected').length;
+    total_files = (tf > 1) ? ' ' + tf + ' Files' : '';    
     
-    var delin = {
+    func.delin = {
         name: 'Delineate',
         func: function() {
-            file.dblclick(); 
+            $file.dblclick(); 
             $('.context_menu').remove(); 
         }
     };
     
-    var rename = {
+    func.rename = {
         name: 'Rename',
+        readOnly: true,
         func: function() {
             fileRename();
             $('.context_menu').remove(); 
         }
     };
     
-    var copy = {
+    func.copy = {
         name: 'Copy' + total_files,
+        readOnly: true,
         func: function() {
             $('#copyItems').click(); 
             $('.context_menu').remove(); 
         }
     };
     
-    var cut = {
+    func.cut = {
         name: 'Cut' + total_files,
+        readOnly: true,
         func: function() {
             $('#cutItems').click(); 
             $('.context_menu').remove(); 
         }
     };
     
-    var del = {
+    func.del = {
         name: 'Move' + total_files + ' to Trash',
+        readOnly: true,
         func: function() {
             $('#deleteItems').click(); 
             $('.context_menu').remove(); 
         }
     };
     
-    var download = {
+    func.download = {
         name: 'Download' + total_files,
         func: function() {
             $('#download').click(); 
@@ -148,54 +203,86 @@ $(document).on('contextmenu', '*', function(e) {
         }
     };
     
-    if (file.hasClass('image') || file.hasClass('tem')) {
+
+    if ($file.hasClass('image') || $file.hasClass('tem')) {
         if (tf == 1) {
-            var item_info = [
-                delin, 'break', 
-                copy, cut, del, 'break', 
-                rename, 'break', 
-                download
+            item_info = [
+                func.delin, 'break', 
+                func.copy, func.cut, func.del, 'break', 
+                func.rename, 'break', 
+                func.download
             ];
         } else {
-            var item_info = [
-                copy, cut, del, 'break', 
-                download
+            item_info = [
+                func.copy, func.cut, func.del, 'break', 
+                func.download
             ];
         }
     } else {
         if (tf == 1) {
-            var item_info = [
-                copy, cut, del, 'break', 
-                rename, 'break', 
-                download
+            item_info = [
+                func.copy, func.cut, func.del, 'break', 
+                func.rename, 'break', 
+                func.download
             ];
         } else {
-            var item_info = [
-                copy, cut, del, 'break', 
-                download
+            item_info = [
+                func.copy, func.cut, func.del, 'break', 
+                func.download
             ];
         }
     }
+
     context_menu(item_info, e);
-}).on('mouseleave', '.context_menu', function(e) { $(this).remove(); });
+}).on('mouseleave', '.context_menu', function(e) { 
+    $(this).remove(); 
+});
 
 // ! project_list functions
-$('#project_list').on('click', '.projectOwnerDelete', function() {
-    var proj_id = $(this).closest('tr').data('id');
+$('#project_list').on('click', '.go_to_project', function() {
+    var proj_id;
+    
+    $.xhrPool.abortAll();
+    proj_id = $(this).closest('tr').data('id');
+    projectSet(proj_id);
+}).on('click', 'tr[data-perm=all] .projectOwnerDelete', function() {
+    var proj_id;
+    
+    proj_id = $(this).closest('tr').data('id');
     projectOwnerDelete(proj_id, $(this).data('id'));
-}).on('keydown', '.projectOwnerAdd', function(e) {
+}).on('keydown', 'tr[data-perm=all] .projectOwnerAdd', function(e) {
     if (e.which == KEYCODE.enter) { projectOwnerAdd(this); }
-}).on('click', '.go_to_project', function() {
-	$.xhrPool.abortAll();
-    var proj_id = $(this).closest('tr').data('id');
-    PM.project = proj_id;
-    $('#currentProject li span.checkmark').hide();
-    $('#currentProject li[data-id=' + proj_id + '] span.checkmark').show();
-    $('#showFinder').click();
-}).on('dblclick', 'td:nth-child(2)', function() {
+}).on('dblclick', 'tr[data-perm=all] td:nth-child(2)', function() {
     projectEdit(this, "name");
-}).on('dblclick', 'td:nth-child(3)', function() {
+}).on('dblclick', 'tr[data-perm=all] td:nth-child(3)', function() {
     projectEdit(this, "notes");
+}).on('click', '.ownerPermToggle', function() {
+    var project,
+        perm,
+        owner;
+        
+    perm = $(this).html() == 'A' ? 'read-only' : 'all';
+    project = $(this).closest('tr').data('id');
+    owner = $(this).data('id');
+    
+    $.ajax({
+        url: 'scripts/projOwnerAdd',
+        data: {
+            project: project,
+            owner: owner,
+            perm: perm
+        },
+        success: function(data) {
+            if (data.error) {
+                $('<div title="Error Changing Owner Permissions" />').html(data.errorText).dialog();
+                $('#footer').html('Project owner permissions not changed');
+                $input.show().val('');
+            } else {
+                $('#refresh').click();
+                $('#footer').html('Project owner permissions changed');
+            }
+        }
+    });
 });
 
 // ! window functions
@@ -206,10 +293,10 @@ $(window).bind('resize', sizeToViewport)
 }).bind('beforeunload', function() {
     // confirm leaving the app
     // the back button doesn't work as most would assume.
-    if (!PM.no_onbeforeunload && PM.interface !== 'login') {
+    if (!PM.noOnBeforeUnload && PM.interfaceWindow !== 'login') {
         return "Do you want to leave PsychoMorph?";
     } else {
-        PM.no_onbeforeunload = false;
+        PM.noOnBeforeUnload = false;
     }
 });
          
@@ -227,7 +314,9 @@ $(document).mousedown(function(e) {
     //growl("Sorry, there was an error with this function.", 1000);
 }).delegate('.ui-dialog', 'keyup', function(e) {
     // pressing the enter key selects default button on dialogs
-    var tagName = e.target.tagName.toLowerCase();
+    var tagName;
+    
+    tagName = e.target.tagName.toLowerCase();
     tagName = (tagName === 'input' && e.target.type === 'button') ? 'button' : tagName;
 
     if (e.which === $.ui.keyCode.ENTER 
@@ -244,19 +333,22 @@ $(document).mousedown(function(e) {
     // ! ***** keyboard shortcuts  *****
     // e.which: a=>65 ... z=>90, 0=>48 ... 9=>57
     // lookup at http://api.jquery.com/event.which/
-    if (PM.interface == 'delineate' && !((e.ctrlKey || e.metaKey) 
+    
+    if (PM.interfaceWindow == 'delineate' && !((e.ctrlKey || e.metaKey) 
         && e.shiftKey) && PM.delinfunc == 'move') {
         cursor('auto');
         quickhelp();
     }
-    if (PM.interface == 'delineate' && (e.which == KEYCODE.ctrl || e.which == KEYCODE.cmd)) {
+    if (PM.interfaceWindow == 'delineate' && (e.which == KEYCODE.ctrl || e.which == KEYCODE.cmd)) {
         // cursor is hovering over a delin point
         $('.pt').removeClass('couldselect');
         drawTem();
     }
 }).keydown(function(e) {
-    // list of keycodes for navigation (except when in input boxes)
-    var navKeys = [
+    var navKeys,    // list of keycodes for navigation (except when in input boxes)
+        funcKeys;   // list of keycodes for text functions (except when in input boxes)
+    
+    navKeys = [
         KEYCODE.left_arrow, 
         KEYCODE.right_arrow, 
         KEYCODE.down_arrow, 
@@ -265,8 +357,7 @@ $(document).mousedown(function(e) {
         KEYCODE.backspace
     ];
     
-    // list of keycodes for text functions (except when in input boxes)
-    var funcKeys = [
+    funcKeys = [
         KEYCODE.x,
         KEYCODE.c,
         KEYCODE.v,
@@ -274,7 +365,7 @@ $(document).mousedown(function(e) {
     ];
 
     if (    (    $('.ui-dialog:visible').length
-                 || (PM.interface == 'login')
+                 || (PM.interfaceWindow == 'login')
                  || $('input:focus').length
                  || $('textarea:focus').length
             ) && 
@@ -303,12 +394,12 @@ $(document).mousedown(function(e) {
             } else {
                 $('#newLine').click();               // alt-L
             }
-        } else if (PM.interface == 'delineate' 
+        } else if (PM.interfaceWindow == 'delineate' 
                 &&   (e.which == KEYCODE.plus 
                    || e.which == KEYCODE.add 
                    || e.which == KEYCODE.equal_sign)) {
             temSizeChange(1);                        // alt-plus
-        } else if (PM.interface == 'delineate' 
+        } else if (PM.interfaceWindow == 'delineate' 
                 &&       (e.which == KEYCODE.minus 
                     || e.which == KEYCODE.subtract 
                     || e.which == KEYCODE.dash)) {
@@ -319,12 +410,15 @@ $(document).mousedown(function(e) {
     } else if (e.ctrlKey || e.metaKey) {
         // ! shift-cmd shortcuts
         if (e.shiftKey) {
-	        if (e.which == KEYCODE.backspace || e.which == KEYCODE.delete) {
-                if ($finder.filter(':visible').length) { // shift-cmd-delete or shift-cmd-backspace
-			        fileDelete(false); // delete with no confirm
-			    }           
+            if (e.which == KEYCODE.backspace || e.which == KEYCODE.delete) {
+                if ($finder.filter(':visible').length) {
+                    // delete with no confirm
+                    fileDelete(false);               // shift-cmd-delete or shift-cmd-backspace
+                }           
             } else if (e.which == KEYCODE.a) {
                 $('#batchAverage').click();          // shift-cmd-A
+            } else if (e.which == KEYCODE.b) {   
+                $('#scramble').click();              // shift-cmd-B
             } else if (e.which == KEYCODE.c) {   
                 $('#multiContinua').click();         // shift-cmd-C
             } else if (e.which == KEYCODE.d) {
@@ -350,7 +444,7 @@ $(document).mousedown(function(e) {
             } else if (e.which == KEYCODE.p) {
                 $('#singlePCA').click();             // shift-cmd-P
             } else if (e.which == KEYCODE.r) {
-                $('#resize').click();                // shift-cmd-R        
+                $('#resize').click();                // shift-cmd-R
             } else if (e.which == KEYCODE.s) {
                 $('#saveAs').click();                // shift-cmd-S
             } else if (e.which == KEYCODE.t) {
@@ -362,8 +456,8 @@ $(document).mousedown(function(e) {
             } else if (e.which == KEYCODE.y) {
                 $('#symmetrise').click();            // shift-cmd-Y
             } else if (e.which == KEYCODE.z) {
-                $('#redo').click();                  // shift-cmd-Z    
-            } else if (PM.interface == 'delineate' && PM.delinfunc == 'move') {
+                $('#redo').click();                  // shift-cmd-Z
+            } else if (PM.interfaceWindow == 'delineate' && PM.delinfunc == 'move') {
                 setTimeout(function() {
                     // delay quickhelp so it doesn't show every time you use a shift-cmd shortcut
                     if ((PM.pageEvents.key[KEYCODE.cmd] || PM.pageEvents.key[KEYCODE.ctrl]) 
@@ -443,8 +537,11 @@ $(document).mousedown(function(e) {
                 $('#prefs').click();                 // cmd-comma (,)
             } else if ($('.pt:hover').length) {
                 // cursor is hovering over a delin point
-                var n = $('.pt:hover').attr('n');
-                var conPts = PM.pts[n].data('connectedPoints');
+                var n,
+                    conPts;
+                
+                n = $('.pt:hover').attr('n');
+                conPts = PM.pts[n].data('connectedPoints');
                 $.each(conPts, function(i,pt) {
                     PM.pts[pt].addClass('couldselect');
                 });
@@ -454,10 +551,10 @@ $(document).mousedown(function(e) {
             }
         }
         return false;
-    } else if ((e.which == KEYCODE.backspace | e.which == KEYCODE.delete) 
-                && $('#average_list li.selected').length) {
+    } else if ((e.which == KEYCODE.backspace || e.which == KEYCODE.delete) 
+                && $('#average-list li.selected').length) {
         // delete selected items for average list
-        $('#average_list li.selected').remove();
+        $('#average-list li.selected').remove();
         averageListCheck();
     } else if (    e.which == KEYCODE.backspace 
                 && ($("input:focus").length === 0) 
@@ -467,19 +564,23 @@ $(document).mousedown(function(e) {
         // do nothing, just prevents accidental page back in FireFox
     } else if (e.which == KEYCODE.enter && PM.delinfunc == 'lineadd') {
         // end new line
+        var line;
+
         PM.delinfunc = 'move';
         cursor('auto');
         quickhelp();
-        var line = PM.current_lines.length - 1;
-        PM.line_colors[line] = 'default';
-        if (PM.current_lines[line].length < 2) { 
+        line = PM.current.lines.length - 1;
+        PM.delin.lineColors[line] = 'default';
+        if (PM.current.lines[line].length < 2) { 
             $('#footer').html('New line cancelled');
-            PM.current_lines.pop();
+            PM.current.lines.pop();
         } else {
+            var t;
+            
             drawTem();
-            var t = 'New line finished [' + PM.current_lines[line].join() + ']';
+            t = 'New line finished [' + PM.current.lines[line].join() + ']';
             $('#footer').html(t).prop('data-persistent', t);
-        }	    
+        }        
     } else if (e.which == KEYCODE.enter 
                 && $finder.filter(':visible').length 
                 && $finder.find('li.file.selected').length == 1) {
@@ -496,16 +597,18 @@ $(document).mousedown(function(e) {
         // pressed enter and only 1 visible button is focussed
         $('button.ui-state-focus:visible').click();
     } else if (e.which == KEYCODE.left_arrow) { // pressed left
-        if (PM.interface == 'delineate') {
+        if (PM.interfaceWindow == 'delineate') {
             nudge(-1, 0);
-        } else if ($finder.find('.imageView:visible').length) {
+        } else if ($finder.find('.image-view:visible').length) {
             // go to previous image
             $finder.find('li.file.selected, li.folder:not(.closed)')
                    .last().prevAll('li:visible').first().find('> span').click();
         } else if ($finder.filter(':visible').length) {
             // go up a directory
             if ($finder.find('li.file.selected').length === 0) {
-                var $lastOpen = $finder.find('li.folder:not(.closed)[path!=""]:last').parents('li.folder').eq(0);
+                var $lastOpen;
+                
+                $lastOpen = $finder.find('li.folder:not(.closed)[path!=""]:last').parents('li.folder').eq(0);
                 console.log($lastOpen.attr('path'));
                 $lastOpen.find('> span').click();
             }
@@ -513,12 +616,14 @@ $(document).mousedown(function(e) {
             updateSelectedFiles();
         }
     } else if (e.which == KEYCODE.up_arrow) { // pressed up
-        if (PM.interface == 'delineate') {
+        if (PM.interfaceWindow == 'delineate') {
             nudge(0, -1);
-        } else if ($finder.find('.imageView:visible').length) {
+        } else if ($finder.find('.image-view:visible').length) {
             // go up a directory
             if ($finder.find('li.file.selected').length === 0) {
-                var $lastOpen = $finder.find('li.folder:not(.closed)[path!=""]:last')
+                var $lastOpen;
+                
+                $lastOpen = $finder.find('li.folder:not(.closed)[path!=""]:last')
                                        .parents('li.folder').eq(0);
                 console.log($lastOpen.attr('path'));
                 $lastOpen.find('> span').click();
@@ -530,9 +635,9 @@ $(document).mousedown(function(e) {
                    .last().prevAll('li:visible').first().find('> span').click();
         }
     } else if (e.which == KEYCODE.right_arrow) { // pressed right
-        if (PM.interface == 'delineate') {
+        if (PM.interfaceWindow == 'delineate') {
             nudge(1, 0);
-        } else if ($finder.find('.imageView:visible').length) {
+        } else if ($finder.find('.image-view:visible').length) {
             // go to next image
             $finder.find('li.file.selected, li.folder:not(.closed)')
                    .last().nextAll('li:visible')
@@ -551,9 +656,9 @@ $(document).mousedown(function(e) {
             }
         }
     } else if (e.which == KEYCODE.down_arrow) { // pressed down 
-        if (PM.interface == 'delineate') {
+        if (PM.interfaceWindow == 'delineate') {
             nudge(0, 1);
-        } else if ($finder.find('.imageView:visible').length) {
+        } else if ($finder.find('.image-view:visible').length) {
             return false;
         } else if ($finder.filter(':visible').length) {
             // go to next image
@@ -577,10 +682,10 @@ $('ul.menubar li.menucategory').mouseleave(function() {
 }).find('>ul>li').click(function() { 
     if (!$(this).hasClass('disabled')) {
         // log all menu function calls
-        console.debug('menu: #' + $(this).attr('id') + '.click()'); 
+        console.debug('menu: #' + this.id + '.click()'); 
         $(this).parent('ul').hide();
     } else {
-        console.debug('menu: #' + $(this).attr('id') + '.click() (disabled)');
+        console.debug('menu: #' + this.id + '.click() (disabled)');
     }
 }).mouseenter(function() {
     if (!$(this).hasClass('disabled')) {
@@ -589,6 +694,7 @@ $('ul.menubar li.menucategory').mouseleave(function() {
 }).mouseleave(function() {
     // hide after a brief timeout 
     var $this = $(this);
+    
     setTimeout(function() {    
         if ($this.find('ul.submenu:hover').length === 0) { 
             $this.find('ul.submenu').hide(); 
@@ -599,10 +705,10 @@ $('#menu_username').click( function() {
     $('#prefs').click();
 });
 $('#register-button').button().click(function(e) {
-	registerUser(e);
+    registerUser(e);
 });
 $('#reset-password-button').button().click( function() {
-	resetPassword();
+    resetPassword();
 });
 $('#login_password').keyup( function(e) {
     if (e.which === KEYCODE.enter) {
@@ -612,8 +718,7 @@ $('#login_password').keyup( function(e) {
 $('#login-button').button().click(function() {
     loginUser();
 });
-$('#logout').click(function() {
-    if ($(this).hasClass('disabled')) { return false; }
+$('#logout').not('.disabled').click(function() {
     logoutUser();
 });
 
@@ -650,7 +755,7 @@ $('#avg_image_box').resizable({
     minHeight: 200
 });
 
-$('#average_list').on('click', 'li', function() {
+$('#average-list').on('click', 'li', function() {
     $(this).toggleClass('selected');
     $finder.find('li.file').removeClass('selected');
 });
@@ -661,24 +766,33 @@ $('#avg_image_box').droppable({
         var $files = ui.helper.find('li.file');
         
         $files.each( function() {
-            var url = $(this).attr('url');
-            var $li = $('<li />').text(urlToName(url))
-                                 .attr('data-url', url)
-                                 .css('background-image', 'url(' + fileAccess(url, true) + ')');
-            $('#average_list').append($li).show();
+            var url,
+                $li;
+                
+            url = $(this).attr('url');
+            $li = $('<li />').text(urlToName(url))
+                            .attr('data-url', url)
+                            .css('background-image', 'url(' + fileAccess(url, true) + ')');
+            $('#average-list').append($li).show();
             $('#average').hide();
         });
 
         averageListCheck();
     }
 });
+
 $('#destimages img:not(.nodrop), #grid img').droppable({
     hoverClass: 'hoverdrag',
     tolerance: "pointer",
     drop: function(event, ui) {
         // ! [FIX] png and gif images don't show up in transform drop
         this.src = fileAccess($(ui.draggable).attr('url').replace('.tem', '.jpg'));
-        setTimeout("$('#transform').width($('#transimage').width()).height($('#transimage').height());",500);
+        setTimeout(function() {
+            var $ti = $('#transimage');
+            
+            $('#transform').width( $ti.width() )
+                           .height( $ti.height() );
+        },500);
         checkTransAbility();
     }
 });
@@ -707,7 +821,7 @@ $('#view-average-button').button().click(function() {
     getAverage();
 });
 $('#clear-average-button').button().click(function() {
-    $('#average_list').hide().find('li').remove();
+    $('#average-list').hide().find('li').remove();
     $('#average').show().css('background-image', PM.blankBG).attr({
         'averaged': ''
     });
@@ -717,15 +831,19 @@ $('#clear-average-button').button().click(function() {
 $('#save-button, #trans-save-button').button({
     disabled: true
 }).click(function() {
-    if (PM.interface == 'average') {
-        var $imgBox = $('#average');
-    } else if (PM.interface == 'transform') {
-        var $imgBox = $('#transform');
+    var $imgBox,
+        tem,
+        img;
+    
+    if (PM.interfaceWindow == 'average') {
+        $imgBox = $('#average');
+    } else if (PM.interfaceWindow == 'transform') {
+        $imgBox = $('#transform');
     }
     
-    $imgBox.data('savefolder', PM.project + "/.tmp/");
-    var tem = $imgBox.data('savefolder') + $imgBox.data('tem');
-    var img = $imgBox.data('savefolder') + $imgBox.data('img');
+    $imgBox.data('savefolder', PM.project.id + "/.tmp/");
+    tem = $imgBox.data('savefolder') + $imgBox.data('tem');
+    img = $imgBox.data('savefolder') + $imgBox.data('img');
     $('<div />').html('Name: <input type="text" />').dialog({
         title: "Save image with name...",
         open: function(e, ui) {
@@ -737,8 +855,10 @@ $('#save-button, #trans-save-button').button({
                 text: 'Save',
                 class: 'ui-state-focus',
                 click: function() {
+                    var savename;
+                    
                     $(this).dialog("close");
-                    var savename = PM.project + '/' + $(this).find('input').val();
+                    savename = PM.project.id + '/' + $(this).find('input').val();
                     savename.replace(/\/\//g, '/');
                     $.ajax({
                         url: 'scripts/fileSave2',
@@ -751,8 +871,8 @@ $('#save-button, #trans-save-button').button({
                         },
                         success: function(data) {
                             if (!data.error[0]) {
-                                $('#footer').html(data.newfilename + ' saved');
-                                loadFiles(data.newfilename);
+                                $('#footer').html(data.newFileName + ' saved');
+                                loadFiles(data.newFileName);
                             } else {
                                 $('<div title="Problem Saving Image" />').html(data.errorText).dialog();
                             }
@@ -765,13 +885,17 @@ $('#save-button, #trans-save-button').button({
     });
 });
 
-// remove growl and devnotes notifications on double-click
-$('body').on('dblclick', '.growl,.devnote', function() {
+// remove growl and message notifications on double-click
+$('body').on('dblclick', '.growl', function() {
     $(this).remove();
+}).on('dblclick', '.msg', function() {
+    msgGet($(this).data('msg_id'));
 });
 
+$('.msg').append('<br><span style="float: right; font-size:60%;">[double-click this notice to permanently close it]</span>');
+
 $('#imagebox').click( function(e) { 
-	e.stopPropagation();
+    e.stopPropagation();
 });
 
 // ! ***** finder functions *****
@@ -780,8 +904,7 @@ $finder.on('dblclick', 'li.file.image, li.file.tem', function() {
     delinImage($(this).attr('url'));
 }).on('click', '> ul > li.folder ul', function(e) {
     // return to base directory when clicking under it
-    var folderup = $(this).closest('li.folder');
-    folderup.find('> span').click();
+    $(this).closest('li.folder').find('> span').click();
 }).on('click', '> ul > li.folder > ul li', function(e) {
     // cancel return to base directory when clicking on an item
     e.stopPropagation();
@@ -792,11 +915,16 @@ $finder.on('dblclick', 'li.file.image, li.file.tem', function() {
         // unselect other files if ctrl/cmd/shift NOT held down
         $('li.file.selected').removeClass('selected');
     } else if (e.shiftKey) {
+        var $prevUnSel,
+            $nextUnSel,
+            $prevAll,
+            $nextAll;
+        
         // select all files between this one and the nearest selected one
-        var $prevUnSel = $(this).prevUntil('li.file.selected');
-        var $nextUnSel = $(this).nextUntil('li.file.selected');
-        var $prevAll = $(this).prevAll('li.file');
-        var $nextAll = $(this).nextAll('li.file');
+        $prevUnSel = $(this).prevUntil('li.file.selected');
+        $nextUnSel = $(this).nextUntil('li.file.selected');
+        $prevAll = $(this).prevAll('li.file');
+        $nextAll = $(this).nextAll('li.file');
         if ($prevUnSel.length < $prevAll.length) {
             $prevUnSel.addClass('selected');
         } else if ($nextUnSel.length < $nextAll.length) {
@@ -808,16 +936,23 @@ $finder.on('dblclick', 'li.file.image, li.file.tem', function() {
     updateSelectedFiles();
 }).on('click', 'li.file.image', function(e) {
     // show image in imgbox on click
-    if ($finder.hasClass('imageView')) { return false; }
+    var theURL,
+        $theImg;
     
-    var theURL = $(this).attr('url');
-    var $theImg = $imagebox.find('img');
+    if ($finder.hasClass('image-view')) { return false; }
+    
+    theURL = $(this).attr('url');
+    $theImg = $imagebox.find('img');
     if ($theImg.filter(':visible').attr('src') != fileAccess(theURL)) {
+        var exif,
+            $this;
+            
+        $this = $(this);
+        exif = $this.data('exif');
+        
         $theImg.attr('src', PM.loadImg).attr('src', fileAccess(theURL)).show();
         $('#selectedTem').hide();
-        
-        var exif = $(this).data('exif');
-        var $this = $(this);
+
         if (exif === undefined) {
             $.ajax({
                 type: 'GET',
@@ -833,12 +968,12 @@ $finder.on('dblclick', 'li.file.image, li.file.tem', function() {
             $('#imagedesc').html(exif).show();
         }
         
-        $(this).append(
-            $imagebox.css('margin-left', $(this).width())
+        $this.append(
+            $imagebox.css('margin-left', $this.width())
         );
     }
 }).on('click', 'li.pca, li.fimg', function(e) {
-    if ($finder.hasClass('imageView')) { return false; }
+    if ($finder.hasClass('image-view')) { return false; }
     
     $('#selectedTem').val("PCA files are not human-readable. " 
         + "This file format is what the desktop version of Psychomorph uses. " 
@@ -850,7 +985,7 @@ $finder.on('dblclick', 'li.file.image, li.file.tem', function() {
         $imagebox.css('margin-left', $(this).width())
     );
 }).on('click', 'li.txt, li.csv, li.pci', function(e) { 
-    if ($finder.hasClass('imageView')) { return false; }
+    if ($finder.hasClass('image-view')) { return false; }
     
     var theURL = $(this).attr('url');
     $.ajax({
@@ -873,7 +1008,7 @@ $finder.on('dblclick', 'li.file.image, li.file.tem', function() {
     );
 }).on('click', 'li.tem', function(e) {
     // show text of file in imgbox on click
-    if ($finder.hasClass('imageView')) { return false; }
+    if ($finder.hasClass('image-view')) { return false; }
 
     var $this = $(this);
     var theURL = $this.attr('url');
@@ -904,14 +1039,14 @@ $finder.on('dblclick', 'li.file.image, li.file.tem', function() {
         $imagebox.css('margin-left', $(this).width())
     );
 }).on('click', 'li.folder > span', function(e) { 
-    $finder.find('input').blur();                                         	// blur any open inputs for folder name changes
+    $finder.find('input').blur();                                             // blur any open inputs for folder name changes
     
-    $theFolder = $(this).parent('li.folder');        						// folder to open    
-    $theFolder.find('li.folder:not(.closed)').addClass('closed');         	// close all folders below this level   
-    $theFolder.parents('li.folder.selected').removeClass('selected');  		// unselect all folders above this level
+    $theFolder = $(this).parent('li.folder');                                // folder to open    
+    $theFolder.find('li.folder:not(.closed)').addClass('closed');             // close all folders below this level   
+    $theFolder.parents('li.folder.selected').removeClass('selected');          // unselect all folders above this level
     
     if (e.shiftKey) {
-		$theFolder.addClass('closed');
+        $theFolder.addClass('closed');
         // select all folders between this one and the nearest selected one
         var $prevUnSel = $theFolder.prevUntil('li.folder.selected');
         var $nextUnSel = $theFolder.nextUntil('li.folder.selected');
@@ -923,30 +1058,30 @@ $finder.on('dblclick', 'li.file.image, li.file.tem', function() {
             $nextUnSel.addClass('selected');
         }
     } else if (e.ctrlKey || e.metaKey) {
-	    $theFolder.addClass('closed');
-	} else {
-		// keep other selected folders if ctrl/cmd/shift held down
-		$finder.find('li.folder').removeClass('selected');
-		$theFolder.removeClass('closed');
-	}
-	
+        $theFolder.addClass('closed');
+    } else {
+        // keep other selected folders if ctrl/cmd/shift held down
+        $finder.find('li.folder').removeClass('selected');
+        $theFolder.removeClass('closed');
+    }
+    
     $theFolder.toggleClass('selected');
-    $theFolder.siblings('li.folder:not(.closed)').addClass('closed'); 	  	// close sibling folders
+    $theFolder.siblings('li.folder:not(.closed)').addClass('closed');           // close sibling folders
     
     var $selFolders = $finder.find('li.folder.selected');
     if ($selFolders.length == 1) {
-	    $selFolders.removeClass('closed');         						  	// if 1 remaining selected folder, open it
-	    $finder.find('li.file.selected').removeClass('selected');         	// unselect all files
-	}
+        $selFolders.removeClass('closed');                                       // if 1 remaining selected folder, open it
+        $finder.find('li.file.selected').removeClass('selected');             // unselect all files
+    }
     
-    if ($finder.hasClass('imageView')) {
+    if ($finder.hasClass('image-view')) {
         $finder.find('ul').css({
             'width': '0'
         });
         $theFolder.find('> ul').css('width', $finder.width());
     }
     
-    $finder.scrollLeft($finder.width());    								// scroll all the way to the right
+    $finder.scrollLeft($finder.width());                                    // scroll all the way to the right
     updateSelectedFiles();
 });
 
@@ -955,9 +1090,9 @@ $finder.on('dblclick', 'li.file.image, li.file.tem', function() {
 $('#imageview').click( function() {
     if ($(this).hasClass('disabled')) { return false; }
     
-    $finder.toggleClass('imageView');
+    $finder.toggleClass('image-view');
     
-    if ($finder.hasClass('imageView') ) {
+    if ($finder.hasClass('image-view') ) {
         $(this).text('Column View');
     } else {
         $(this).text('Icon View');
@@ -982,8 +1117,7 @@ $('#uploadFiles').click(function() {
 });
 $('#upload').change(function() { fileUpload(); });
 // !#showProjects
-$('#showProjects').click(function() {
-    if ($(this).hasClass('disabled')) { return false; }
+$('#showProjects').not('.disabled').click(function() {
     
     var $spinner = bodySpinner();
     
@@ -997,8 +1131,7 @@ $('#showProjects').click(function() {
     });
 });
 // !#showFinder
-$('#showFinder').click(function() {
-    if ($(this).hasClass('disabled')) { return false; }
+$('#showFinder').not('.disabled').click(function() {
     
     $('#menu_window .checkmark').hide();
     $(this).find('.checkmark').show();
@@ -1014,8 +1147,7 @@ $('#showFinder').click(function() {
     });
 });
 // !#showDelineate
-$('#showDelineate').click(function() {
-    if ($(this).hasClass('disabled')) { return false; }
+$('#showDelineate').not('.disabled').click(function() {
 
     $('#menu_window .checkmark').hide();
     $(this).find('.checkmark').show();
@@ -1028,8 +1160,7 @@ $('#showDelineate').click(function() {
     
 });
 // !#showAverage
-$('#showAverage').click(function() {
-    if ($(this).hasClass('disabled')) { return false; }
+$('#showAverage').not('.disabled').click(function() {
     
     $('#menu_window .checkmark').hide();
     $(this).find('.checkmark').show();
@@ -1049,8 +1180,7 @@ $('#showAverage').click(function() {
     });
 });
 // !#showTransform
-$('#showTransform').click(function() {
-    if ($(this).hasClass('disabled')) { return false; }
+$('#showTransform').not('.disabled').click(function() {
     
     $('#menu_window .checkmark').hide();
     $(this).find('.checkmark').show();
@@ -1075,8 +1205,7 @@ $('#aboutPsychomorph').click(function() {
 });
 // !#prefs
 $('#prefDialog').tabs();
-$('#prefs').click(function() {
-    if ($(this).hasClass('disabled')) { return false; }
+$('#prefs').not('.disabled').click(function() {
     
     // make sure the prefs interface is up to date with the database
     //prefGet( function () {
@@ -1156,6 +1285,45 @@ $('.rgb_chooser').each( function() {
     });
 });
 
+$('#grid_line_color').slider('values', [127,127,127]);
+
+$('#grid_lines').change( function() {
+    var line_color;
+    
+    if ($(this).prop('checked')) {
+        $('#grid_line_color').show().change();
+    } else {
+        $('#grid_line_color').hide();
+        $('#scrambleExample div').css({
+            'border-color': 'rgba(0,0,0,0.75)'
+        });
+    }
+});
+
+$('#grid_line_color').on( "slidechange", function(e, ui) {
+    var r, g, b;
+    
+    r = ui.values[0];
+    g = ui.values[1];
+    b = ui.values[2];
+    
+    $('#scrambleExample div').css({
+        'border-color': 'rgb(' + r + ',' + g + ',' + b + ')'
+    });
+});
+
+$('#grid_size').change( function() {
+    resetGrids();
+});
+
+$('#scramble_x_offset').change( function() {
+    resetGrids();
+});
+
+$('#scramble_y_offset').change( function() {
+    resetGrids();
+});
+
 $('#batch_mask_color').slider({
     slide: function(event, ui) {
         var r = ui.values[0];
@@ -1182,14 +1350,11 @@ $('#batch_mask_color').slider({
 });
 
 // !#fileListGet
-$('#fileListGet').click(function() {
-    if ($(this).hasClass('disabled')) { return false; }
+$('#fileListGet').not('.disabled').click(function() {
     fileListGet();
 });
 // !#getInfo
-$('#getInfo').click(function() {
-    if ($(this).hasClass('disabled')) { return false; }
-    
+$('#getInfo').not('.disabled').click(function() {
     $.ajax({
         type: 'GET',
         url: 'scripts/imgReadExif',
@@ -1205,22 +1370,20 @@ $('#getInfo').click(function() {
 });
 
 // !#save
-$('#save').click(function() {
-    if ($(this).hasClass('disabled')) { return false; }
-    if (PM.interface == 'delineate') {
+$('#save').not('.disabled').click(function() {
+    if (PM.interfaceWindow == 'delineate') {
         saveTem();
-    } else if (PM.interface == 'average') {
+    } else if (PM.interfaceWindow == 'average') {
         $('#save-button').click();
-    } else if (PM.interface == 'transform') {
+    } else if (PM.interfaceWindow == 'transform') {
         $('#trans-save-button').click();
     }
 });
 // !saveAs
 /*
-$('#saveAs').click(function() {
-    if ($(this).hasClass('disabled')) { return false; }    
+$('#saveAs').not('.disabled').click(function() {    
     
-    if (PM.interface == 'delineate') {
+    if (PM.interfaceWindow == 'delineate') {
         $('<div />').html('Name: <input type="text" />').dialog({
             title: 'Save As',
             buttons: {
@@ -1236,23 +1399,25 @@ $('#saveAs').click(function() {
 });
 */
 // !#convert
-$('#convert').click(function() {
-    if ($(this).hasClass('disabled')) { return false; }
+$('#convert').not('.disabled').click(function() {
     batchConvert();
 });
 // !#download
-$('#download').click(function() {
-    if ($(this).hasClass('disabled')) { return false; }
-    var cDir = currentDir();
-    var files = filesGetSelected();
+$('#download').not('.disabled').click(function() {
+    var cDir,
+        files;
+        
+    cDir = currentDir();
+    files = filesGetSelected();
+    
     if (files.length > 0) {
         growl('<p>Downloading ' + files.length + ' file' + (files.length==1?'':'s') + '.</p>' +
         '<p>This may take a few seconds, depending on how many files need to be compressed.</p>');
         postIt('scripts/fileZip', {
             'files': files
         });
-    } else if (cDir != '') {
-        growl('<p>Downloading directory <code>' + cDir + '</code></p>' +
+    } else if (typeof cDir == 'string' || cDir.length > 0) {
+        growl('<p>Downloading directory <code>' + urlToName(cDir) + '</code></p>' +
         '<p>This may take a few seconds, depending on how many files need to be compressed.</p>');
         postIt('scripts/fileZip', {
             'directory': cDir
@@ -1262,8 +1427,7 @@ $('#download').click(function() {
     }
 });
 // !#toggletem
-$('#toggletem').click(function() {
-    if ($(this).hasClass('disabled')) { return false; }
+$('#toggletem').not('.disabled').click(function() {
     
     if (PM.showTem) {
         // hide delineation
@@ -1278,10 +1442,9 @@ $('#toggletem').click(function() {
         drawTem();
     }
 });
-$('#emptyTrash').click( function() { emptyTrash(); });
+$('#emptyTrash').not('.disabled').click( function() { emptyTrash(); });
 // !#toggletrash
-$('#toggletrash').click(function() {
-    if ($(this).hasClass('disabled')) { return false; }
+$('#toggletrash').not('.disabled').click(function() {
     
     if ($('#trash:visible').length) {
         $(this).find('span.checkmark').hide();
@@ -1334,7 +1497,7 @@ $('#imgsize').slider({
         updateUndoList();
         
         if (PM.delinfunc == 'fit') {
-            PM.dcontext.clearRect (0, 0, $('#template').width(), $('#template').height());
+            PM.delinContext.clearRect (0, 0, $('#template').width(), $('#template').height());
             cursor('crosshair');
         } else {
             drawTem();
@@ -1342,31 +1505,32 @@ $('#imgsize').slider({
     }
 });
 // !#fitsize
-$('#fitsize').click(function() {
-    if ($(this).hasClass('disabled')) { return false; }
-    var availableWidth = $('#delin_toolbar').width();
-    var availableHeight = $(window).height() - $delin.offset().top - $('#footer').height() - 20;
+$('#fitsize').not('.disabled').click(function() {
     
-    if (availableWidth*PM.originalHeight/PM.originalWidth < availableHeight) {
-        // fit to available width
-        var resize = availableWidth*PM.originalHeight/PM.originalWidth;
-    } else {
-        // fit to available height
-        var resize = availableHeight;
-    }
+    var availableWidth,
+        availableHeight,
+        fitWidth,
+        resize;
     
+    availableWidth = $('#delin_toolbar').width();
+    availableHeight = $(window).height() - $delin.offset().top - $('#footer').height() - 20;
+    fitWidth = availableWidth*PM.originalHeight/PM.originalWidth;
+    
+    resize = (fitWidth >= availableHeight) ?
+                 availableHeight :  // fit to available height
+                 fitWidth;          // fit to available width
+
     $('#imgsize').slider('value', resize);
 });
 // !#zoomin
-$("#zoomin").click(function() {
-    if ($(this).hasClass('disabled')) { return false; }
-    if (PM.interface == 'delineate') {
+$("#zoomin").not('.disabled').click(function() {
+    if (PM.interfaceWindow == 'delineate') {
         var resize = $('#imgsize').slider('value') + 100;
         if (resize > $('#imgsize').slider('option', 'max')) {
             resize = $('#imgsize').slider('option', 'max');
         }
         $('#imgsize').slider('value', resize);
-    } else if (PM.interface == 'transform') {
+    } else if (PM.interfaceWindow == 'transform') {
         var w = $('#destimages').width() + 100;
         $('#destimages').css('width', w + 'px');
         $('#transform').width($('#transimage').width()).height($('#transimage').height());
@@ -1374,15 +1538,14 @@ $("#zoomin").click(function() {
     }
 });
 // !#zoomout
-$("#zoomout").click(function() {
-    if ($(this).hasClass('disabled')) { return false; }
-    if (PM.interface == 'delineate') {
+$("#zoomout").not('.disabled').click(function() {
+    if (PM.interfaceWindow == 'delineate') {
         var resize = $('#imgsize').slider('value') - 100;
         if (resize < $('#imgsize').slider('option', 'min')) {
             resize = $('#imgsize').slider('option', 'min');
         }
         $('#imgsize').slider('value', resize);
-    } else if (PM.interface == 'transform') {
+    } else if (PM.interfaceWindow == 'transform') {
         var w = $('#destimages').width() - 100;
         if (w < 200) {
             w = 200;
@@ -1393,9 +1556,8 @@ $("#zoomout").click(function() {
     }
 });
 // !#zoomoriginal
-$('#zoomoriginal').click(function() {
-    if ($(this).hasClass('disabled')) { return false; }
-    if (PM.interface == 'delineate') {
+$('#zoomoriginal').not('.disabled').click(function() {
+    if (PM.interfaceWindow == 'delineate') {
         var resize = PM.originalHeight;
         
         // adjust slider min and max if out of range
@@ -1405,17 +1567,16 @@ $('#zoomoriginal').click(function() {
             $('#imgsize').slider('option', 'max', resize);
         }
         $('#imgsize').slider('value', resize);
-    } else if (PM.interface == 'transform') {
+    } else if (PM.interfaceWindow == 'transform') {
         $('#destimages').css('width', '310px');
         sizeToViewport();
-    } else if (PM.interface == 'average') {
+    } else if (PM.interfaceWindow == 'average') {
         $('#average').css('width', '310px');
         sizeToViewport();
     }
 });
 // !#cutItems
-$('#cutItems').click(function() {
-    if ($(this).hasClass('disabled')) { return false; }
+$('#cutItems').not('.disabled').click(function() {
     PM.pasteBoard = filesGetSelected();
     $finder.find('li.file').removeClass('to_cut'); // clear all other to_cut files
     $finder.find('li.file.selected:visible').each(function(i, v) {
@@ -1424,17 +1585,16 @@ $('#cutItems').click(function() {
     $('#footer').html(PM.pasteBoard.length + ' files cut');
 });
 // !#copyItems
-$('#copyItems').click(function() {
-    if ($(this).hasClass('disabled')) { return false; }
+$('#copyItems').not('.disabled').click(function() {
     
-    if (PM.interface == 'delineate') {
+    if (PM.interfaceWindow == 'delineate') {
         PM.pasteBoard = [];
-        $.each(PM.selected_pts, function(i, v) {
+        $.each(PM.selectedPts, function(i, v) {
             if (v) {
                 PM.pasteBoard.push({
                     n: i,
-                    x: PM.current_tem[i].x,
-                    y: PM.current_tem[i].y
+                    x: PM.current.tem[i].x,
+                    y: PM.current.tem[i].y
                 });
             }
         });
@@ -1447,68 +1607,22 @@ $('#copyItems').click(function() {
     }
 });
 // !#pasteItems
-$('#pasteItems').click(function() {
-    if ($(this).hasClass('disabled')) { return false; }
+$('#pasteItems').not('.disabled').click(function() {
     
-    if (PM.interface == 'delineate') {
-        if (PM.pasteBoard.length) {
-            $.each(PM.pasteBoard, function(i, v) {
-                PM.current_tem[v.n].x = v.x;
-                PM.current_tem[v.n].y = v.y;
-            });
-            
-            updateUndoList();
-            drawTem();
-        } else {
-            $('#footer').html('No points were copied');
-        }
+    if (PM.interfaceWindow == 'delineate') {
+        temPaste();
     } else {
-        nImages = PM.pasteBoard.length;
-        if (nImages) {
-            var toDir = currentDir();
-            var $fileList = $('<ul />').css('max-height', '200px');
-            var cutlist = 0;
-            $.each(PM.pasteBoard, function(i, v) {
-                $fileList.append('<li>' + urlToName(v) + '</li>');
-                if ($('li.to_cut[url="' + v + '"]').length) cutlist++;
-            });
-            var action = (nImages == cutlist) ? 'move' : 'copy';
-            $.ajax({
-                url: 'scripts/fileCopy',
-                data: {
-                    toDir: toDir,
-                    files: PM.pasteBoard,
-                    action: action
-                },
-                success: function(data) {
-                    if (data.error) {
-                        $('<div />').html(data.errorText).dialog({
-                            title: 'Error Pasting Files',
-                        });
-                        loadFiles(toDir);
-                    } else {
-                        $finder.find('li.folder').addClass('closed');
-                        $finder.find('li.file').removeClass('selected');
-                        if (action == 'move') {
-                            PM.pasteBoard = [];
-                        } // clear PM.pasteBoard if moved, not if copied
-                        loadFiles(toDir);
-                        $('#footer').html(nImages + ' files pasted to <code>' + toDir + '</code>');
-                    }
-                }
-            });
-        }
+        filePaste();
     }
 });
 
 $('#moveFolderToProject').click( function() {
-	if ($(this).hasClass('disabled')) { return false; }
-	
-	folderMoveProject();
+    if ($(this).hasClass('disabled')) { return false; }
+    
+    folderMoveProject();
 });
 // !#find
-$('#find').click(function() {
-    if ($(this).hasClass('disabled')) { return false; }
+$('#find').not('.disabled').click(function() {
     
     $('#searchbar').toggle().val('').focus();
     sizeToViewport();
@@ -1523,18 +1637,17 @@ $('#searchbar').keyup(function() {
     var searchtext = $(this).val();
     var $allFiles = $finder.find('li.file');
     $allFiles.show();
-    if (searchtext != '') {
+    if (searchtext !== '') {
         $allFiles.not(':contains("' + searchtext + '")').hide();
     }
     updateSelectedFiles();
 });
 // !#deleteItems
-$('#deleteItems').click(function() {
-    if ($(this).hasClass('disabled')) { return false; }
+$('#deleteItems').not('.disabled').click(function() {
     
     if ($finder.filter(':visible').length) {
         fileDelete(true);
-    } else if (PM.interface == 'delineate') {
+    } else if (PM.interfaceWindow == 'delineate') {
         var ptArray = getSelPts();
         if (ptArray.length) {
             removeTemPoints(ptArray);
@@ -1543,24 +1656,21 @@ $('#deleteItems').click(function() {
 });
 // !#debug
 $('#debug').click(function() {
-	window.open("/debug/");
+    window.open("/debug/");
 });
 
 // !#newProject
-$('#newProject').click(function() {
-    if ($(this).hasClass('disabled')) { return false; }
+$('#newProject').not('.disabled').click(function() {
     projectNew();
 });
 // !#newFolder
-$('#newFolder').click(function() {
-    if ($(this).hasClass('disabled')) { return false; }
+$('#newFolder').not('.disabled').click(function() {
     folderNew();
 });
 // !#dbCleanup
-$('#dbCleanup').click(function() {
-    if ($(this).hasClass('disabled')) { return false; }
+$('#dbCleanup').not('.disabled').click(function() {
     $.ajax({
-        url: 'scripts/dbCleanup?project=' + PM.project,
+        url: 'scripts/dbCleanup?project=' + PM.project.id,
         success: function(data) {
             if (data.error) {
                 $('<div title="Error Cleaning Database" />').html(data.errorText).dialog();
@@ -1584,14 +1694,14 @@ $('#refresh').click(function() { console.log('refresh()');
         loadFiles(currentDir());
     }
     
-    if (PM.interface == 'delineate') {
+    if (PM.interfaceWindow == 'delineate') {
         delinImage(PM.faceimg);
         PM.delinfunc = 'move';
         $('#pointer, #leftEye, #rightEye, #mouth').hide();
-    } else if (PM.interface == 'average') {
+    } else if (PM.interfaceWindow == 'average') {
         $('#clear-average-button').click();
         loadFiles(currentDir());
-    } else if (PM.interface == 'transform') {
+    } else if (PM.interfaceWindow == 'transform') {
         $('#fromimage, #toimage, #transimage').attr('src', PM.blankImg);
 
         $("#transform").attr({
@@ -1605,7 +1715,7 @@ $('#refresh').click(function() { console.log('refresh()');
             'texture': 50
         });
         
-    } else if (PM.interface == 'project') {
+    } else if (PM.interfaceWindow == 'project') {
         projectList();
     }
     cursor('auto');
@@ -1629,8 +1739,7 @@ $('#maskBuilder').click(function() {
 });
 
 // !#fitTemplate
-$('#fitTemplate').click(function() {
-    if ($(this).hasClass('disabled')) { return false; }
+$('#fitTemplate').not('.disabled').click(function() {
     
     clickPt(0);
     PM.delinfunc = 'fit';
@@ -1643,12 +1752,12 @@ $('#fitTemplate').click(function() {
             files[i] = $(this).attr('url');
         });
         if (files.length > 0) {
-            $('#footer').html('0 of ' + files.length + ' image' + ((files.length == 1) ? '' : 's') + ' fitted to template <code>' + $('#current_tem_name').text() + '</code>');
+            $('#footer').html('0 of ' + files.length + ' image' + ((files.length == 1) ? '' : 's') + ' fitted to template <code>' + $('#currentTem_name').text() + '</code>');
             PM.selectedFile = 0;
             var url = files[0];
-            var name = PM.project + urlToName(url);
+            var name = PM.project.id + urlToName(url);
             delinImage(name, false);
-            PM.eye_clicks = [];
+            PM.eyeClicks = [];
             $('#template').hide();
             PM.delinfunc = '3pt';
             cursor('crosshair');
@@ -1657,9 +1766,9 @@ $('#fitTemplate').click(function() {
             PM.delinfunc = 'move';
             quickhelp();
         }
-    } else if (PM.interface == 'delineate') {
-        $('#footer').html('Fitting template <code>' + $('#current_tem_name').text() + '</code>');
-        PM.eye_clicks = [];
+    } else if (PM.interfaceWindow == 'delineate') {
+        $('#footer').html('Fitting template <code>' + $('#currentTem_name').text() + '</code>');
+        PM.eyeClicks = [];
         $('#template').hide();
         PM.delinfunc = '3pt';
         cursor('crosshair');
@@ -1672,9 +1781,9 @@ $('#newLine').click(function() {
         PM.delinfunc = 'lineadd';
         quickhelp('New line: press &lsquo;enter&rsquo; to end');
         cursor('lineadd');
-        PM.current_lines.push([]);
-        var line = PM.current_lines.length - 1;
-        PM.line_colors[line] = 'red';
+        PM.current.lines.push([]);
+        var line = PM.current.lines.length - 1;
+        PM.delin.lineColors[line] = 'red';
         $('#footer').html('Starting new line');
     }
     updateUndoList();
@@ -1688,7 +1797,6 @@ $('#deleteLine').click(function() {
         cursor('linesub');
     }
     
-    PM.lineWidth = 5;
     drawTem();
 });
 // !#closeMouth
@@ -1697,8 +1805,8 @@ $('#closeMouth').click(function() {
         for (var i = 94; i < 99; i++) {
             var fromPt = i + 5;
             var toPt = i;
-            PM.current_tem[toPt].x = PM.current_tem[fromPt].x;
-            PM.current_tem[toPt].y = PM.current_tem[fromPt].y;
+            PM.current.tem[toPt].x = PM.current.tem[fromPt].x;
+            PM.current.tem[toPt].y = PM.current.tem[fromPt].y;
         }
         drawTem();
     }
@@ -1729,8 +1837,7 @@ $('#batchRenameDialog input, #batchRenameDialog select').change( function() {
     batchRenameChecks();
 });
 // !#resize
-$('#resize').click(function() {
-    if ($(this).hasClass('disabled')) { return false; }
+$('#resize').not('.disabled').click(function() {
     batchResize();
 });
 $('#resizeDialog input').blur( function() {
@@ -1738,19 +1845,17 @@ $('#resizeDialog input').blur( function() {
     calcNewSizes(this.name);
 });
 // !#rotate
-$('#rotate').click(function() {
-    if ($(this).hasClass('disabled')) { return false; }
+$('#rotate').not('.disabled').click(function() {
     batchRotate();
 });
 // !#alignEyes
-$('#alignEyes').click(function() {
-    if ($(this).hasClass('disabled')) { return false; }
+$('#alignEyes').not('.disabled').click(function() {
     batchAlign();
 });
 
 //!.batch_name toggles
 $('.batch_name').on('change', 'input.toggle_superfolder, input.toggle_subfolder, input.toggle_prefix, input.toggle_suffix', function() {
-	batchToggle(this);
+    batchToggle(this);
 });
 
 $('.batch_name').on('click', 'span:not(.multibatch)', function() {
@@ -1777,15 +1882,15 @@ $('.batch_name').on('click', 'span:not(.multibatch)', function() {
                 if (val.substr(-1) != '/') val = val + '/';
             }
         } else if ($this.hasClass('batch_prefix')) {
-	        val = val.replace(/\//g, '');
+            val = val.replace(/\//g, '');
             if (val.length === 0) {
-				$(this).closest('div.batch_name').find('.toggle_prefix').prop('checked', false);
-			}
+                $(this).closest('div.batch_name').find('.toggle_prefix').prop('checked', false);
+            }
         } else if ($this.hasClass('batch_suffix')) {
-	        val = val.replace(/\//g, '');
+            val = val.replace(/\//g, '');
             if (val.length === 0) {
-				$(this).closest('div.batch_name').find('.toggle_suffix').prop('checked', false);
-			}
+                $(this).closest('div.batch_name').find('.toggle_suffix').prop('checked', false);
+            }
         }
         $this.html(val).show();
         $(this).remove();
@@ -1800,8 +1905,7 @@ $('#colorCalibrate').click( function() {
     batchColorCalibrate();
 });
 // !#crop
-$('#crop').click(function() {
-    if ($(this).hasClass('disabled')) { return false; }
+$('#crop').not('.disabled').click(function() {
     batchCrop();
 });
 $('#cropDialog input').keyup(function() {
@@ -1852,33 +1956,75 @@ $('#cropDialog input').keyup(function() {
         }
     }
 });
-// !#tem2ModSkyBio
-$('#convert_template_menu li').click(function() {
-    if ($(this).hasClass('disabled')) { return false; }
+// !#convert_template_menu
+$('#convert_template_menu li').not('.disabled').click(function() {
     var from_tem = parseInt($(this).data('from'));
     var to_tem = parseInt($(this).data('to'));
-    
-    
+
     if (from_tem > 0 && to_tem > 0) {
-   		batchTemConvert(from_tem, to_tem);
-   	}
+        batchTemConvert(from_tem, to_tem);
+    }
 });
 
+/*
+$('#scrambleExample').on('click', 'div', function(e) {
+    var $scram,
+        $theDiv,
+        thisSel,
+        lastSel,
+        x,
+        y,
+        minx,
+        miny,
+        maxx,
+        maxy;
+    
+    $theDiv = $(this);
+    $theDiv.toggleClass('selected');
+    $scram = $('#scrambleExample');
+    thisSel = $theDiv.data();
+    
+    if (e.ctrlKey || e.metaKey || e.shiftKey) {
+        
+        lastSel = $scram.data('lastSel');
+        
+        if (lastSel !== undefined && lastSel.hasOwnProperty('x')) {
+            minx = Math.min(thisSel.x, lastSel.x);
+            maxx = Math.max(thisSel.x, lastSel.x);
+            miny = Math.min(thisSel.y, lastSel.y);
+            maxy = Math.max(thisSel.y, lastSel.y);
+            $scramDivs = $scram.find('div');
+        
+            for (x = minx; x <= maxx; x++) {
+                for (y = miny; y <= maxy; y++) {
+                    $scramDivs.filterByData('x', x).filterByData('y', y).addClass('selected');
+                    console.log(x + ' - ' + y);
+                }
+            }
+        }
+    }
+    
+    if ($theDiv.hasClass('selected')) {
+        $scram.data('lastSel', thisSel);
+    }
+});
+*/
 
+// !#scramble
+$('#scramble').not('.disabled').click( function() {
+    batchScramble();
+});
 
 // !#mask
-$('#mask').click(function() {
-    if ($(this).hasClass('disabled')) { return false; }
+$('#mask').not('.disabled').click(function() {
     batchMask();
 });
 // !#mirror
-$('#mirror').click( function() {
-    if ($(this).hasClass('disabled')) { return false; }
+$('#mirror').not('.disabled').click( function() {
     batchMirror();
 });
 // !#symmetrise
-$('#symmetrise').click(function() {
-    if ($(this).hasClass('disabled')) { return false; }
+$('#symmetrise').not('.disabled').click(function() {
     batchSymmetrise();
 });
 // !movie functions 
@@ -1904,7 +2050,7 @@ $('#movieOriginalHeight').click( function() {
     $.ajax({
         url: 'scripts/imgDimensions',
         type: 'GET',
-        data: { img: PM.project + urlToName($('#movieBox').attr('src')) },
+        data: { img: PM.project.id + urlToName($('#movieBox').attr('src')) },
         success: function(data) {
             $('#movieHeight').slider('value', data.h);
             $('#movieBox').css({
@@ -1971,22 +2117,19 @@ $('#webcamPhoto').click( function() {
 });
 
 // !#movingGif
-$('#movingGif').click(function() {
-    if ($(this).hasClass('disabled')) { return false; }
+$('#movingGif').not('.disabled').click(function() {
     
     movingGif();
 });
 
 // !#batchAverage
-$('#batchAverage').click(function() {
-    if ($(this).hasClass('disabled')) { return false; }
+$('#batchAverage').not('.disabled').click(function() {
     
     batchAverage();
 });
 
 // !batchTransform
-$('#batchTransform').click(function() {
-    if ($(this).hasClass('disabled')) { return false; }
+$('#batchTransform').not('.disabled').click(function() {
     
     batchTransform();
 });
@@ -2009,8 +2152,7 @@ $('#SBTdialog').delegate('textarea', 'keydown', function(e) {
 });
 
 //!gridFaces
-$('#gridFaces').click(function() {
-    if ($(this).hasClass('disabled')) { return false; }
+$('#gridFaces').not('.disabled').click(function() {
     $('#showTransform').click();
     $('#destimages, #continua').hide();
     $('#grid').show();
@@ -2021,8 +2163,7 @@ $('#createGrid').button().click( function() {
 });
 
 //!multiContinua
-$('#multiContinua').click(function() {
-	if ($(this).hasClass('disabled')) { return false; }
+$('#multiContinua').not('.disabled').click(function() {
     $('#showTransform').click();
     $('#destimages, #grid').hide();
     $('#continua').show();
@@ -2031,10 +2172,10 @@ $('#createContinua').button().click( function() {
     createContinua();
 });
 $('#cimgs').change(function() {
-	var c = $('#cimgs').val();
-	if (c < 2) { c = 2; $('#cimgs').val(2); }
-	if (c > 30) { c = 30; $('#cimgs').val(30); }
-	$('#continua-imgs img').hide().slice(0,c).show();
+    var c = $('#cimgs').val();
+    if (c < 2) { c = 2; $('#cimgs').val(2); }
+    if (c > 30) { c = 30; $('#cimgs').val(30); }
+    $('#continua-imgs img').hide().slice(0,c).show();
 });
 $('#cimgs').val(4).change();
 $('#continua-imgs img').droppable({
@@ -2047,8 +2188,7 @@ $('#continua-imgs img').droppable({
 });
 
 // !batchTag
-$('#batchTag').click(function() {
-    if ($(this).hasClass('disabled')) { return false; }
+$('#batchTag').not('.disabled').click(function() {
     // put all img files in a list
     var regex = new RegExp('(^/images|\.jpg$)', 'g');
     var files = filesGetSelected('.jpg', regex);
@@ -2105,8 +2245,7 @@ $('#batchTag').click(function() {
     }
 });
 //!batchModDelin
-$('#batchModDelin').click(function() {
-    if ($(this).hasClass('disabled')) { return false; }
+$('#batchModDelin').not('.disabled').click(function() {
     batchModDelin();
 });
 //!facialMetrics
@@ -2151,56 +2290,52 @@ $('#fm_results').on('dblclick', 'thead th+th', function() {
 $('#fm_new').click(function() {
     fmAddEquation();
 });
-$('#facialMetrics').click(function() {
-    if ($(this).hasClass('disabled')) { return false; }
+$('#facialMetrics').not('.disabled').click(function() {
     
     batchFacialmetrics();
 });
 // !undo
-$('#undo').click(function() {
-    if ($(this).hasClass('disabled')) { return false; }
+$('#undo').not('.disabled').click(function() {
     
-    if (PM.interface == 'delineate') {
+    if (PM.interfaceWindow == 'delineate') {
         if (PM.delinfunc == 'move') {
-            PM.undo_level = Math.max(0, PM.undo_level - 1);
-            PM.current_tem = $.extend(true, [], PM.undo_tem[PM.undo_level]);
-            PM.current_lines = $.extend(true, [], PM.undo_lines[PM.undo_level]);
-            if (PM.undo_level == 0) $('#delin_save').removeClass('unsaved');
+            PM.undo.level = Math.max(0, PM.undo.level - 1);
+            PM.current.tem = $.extend(true, [], PM.undo.tem[PM.undo.level]);
+            PM.current.lines = $.extend(true, [], PM.undo.lines[PM.undo.level]);
+            if (PM.undo.level == 0) $('#delin_save').removeClass('unsaved');
             drawTem();
         } else if (PM.delinfunc == 'sym' && PM.symPts.n > 0) {
             PM.symPts.n = PM.symPts.order.pop();
             nextSymPt('start');
         } else if (PM.delinfunc == '3pt') {
-            // remove last item in eye_clicks
-            var n = PM.eye_clicks.length;
+            // remove last item in eyeClicks
+            var n = PM.eyeClicks.length;
             if (n == 1) {
                 $('#leftEye').hide();
-                PM.eye_clicks.pop();
+                PM.eyeClicks.pop();
                 clickPt(0);
             } else if (n == 2 ) {
                 $('#rightEye').hide();
-                PM.eye_clicks.pop();
+                PM.eyeClicks.pop();
                 clickPt(1);
             }
         }
     }
 });
 // !redo
-$('#redo').click(function() {
-    if ($(this).hasClass('disabled')) { return false; }
-    if (PM.interface == 'delineate') {
+$('#redo').not('.disabled').click(function() {
+    if (PM.interfaceWindow == 'delineate') {
         if (PM.delinfunc == 'move') {
-            PM.undo_level = Math.min(PM.undo_level + 1, PM.undo_tem.length - 1);
-            PM.current_tem = $.extend(true, [], PM.undo_tem[PM.undo_level]);
-            PM.current_lines = $.extend(true, [], PM.undo_lines[PM.undo_level]);
-            if (PM.undo_level > 0) $('#delin_save').addClass('unsaved');
+            PM.undo.level = Math.min(PM.undo.level + 1, PM.undo.tem.length - 1);
+            PM.current.tem = $.extend(true, [], PM.undo.tem[PM.undo.level]);
+            PM.current.lines = $.extend(true, [], PM.undo.lines[PM.undo.level]);
+            if (PM.undo.level > 0) $('#delin_save').addClass('unsaved');
             drawTem();
         }
     }
 });
 // !#select
-$('#select').click(function() {
-    if ($(this).hasClass('disabled')) { return false; }
+$('#select').not('.disabled').click(function() {
     if ($finder.filter(':visible').length) {
         // (un)select all files in the open folder
         var $openFolder = $finder.find('li.folder')
@@ -2218,7 +2353,7 @@ $('#select').click(function() {
             $imagebox.hide().appendTo($allfiles.eq(0));
         }
         updateSelectedFiles();
-    } else if (PM.interface == 'delineate') {
+    } else if (PM.interfaceWindow == 'delineate') {
         if ($('.pt').length == $('.pt.selected').length) {
             // unselect all delineation points
             $('.pt').removeClass('selected');
@@ -2229,17 +2364,16 @@ $('#select').click(function() {
     }
 });
 // !createTransform
-$('#createTransform').click(function() {
-    if ($(this).hasClass('disabled')) { return false; }
-    if (PM.interface == 'average') {
+$('#createTransform').not('.disabled').click(function() {
+    if (PM.interfaceWindow == 'average') {
         getAverage();
-    } else if (PM.interface == 'transform') {
+    } else if (PM.interfaceWindow == 'transform') {
         getTransform({async:true});
-    } else if (PM.interface == 'finder') {
+    } else if (PM.interfaceWindow == 'finder') {
         var regex = new RegExp("(.tem$)", "g");
-        PM.selected_images = filesGetSelected('.tem', regex);
+        var selTems = filesGetSelected('.tem', regex);
         
-        if (PM.selected_images.length > 1) {
+        if (selTems.length > 1) {
             $('#showAverage').click();
         } else {
             growl("Select more than 1 image to average", 1000);
@@ -2264,21 +2398,19 @@ $('#isNewTem').click( function() {
     }
 });
 // !editTemplate
-$('#editTemplate').click(function() {
-    if ($(this).hasClass('disabled')) { return false; }
+$('#editTemplate').not('.disabled').click(function() {
     
     editTemplate();
 });
-$('#setPointLabels').click(function() {
-    if ($(this).hasClass('disabled')) { return false; }
+$('#setPointLabels').not('.disabled').click(function() {
     
-    if (PM.default_tem.length != PM.current_tem.length) {
-        growl('The current template does not match the template <code>' + $('#current_tem_name').text() + '</code>');
+    if (PM.delin.tem.length != PM.current.tem.length) {
+        growl('The current template does not match the template <code>' + $('#currentTem_name').text() + '</code>');
     } else {
         // check if the current user has access to edit this template
         $.ajax({
             url: '/scripts/userCheckAccess',
-            data: { table: 'tem', id: PM.default_tem_id },
+            data: { table: 'tem', id: PM.delin.temId },
             success: function(data) {
                 if (data.error) {
                     growl(data.errorText);
@@ -2307,8 +2439,7 @@ $('#labelDialog ol').on('focus', 'input', function() {
 });
 
 // !setSymPoints
-$('#setSymPoints').click(function() {
-    if ($(this).hasClass('disabled')) { return false; }
+$('#setSymPoints').not('.disabled').click(function() {
     setSymPoints();
 });
 // !whatsnew
@@ -2329,9 +2460,9 @@ $('.tinyhelp').click(function() {
 });
 // !emailLisa
 $('#emailLisa').click(function() {
-    PM.no_onbeforeunload = true;
+    PM.noOnBeforeUnload = true;
     location.assign("mailto:lisa.debruine@glasgow.ac.uk?subject=Online PsychoMorph");
-    PM.no_onbeforeunload = false;
+    PM.noOnBeforeUnload = false;
 });
 // !show_thumbs
 $('#show_thumbs').change(function() {
@@ -2370,7 +2501,7 @@ $('#maskDialog ul input[type=checkbox]').change(function() {
 });
 // !#transButton
 $('#transButton').button().click(function() {
-    var list = filesGetSelected('.image.hasTem', PM.project);
+    var list = filesGetSelected('.image.hasTem', PM.project.id);
     
     if (list.length > 1) {
         var fromimage = urlToName($("#fromimage").attr('src'));
@@ -2394,8 +2525,8 @@ $('#transButton').button().click(function() {
 // !#continuum
 $('#continuum').click(function() {
     if ($(".movie_settings:visible").length === 0) {
-        $("#trans_settings").hide()
-        $(".movie_settings").show()
+        $("#trans_settings").hide();
+        $(".movie_settings").show();
         $('#continuum').html('Hide Continuum Settings');
     } else {
         $("#trans_settings").show();
@@ -2428,7 +2559,7 @@ $('#toggle_recent').click(function() {
 $delin.click(function(e) {
     if (e.shiftKey && (e.metaKey || e.altKey)) {
         newDelinPoint(e);
-    } else if (PM.eye_clicks.length < 3) {
+    } else if (PM.eyeClicks.length < 3) {
         threePtDelin(e);
     }
 }).dblclick(function() {
@@ -2497,10 +2628,10 @@ $delin.on("mouseenter", ".pt", function(e) {
     
     var i = parseInt($(this).attr('n'));
     
-    var pointName = (PM.default_tem[i] !== undefined) ? PM.default_tem[i].name : 'undefined';
+    var pointName = (PM.delin.tem[i] !== undefined) ? PM.delin.tem[i].name : 'undefined';
     
-    var thisx = round(PM.current_tem[i].x, 1);
-    var thisy = round(PM.current_tem[i].y, 1);
+    var thisx = round(PM.current.tem[i].x, 1);
+    var thisy = round(PM.current.tem[i].y, 1);
     
     var footertext = '[' + i + '] ' + pointName + 
                      ' x=<span class="x">' + thisx + '</span>; ' + 
@@ -2539,13 +2670,13 @@ $delin.on("mousedown", ".pt", function(e) {
     if (PM.delinfunc == 'label') { 
         return false;
     } else if (PM.delinfunc == 'lineadd') {
-        var line = PM.current_lines.length - 1;
+        var line = PM.current.lines.length - 1;
         var i = parseInt($(this).attr('n'));
         // check if last point if the same as this one
-        var lastPt = PM.current_lines[line][PM.current_lines[line].length - 1];
+        var lastPt = PM.current.lines[line][PM.current.lines[line].length - 1];
         if (lastPt === undefined || lastPt != i) {
-            PM.current_lines[line].push(i);
-            var t = 'Added a point to the new line [' + PM.current_lines[line].join() + ']';
+            PM.current.lines[line].push(i);
+            var t = 'Added a point to the new line [' + PM.current.lines[line].join() + ']';
             $('#footer').html(t).prop('data-persistent', t);
         }
     } else if (PM.delinfunc == 'sym') {
@@ -2556,7 +2687,7 @@ $delin.on("mousedown", ".pt", function(e) {
             
             $.each(conLines, function(idx, line) {
                 addToCustomMask(';');
-                $.each(PM.current_lines[line], function(idx2, pt) {
+                $.each(PM.current.lines[line], function(idx2, pt) {
                     addToCustomMask(pt);
                 });
             });
@@ -2669,7 +2800,7 @@ $queue.on('click', 'li.queueItem:not(.active)', function(e) {
         $(this).data('obj').destroy();
     }
 }).on('click', 'li.queueItem.complete:not(.ui-state-error)', function() {
-    fileShow($(this).data('obj').returnData.newfilename);
+    fileShow($(this).data('obj').returnData.newFileName);
 }).on('click', 'li.queueItem.paused', function(){
     $(this).data('obj').wait();
 }).on('click', 'li.queueItem.waiting', function(){        
@@ -2698,9 +2829,10 @@ sizeToViewport();
 
 $("body").removeClass("loading");
 
-if (PM.userid) {
+if (PM.user.id) {
     var $spinner = bodySpinner();
     $('#projectInterface').show();
+    msgGet();
     prefGet();
     projectList();
     menubar('project');

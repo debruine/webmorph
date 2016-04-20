@@ -5,9 +5,9 @@ auth();
 checkAllocation();
 
 $return = array(
-	'error' => true,
-	'errorText' => '',
-	'newfilename' => ''
+    'error' => true,
+    'errorText' => '',
+    'newFileName' => ''
 );
 
 // standard 1350 x 1800 FRL alignment
@@ -22,39 +22,39 @@ $align_pt2 = $_POST['pt2'];
 $rgb = $_POST['rgb'];
 
 if (array_key_exists('img', $_POST)) {
-	ini_set('memory_limit','512M');
-	include_once DOC_ROOT . '/include/classes/psychomorph.class.php';
+    ini_set('memory_limit','512M');
+    include_once DOC_ROOT . '/include/classes/psychomorph.class.php';
 
-	if (array_key_exists('tem', $_POST)) {
-		$img = new PsychoMorph_ImageTem($_POST['img'], $_POST['tem']);
-	} else {
-		$img = new PsychoMorph_ImageTem($_POST['img']);
-	}
-	
-	$img->alignEyes($align_width, $align_height,
-					array($aligned_x1, $aligned_y1),
-					array($aligned_x2, $aligned_y2),
-					$align_pt1, $align_pt2, $rgb);
-	
-	if (array_key_exists('newfilename', $_POST)) {
-		$newfilename = $_POST['newfilename'];
-	} else {
-		$newfilename = array(
-			'subfolder' => $_POST['subfolder'],
-			'prefix' => $_POST['prefix'],
-			'suffix' => $_POST['suffix']
-		);
-	}
-	
-	//$img->setOverWrite(true);
-	if ($img->save($newfilename)) {
-		$return['error'] = false;
-		$return['newfilename'] = $img->getImg()->getURL();
-	} else {
-		$return['errorText'] .= 'The image was not saved. ';
-	}
+    if (array_key_exists('tem', $_POST)) {
+        $img = new PsychoMorph_ImageTem($_POST['img'], $_POST['tem']);
+    } else {
+        $img = new PsychoMorph_ImageTem($_POST['img']);
+    }
+    
+    $img->alignEyes($align_width, $align_height,
+                    array($aligned_x1, $aligned_y1),
+                    array($aligned_x2, $aligned_y2),
+                    $align_pt1, $align_pt2, $rgb);
+    
+    if (array_key_exists('newFileName', $_POST)) {
+        $newFileName = $_POST['newFileName'];
+    } else {
+        $newFileName = array(
+            'subfolder' => $_POST['subfolder'],
+            'prefix' => $_POST['prefix'],
+            'suffix' => $_POST['suffix']
+        );
+    }
+    
+    //$img->setOverWrite(true);
+    if ($img->save($newFileName)) {
+        $return['error'] = false;
+        $return['newFileName'] = $img->getImg()->getURL();
+    } else {
+        $return['errorText'] .= 'The image was not saved. ';
+    }
 } else {
-	$return['errorText'] .= 'The image to align was not found.';
+    $return['errorText'] .= 'The image to align was not found.';
 }
 
 scriptReturn($return);

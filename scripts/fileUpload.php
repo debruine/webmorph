@@ -8,29 +8,12 @@ checkAllocation();
 
 $return = array(
     'error' => false,
-    'errorText' => '',
-    //'post' => $_POST
+    'errorText' => ''
 );
 
-include_once DOC_ROOT . '/include/classes/psychomorph.class.php';
-
-if (array_key_exists('imgBase64', $_POST)) {
-    // create image from base64
-    $newFileName = safeFileName($_POST['basedir'] . '/' . $_POST['name']) . '.jpg';
+if (count($_FILES) > 0) {
+    include_once DOC_ROOT . '/include/classes/psychomorph.class.php';
     
-    $img = new PsychoMorph_Image($newFileName);
-    $b64 = str_replace('data:image/jpeg;base64,', '', $_POST['imgBase64']);
-    $b64 = str_replace(' ', '+', $b64);
-    $img->setImageBase64($b64);
-    $img->setDescription('Webcam upload');
-} else if (strpos($_POST['img'], "/.tmp/") !== false) {
-    $tempath = IMAGEBASEDIR . str_replace("/scripts/fileAccess?file=/", "", $_POST['tem']);
-    $imgpath = IMAGEBASEDIR . str_replace("/scripts/fileAccess?file=/", "", $_POST['img']);
-    $newFileName = safeFileName($_POST['name']);
-
-    $img = new PsychoMorph_ImageTem($imgpath, $tempath);
-    $img->setDescription(json_decode($_POST['desc']));
-} else if (count($_FILES) > 0) {
     foreach ($_FILES['upload']['tmp_name'] as $i => $tmp_name) {
         $files[$_FILES['upload']['name'][$i]] = $tmp_name;
     }
@@ -65,7 +48,6 @@ if (array_key_exists('imgBase64', $_POST)) {
                     $img = new PsychoMorph_ImageTem($tmp_name, $existingtemfile);
                 } else {
                     // there is no tem for this image
-                    
                     $img = new PsychoMorph_Image($tmp_name);
                 }
                 $img->setDescription('Uploaded file');

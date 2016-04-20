@@ -16,7 +16,7 @@ if (typeof console === "undefined") {
 // select part of a text field
 $.fn.selectRange = function(start, end) {
     return this.each(function() {
-        if(this.setSelectionRange) {
+        if (this.setSelectionRange) {
             this.focus();
             this.setSelectionRange(start, end);
         } else if(this.createTextRange) {
@@ -39,41 +39,51 @@ $.extend($.ui.dialog.prototype.options, {
 
 // stripe a table or list
 $.fn.stripe = function() {
-    var $rows = $(this[0]).find('tbody > tr, > li');
+    var $rows;
+    
+    $rows = $(this[0]).find('tbody > tr, > li');
     $rows.filter(':odd').addClass("odd");
     $rows.filter(':even').addClass("even");
 };
 
-// set defaults for ajax
-/*$.ajaxSetup({
-    dataType: 'json',
-    type: 'POST',
-});*/
+// filter elements by data
+$.fn.filterByData = function (prop, val) {
+    var $self = this;
+    
+    if (typeof val === 'undefined') {
+        return $self.filter(
+            function () { return typeof $(this).data(prop) !== 'undefined'; }
+        );
+    }
+    return $self.filter(
+        function () { return $(this).data(prop) == val; }
+    );
+};
 
+// set defaults for ajax
 $.xhrPool = []; // array of uncompleted requests
 $.xhrPool.abortAll = function() { // our abort function
     $(this).each(function(idx, jqXHR) { 
         jqXHR.abort();
     });
-    $.xhrPool.length = 0
+    $.xhrPool.length = 0;
 };
  
 $.ajaxSetup({
-	dataType: 'json',
+    dataType: 'json',
     type: 'POST',
     beforeSend: function(jqXHR) { // before jQuery send the request we will push it to our array
         $.xhrPool.push(jqXHR);
     },
     complete: function(jqXHR) { // when some of the requests completed it will splice from the array
-        var index = $.xhrPool.indexOf(jqXHR);
+        var index;
+        
+        index = $.xhrPool.indexOf(jqXHR);
         if (index > -1) {
             $.xhrPool.splice(index, 1);
         }
     }
 });
-
-
-
 
 
 // check if an array a contains an item obj
@@ -88,16 +98,22 @@ function contains(a, obj) {
 
 // pad a number with leading zeros (or other chararcter in 3rd argument
 function pad(original, width, padder) {
+    var len;
+    
     padder = padder || '0';
     original = original + ''; // turn numbers into strings
-    var len = original.length;
+    len = original.length;
     return (len >= width) ? original : new Array(width - len + 1).join(padder) + original;
 }
 
 // round a number in apa style
 function round(original, decimals) {
-    var apa_decimals = 0;
-    var v = Math.abs(original);
+    var apa_decimals = 0,
+        v,
+        mult,
+        rounded;
+    
+    v = Math.abs(original);
     if (v < 0.0001) {
         apa_decimals = 5; 
     } else if (v < 0.001) {
@@ -112,8 +128,8 @@ function round(original, decimals) {
 
     decimals = decimals || apa_decimals;
     
-    var mult = Math.pow(10, decimals);
-    var rounded = Math.round(original * mult) / mult;
+    mult = Math.pow(10, decimals);
+    rounded = Math.round(original * mult) / mult;
     return rounded;
 }
 
@@ -124,7 +140,10 @@ function sortNumber(a, b) {
 
 // timed small notifications
 function growl(txt, interval, pos) {
-    var $growlDialog = $('<div />').addClass('growl').html(txt).draggable();
+    var $growlDialog;
+    
+    $growlDialog = $('<div />').addClass('growl').html(txt).draggable();
+
     $('body').prepend($growlDialog);
     if (interval >= 100) {
         setTimeout(function() { $growlDialog.remove(); }, interval);
@@ -140,15 +159,17 @@ function postIt(url, data) {
         action: url
     }));
     for (var i in data) {
-        $('#jQueryPostItForm').append($('<input/>', {
-            type: 'hidden',
-            name: i,
-            value: data[i]
+        if (data.hasOwnProperty(i)) {
+            $('#jQueryPostItForm').append($('<input/>', {
+                type: 'hidden',
+                name: i,
+                value: data[i]
         }));
+        }
     }
-    PM.no_onbeforeunload = true;
+    PM.noOnBeforeUnload = true;
     $('#jQueryPostItForm').submit();
-    PM.no_onbeforeunload = false;
+    PM.noOnBeforeUnload = false;
 } 
 
 function cursor(curs) {
@@ -160,12 +181,30 @@ function cursor(curs) {
 // set up a contextual menu (right-click)
 function context_menu(items, e) {
     // items = array of items, each an objects with a name (to display in the menu) and func (function when clicked) 
-    var $menu = $('<div class="context_menu" />');
-    var $ul = $('<ul />');
+    var $menu, 
+        $ul,
+        filteredItems = [],
+        itemN;
+        
+    // filter out read-only items
+    if (PM.project.perm == 'read-only') {
+        $.each(items, function(i, item) {
+            if (item.readOnly !== true) {
+                filteredItems.push(item);
+            }
+        });
+    } else {
+        filteredItems = items;
+    }
     
-    $.each(items, function(i,item) {
-        var $theItem;
-        if (item == 'break') {
+    itemN = filteredItems.length;
+    
+    $menu = $('<div class="context_menu" />');
+    $ul = $('<ul />');
+    $.each(filteredItems, function(i, item) {
+        var $theItem = '';
+        
+        if (item == 'break' && i !== 0 && i !== itemN-1 & items[i-1] !== 'break') {
             $theItem = $('<li class="separator" />');
         } else {
             $theItem = $('<li />').html(item.name).click( item.func);
@@ -183,74 +222,69 @@ function context_menu(items, e) {
 }
 
 function menubar(currentInterface) { console.log('menubar('+currentInterface+')');
-    PM.interface = currentInterface;
+    PM.interfaceWindow = currentInterface;
     $('.menubar .average, .menubar .finder, .menubar .transform, .menubar .delineate, .menubar .project').addClass('disabled');
     $('.menubar .' + currentInterface).removeClass('disabled');
+    
+    if (PM.project.perm == 'read-only') {
+        $('.no-read-only').addClass('disabled');
+    } else {
+        $('.no-read-only').removeClass('disabled');
+    }
 }
 
-function urlToName(url) { //console.debug('urlToName(' + url + ')');
-    var name = url.replace(/^\s*(http:\/\/)?(webmorph\.org|webmorph\.test|test\.psychomorph|psychomorph\.facelab\.org)?/, '');
+function urlToName(url) {
+    var name,
+        regex;
+    
+    name = url.replace(/^\s*(http:\/\/)?(webmorph\.org|webmorph\.test|test\.psychomorph|psychomorph\.facelab\.org)?/, '');
     name = name.replace(/^\/scripts\/fileAccess\?file=/, '');
-    //name = name.replace('/scripts/fileAccess?file=', '');
-    var regex = new RegExp('^' + PM.project + '\/', 'g');
+    regex = new RegExp('^' + PM.project.id + '\/', 'g');
     name = name.replace(regex, '/');
     
     return name;
 }
 
 function spinner(css) {
-	var $spinner = $('<div class="rainbow-loader">'
-	               + '<div><div></div></div>'
-	               + '<div><div></div></div>'
-	               + '<div><div></div></div>'
-	               + '<div><div></div></div>'
-	               + '<div><div></div></div>'
-	               + '<div><div></div></div>'
-	               + '</div>');
-	
-	if (css !== "undefined") { $spinner.css(css); }
+    var $spinner;
+    
+    $spinner = $('<div class="rainbow-loader">'
+               + '<div><div></div></div>'
+               + '<div><div></div></div>'
+               + '<div><div></div></div>'
+               + '<div><div></div></div>'
+               + '<div><div></div></div>'
+               + '<div><div></div></div>'
+               + '</div>');
+    
+    if (css !== "undefined") { $spinner.css(css); }
     
     return $spinner;
 }
 
 function bodySpinner() {
-	var $spinner;
+    var $spinner;
 
     $spinner = spinner({
         'font-size': '300px',
         'position': 'absolute'
     });
-    /*
-	$spinner = $('<div class="rainbow-spin"><div><div><div><div><div><div><div></div></div></div></div></div></div></div></div>').css({
-        'font-size': '200px',
-        'position': 'fixed',
-        'top': '50%',
-        'left': '50%',
-        'margin-left': '-50px',
-        'margin-top': '-50px'
-    });
-    
-    $spinner = $('<div class="spinner" />').css({
-        'font-size': '150px',
-        'position': 'fixed',
-        'top': '50%',
-        'left': '50%',
-        'margin-left': '-50px',
-        'margin-top': '-50px'
-    });
-    */
     
     $('body').append($spinner);
     
     return $spinner;
 }
 
+/*
 function resizeTags() {  console.log('resizeTags()');
     // update all font sizes for visible tags
-    var visTags = {};
+    var visTags = {},
+        visImages;
+    
     $('#my_images div').filter(':visible').find('img').each(function() {
         var thisTag = $(this).attr('title');
         var thisTagList = thisTag.split(';');
+        
         $.each(thisTagList, function(i, v) {
             if (visTags[v]) {
                 visTags[v] = visTags[v] + 1;
@@ -259,9 +293,16 @@ function resizeTags() {  console.log('resizeTags()');
             }
         });
     });
-    var visImages = $('#my_images div:visible img').length;
+    
+    visImages = $('#my_images div:visible img').length;
+    
     $('#taglist a').each(function() {
-        var $a = $(this);
+        var $a,
+            fontsize,
+            n;
+            
+        $a = $(this);
+        
         if ($a.html() == 'ALL') {
             if (visImages == $('#my_images img').length) {
                 $a.hide();
@@ -275,34 +316,37 @@ function resizeTags() {  console.log('resizeTags()');
                 $a.show();
             }
         } else {
-            var n = visTags[$a.html()];
+            n = visTags[$a.html()];
             if (n > 0) {
-                var fontsize = 75 + ((n / visImages) * 75);
+                fontsize = 75 + ((n / visImages) * 75);
                 $a.css('font-size', fontsize + '%').show();
             } else {
                 $a.hide();
             }
         }
     });
+    
     updateSelectedImages();
 }
+*/
 
-function sizeToViewport() { // console.log('sizeToViewport()');
-    if (PM.interface == 'finder') {    
-        var finderHeight = $(window).height() - $finder.offset().top - 44;
-        $finder.height(finderHeight);
-    } else if (PM.interface == 'average') {
-        $finder.height($('#avg_image_box').outerHeight());
-        //$('#avg_image_box').css('width', 'auto');
+function sizeToViewport() { 
+    var finderHeight;
+    
+    if (PM.interfaceWindow == 'finder') {    
+        finderHeight = $(window).height() - $finder.offset().top - 44;
+    } else if (PM.interfaceWindow == 'average') {
+        finderHeight = $('#avg_image_box').outerHeight();
         $('#individual_image_box').css("padding-left", $('#avg_image_box').outerWidth(true) + 20);
-        $('#average_list').height($('#average').outerHeight());
-        
-    } else if (PM.interface == 'transform') {
+        $('#average-list').height($('#average').innerHeight());
+    } else if (PM.interfaceWindow == 'transform') {
         $('#destimages').css('height', 'auto');
-        $finder.height($('#destimages').outerHeight());
+        finderHeight = $('#destimages').outerHeight();
         $('#transform').width($('#transimage').width()).height($('#transimage').height());
         $('#individual_image_box').css("padding-left", $('#destimages').outerWidth(true) + 20);
     }
+    
+    $finder.height(finderHeight);
     
     $('#imagebox').css({
         'position': 'fixed',

@@ -6,7 +6,7 @@
  * PHP version 5
  *
  * @author     Andrew Moore <http://stackoverflow.com/users/26210/andrew-moore>
- * @link	   http://stackoverflow.com/questions/2190236/how-can-i-read-png-metadata-from-php
+ * @link       http://stackoverflow.com/questions/2190236/how-can-i-read-png-metadata-from-php
  *************************************************************************/
 
 class PNG_Reader {

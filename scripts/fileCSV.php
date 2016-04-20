@@ -11,13 +11,13 @@ $filename = ifEmpty($_POST['name'], 'csvfile') . ".csv";
 # check that everything went OK
 if (!empty($_POST['file'])) {
 
-	header("Content-Disposition: attachment; filename=\"$filename\"");
-	header("Content-Type: text/plain");  
-	
-	echo $_POST['file'];
+    header("Content-Disposition: attachment; filename=\"$filename\"");
+    header("Content-Type: text/plain");  
+    
+    echo $_POST['file'];
 }
 
 
 exit;
-	
+    
 ?>

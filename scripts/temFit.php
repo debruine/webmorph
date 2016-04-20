@@ -37,13 +37,13 @@ $e = round($y->get(1), 3);
 $f = round($y->get(2), 3);
 
 $variables = array(
-	'a' => $a,
-	'b' => $b,
-	'c' => $c,
-	'd' => $d,
-	'e' => $e,
-	'f' => $f,
-	'fitPoints' => $_POST['fitPoints']
+    'a' => $a,
+    'b' => $b,
+    'c' => $c,
+    'd' => $d,
+    'e' => $e,
+    'f' => $f,
+    'fitPoints' => $_POST['fitPoints']
 );
 
 echo json_encode($variables);

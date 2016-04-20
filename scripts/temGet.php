@@ -6,8 +6,8 @@ require_once $_SERVER['DOCUMENT_ROOT'] . '/include/main_func.php';
 auth();
 
 $return = array(
-	'error' => false,
-	'errorText' => '',
+    'error' => false,
+    'errorText' => '',
 );
 
 $user = $_SESSION['user_id'];
@@ -17,15 +17,15 @@ $q = new myQuery("SELECT name FROM tem WHERE id=" . $tem_id);
 $return['name'] = $q->get_one();
 
 $q = new myQuery("SELECT n as i, name, x, y FROM point WHERE tem_id=" . $tem_id . " ORDER BY n");
-$return['default_tem'] = $q->get_assoc();
+$return['defaultTem'] = $q->get_assoc();
 
 $q = new myQuery("SELECT points FROM line WHERE tem_id=" . $tem_id . " ORDER BY n");
-$return['default_lines'] = array_map(function($a) { 
-	return explode(',', $a['points']);
+$return['defaultLines'] = array_map(function($a) { 
+    return explode(',', $a['points']);
 }, $q->get_assoc());
 
 $q = new myQuery("SELECT n, color FROM line WHERE tem_id=" . $tem_id . " ORDER BY n");
-$return['line_colors'] = $q->get_assoc(false, false, 'color');
+$return['lineColors'] = $q->get_assoc(false, false, 'color');
 
 $q = new myQuery("SELECT 3ptdelin1, 3ptdelin2, 3ptdelin3 FROM tem WHERE id=" . $tem_id);
 $pts = $q->get_row();
@@ -38,27 +38,27 @@ exit;
 /*
 
 CREATE TABLE tem (
-	id INT(11) NOT NULL AUTO_INCREMENT,
-	user_id INT(4) NOT NULL,
-	name VARCHAR(255) NOT NULL,
-	notes TEXT,
-	public BOOL DEFAULT 0,
-	3ptdelin1 INT(4),
-	3ptdelin2 INT(4),
-	3ptdelin3 INT(4),
-	PRIMARY KEY (id)
+    id INT(11) NOT NULL AUTO_INCREMENT,
+    user_id INT(4) NOT NULL,
+    name VARCHAR(255) NOT NULL,
+    notes TEXT,
+    public BOOL DEFAULT 0,
+    3ptdelin1 INT(4),
+    3ptdelin2 INT(4),
+    3ptdelin3 INT(4),
+    PRIMARY KEY (id)
 );
 
 INSERT INTO tem VALUES (1, 1, "FRL-189", "Face Research Lab 189-point front face template", TRUE, 0, 1, 96);
 
 CREATE TABLE point (
-	tem_id INT(11) NOT NULL,
-	n INT(4) NOT NULL,
-	name VARCHAR(255) NOT NULL,
-	x DECIMAL(7,3),
-	y DECIMAL(7,3),
-	sym INT(4),
-	CONSTRAINT id_n UNIQUE (tem_id, n)
+    tem_id INT(11) NOT NULL,
+    n INT(4) NOT NULL,
+    name VARCHAR(255) NOT NULL,
+    x DECIMAL(7,3),
+    y DECIMAL(7,3),
+    sym INT(4),
+    CONSTRAINT id_n UNIQUE (tem_id, n)
 );
 
 INSERT INTO point (tem_id, n, name, x, y) VALUES 
@@ -253,12 +253,12 @@ INSERT INTO point (tem_id, n, name, x, y) VALUES
 (1, 188,  "lower-middle of where right ear meets face", 353.337, 334.473);
 
 CREATE TABLE line (
-	tem_id INT(11) NOT NULL,
-	n INT(4) NOT NULL,
-	linetype ENUM('open', 'closed') DEFAULT 'open',
-	points VARCHAR(255) NOT NULL,
-	color ENUM('blue', 'red', 'green', 'yellow') DEFAULT 'blue',
-	CONSTRAINT id_n UNIQUE (tem_id, n)
+    tem_id INT(11) NOT NULL,
+    n INT(4) NOT NULL,
+    linetype ENUM('open', 'closed') DEFAULT 'open',
+    points VARCHAR(255) NOT NULL,
+    color ENUM('blue', 'red', 'green', 'yellow') DEFAULT 'blue',
+    CONSTRAINT id_n UNIQUE (tem_id, n)
 );
 
 REPLACE INTO line VALUES 

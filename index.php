@@ -6,23 +6,23 @@ require_once $_SERVER['DOCUMENT_ROOT'] . '/include/main_func.php';
 
 <html lang="en">
 <head>
-	<title>WebMorph</title>
-	<meta charset='utf-8'>
-	<meta name='author' content='Lisa DeBruine and Bernard Tiddeman' />
-	<meta name='Description' content='Online tools for manipulating faces by morphing and transforming.' />
-	<meta name='keywords' content='webmorph,morphing,psychomorph,face research,faces,psychology,research,computer graphics' />
-	<!--<meta name='verify-v1' content='oCEvWF1olBQ+/+nyyAZfRnSeVVGeEVlD0Qw8aHTRvAU=' />-->
-	<meta property='og:site_name' content='WebMorph'/>
-	<meta property='og:image' content='/include/images/logo.png'/>
-	<meta name="viewport" id="vp" content="initial-scale=1.0,user-scalable=no,maximum-scale=1" media="(device-height: 568px)" />
-	<meta name='apple-mobile-web-app-capable' content='yes' />
-	<link rel='apple-touch-startup-image' href='/include/images/logo.png' />
-	<link rel='apple-touch-startup-image' sizes='640x920' href='/include/images/logo@2x.png' />
-	<meta name='apple-mobile-web-app-status-bar-style' content='black' />
-	<link rel='shortcut icon' href='/include/images/favicon.ico' />
-	<link rel='apple-touch-icon-precomposed' href='/include/images/apple-touch-icon-precomposed.png' />
-	<link rel='stylesheet' type='text/css' href='<?= JQUERYUI_THEME ?>'>
-	<link rel='stylesheet' type='text/css' href='/include/css/style.php' id='css'>
+    <title>WebMorph</title>
+    <meta charset='utf-8'>
+    <meta name='author' content='Lisa DeBruine and Bernard Tiddeman' />
+    <meta name='Description' content='Online tools for manipulating faces by morphing and transforming.' />
+    <meta name='keywords' content='webmorph,morphing,psychomorph,face research,faces,psychology,research,computer graphics' />
+    <!--<meta name='verify-v1' content='oCEvWF1olBQ+/+nyyAZfRnSeVVGeEVlD0Qw8aHTRvAU=' />-->
+    <meta property='og:site_name' content='WebMorph'/>
+    <meta property='og:image' content='/include/images/logo.png'/>
+    <meta name="viewport" id="vp" content="initial-scale=1.0,user-scalable=no,maximum-scale=1" media="(device-height: 568px)" />
+    <meta name='apple-mobile-web-app-capable' content='yes' />
+    <link rel='apple-touch-startup-image' href='/include/images/logo.png' />
+    <link rel='apple-touch-startup-image' sizes='640x920' href='/include/images/logo@2x.png' />
+    <meta name='apple-mobile-web-app-status-bar-style' content='black' />
+    <link rel='shortcut icon' href='/include/images/favicon.ico' />
+    <link rel='apple-touch-icon-precomposed' href='/include/images/apple-touch-icon-precomposed.png' />
+    <link rel='stylesheet' type='text/css' href='<?= JQUERYUI_THEME ?>'>
+    <link rel='stylesheet' type='text/css' href='/include/css/style.php' id='css'>
 </head>
 
 <!-- START BODY -->
@@ -33,7 +33,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . '/include/main_func.php';
 
 <!-- !menubar -->
 <div data-role="header">
-	<?php include 'include/sections/menubar.php'; ?>
+    <?php include 'include/sections/menubar.php'; ?>
 </div><!-- end menu header -->
 
 <!-- START CONTENT -->
@@ -67,7 +67,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . '/include/main_func.php';
 </div><!-- /content -->
 
 <div data-role='footer'>
-	<footer id='footer' data-persistent=''></footer>
+    <footer id='footer' data-persistent=''></footer>
 </div>
 
 </div><!-- /page -->
@@ -76,9 +76,11 @@ require_once $_SERVER['DOCUMENT_ROOT'] . '/include/main_func.php';
 
 <script src='<?= JQUERY ?>'></script> 
 <script src='<?= JQUERYUI ?>'></script>
-<script src='/include/js/FCClientJS/FCClientJS.js'></script> <!-- for SkyBiometry -->
 <script src='/include/js/psychomorph/vars.js'></script>
-<?php if (LOGGEDIN) echo "<script>PM.userid = {$_SESSION['user_id']};</script>\n"; ?>
+<?php if (LOGGEDIN) echo "<script>PM.user.id = {$_SESSION['user_id']};</script>\n"; ?>
+
+<!--<script src='/include/js/psychomorph/webmorph.min.js'></script>-->
+
 <script src='/include/js/psychomorph/functions.js'></script>
 <script src='/include/js/psychomorph/batch.func.js'></script>
 <script src='/include/js/psychomorph/finder.func.js'></script>
@@ -87,7 +89,9 @@ require_once $_SERVER['DOCUMENT_ROOT'] . '/include/main_func.php';
 <script src='/include/js/psychomorph/user.func.js'></script>
 <script src='/include/js/psychomorph/page.js'></script>
 
+
 <?php if (!DEBUG) {
+/*
 echo "<script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
   (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
@@ -97,6 +101,14 @@ echo "<script>
   ga('create', 'UA-1815702-3', 'auto');
   ga('send', 'pageview');
 </script>";
+*/
+
+echo "<script>
+window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+ga('create', 'UA-1815702-3', 'auto');
+ga('send', 'pageview');
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>";
 
 } ?>
 </body>

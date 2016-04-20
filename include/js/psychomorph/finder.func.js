@@ -3,13 +3,15 @@
 //====================================
 
 function currentDir() {  //console.log('currentDir()');
-    var cDir = '';
+    var cDir = '',
+        openFolders,
+        sf;
     
-    var openFolders = $('li.folder').filter(':not(.closed):visible').last();
+    openFolders = $('li.folder').filter(':not(.closed):visible').last();
     if (openFolders.length) {
         cDir = openFolders.attr('path');
     } else {
-        var sf = $('li.file.selected').filter(':first');
+        sf = $('li.file.selected').filter(':first');
         if (sf.length) {
             cDir = sf.attr('url').replace(/\/[^\/]+$/, '');
         }
@@ -29,12 +31,16 @@ function fileAccess(img, thumb) {
 }
 
 function emptyTrash() {
-    var file_n = $('#trash li.file').length;
+    var file_n;
+    
+    file_n = $('#trash li.file').length;
     if (file_n == 0 ) {
         growl('There are no files to delete', 1000);
         return false;
     }
-    $('<div />').html('Are you sure you want to permanently remove these ' + file_n + ' files? This cannot be undone.').dialog({
+    
+    $('<div />').html('Are you sure you want to permanently remove these ' + 
+                       file_n + ' files? This cannot be undone.').dialog({
         title: 'Empty Trash',
         buttons: {
             Cancel: function() { $(this).dialog("close"); },
@@ -44,12 +50,12 @@ function emptyTrash() {
                     $(this).dialog("close");
                     $.ajax({
                         url: 'scripts/dirTrashEmpty',
-                        data: { project: PM.project },
+                        data: { project: PM.project.id },
                         success: function(data) {
                             if (data.error) {
                                 growl(data.errorText);
                             } else {
-                                loadFiles(PM.project + '/.trash');
+                                loadFiles(PM.project.id + '/.trash');
                             }
                         }
                     });
@@ -61,7 +67,12 @@ function emptyTrash() {
 
 function folderNew() {
     // get base directory to add folder to
-    var cDir = currentDir();
+    var cDir,
+        theHTML;
+    
+    if (PM.project.perm == 'read-only') { return false; }
+        
+    cDir = currentDir();
     var theHTML = 'Add a folder to the directory <code>' + urlToName(cDir) + '</code>?' + '<p>Folder name: <input type="text" /></p>';
     $('<div />').html(theHTML).dialog({
         title: 'New Folder',
@@ -74,6 +85,7 @@ function folderNew() {
                 class: 'ui-state-focus',
                 click: function() {
                     var dirname = $(this).find('input').val();
+                    
                     $(this).dialog("close");
                     $.ajax({
                         url: 'scripts/dirAdd',
@@ -85,8 +97,7 @@ function folderNew() {
                             if (data.error) {
                                 $('<div title="Error Creating Folder" />').html(data.errorText).dialog();
                             } else {
-                                var dir = cDir + dirname;
-                                loadFiles(dir);
+                                loadFiles(cDir + dirname);
                             }
                         }
                     });
@@ -97,22 +108,39 @@ function folderNew() {
 }
 
 function fileUpload() {
-    var cDir = currentDir();
-    var uploadedFiles = document.getElementById('upload').files;
-    var uploadList = $('<ul class="batchList" />');
-    var filenames = {};
+    var cDir,
+        uploadedFiles,
+        uploadList,
+        filenames,
+        $uploadDialog;
+        
+    if (PM.project.perm == 'read-only') { return false; }
+    
+    cDir = currentDir();
+    uploadedFiles = document.getElementById('upload').files;
+    uploadList = $('<ul class="batchList" />');
+    filenames = {};
     for (var i = 0; i < uploadedFiles.length; ++i) {
-        var name = uploadedFiles.item(i).name;
+        var name,
+            name_parts,
+            suffix,
+            prefix;
+            
+        name = uploadedFiles.item(i).name;
         uploadList.append('<li>' + name + '</li>');
         
-        var name_parts = name.split('.');
-        var suffix = name_parts.pop();
-        var prefix = name_parts.join('.');
+        name_parts = name.split('.');
+        suffix = name_parts.pop();
+        prefix = name_parts.join('.');
         
-        if (filenames[prefix] == undefined) filenames[prefix] = [];
+        if (filenames[prefix] == undefined) {
+            filenames[prefix] = [];
+        }
         filenames[prefix].push(uploadedFiles.item(i));
     }
-    var $uploadDialog = $('<div />').html('Upload ' + uploadedFiles.length + ' file' + (uploadedFiles.length == 1 ? '' : 's') + ' to <code>' + urlToName(cDir) + '</code>?').append(uploadList).dialog({
+    $uploadDialog = $('<div />').html('Upload ' + uploadedFiles.length + ' file' + 
+                      (uploadedFiles.length == 1 ? '' : 's') + ' to <code>' + 
+                      urlToName(cDir) + '</code>?').append(uploadList).dialog({
         title: "Files to Upload",
         buttons: {
             Cancel: function() {
@@ -123,29 +151,33 @@ function fileUpload() {
                 text: 'Upload',
                 class: 'ui-state-focus',
                 click: function() {
+                    var totalFiles,
+                        uploadedAttempts = 0,
+                        uploadedSuccesses = 0,
+                        formData = null,
+                        $progressUpdate,
+                        $errorList,
+                        $progressBar,
+                        $progressBox
+                    
                     uploadList.hide();
                     
                     $(this).parent().find('.ui-dialog-buttonpane').hide();
-                    
                     $(this).text('');
 
-                    var totalFiles = uploadedFiles.length;
+                    totalFiles = uploadedFiles.length;
                     
-                    var $progressUpdate = $('<p />').html('0 of ' + totalFiles + ' files uploaded');
-                    var $errorList = $('<ol />').css('clear', 'both').css('max-height', '10em').css('overflow', 'auto');
-                    var $progressBar = $('<div />').addClass('progressBar');
-                    var $progressBox = $('<div />').addClass('progressBox').append($progressBar);
+                    $progressUpdate = $('<p />').html('0 of ' + totalFiles + ' files uploaded');
+                    $errorList = $('<ol />').css('clear', 'both').css('max-height', '10em').css('overflow', 'auto');
+                    $progressBar = $('<div />').addClass('progressBar');
+                    $progressBox = $('<div />').addClass('progressBox').append($progressBar);
                     $(this).append($progressUpdate).append($progressBox).append($errorList).dialog({
                         title: 'Upload Images'
                     });
                     $progressBar.css('width', '0%');
-
-                    var uploaded_attempts = 0;
-                    var uploaded_successes = 0;
-                    var formData = null;
                     
                     $.each(filenames, function(i, files) {
-                        formData = new FormData();
+                        var formData = new FormData();
                         $.each(files, function(j, file) {
                             formData.append('upload' + '[' + j + ']', file);
                         });
@@ -153,14 +185,14 @@ function fileUpload() {
                         formData.append('desc', 'Uploaded image');
                         $.ajax({
                             data: formData,
-                            url: "scripts/fileSave2",
+                            url: "scripts/fileUpload",
                             cache: false,
                             contentType: false,
                             processData: false,
                             success: function(data) {
                                 if (!data.error) {
-                                    uploaded_successes += files.length;
-                                    $progressUpdate.html(uploaded_successes + ' of ' + totalFiles + ' files uploaded');
+                                    uploadedSuccesses += files.length;
+                                    $progressUpdate.html(uploadedSuccesses + ' of ' + totalFiles + ' files uploaded');
                                 } else {
                                     $errorList.append('<li>' + data.errorText + '</li>');
                                 }
@@ -169,13 +201,13 @@ function fileUpload() {
                                 $errorList.append('<li>Error uploading ' + i + '</li>');
                             },
                             complete: function() {
-                                uploaded_attempts += files.length;
-                                $progressBar.css('width', (100 * (uploaded_attempts) / totalFiles) + '%');
+                                uploadedAttempts += files.length;
+                                $progressBar.css('width', (100 * (uploadedAttempts) / totalFiles) + '%');
                                 
-                                if (uploaded_attempts == totalFiles) {
+                                if (uploadedAttempts == totalFiles) {
                                     loadFiles(cDir);
                                     $('#upload').val('');
-                                    if (uploaded_successes == totalFiles) {
+                                    if (uploadedSuccesses == totalFiles) {
                                         $uploadDialog.dialog("close");
                                     }
                                 }
@@ -188,46 +220,104 @@ function fileUpload() {
     });
 }
 
-function fileDelete(confirm) {
-	var files = filesGetSelected();
-    var $fileItems = $finder.find('li.file.selected'); //.filter(':visible');
-    var nFiles = files.length;
-    if (nFiles) {	// at least one file is selected
-        var fileList = $('<ul class="file" />').css('max-height', '15em');
-        $.each(files, function(i, url) {
-            var fileName = urlToName(url);
-            fileList.append('<li>' + fileName + '</li>');
+function filePaste() {
+    var nImages,
+    toDir,
+    $fileList,
+    cutlist,
+    action;
+    
+    if (PM.project.perm == 'read-only') { return false; }
+    
+    nImages = PM.pasteBoard.length;
+    
+    if (nImages) {
+        toDir = currentDir();
+        $fileList = $('<ul />').css('max-height', '200px');
+        cutlist = 0;
+        $.each(PM.pasteBoard, function(i, v) {
+            $fileList.append('<li>' + urlToName(v) + '</li>');
+            if ($('li.to_cut[url="' + v + '"]').length) cutlist++;
         });
+        action = (nImages == cutlist) ? 'move' : 'copy';
+        $.ajax({
+            url: 'scripts/fileCopy',
+            data: {
+                toDir: toDir,
+                files: PM.pasteBoard,
+                action: action
+            },
+            success: function(data) {
+                if (data.error) {
+                    $('<div />').html(data.errorText).dialog({
+                        title: 'Error Pasting Files',
+                    });
+                    loadFiles(toDir);
+                } else {
+                    $finder.find('li.folder').addClass('closed');
+                    $finder.find('li.file').removeClass('selected');
+                    if (action == 'move') {
+                        PM.pasteBoard = [];
+                    } // clear PM.pasteBoard if moved, not if copied
+                    loadFiles(toDir);
+                    $('#footer').html(nImages + ' files pasted to <code>' + toDir + '</code>');
+                }
+            }
+        });
+    }   
+}
+
+function fileDelete(confirm) {
+    var files,
+        nfiles,
+        $fileList,
+        $fileItems,
+        dirToDelete,
+        $selFolders;
+        
+    if (PM.project.perm == 'read-only') { return false; }
+    
+    files = filesGetSelected();
+    $fileItems = $finder.find('li.file.selected'); //.filter(':visible');
+    nFiles = files.length;
+    
+    if (nFiles) {    // at least one file is selected
+        $fileList = $('<ul class="file" />').css('max-height', '15em');
+        
+        $.each(files, function(i, url) {
+            $fileList.append('<li>' + urlToName(url) + '</li>');
+        });
+        
         if (confirm) {
-	        $('<div />').html('Move these ' + nFiles + ' files to the Trash?').append(fileList).dialog({
-	            title: "Delete Files",
-	            buttons: {
-	                Cancel: function() {
-	                    $(this).dialog("close");
-	                },
-	                "Delete Files": function() {
-	                    $(this).dialog("close");
-	                    $.ajax({
-	                        url: 'scripts/fileDelete',
-	                        data: {
-	                            files: files
-	                        },
-	                        success: function(data) {
-	                            if (data.error) {
-	                                $('<div />').html(data.errorText).dialog({
-	                                    title: 'Error Deleting Files'
-	                                });
-	                            } else {
-	                                loadFiles($fileItems.closest('li.folder').attr('path')); // reload so trash is updated
-	                            }
-	                            updateSelectedFiles();
-	                        }
-	                    });
-	                },
-	            }
-	        });
+            $('<div />').html('Move these ' + nFiles + ' files to the Trash?').append($fileList).dialog({
+                title: "Delete Files",
+                buttons: {
+                    Cancel: function() {
+                        $(this).dialog("close");
+                    },
+                    "Delete Files": function() {
+                        $(this).dialog("close");
+                        $.ajax({
+                            url: 'scripts/fileDelete',
+                            data: {
+                                files: files
+                            },
+                            success: function(data) {
+                                if (data.error) {
+                                    $('<div />').html(data.errorText).dialog({
+                                        title: 'Error Deleting Files'
+                                    });
+                                } else {
+                                    loadFiles($fileItems.closest('li.folder').attr('path')); // reload so trash is updated
+                                }
+                                updateSelectedFiles();
+                            }
+                        });
+                    },
+                }
+            });
         } else {
-	        $.ajax({
+            $.ajax({
                 url: 'scripts/fileDelete',
                 data: {
                     files: files
@@ -246,21 +336,23 @@ function fileDelete(confirm) {
         }
     } else {  // no files are selected, check if there are subfolders
         //var $lastFolder = $finder.find('li.folder:not(.closed):last');
-        var $selFolders = $finder.find('li.folder.selected, li.folder.selected li.folder');
+        $selFolders = $finder.find('li.folder.selected, li.folder.selected li.folder').not('#trash');
         
         if ($selFolders.length) {
-            var dirToDelete = [];
+            dirToDelete = [];
+            $selFolders.addClass('.selected'); 
             $selFolders.each( function() {
-	            var path = $(this).attr('path');
-	            if (path !== PM.project +  + '/') {
-	            	dirToDelete.unshift(path);
-	            }
-	        });
+                var path = $(this).attr('path');
+                
+                if (path !== PM.project.id + '/' && path !== PM.project.id + '/.trash/') {
+                    dirToDelete.unshift(path);
+                }
+            });
             
             if (dirToDelete.length == 0) {
                 return false;
             } else if ($selFolders.find('li.file').length) {
-	            // there are still files in the folders, select them and check if they should be deleted
+                // there are still files in the folders, select them and check if they should be deleted
                 $selFolders.find('li.file, li.folder').addClass('selected');
                 fileDelete(true);
                 return false;
@@ -268,38 +360,38 @@ function fileDelete(confirm) {
             
             
             if (confirm) {
-	            var delTitle = (dirToDelete.length == 1) ? 
-	            			   'Delete directory <code>' + urlToName(dirToDelete[0]) + '</code>?' : 
-	            			   'Delete ' + dirToDelete.length + ' directories?';
-	            
-	            $('<div />').html(delTitle).dialog({
-	                title: 'Delete Directory',
-	                buttons: {
-	                    Cancel: function() {
-	                        $(this).dialog("close");
-	                    },
-	                    "Delete Directory": function() {
-	                        $(this).dialog("close");
-	                        $.ajax({
-	                            url: 'scripts/dirDelete',
-	                            data: { dirname: dirToDelete },
-	                            success: function(data) {
-	                                if (data.error) {
-	                                    $('<div />').html(data.errorText).dialog({
-	                                        title: 'Error Deleting ' + dirToDelete.join()
-	                                    });
-	                                } else {
-	                                    // modify enclosing folder contents so it will be reloaded on next finder refresh
-										$selFolders.closest('li.folder').data('contents', ''); 
-										$selFolders.remove();
-	                                }
-	                            }
-	                        });
-	                    },
-	                }
-	            });
-	        } else {
-		        $.ajax({
+                var delTitle = (dirToDelete.length == 1) ? 
+                               'Delete directory <code>' + urlToName(dirToDelete[0]) + '</code>?' : 
+                               'Delete ' + dirToDelete.length + ' directories?';
+                
+                $('<div />').html(delTitle).dialog({
+                    title: 'Delete Directory',
+                    buttons: {
+                        Cancel: function() {
+                            $(this).dialog("close");
+                        },
+                        "Delete Directory": function() {
+                            $(this).dialog("close");
+                            $.ajax({
+                                url: 'scripts/dirDelete',
+                                data: { dirname: dirToDelete },
+                                success: function(data) {
+                                    if (data.error) {
+                                        $('<div />').html(data.errorText).dialog({
+                                            title: 'Error Deleting ' + dirToDelete.join()
+                                        });
+                                    } else {
+                                        // modify enclosing folder contents so it will be reloaded on next finder refresh
+                                        $selFolders.closest('li.folder').data('contents', ''); 
+                                        $selFolders.remove();
+                                    }
+                                }
+                            });
+                        },
+                    }
+                });
+            } else {
+                $.ajax({
                     url: 'scripts/dirDelete',
                     data: { dirname: dirToDelete },
                     success: function(data) {
@@ -309,27 +401,38 @@ function fileDelete(confirm) {
                             });
                         } else {
                             // modify enclosing folder contents so it will be reloaded on next finder refresh
-							$selFolders.closest('li.folder').data('contents', ''); 
-							$selFolders.remove();
+                            $selFolders.closest('li.folder').data('contents', ''); 
+                            $selFolders.remove();
                         }
                     }
                 });
-		    }
+            }
         }
     }
 }
 
 function fileRename() {
-    var $theFileItem = $finder.find('li.file.selected:first');
-    var $theSpan = $theFileItem.find('span');
-    var oldurl = $finder.find('li.file.selected:first').attr('url');
+    var $theFileItem,
+        $theSpan,
+        oldurl,
+        oldname,
+        w,
+        $newnameinput,
+        fname;
+        
+    if (PM.project.perm == 'read-only') { return false; }
+    
+    $theFileItem = $finder.find('li.file.selected:first');
+    $theSpan = $theFileItem.find('span');
+    oldurl = $finder.find('li.file.selected:first').attr('url');
     $finder.find('li.file.selected').removeClass('selected');
-    var oldname = $theSpan.html();
-    var w = $theSpan.closest('li').width();
-    var $newnameinput = $('<input />').val(oldname).attr('type', 'text').width(w);
+    oldname = $theSpan.html();
+    w = $theSpan.closest('li').width();
+    $newnameinput = $('<input />').val(oldname).attr('type', 'text').width(w);
     
     $newnameinput.keydown(function(e) {
         var newname = $(this).val();
+        
         if (e.which == KEYCODE.enter) {
             e.stopPropagation();
             if (newname !== '' && newname !== oldname) {
@@ -362,20 +465,30 @@ function fileRename() {
     });
     
     $theSpan.hide().before($newnameinput);
-    var fname = oldname.replace(/\.(jpg|gif|png|tem)$/,'').length;
+    fname = oldname.replace(/\.(jpg|gif|png|tem)$/,'').length;
     $newnameinput.focus().selectRange(0,fname);
 }
 
 function folderRename() {
-    var $theFolder = $finder.find('li.folder').not('.closed').last();
+    var $theFolder,
+        $theSpan,
+        olddir,
+        oldname,
+        w,
+        $newnameinput;
+        
+    if (PM.project.perm == 'read-only') { return false; }
+    
+    $theFolder = $finder.find('li.folder').not('.closed').last();
     
     if ($theFolder.attr('id') == "trash") return false;
     
-    var $theSpan = $theFolder.find('> span');
-    var olddir = $theFolder.attr('path');
-    var oldname = $theSpan.html();
-    var w = $theSpan.closest('li').width();
-    var $newnameinput = $('<input />').val(oldname).attr('type', 'text').width(w);
+    $theSpan = $theFolder.find('> span');
+    olddir = $theFolder.attr('path');
+    oldname = $theSpan.html();
+    w = $theSpan.closest('li').width();
+    $newnameinput = $('<input />').val(oldname).attr('type', 'text').width(w);
+    
     $newnameinput.keydown(function(e) {
         e.stopPropagation();
         var newname = $(this).val();
@@ -414,22 +527,23 @@ function folderRename() {
 }
 
 function folderMoveProject() {
-	if ($finder.find('li.file.selected').filter(':visible').length) return false;
-	
+    if ($finder.find('li.file.selected').filter(':visible').length) return false;
+    
     var $theFolder = $finder.find('li.folder').not('.closed').last();
     
     if ($theFolder.attr('id') == "trash") return false;
     
     var fpath = $theFolder.attr('path');
     var $project = $('#default_project').clone();
-    $project.find('option[value=' + PM.project + ']').remove();
+    $project.find('option[value=' + PM.project.id + ']').remove();
+    $project.find('option.readOnly').remove();
     
     var $dialog = $('<div />').html('Copy the folder <code>' + fpath + '</code> to ').append($project).dialog({
         title: "Copy Folder to Project",
         buttons: {
             Cancel: function() { $(this).dialog("close"); },
             /*
-	        'Move': {
+            'Move': {
                 text: 'Move',
                 click: function() {
                     $.ajax({
@@ -485,18 +599,18 @@ function filesGetSelected(filter, replaced) { console.log('filesGetSelected(' + 
     if (replaced == null) replaced = '';
     var $selFiles = '';
     if ($finder.find('li.folder.selected').length > 1) { 
-	    $selFiles = $finder.find('li.folder.selected li').filter('.file' + filter);
-	} else {
-	    $selFiles = $finder.find('li.file.selected').filter(':visible' + filter);
-	}
-	$selFiles.each(function(i, v) {
-	    sf.push($(this).attr('url').replace(replaced, ''));
+        $selFiles = $finder.find('li.folder.selected li').filter('.file' + filter);
+    } else {
+        $selFiles = $finder.find('li.file.selected').filter(':visible' + filter);
+    }
+    $selFiles.each(function(i, v) {
+        sf.push($(this).attr('url').replace(replaced, ''));
     });
     return sf;
 }
 
 function fileListGet() {
-    var files = filesGetSelected('.image', PM.project);
+    var files = filesGetSelected('.image', PM.project.id);
     var fileList;
     
     if (files.length > 0) {
@@ -509,7 +623,7 @@ function fileListGet() {
         var $allfiles = $finder.find('li[url^="' + cd + '"].file.image');
         $allfiles.addClass('selected');
         updateSelectedFiles();
-        files = filesGetSelected('.image', PM.project);
+        files = filesGetSelected('.image', PM.project.id);
         fileList = files.join("\n");
         $('<div />').html("<textarea style='width:100%; height: 200px;'>" + fileList + "</textarea>").dialog({
             title: 'File List for ' + cd + ' (' + files.length + ' images)',
@@ -520,22 +634,22 @@ function fileListGet() {
 }
 
 function updateSelectedFiles() { //console.log('updateSelectedFiles()');
-	var $selFolders = $finder.find('li.folder.selected').filter(':visible');
-	
-	if ($selFolders.length > 1) {
-		var nFiles = $selFolders.find('li.file').length;
-		$('#footer').html($selFolders.length + ' folders selected containing ' + nFiles + ' files');
-	} else {
-	    var cdir = currentDir();
-	    var s = $finder.find('li.file.selected').filter(':visible').length;
-	    var vFiles = $finder.find('li.folder[path="' + cdir + '"] > ul > li.file').length;
-	    
-	    $('#footer').html('<code>' + urlToName(cdir) + '</code> (' + s + ' of ' + vFiles + ' file' + (vFiles == 1 ? '' : 's') + ' selected)');
+    var $selFolders = $finder.find('li.folder.selected').filter(':visible');
+    var s = $finder.find('li.file.selected').filter(':visible').length;
+    
+    if ($selFolders.length > 1) {
+        var nFiles = $selFolders.find('li.file').length;
+        $('#footer').html($selFolders.length + ' folders selected containing ' + nFiles + ' files');
+    } else {
+        var cdir = currentDir();
+        var vFiles = $finder.find('li.folder[path="' + cdir + '"] > ul > li.file').length;
+        
+        $('#footer').html('<code>' + urlToName(cdir) + '</code> (' + s + ' of ' + vFiles + ' file' + (vFiles == 1 ? '' : 's') + ' selected)');
     }
     
-    if (PM.interface == 'average') { 
+    if (PM.interfaceWindow == 'average') { 
         checkAvgAbility(); 
-    } else if (PM.interface == 'transform') { 
+    } else if (PM.interfaceWindow == 'transform') { 
         if (s > 1) {
             $('#transButton').button('option', 'label', 'Transform All');
         } else {
@@ -543,7 +657,7 @@ function updateSelectedFiles() { //console.log('updateSelectedFiles()');
         }
     }
     
-    if (s == 1 && !$finder.hasClass('imageView')) {
+    if (s == 1 && !$finder.hasClass('image-view')) {
         $('#imagebox').show();
     } else {
         $('#imagebox').hide();
@@ -575,7 +689,7 @@ function imagesWithTems() {
         }
     });
     
-    if (PM.interface == 'average' || PM.interface == 'transform') { 
+    if (PM.interfaceWindow == 'average' || PM.interfaceWindow == 'transform') { 
         $files.hide().filter('.image.hasTem').show();
     }
     console.timeEnd('imagesWithTems()');
@@ -585,7 +699,7 @@ function finder(dir) { console.log('finder(' + dir + ')');
     this.dir = dir;
     
     this.load = function(subdir) {
-        subdir = subdir | this.dir;
+        subdir = subdir || this.dir;
         
         $.ajax({
             url: 'scripts/dirLoad',
@@ -672,7 +786,7 @@ function finder(dir) { console.log('finder(' + dir + ')');
             }
         });
         
-        if (PM.interface == 'average' || PM.interface == 'transform') { 
+        if (PM.interfaceWindow == 'average' || PM.interfaceWindow == 'transform') { 
             $files.hide().filter('.image.hasTem').show();
         }
         console.timeEnd('imagesWithTems()');
@@ -686,7 +800,7 @@ function loadFiles(selected_dir, subdir) { console.log('loadFiles(' + selected_d
     if (subdir === true && selected_dir !== undefined) {
         subdir = selected_dir.replace(/\/$/, '').replace(/[^\/]+$/, '');
     } else if (subdir === undefined) { 
-        subdir = PM.project; 
+        subdir = PM.project.id; 
     }  
     
     $.ajax({
@@ -716,7 +830,7 @@ function loadFiles(selected_dir, subdir) { console.log('loadFiles(' + selected_d
                 firstul.css('margin-left', (-1 * firstul.width()) - 1).find('> li.folder:eq(0) > span').click(); 
                 
                 // hide trash
-                var $trash = $finder.find('li.folder[path="' + PM.project + '/.trash/"]');
+                var $trash = $finder.find('li.folder[path="' + PM.project.id + '/.trash/"]');
                 $trash.attr('id', 'trash');
                 $trash.find('> span').text('Trash');
                 
@@ -778,29 +892,31 @@ function folderize(json, appendElement) {
     var fItems = [];
     
     for (var folder in json) {
-        var contents = json[folder];
-        var theItem;
-        if (typeof contents === 'string') {
-            // contents are an image name
-            var url = folder.replace(/^i/, '');
-            theItem = fileNew(url, theFolder).removeClass('oldfinder');
-        } else {
-            // contents are more files/folders
-            theItem = $allItems.filter('.folder[path="' + folder + '/"]');
-            var oldC = '';
-            
-            if (!theItem.length) { 
-                var shortName = folder.replace(/^.*\//, '');
-                theItem = $('<li class="folder closed" path="' + folder + '/"><span>' + shortName + '</span></li>'); 
+        if (json.hasOwnProperty(folder)) {
+            var contents = json[folder];
+            var theItem;
+            if (typeof contents === 'string') {
+                // contents are an image name
+                var url = folder.replace(/^i/, '');
+                theItem = fileNew(url, theFolder).removeClass('oldfinder');
             } else {
-                theItem.removeClass('oldfinder folderDrop');
-                oldC = JSON.stringify(theItem.data('contents'));
+                // contents are more files/folders
+                theItem = $allItems.filter('.folder[path="' + folder + '/"]');
+                var oldC = '';
+                
+                if (!theItem.length) { 
+                    var shortName = folder.replace(/^.*\//, '');
+                    theItem = $('<li class="folder closed" path="' + folder + '/"><span>' + shortName + '</span></li>'); 
+                } else {
+                    theItem.removeClass('oldfinder folderDrop');
+                    oldC = JSON.stringify(theItem.data('contents'));
+                }
+    
+                var newC = JSON.stringify(contents);
+                if (newC !== oldC) { theItem.data('contents', contents).addClass('tofolderize'); }
             }
-
-            var newC = JSON.stringify(contents);
-            if (newC !== oldC) { theItem.data('contents', contents).addClass('tofolderize'); }
+            fItems.push(theItem);
         }
-        fItems.push(theItem);
     }
     
     theFolder.append(fItems);
@@ -861,7 +977,7 @@ function finderFunctions() { console.time('finderFunctions()');
 
     $('#searchbar:visible').keyup();
 
-    var thisContainment = (PM.interface == 'finder') ? '#finder' : 'window';
+    var thisContainment = (PM.interfaceWindow == 'finder') ? '#finder' : 'window';
     
     $finder.find('li.file').not('.ui-draggable').draggable({
         helper: function() {
@@ -917,7 +1033,7 @@ function finderFunctions() { console.time('finderFunctions()');
         over: function(e, ui) {
             var to_move = ui.helper.find('li.folder').attr('path');
             if (typeof to_move === 'undefined') { 
-	            var l = ui.helper.find('li.file').length;
+                var l = ui.helper.find('li.file').length;
                 to_move = l + ' file' + ((l >1) ? 's' : ''); 
             } else {
                 to_move = '<code>' + urlToName(to_move) + '</code>';
@@ -1001,17 +1117,17 @@ function finderFunctions() { console.time('finderFunctions()');
 function autoLoadTem(theTem, theLines) {
     // auto-load default template if option is selected and default doesn't match current
 
-    if ((PM.default_tem.length != theTem.length) || (PM.default_lines.length != theLines.length)) {
+    if ((PM.delin.tem.length != theTem.length) || (PM.delin.lines.length != theLines.length)) {
         // try to autoload the current tem
         var $matched_opts = $('#currentTem li[data-points="' + theTem.length + '"][data-lines="' + theLines.length + '"]');
         if ($matched_opts.length) {
             var defaultTemId = $matched_opts.first().attr('data-id') || 1;
             setCurrentTem(defaultTemId);
         } else {
-            //var defaultTemId = $('#default_template').val() || 1;
-            PM.default_tem = theTem;
-            PM.default_lines = theLines;
-            $('#current_tem_name').text('Unknown ' + theTem.length + '-point template');
+            //var defaultTemId = $('#defaultTemplate').val() || 1;
+            PM.delin.tem = theTem;
+            PM.delin.lines = theLines;
+            $('#currentTem_name').text('Unknown ' + theTem.length + '-point template');
         }
     }
 }
@@ -1130,7 +1246,7 @@ function webcamPhoto() {
                     var dataURL = $('#webcamvas').get(0).toDataURL('image/jpeg', 1.0);
                     
                     $.ajax({
-                        url: "scripts/fileSave2",
+                        url: "scripts/webcamUpload",
                         data: { 
                             basedir: currentDir(),
                             name: $wcn.val(),
