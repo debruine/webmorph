@@ -22,7 +22,8 @@ require_once $_SERVER['DOCUMENT_ROOT'] . '/include/main_func.php';
     <link rel='shortcut icon' href='/include/images/favicon.ico' />
     <link rel='apple-touch-icon-precomposed' href='/include/images/apple-touch-icon-precomposed.png' />
     <link rel='stylesheet' type='text/css' href='<?= JQUERYUI_THEME ?>'>
-    <link rel='stylesheet' type='text/css' href='/include/css/style.php' id='css'>
+    <link rel='stylesheet' type='text/css' href='/include/css/style.css'>
+    <link rel='stylesheet' type='text/css' href='/include/css/theme.php' id='themecss'>
 </head>
 
 <!-- START BODY -->
@@ -39,6 +40,8 @@ require_once $_SERVER['DOCUMENT_ROOT'] . '/include/main_func.php';
 <!-- START CONTENT -->
 
 <div data-role="content" id="content">
+    
+<div id='loadingInterface' class='interface'>Loading</div>
 
 <!-- !- loginInterface -->
 <?php include 'include/sections/login.php'; ?>
@@ -77,7 +80,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . '/include/main_func.php';
 <script src='<?= JQUERY ?>'></script> 
 <script src='<?= JQUERYUI ?>'></script>
 <script src='/include/js/psychomorph/vars.js'></script>
-<?php if (LOGGEDIN) echo "<script>PM.user.id = {$_SESSION['user_id']};</script>\n"; ?>
+<?php if (LOGGEDIN) echo "<script>WM.user.id = {$_SESSION['user_id']};</script>\n"; ?>
 
 <!--<script src='/include/js/psychomorph/webmorph.min.js'></script>-->
 
@@ -85,7 +88,8 @@ require_once $_SERVER['DOCUMENT_ROOT'] . '/include/main_func.php';
 <script src='/include/js/psychomorph/batch.func.js'></script>
 <script src='/include/js/psychomorph/finder.func.js'></script>
 <script src='/include/js/psychomorph/delin.func.js'></script>
-<script src='/include/js/psychomorph/trans.func.js'></script>
+<script src='/include/js/psychomorph/morph.func.js'></script>
+<script src='/include/js/psychomorph/project.func.js'></script>
 <script src='/include/js/psychomorph/user.func.js'></script>
 <script src='/include/js/psychomorph/page.js'></script>
 

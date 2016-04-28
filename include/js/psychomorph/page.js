@@ -11,63 +11,63 @@ $(document).on('contextmenu', '#finder *, #delin', function(e) {
     e.preventDefault();
 }).on('contextmenu', '#delin', function(e) {
     var item_info;
-    
+
     e.stopPropagation();
-    
+
     item_info = [
         {
             name: 'Download Tem SVG',
-            func: function() { 
-                temSVG(true, 'plus', false); 
-                $('.context_menu').remove(); 
+            func: function() {
+                temSVG(true, 'plus', false);
+                $('.context_menu').remove();
             }
         },
         {
             name: 'Download Lines SVG',
-            func: function() { 
-                temSVG(true, false, false); 
-                $('.context_menu').remove(); 
+            func: function() {
+                temSVG(true, false, false);
+                $('.context_menu').remove();
             }
         },
         {
             name: 'Download Points SVG',
-            func: function() { 
-                temSVG(false, 'circle', false); 
-                $('.context_menu').remove(); 
+            func: function() {
+                temSVG(false, 'circle', false);
+                $('.context_menu').remove();
             }
         },
         {
             name: 'Download Numbered SVG',
-            func: function() { 
-                temSVG(true, 'numbers', false); 
-                $('.context_menu').remove(); 
+            func: function() {
+                temSVG(true, 'numbers', false);
+                $('.context_menu').remove();
             }
         }
     ];
     context_menu(item_info, e);
 }).on('contextmenu', '#trash > span', function(e) {
     var item_info = [];
-    
+
     e.stopPropagation();
-    
+
     item_info = [
         {
             name: 'Empty Trash',
             readOnly: true,
-            func: function() { 
-                emptyTrash(); 
-                $('.context_menu').remove(); 
+            func: function() {
+                emptyTrash();
+                $('.context_menu').remove();
             }
         },
         {
             name: 'Hide',
-            func: function() { 
-                $('#toggletrash').click(); 
-                $('.context_menu').remove(); 
+            func: function() {
+                $('#toggletrash').click();
+                $('.context_menu').remove();
             }
         }
     ];
-    
+
     context_menu(item_info, e);
 }).on('contextmenu', '#finder li.folder:not(#trash)', function(e) {
     var folder_name,
@@ -75,11 +75,11 @@ $(document).on('contextmenu', '#finder *, #delin', function(e) {
         upload = {},
         cutlist = 0,
         pasteName;
-        
+
     e.stopPropagation();
-    
+
     folder_name = $(this).find('> span').click().text();
-    
+
     if ($finder.find('>ul> li.folder:eq(0) > span').text() == folder_name) {
         // folder is base directory
         folder_name = 'Base Folder';
@@ -92,7 +92,7 @@ $(document).on('contextmenu', '#finder *, #delin', function(e) {
                 $('.context_menu').remove();
             }
         });
-        
+
         item_info.push({
             name: 'Copy to Project',
             func: function() {
@@ -100,42 +100,42 @@ $(document).on('contextmenu', '#finder *, #delin', function(e) {
                 $('.context_menu').remove();
             }
         });
-            
+
         item_info.push('break');
     }
-    
-    if (PM.pasteBoard.length) {
-        $.each(PM.pasteBoard, function(i, v) {
+
+    if (WM.pasteBoard.length) {
+        $.each(WM.pasteBoard, function(i, v) {
             if ($('li.to_cut[url="' + v + '"]').length) {
-                cutlist++;   
+                cutlist++;
             }
         });
-        
-        pasteName = (PM.pasteBoard.length == cutlist) ? 'Move ' : 'Copy ';
-        pasteName += PM.pasteBoard.length + ' file';
-        pasteName += (PM.pasteBoard.length>1 ? 's' : '');
+
+        pasteName = (WM.pasteBoard.length == cutlist) ? 'Move ' : 'Copy ';
+        pasteName += WM.pasteBoard.length + ' file';
+        pasteName += (WM.pasteBoard.length>1 ? 's' : '');
         pasteName += ' to ' + folder_name;
-            
+
         item_info.push({
             name: pasteName,
             readOnly: true,
             func: function() {
                 $('#pasteItems').click();
-                $('.context_menu').remove(); 
+                $('.context_menu').remove();
             }
         });
         item_info.push('break');
     }
-    
+
     item_info.push({
         name: 'Upload to ' + folder_name,
         readOnly: true,
         func: function() {
             $('#upload').click();
-            $('.context_menu').remove(); 
+            $('.context_menu').remove();
         }
     });
-    
+
     context_menu(item_info, e);
 }).on('contextmenu', '#finder li.file > span', function(e) {
     var $file,
@@ -143,111 +143,111 @@ $(document).on('contextmenu', '#finder *, #delin', function(e) {
         total_files,
         func = {},
         item_info = [];
-    
+
     e.stopPropagation();
-    
+
     $file = $(this).closest('li.file').addClass('selected');
     updateSelectedFiles();
     tf = $finder.find('li.file.selected').length;
-    total_files = (tf > 1) ? ' ' + tf + ' Files' : '';    
-    
+    total_files = (tf > 1) ? ' ' + tf + ' Files' : '';
+
     func.delin = {
         name: 'Delineate',
         func: function() {
-            $file.dblclick(); 
-            $('.context_menu').remove(); 
+            $file.dblclick();
+            $('.context_menu').remove();
         }
     };
-    
+
     func.rename = {
         name: 'Rename',
         readOnly: true,
         func: function() {
             fileRename();
-            $('.context_menu').remove(); 
+            $('.context_menu').remove();
         }
     };
-    
+
     func.copy = {
         name: 'Copy' + total_files,
         readOnly: true,
         func: function() {
-            $('#copyItems').click(); 
-            $('.context_menu').remove(); 
+            $('#copyItems').click();
+            $('.context_menu').remove();
         }
     };
-    
+
     func.cut = {
         name: 'Cut' + total_files,
         readOnly: true,
         func: function() {
-            $('#cutItems').click(); 
-            $('.context_menu').remove(); 
+            $('#cutItems').click();
+            $('.context_menu').remove();
         }
     };
-    
+
     func.del = {
         name: 'Move' + total_files + ' to Trash',
         readOnly: true,
         func: function() {
-            $('#deleteItems').click(); 
-            $('.context_menu').remove(); 
+            $('#deleteItems').click();
+            $('.context_menu').remove();
         }
     };
-    
+
     func.download = {
         name: 'Download' + total_files,
         func: function() {
-            $('#download').click(); 
-            $('.context_menu').remove(); 
+            $('#download').click();
+            $('.context_menu').remove();
         }
     };
-    
+
 
     if ($file.hasClass('image') || $file.hasClass('tem')) {
         if (tf == 1) {
             item_info = [
-                func.delin, 'break', 
-                func.copy, func.cut, func.del, 'break', 
-                func.rename, 'break', 
+                func.delin, 'break',
+                func.copy, func.cut, func.del, 'break',
+                func.rename, 'break',
                 func.download
             ];
         } else {
             item_info = [
-                func.copy, func.cut, func.del, 'break', 
+                func.copy, func.cut, func.del, 'break',
                 func.download
             ];
         }
     } else {
         if (tf == 1) {
             item_info = [
-                func.copy, func.cut, func.del, 'break', 
-                func.rename, 'break', 
+                func.copy, func.cut, func.del, 'break',
+                func.rename, 'break',
                 func.download
             ];
         } else {
             item_info = [
-                func.copy, func.cut, func.del, 'break', 
+                func.copy, func.cut, func.del, 'break',
                 func.download
             ];
         }
     }
 
     context_menu(item_info, e);
-}).on('mouseleave', '.context_menu', function(e) { 
-    $(this).remove(); 
+}).on('mouseleave', '.context_menu', function(e) {
+    $(this).remove();
 });
 
 // ! project_list functions
 $('#project_list').on('click', '.go_to_project', function() {
     var proj_id;
-    
+
     $.xhrPool.abortAll();
     proj_id = $(this).closest('tr').data('id');
     projectSet(proj_id);
 }).on('click', 'tr[data-perm=all] .projectOwnerDelete', function() {
     var proj_id;
-    
+
     proj_id = $(this).closest('tr').data('id');
     projectOwnerDelete(proj_id, $(this).data('id'));
 }).on('keydown', 'tr[data-perm=all] .projectOwnerAdd', function(e) {
@@ -256,72 +256,46 @@ $('#project_list').on('click', '.go_to_project', function() {
     projectEdit(this, "name");
 }).on('dblclick', 'tr[data-perm=all] td:nth-child(3)', function() {
     projectEdit(this, "notes");
-}).on('click', '.ownerPermToggle', function() {
-    var project,
-        perm,
-        owner;
-        
-    perm = $(this).html() == 'A' ? 'read-only' : 'all';
-    project = $(this).closest('tr').data('id');
-    owner = $(this).data('id');
-    
-    $.ajax({
-        url: 'scripts/projOwnerAdd',
-        data: {
-            project: project,
-            owner: owner,
-            perm: perm
-        },
-        success: function(data) {
-            if (data.error) {
-                $('<div title="Error Changing Owner Permissions" />').html(data.errorText).dialog();
-                $('#footer').html('Project owner permissions not changed');
-                $input.show().val('');
-            } else {
-                $('#refresh').click();
-                $('#footer').html('Project owner permissions changed');
-            }
-        }
-    });
-});
+}).on('click', '.ownerPermToggle', projectOwnerPermToggle);
 
 // ! window functions
 $(window).bind('resize', sizeToViewport)
 .blur(function() {
     // removes growl notifications when download window is ready
     $('div.growl').remove();
-}).bind('beforeunload', function() {
+/*}).bind('beforeunload', function() {
     // confirm leaving the app
     // the back button doesn't work as most would assume.
-    if (!PM.noOnBeforeUnload && PM.interfaceWindow !== 'login') {
+    if (!WM.noOnBeforeUnload && WM.appWindow !== 'login') {
         return "Do you want to leave PsychoMorph?";
     } else {
-        PM.noOnBeforeUnload = false;
+        WM.noOnBeforeUnload = false;
     }
-});
-         
+*/
+}).on('hashchange', hashChange);
+
 // !document functions
 // functions to keep track of mouse and key events
 $(document).mousedown(function(e) {
-    PM.pageEvents.mousebutton[e.which] = true;
+    WM.pageEvents.mousebutton[e.which] = true;
 }).mouseup(function(e) {
-    PM.pageEvents.mousebutton[e.which] = false;
+    WM.pageEvents.mousebutton[e.which] = false;
 }).keydown(function(e) {
-    PM.pageEvents.key[e.which] = true;
+    WM.pageEvents.key[e.which] = true;
 }).keyup(function(e) {
-    PM.pageEvents.key[e.which] = false;
+    WM.pageEvents.key[e.which] = false;
 }).ajaxError(function() {
     //growl("Sorry, there was an error with this function.", 1000);
 }).delegate('.ui-dialog', 'keyup', function(e) {
     // pressing the enter key selects default button on dialogs
     var tagName;
-    
+
     tagName = e.target.tagName.toLowerCase();
     tagName = (tagName === 'input' && e.target.type === 'button') ? 'button' : tagName;
 
-    if (e.which === $.ui.keyCode.ENTER 
-        && tagName !== 'textarea' 
-        && tagName !== 'select' 
+    if (e.which === $.ui.keyCode.ENTER
+        && tagName !== 'textarea'
+        && tagName !== 'select'
         && tagName !== 'button') {
         $(this).find('.ui-dialog-buttonset button.ui-state-focus').eq(0).trigger('click');
         return false;
@@ -333,13 +307,13 @@ $(document).mousedown(function(e) {
     // ! ***** keyboard shortcuts  *****
     // e.which: a=>65 ... z=>90, 0=>48 ... 9=>57
     // lookup at http://api.jquery.com/event.which/
-    
-    if (PM.interfaceWindow == 'delineate' && !((e.ctrlKey || e.metaKey) 
-        && e.shiftKey) && PM.delinfunc == 'move') {
+
+    if (WM.appWindow == 'delineate' && !((e.ctrlKey || e.metaKey)
+        && e.shiftKey) && WM.delinfunc == 'move') {
         cursor('auto');
         quickhelp();
     }
-    if (PM.interfaceWindow == 'delineate' && (e.which == KEYCODE.ctrl || e.which == KEYCODE.cmd)) {
+    if (WM.appWindow == 'delineate' && (e.which == KEYCODE.ctrl || e.which == KEYCODE.cmd)) {
         // cursor is hovering over a delin point
         $('.pt').removeClass('couldselect');
         drawTem();
@@ -347,16 +321,16 @@ $(document).mousedown(function(e) {
 }).keydown(function(e) {
     var navKeys,    // list of keycodes for navigation (except when in input boxes)
         funcKeys;   // list of keycodes for text functions (except when in input boxes)
-    
+
     navKeys = [
-        KEYCODE.left_arrow, 
-        KEYCODE.right_arrow, 
-        KEYCODE.down_arrow, 
-        KEYCODE.up_arrow, 
-        KEYCODE.delete, 
+        KEYCODE.left_arrow,
+        KEYCODE.right_arrow,
+        KEYCODE.down_arrow,
+        KEYCODE.up_arrow,
+        KEYCODE.delete,
         KEYCODE.backspace
     ];
-    
+
     funcKeys = [
         KEYCODE.x,
         KEYCODE.c,
@@ -365,16 +339,16 @@ $(document).mousedown(function(e) {
     ];
 
     if (    (    $('.ui-dialog:visible').length
-                 || (PM.interfaceWindow == 'login')
+                 || (WM.appWindow == 'login')
                  || $('input:focus').length
                  || $('textarea:focus').length
-            ) && 
-            (    ((e.ctrlKey || e.metaKey) && ( funcKeys.indexOf(e.which) !== -1 )) 
-                || (navKeys.indexOf(e.which) !== -1) 
+            ) &&
+            (    ((e.ctrlKey || e.metaKey) && ( funcKeys.indexOf(e.which) !== -1 ))
+                || (navKeys.indexOf(e.which) !== -1)
             )
-            
+
         ) {
-        // do not override cut/paste/copy/select all keyboard shortcuts 
+        // do not override cut/paste/copy/select all keyboard shortcuts
         // and delete/arrow functions when dialog windows are open
         // or on the login page or an input/textarea is focussed
         return true;
@@ -394,16 +368,20 @@ $(document).mousedown(function(e) {
             } else {
                 $('#newLine').click();               // alt-L
             }
-        } else if (PM.interfaceWindow == 'delineate' 
-                &&   (e.which == KEYCODE.plus 
-                   || e.which == KEYCODE.add 
+        } else if (WM.appWindow == 'delineate'
+                &&   (e.which == KEYCODE.plus
+                   || e.which == KEYCODE.add
                    || e.which == KEYCODE.equal_sign)) {
             temSizeChange(1);                        // alt-plus
-        } else if (PM.interfaceWindow == 'delineate' 
-                &&       (e.which == KEYCODE.minus 
-                    || e.which == KEYCODE.subtract 
+        } else if (WM.appWindow == 'delineate'
+                &&       (e.which == KEYCODE.minus
+                    || e.which == KEYCODE.subtract
                     || e.which == KEYCODE.dash)) {
             temSizeChange(-1);                       // alt-minus
+        } else if (WM.appWindow == 'delineate' && e.which ==  KEYCODE.right_arrow) {
+            temRotate(0.01745);                     // alt-right arrow
+        } else if (WM.appWindow == 'delineate' && e.which ==  KEYCODE.left_arrow) {
+            temRotate(-0.01745);                     // alt-left arrow
         } else {
             return true;
         }
@@ -414,12 +392,12 @@ $(document).mousedown(function(e) {
                 if ($finder.filter(':visible').length) {
                     // delete with no confirm
                     fileDelete(false);               // shift-cmd-delete or shift-cmd-backspace
-                }           
+                }
             } else if (e.which == KEYCODE.a) {
                 $('#batchAverage').click();          // shift-cmd-A
-            } else if (e.which == KEYCODE.b) {   
+            } else if (e.which == KEYCODE.b) {
                 $('#scramble').click();              // shift-cmd-B
-            } else if (e.which == KEYCODE.c) {   
+            } else if (e.which == KEYCODE.c) {
                 $('#multiContinua').click();         // shift-cmd-C
             } else if (e.which == KEYCODE.d) {
                 $('#batchModDelin').click();         // shift-cmd-D
@@ -457,11 +435,11 @@ $(document).mousedown(function(e) {
                 $('#symmetrise').click();            // shift-cmd-Y
             } else if (e.which == KEYCODE.z) {
                 $('#redo').click();                  // shift-cmd-Z
-            } else if (PM.interfaceWindow == 'delineate' && PM.delinfunc == 'move') {
+            } else if (WM.appWindow == 'delineate' && WM.delinfunc == 'move') {
                 setTimeout(function() {
                     // delay quickhelp so it doesn't show every time you use a shift-cmd shortcut
-                    if ((PM.pageEvents.key[KEYCODE.cmd] || PM.pageEvents.key[KEYCODE.ctrl]) 
-                         && PM.pageEvents.key[KEYCODE.shift]) {
+                    if ((WM.pageEvents.key[KEYCODE.cmd] || WM.pageEvents.key[KEYCODE.ctrl])
+                         && WM.pageEvents.key[KEYCODE.shift]) {
                         cursor('crosshair');
                         quickhelp('Click to add a point');
                     }
@@ -516,21 +494,21 @@ $(document).mousedown(function(e) {
             } else if (e.which == KEYCODE.t) {
                 $('#toggletem').click();              // cmd-t
             } else if (e.which == KEYCODE.u) {
-                $('#uploadFiles').click();            // cmd-u
+                $('#upload').click();                 // cmd-u
             } else if (e.which == KEYCODE.v) {
                 $('#pasteItems').click();             // cmd-v
             } else if (e.which == KEYCODE.w) {
                 $(".modal:visible").dialog("close");  // cmd-w
             } else if (e.which == KEYCODE.x) {
-                $('#cutItems').click();               // cmd-x        
+                $('#cutItems').click();               // cmd-x
             } else if (e.which == KEYCODE.z) {
-                $('#undo').click();                   // cmd-z    
-            } else if (e.which == KEYCODE.plus 
-                    || e.which == KEYCODE.add 
+                $('#undo').click();                   // cmd-z
+            } else if (e.which == KEYCODE.plus
+                    || e.which == KEYCODE.add
                     || e.which == KEYCODE.equal_sign) {
                 $('#zoomin').click();                 // cmd-plus (+)
-            } else if (e.which == KEYCODE.minus 
-                    || e.which == KEYCODE.subtract 
+            } else if (e.which == KEYCODE.minus
+                    || e.which == KEYCODE.subtract
                     || e.which == KEYCODE.dash) {
                 $('#zoomout').click();                 // cmd-minus (-)
             } else if (e.which == KEYCODE.comma) {
@@ -539,11 +517,11 @@ $(document).mousedown(function(e) {
                 // cursor is hovering over a delin point
                 var n,
                     conPts;
-                
+
                 n = $('.pt:hover').attr('n');
-                conPts = PM.pts[n].data('connectedPoints');
+                conPts = WM.pts[n].data('connectedPoints');
                 $.each(conPts, function(i,pt) {
-                    PM.pts[pt].addClass('couldselect');
+                    WM.pts[pt].addClass('couldselect');
                 });
                 drawTem();
             } else {
@@ -551,53 +529,53 @@ $(document).mousedown(function(e) {
             }
         }
         return false;
-    } else if ((e.which == KEYCODE.backspace || e.which == KEYCODE.delete) 
+    } else if ((e.which == KEYCODE.backspace || e.which == KEYCODE.delete)
                 && $('#average-list li.selected').length) {
         // delete selected items for average list
         $('#average-list li.selected').remove();
         averageListCheck();
-    } else if (    e.which == KEYCODE.backspace 
-                && ($("input:focus").length === 0) 
+    } else if (    e.which == KEYCODE.backspace
+                && ($("input:focus").length === 0)
                 && ($("textarea:focus").length === 0)
               ) {
         // pressed backspace and no inputs are focussed
         // do nothing, just prevents accidental page back in FireFox
-    } else if (e.which == KEYCODE.enter && PM.delinfunc == 'lineadd') {
+    } else if (e.which == KEYCODE.enter && WM.delinfunc == 'lineadd') {
         // end new line
         var line;
 
-        PM.delinfunc = 'move';
+        WM.delinfunc = 'move';
         cursor('auto');
         quickhelp();
-        line = PM.current.lines.length - 1;
-        PM.delin.lineColors[line] = 'default';
-        if (PM.current.lines[line].length < 2) { 
+        line = WM.current.lines.length - 1;
+        WM.delin.lineColors[line] = 'default';
+        if (WM.current.lines[line].length < 2) {
             $('#footer').html('New line cancelled');
-            PM.current.lines.pop();
+            WM.current.lines.pop();
         } else {
             var t;
-            
+
             drawTem();
-            t = 'New line finished [' + PM.current.lines[line].join() + ']';
+            t = 'New line finished [' + WM.current.lines[line].join() + ']';
             $('#footer').html(t).prop('data-persistent', t);
-        }        
-    } else if (e.which == KEYCODE.enter 
-                && $finder.filter(':visible').length 
+        }
+    } else if (e.which == KEYCODE.enter
+                && $finder.filter(':visible').length
                 && $finder.find('li.file.selected').length == 1) {
         // pressed return and finder is visible and one file is selected
         fileRename();
-    } else if (e.which == KEYCODE.enter 
-                && $finder.filter(':visible').length 
-                && $finder.find('li.file.selected').length === 0 
+    } else if (e.which == KEYCODE.enter
+                && $finder.filter(':visible').length
+                && $finder.find('li.file.selected').length === 0
                 && $finder.find('li.folder').not('.closed').length > 0) {
         // pressed return and finder is visible and one folder is selected
         folderRename();
-    } else if (e.which == KEYCODE.enter 
+    } else if (e.which == KEYCODE.enter
                 && $('button.ui-state-focus:visible').length == 1) {
         // pressed enter and only 1 visible button is focussed
         $('button.ui-state-focus:visible').click();
     } else if (e.which == KEYCODE.left_arrow) { // pressed left
-        if (PM.interfaceWindow == 'delineate') {
+        if (WM.appWindow == 'delineate') {
             nudge(-1, 0);
         } else if ($finder.find('.image-view:visible').length) {
             // go to previous image
@@ -607,7 +585,7 @@ $(document).mousedown(function(e) {
             // go up a directory
             if ($finder.find('li.file.selected').length === 0) {
                 var $lastOpen;
-                
+
                 $lastOpen = $finder.find('li.folder:not(.closed)[path!=""]:last').parents('li.folder').eq(0);
                 console.log($lastOpen.attr('path'));
                 $lastOpen.find('> span').click();
@@ -616,13 +594,13 @@ $(document).mousedown(function(e) {
             updateSelectedFiles();
         }
     } else if (e.which == KEYCODE.up_arrow) { // pressed up
-        if (PM.interfaceWindow == 'delineate') {
+        if (WM.appWindow == 'delineate') {
             nudge(0, -1);
         } else if ($finder.find('.image-view:visible').length) {
             // go up a directory
             if ($finder.find('li.file.selected').length === 0) {
                 var $lastOpen;
-                
+
                 $lastOpen = $finder.find('li.folder:not(.closed)[path!=""]:last')
                                        .parents('li.folder').eq(0);
                 console.log($lastOpen.attr('path'));
@@ -635,7 +613,7 @@ $(document).mousedown(function(e) {
                    .last().prevAll('li:visible').first().find('> span').click();
         }
     } else if (e.which == KEYCODE.right_arrow) { // pressed right
-        if (PM.interfaceWindow == 'delineate') {
+        if (WM.appWindow == 'delineate') {
             nudge(1, 0);
         } else if ($finder.find('.image-view:visible').length) {
             // go to next image
@@ -647,7 +625,7 @@ $(document).mousedown(function(e) {
             $nextOpen = $finder.find('li.folder:not(.closed)')
                                 .last().find('li.folder')
                                 .first().find('>span');
-            if ($nextOpen.length) { 
+            if ($nextOpen.length) {
                 $nextOpen.click();
             } else {
                 $finder.find('li.folder:not(.closed)')
@@ -655,8 +633,8 @@ $(document).mousedown(function(e) {
                        .first().click();
             }
         }
-    } else if (e.which == KEYCODE.down_arrow) { // pressed down 
-        if (PM.interfaceWindow == 'delineate') {
+    } else if (e.which == KEYCODE.down_arrow) { // pressed down
+        if (WM.appWindow == 'delineate') {
             nudge(0, 1);
         } else if ($finder.find('.image-view:visible').length) {
             return false;
@@ -666,7 +644,7 @@ $(document).mousedown(function(e) {
                    .last().nextAll('li:visible')
                    .first().find('> span').click();
         }
-    } else if (e.which == KEYCODE.esc) { // pressed escape 
+    } else if (e.which == KEYCODE.esc) { // pressed escape
         $('#refresh').click();
     } else {
         return true;
@@ -679,25 +657,25 @@ $('ul.menubar li.menucategory').mouseleave(function() {
     $(this).find('>ul').hide();
 }).mouseenter(function() {
     $(this).find('>ul').show();
-}).find('>ul>li').click(function() { 
+}).find('>ul>li').click(function() {
     if (!$(this).hasClass('disabled')) {
         // log all menu function calls
-        console.debug('menu: #' + this.id + '.click()'); 
+        // console.debug('menu: #' + this.id + '.click()');
         $(this).parent('ul').hide();
     } else {
-        console.debug('menu: #' + this.id + '.click() (disabled)');
+       // console.debug('menu: #' + this.id + '.click() (disabled)');
     }
 }).mouseenter(function() {
     if (!$(this).hasClass('disabled')) {
         $(this).find('ul.submenu').show();
     }
 }).mouseleave(function() {
-    // hide after a brief timeout 
+    // hide after a brief timeout
     var $this = $(this);
-    
-    setTimeout(function() {    
-        if ($this.find('ul.submenu:hover').length === 0) { 
-            $this.find('ul.submenu').hide(); 
+
+    setTimeout(function() {
+        if ($this.find('ul.submenu:hover').length === 0) {
+            $this.find('ul.submenu').hide();
         }
     }, 300);
 });
@@ -705,22 +683,16 @@ $('#menu_username').click( function() {
     $('#prefs').click();
 });
 $('#register-button').button().click(function(e) {
-    registerUser(e);
+    userRegister(e);
 });
-$('#reset-password-button').button().click( function() {
-    resetPassword();
-});
+$('#reset-password-button').button().click( userPasswordReset );
 $('#login_password').keyup( function(e) {
     if (e.which === KEYCODE.enter) {
         $('#login-button').click();
     }
 });
-$('#login-button').button().click(function() {
-    loginUser();
-});
-$('#logout').not('.disabled').click(function() {
-    logoutUser();
-});
+$('#login-button').button().click( userLogin );
+$('#logout').not('.disabled').click( userLogout );
 
 // set events for tag list
 /*
@@ -764,11 +736,11 @@ $('#avg_image_box').droppable({
     tolerance: "pointer",
     drop: function(event, ui) {
         var $files = ui.helper.find('li.file');
-        
+
         $files.each( function() {
             var url,
                 $li;
-                
+
             url = $(this).attr('url');
             $li = $('<li />').text(urlToName(url))
                             .attr('data-url', url)
@@ -789,7 +761,7 @@ $('#destimages img:not(.nodrop), #grid img').droppable({
         this.src = fileAccess($(ui.draggable).attr('url').replace('.tem', '.jpg'));
         setTimeout(function() {
             var $ti = $('#transimage');
-            
+
             $('#transform').width( $ti.width() )
                            .height( $ti.height() );
         },500);
@@ -817,12 +789,10 @@ $('#cancel-continua').button().click(function() {
     $('#continua').hide();
     $('#destimages').show();
 });
-$('#view-average-button').button().click(function() {
-    getAverage();
-});
+$('#view-average-button').button().click( getAverage );
 $('#clear-average-button').button().click(function() {
     $('#average-list').hide().find('li').remove();
-    $('#average').show().css('background-image', PM.blankBG).attr({
+    $('#average').show().css('background-image', WM.blankBG).attr({
         'averaged': ''
     });
     $('#footer').html('');
@@ -830,60 +800,7 @@ $('#clear-average-button').button().click(function() {
 // ! save buttons
 $('#save-button, #trans-save-button').button({
     disabled: true
-}).click(function() {
-    var $imgBox,
-        tem,
-        img;
-    
-    if (PM.interfaceWindow == 'average') {
-        $imgBox = $('#average');
-    } else if (PM.interfaceWindow == 'transform') {
-        $imgBox = $('#transform');
-    }
-    
-    $imgBox.data('savefolder', PM.project.id + "/.tmp/");
-    tem = $imgBox.data('savefolder') + $imgBox.data('tem');
-    img = $imgBox.data('savefolder') + $imgBox.data('img');
-    $('<div />').html('Name: <input type="text" />').dialog({
-        title: "Save image with name...",
-        open: function(e, ui) {
-            $(this).find('input').focus().val(urlToName(currentDir()));
-        },
-        buttons: {
-            Cancel: function() { $(this).dialog("close"); },
-            'Save': {
-                text: 'Save',
-                class: 'ui-state-focus',
-                click: function() {
-                    var savename;
-                    
-                    $(this).dialog("close");
-                    savename = PM.project.id + '/' + $(this).find('input').val();
-                    savename.replace(/\/\//g, '/');
-                    $.ajax({
-                        url: 'scripts/fileSave2',
-                        data: {
-                            tags: 'average',
-                            img: img,
-                            tem: tem,
-                            name: savename,
-                            desc: getDesc()
-                        },
-                        success: function(data) {
-                            if (!data.error[0]) {
-                                $('#footer').html(data.newFileName + ' saved');
-                                loadFiles(data.newFileName);
-                            } else {
-                                $('<div title="Problem Saving Image" />').html(data.errorText).dialog();
-                            }
-                            
-                        }
-                    });
-                }
-            }
-        }
-    });
-});
+}).click(imgSave());
 
 // remove growl and message notifications on double-click
 $('body').on('dblclick', '.growl', function() {
@@ -894,12 +811,12 @@ $('body').on('dblclick', '.growl', function() {
 
 $('.msg').append('<br><span style="float: right; font-size:60%;">[double-click this notice to permanently close it]</span>');
 
-$('#imagebox').click( function(e) { 
+$('#imagebox').click( function(e) {
     e.stopPropagation();
 });
 
 // ! ***** finder functions *****
-$finder.on('dblclick', 'li.file.image, li.file.tem', function() { 
+$finder.on('dblclick', 'li.file.image, li.file.tem', function() {
     // open in delineator on double-click
     delinImage($(this).attr('url'));
 }).on('click', '> ul > li.folder ul', function(e) {
@@ -919,7 +836,7 @@ $finder.on('dblclick', 'li.file.image, li.file.tem', function() {
             $nextUnSel,
             $prevAll,
             $nextAll;
-        
+
         // select all files between this one and the nearest selected one
         $prevUnSel = $(this).prevUntil('li.file.selected');
         $nextUnSel = $(this).nextUntil('li.file.selected');
@@ -938,19 +855,19 @@ $finder.on('dblclick', 'li.file.image, li.file.tem', function() {
     // show image in imgbox on click
     var theURL,
         $theImg;
-    
+
     if ($finder.hasClass('image-view')) { return false; }
-    
+
     theURL = $(this).attr('url');
     $theImg = $imagebox.find('img');
     if ($theImg.filter(':visible').attr('src') != fileAccess(theURL)) {
         var exif,
             $this;
-            
+
         $this = $(this);
         exif = $this.data('exif');
-        
-        $theImg.attr('src', PM.loadImg).attr('src', fileAccess(theURL)).show();
+
+        $theImg.attr('src', WM.loadImg).attr('src', fileAccess(theURL)).show();
         $('#selectedTem').hide();
 
         if (exif === undefined) {
@@ -958,7 +875,7 @@ $finder.on('dblclick', 'li.file.image, li.file.tem', function() {
                 type: 'GET',
                 url: 'scripts/imgReadExif',
                 data: { img: theURL },
-                dataType: 'html', 
+                dataType: 'html',
                 success: function(data) {
                     $this.data('exif', data);
                     $('#imagedesc').html(data).show();
@@ -967,26 +884,26 @@ $finder.on('dblclick', 'li.file.image, li.file.tem', function() {
         } else {
             $('#imagedesc').html(exif).show();
         }
-        
+
         $this.append(
             $imagebox.css('margin-left', $this.width())
         );
     }
 }).on('click', 'li.pca, li.fimg', function(e) {
     if ($finder.hasClass('image-view')) { return false; }
-    
-    $('#selectedTem').val("PCA files are not human-readable. " 
-        + "This file format is what the desktop version of Psychomorph uses. " 
-        + "To see a human-readable version of this file, look at the " 
+
+    $('#selectedTem').val("PCA files are not human-readable. "
+        + "This file format is what the desktop version of Psychomorph uses. "
+        + "To see a human-readable version of this file, look at the "
         + $(this).text() + ".txt file.").show();
-    
+
     $('#imagebox img, #imagedesc').hide();
     $(this).append(
         $imagebox.css('margin-left', $(this).width())
     );
-}).on('click', 'li.txt, li.csv, li.pci', function(e) { 
+}).on('click', 'li.txt, li.csv, li.pci', function(e) {
     if ($finder.hasClass('image-view')) { return false; }
-    
+
     var theURL = $(this).attr('url');
     $.ajax({
         url: 'scripts/fileRead',
@@ -1001,7 +918,7 @@ $finder.on('dblclick', 'li.file.image, li.file.tem', function() {
             }
         }
     });
-    
+
     $('#imagebox img, #imagedesc').hide();
     $(this).append(
         $imagebox.css('margin-left', $(this).width())
@@ -1013,7 +930,7 @@ $finder.on('dblclick', 'li.file.image, li.file.tem', function() {
     var $this = $(this);
     var theURL = $this.attr('url');
     var theTem = $this.data('tem');
-    
+
     if (theTem === undefined) {
         $.ajax({
             type: 'GET',
@@ -1034,17 +951,17 @@ $finder.on('dblclick', 'li.file.image, li.file.tem', function() {
         $('#selectedTem').val(theTem).show();
     }
     $('#imagebox img, #imagedesc').hide();
-    
+
     $(this).append(
         $imagebox.css('margin-left', $(this).width())
     );
-}).on('click', 'li.folder > span', function(e) { 
+}).on('click', 'li.folder > span', function(e) {
     $finder.find('input').blur();                                             // blur any open inputs for folder name changes
-    
-    $theFolder = $(this).parent('li.folder');                                // folder to open    
-    $theFolder.find('li.folder:not(.closed)').addClass('closed');             // close all folders below this level   
+
+    $theFolder = $(this).parent('li.folder');                                // folder to open
+    $theFolder.find('li.folder:not(.closed)').addClass('closed');             // close all folders below this level
     $theFolder.parents('li.folder.selected').removeClass('selected');          // unselect all folders above this level
-    
+
     if (e.shiftKey) {
         $theFolder.addClass('closed');
         // select all folders between this one and the nearest selected one
@@ -1064,23 +981,23 @@ $finder.on('dblclick', 'li.file.image, li.file.tem', function() {
         $finder.find('li.folder').removeClass('selected');
         $theFolder.removeClass('closed');
     }
-    
+
     $theFolder.toggleClass('selected');
     $theFolder.siblings('li.folder:not(.closed)').addClass('closed');           // close sibling folders
-    
+
     var $selFolders = $finder.find('li.folder.selected');
     if ($selFolders.length == 1) {
         $selFolders.removeClass('closed');                                       // if 1 remaining selected folder, open it
         $finder.find('li.file.selected').removeClass('selected');             // unselect all files
     }
-    
+
     if ($finder.hasClass('image-view')) {
         $finder.find('ul').css({
             'width': '0'
         });
         $theFolder.find('> ul').css('width', $finder.width());
     }
-    
+
     $finder.scrollLeft($finder.width());                                    // scroll all the way to the right
     updateSelectedFiles();
 });
@@ -1089,9 +1006,9 @@ $finder.on('dblclick', 'li.file.image, li.file.tem', function() {
 // !#imageview
 $('#imageview').click( function() {
     if ($(this).hasClass('disabled')) { return false; }
-    
+
     $finder.toggleClass('image-view');
-    
+
     if ($finder.hasClass('image-view') ) {
         $(this).text('Column View');
     } else {
@@ -1100,7 +1017,7 @@ $('#imageview').click( function() {
     $imagebox.hide();
     $('#refresh').click();
     $finder.find('ul').css('width', 'auto');
-    $finder.find('ul').css('margin-left', (-1 * $finder.find('> ul').width()) - 1); 
+    $finder.find('ul').css('margin-left', (-1 * $finder.find('> ul').width()) - 1);
 });
 // !#selectedImage
 $('#selectedImage').click(function() {
@@ -1112,93 +1029,18 @@ $('#selectedImage').click(function() {
 });
 
 // !#upload
-$('#uploadFiles').click(function() {
-    $('#upload').click();
-});
-$('#upload').change(function() { fileUpload(); });
+$('#uploadFiles').click(function() { $('#upload').click(); });
+$('#upload').change(fileUpload);
 // !#showProjects
-$('#showProjects').not('.disabled').click(function() {
-    
-    var $spinner = bodySpinner();
-    
-    $('.interface:visible').not('#projectInterface').hide('fade', {}, 300, function() { 
-        $('#menu_window .checkmark').hide();
-        $(this).find('.checkmark').show();
-        menubar('project');
-        $('#projectInterface').show('fade', 300, function() {}); 
-        projectList();
-        $spinner.remove();
-    });
-});
+$('#showProjects').not('.disabled').click({appWindow: 'project'}, interfaceChange);
 // !#showFinder
-$('#showFinder').not('.disabled').click(function() {
-    
-    $('#menu_window .checkmark').hide();
-    $(this).find('.checkmark').show();
-
-    $('.interface:visible').not('#finderInterface').hide('fade', {}, 300, function() { 
-        menubar('finder');
-        $finder.insertAfter($('#uploadbar'));
-        $('#recent_creations').hide();
-        $('#finderInterface').show('fade', 300, function() { 
-            $('#refresh').click(); 
-        }); 
-        $finder.find('li.file').show().draggable('option', 'containment', '#finder');
-    });
-});
+$('#showFinder').not('.disabled').click({appWindow: 'finder'}, interfaceChange);
 // !#showDelineate
-$('#showDelineate').not('.disabled').click(function() {
-
-    $('#menu_window .checkmark').hide();
-    $(this).find('.checkmark').show();
-
-    $('.interface:visible').not('#delineationInterface').hide('fade', {}, 300, function() {
-        menubar('delineate');
-        $('#recent_creations').hide();
-        $('#delineationInterface').show('fade', 300, function() { });
-    });
-    
-});
+$('#showDelineate').not('.disabled').click({appWindow: 'delineate'}, interfaceChange);
 // !#showAverage
-$('#showAverage').not('.disabled').click(function() {
-    
-    $('#menu_window .checkmark').hide();
-    $(this).find('.checkmark').show();
-
-    $('.interface:visible').not('#averageInterface').hide('fade', {}, 300, function() { 
-        menubar('average');
-        loadFiles(currentDir());
-        var padwidth = $('#avg_image_box').outerWidth(true) + 20;
-        $('#individual_image_box').insertAfter($('#avg_image_box')).css("padding-left", padwidth);
-        $finder.appendTo($('#individual_image_box'));
-        $finder.find('li.file').hide().filter('.image.hasTem').show().draggable('option', 'containment', 'window');
-        $('#recent_creations').insertAfter($('#individual_image_box')).show();
-        $('#averageInterface').show('fade', 300, function() { sizeToViewport(); }); 
-        
-        $('#view-average-button, #save-button').button({ disabled: true });
-        checkAvgAbility();
-    });
-});
+$('#showAverage').not('.disabled').click({appWindow: 'average'}, interfaceChange);
 // !#showTransform
-$('#showTransform').not('.disabled').click(function() {
-    
-    $('#menu_window .checkmark').hide();
-    $(this).find('.checkmark').show();
-    
-    $('.interface:visible').not('#transformInterface').hide('fade', {}, 300, function() { 
-        menubar('transform');
-        loadFiles(currentDir()); 
-        var padwidth = $('#destimages').outerWidth(true) + 20;
-        $('#individual_image_box').insertAfter($('#continua')).css("padding-left", padwidth);
-        $finder.appendTo($('#individual_image_box'));
-        $finder.find('li.file').filter('.image.hasTem').show().draggable('option', 'containment', 'window');
-        $('#recent_creations').insertAfter($('#individual_image_box')).show();
-        $('#transformInterface').show('fade', 300, function() { sizeToViewport(); }); 
-        
-        $('#transButton, #trans-save-button').button({ disabled: true });
-        checkTransAbility();
-    });
-});
+$('#showTransform').not('.disabled').click({appWindow: 'transform'}, interfaceChange);
 // !#aboutPsychomoprh
 $('#aboutPsychomorph').click(function() {
     $('#aboutDialog').dialog();
@@ -1206,22 +1048,18 @@ $('#aboutPsychomorph').click(function() {
 // !#prefs
 $('#prefDialog').tabs();
 $('#prefs').not('.disabled').click(function() {
-    
-    // make sure the prefs interface is up to date with the database
-    //prefGet( function () {
-        // then open the prefs dialog
-        $('#prefDialog').dialog({
-            close: prefGet,
-            buttons: {
-                Cancel: function() { $(this).dialog("close"); },
-                'Save': {
-                    text: 'Save',
-                    class: 'ui-state-focus',
-                    click: prefSet
-                }
+    // open the prefs dialog
+    $('#prefDialog').dialog({
+        close: prefGet,
+        buttons: {
+            Cancel: function() { $(this).dialog("close"); },
+            'Save': {
+                text: 'Save',
+                class: 'ui-state-focus',
+                click: prefSet
             }
-        });
-    //});
+        }
+    });
 });
 $('.hue_chooser').slider({
     value: 200,
@@ -1289,7 +1127,7 @@ $('#grid_line_color').slider('values', [127,127,127]);
 
 $('#grid_lines').change( function() {
     var line_color;
-    
+
     if ($(this).prop('checked')) {
         $('#grid_line_color').show().change();
     } else {
@@ -1302,11 +1140,11 @@ $('#grid_lines').change( function() {
 
 $('#grid_line_color').on( "slidechange", function(e, ui) {
     var r, g, b;
-    
+
     r = ui.values[0];
     g = ui.values[1];
     b = ui.values[2];
-    
+
     $('#scrambleExample div').css({
         'border-color': 'rgb(' + r + ',' + g + ',' + b + ')'
     });
@@ -1358,10 +1196,10 @@ $('#getInfo').not('.disabled').click(function() {
     $.ajax({
         type: 'GET',
         url: 'scripts/imgReadExif',
-        data: { img: PM.faceimg },
-        dataType: 'html', 
+        data: { img: WM.faceimg },
+        dataType: 'html',
         success: function(data) {
-            $('<div />').attr('title', PM.faceimg).html(data).dialog({
+            $('<div />').attr('title', WM.faceimg).html(data).dialog({
                 width: 500,
                 height: 400,
             });
@@ -1371,19 +1209,19 @@ $('#getInfo').not('.disabled').click(function() {
 
 // !#save
 $('#save').not('.disabled').click(function() {
-    if (PM.interfaceWindow == 'delineate') {
+    if (WM.appWindow == 'delineate') {
         saveTem();
-    } else if (PM.interfaceWindow == 'average') {
+    } else if (WM.appWindow == 'average') {
         $('#save-button').click();
-    } else if (PM.interfaceWindow == 'transform') {
+    } else if (WM.appWindow == 'transform') {
         $('#trans-save-button').click();
     }
 });
 // !saveAs
 /*
-$('#saveAs').not('.disabled').click(function() {    
-    
-    if (PM.interfaceWindow == 'delineate') {
+$('#saveAs').not('.disabled').click(function() {
+
+    if (WM.appWindow == 'delineate') {
         $('<div />').html('Name: <input type="text" />').dialog({
             title: 'Save As',
             buttons: {
@@ -1406,10 +1244,10 @@ $('#convert').not('.disabled').click(function() {
 $('#download').not('.disabled').click(function() {
     var cDir,
         files;
-        
+
     cDir = currentDir();
     files = filesGetSelected();
-    
+
     if (files.length > 0) {
         growl('<p>Downloading ' + files.length + ' file' + (files.length==1?'':'s') + '.</p>' +
         '<p>This may take a few seconds, depending on how many files need to be compressed.</p>');
@@ -1428,16 +1266,16 @@ $('#download').not('.disabled').click(function() {
 });
 // !#toggletem
 $('#toggletem').not('.disabled').click(function() {
-    
-    if (PM.showTem) {
+
+    if (WM.showTem) {
         // hide delineation
         $(this).find('span.checkmark').hide();
         $('#template, .pt').hide();
-        PM.showTem = false;
+        WM.showTem = false;
     } else {
         // show delineation
         $(this).find('span.checkmark').show();
-        PM.showTem = true;
+        WM.showTem = true;
         $('#template, .pt').show();
         drawTem();
     }
@@ -1445,7 +1283,7 @@ $('#toggletem').not('.disabled').click(function() {
 $('#emptyTrash').not('.disabled').click( function() { emptyTrash(); });
 // !#toggletrash
 $('#toggletrash').not('.disabled').click(function() {
-    
+
     if ($('#trash:visible').length) {
         $(this).find('span.checkmark').hide();
         $('#trash').hide();
@@ -1471,14 +1309,14 @@ $('#imgsize').slider({
     step: 1,
     slide: function(event, ui) {
         var h = ui.value;
-        var w = Math.round(PM.originalWidth * h / PM.originalHeight);
+        var w = Math.round(WM.originalWidth * h / WM.originalHeight);
         $('#size_value').html(w + 'x' + h);
     },
     change: function(event, ui) {
         var h = ui.value;
-        var w = Math.round(PM.originalWidth * h / PM.originalHeight);
-        PM.temRatio = h / PM.originalHeight;
-        
+        var w = Math.round(WM.originalWidth * h / WM.originalHeight);
+        WM.temRatio = h / WM.originalHeight;
+
         $('#size_value').html(w + 'x' + h);
 
         $delin.css({
@@ -1492,12 +1330,12 @@ $('#imgsize').slider({
         var canvas = document.getElementById("template");
         canvas.width = w;
         canvas.height = h;
-    
+
         drawTem();
         updateUndoList();
-        
-        if (PM.delinfunc == 'fit') {
-            PM.delinContext.clearRect (0, 0, $('#template').width(), $('#template').height());
+
+        if (WM.delinfunc == 'fit') {
+            WM.delinContext.clearRect (0, 0, $('#template').width(), $('#template').height());
             cursor('crosshair');
         } else {
             drawTem();
@@ -1506,16 +1344,16 @@ $('#imgsize').slider({
 });
 // !#fitsize
 $('#fitsize').not('.disabled').click(function() {
-    
+
     var availableWidth,
         availableHeight,
         fitWidth,
         resize;
-    
+
     availableWidth = $('#delin_toolbar').width();
     availableHeight = $(window).height() - $delin.offset().top - $('#footer').height() - 20;
-    fitWidth = availableWidth*PM.originalHeight/PM.originalWidth;
-    
+    fitWidth = availableWidth*WM.originalHeight/WM.originalWidth;
+
     resize = (fitWidth >= availableHeight) ?
                  availableHeight :  // fit to available height
                  fitWidth;          // fit to available width
@@ -1524,13 +1362,13 @@ $('#fitsize').not('.disabled').click(function() {
 });
 // !#zoomin
 $("#zoomin").not('.disabled').click(function() {
-    if (PM.interfaceWindow == 'delineate') {
+    if (WM.appWindow == 'delineate') {
         var resize = $('#imgsize').slider('value') + 100;
         if (resize > $('#imgsize').slider('option', 'max')) {
             resize = $('#imgsize').slider('option', 'max');
         }
         $('#imgsize').slider('value', resize);
-    } else if (PM.interfaceWindow == 'transform') {
+    } else if (WM.appWindow == 'transform') {
         var w = $('#destimages').width() + 100;
         $('#destimages').css('width', w + 'px');
         $('#transform').width($('#transimage').width()).height($('#transimage').height());
@@ -1539,13 +1377,13 @@ $("#zoomin").not('.disabled').click(function() {
 });
 // !#zoomout
 $("#zoomout").not('.disabled').click(function() {
-    if (PM.interfaceWindow == 'delineate') {
+    if (WM.appWindow == 'delineate') {
         var resize = $('#imgsize').slider('value') - 100;
         if (resize < $('#imgsize').slider('option', 'min')) {
             resize = $('#imgsize').slider('option', 'min');
         }
         $('#imgsize').slider('value', resize);
-    } else if (PM.interfaceWindow == 'transform') {
+    } else if (WM.appWindow == 'transform') {
         var w = $('#destimages').width() - 100;
         if (w < 200) {
             w = 200;
@@ -1557,9 +1395,9 @@ $("#zoomout").not('.disabled').click(function() {
 });
 // !#zoomoriginal
 $('#zoomoriginal').not('.disabled').click(function() {
-    if (PM.interfaceWindow == 'delineate') {
-        var resize = PM.originalHeight;
-        
+    if (WM.appWindow == 'delineate') {
+        var resize = WM.originalHeight;
+
         // adjust slider min and max if out of range
         if (resize < $('#imgsize').slider('option', 'min')) {
             $('#imgsize').slider('option', 'min', resize);
@@ -1567,49 +1405,49 @@ $('#zoomoriginal').not('.disabled').click(function() {
             $('#imgsize').slider('option', 'max', resize);
         }
         $('#imgsize').slider('value', resize);
-    } else if (PM.interfaceWindow == 'transform') {
+    } else if (WM.appWindow == 'transform') {
         $('#destimages').css('width', '310px');
         sizeToViewport();
-    } else if (PM.interfaceWindow == 'average') {
+    } else if (WM.appWindow == 'average') {
         $('#average').css('width', '310px');
         sizeToViewport();
     }
 });
 // !#cutItems
 $('#cutItems').not('.disabled').click(function() {
-    PM.pasteBoard = filesGetSelected();
+    WM.pasteBoard = filesGetSelected();
     $finder.find('li.file').removeClass('to_cut'); // clear all other to_cut files
     $finder.find('li.file.selected:visible').each(function(i, v) {
         $(this).addClass('to_cut');
     });
-    $('#footer').html(PM.pasteBoard.length + ' files cut');
+    $('#footer').html(WM.pasteBoard.length + ' files cut');
 });
 // !#copyItems
 $('#copyItems').not('.disabled').click(function() {
-    
-    if (PM.interfaceWindow == 'delineate') {
-        PM.pasteBoard = [];
-        $.each(PM.selectedPts, function(i, v) {
+
+    if (WM.appWindow == 'delineate') {
+        WM.pasteBoard = [];
+        $.each(WM.selectedPts, function(i, v) {
             if (v) {
-                PM.pasteBoard.push({
+                WM.pasteBoard.push({
                     n: i,
-                    x: PM.current.tem[i].x,
-                    y: PM.current.tem[i].y
+                    x: WM.current.tem[i].x,
+                    y: WM.current.tem[i].y
                 });
             }
         });
-        
-        $('#footer').html(PM.pasteBoard.length + ' points copied');
+
+        $('#footer').html(WM.pasteBoard.length + ' points copied');
     } else {
-        PM.pasteBoard = filesGetSelected();
+        WM.pasteBoard = filesGetSelected();
         $finder.find('li.file').removeClass('to_cut'); // clear all to_cut files
-        $('#footer').html(PM.pasteBoard.length + ' files copied');
+        $('#footer').html(WM.pasteBoard.length + ' files copied');
     }
 });
 // !#pasteItems
 $('#pasteItems').not('.disabled').click(function() {
-    
-    if (PM.interfaceWindow == 'delineate') {
+
+    if (WM.appWindow == 'delineate') {
         temPaste();
     } else {
         filePaste();
@@ -1618,18 +1456,18 @@ $('#pasteItems').not('.disabled').click(function() {
 
 $('#moveFolderToProject').click( function() {
     if ($(this).hasClass('disabled')) { return false; }
-    
+
     folderMoveProject();
 });
 // !#find
 $('#find').not('.disabled').click(function() {
-    
+
     $('#searchbar').toggle().val('').focus();
     sizeToViewport();
-    
+
     if ($('#searchbar:visible').length === 0) {
         $finder.find('li.file').show();
-    }    
+    }
 
 });
 // !#searchbar
@@ -1644,10 +1482,10 @@ $('#searchbar').keyup(function() {
 });
 // !#deleteItems
 $('#deleteItems').not('.disabled').click(function() {
-    
+
     if ($finder.filter(':visible').length) {
         fileDelete(true);
-    } else if (PM.interfaceWindow == 'delineate') {
+    } else if (WM.appWindow == 'delineate') {
         var ptArray = getSelPts();
         if (ptArray.length) {
             removeTemPoints(ptArray);
@@ -1670,7 +1508,7 @@ $('#newFolder').not('.disabled').click(function() {
 // !#dbCleanup
 $('#dbCleanup').not('.disabled').click(function() {
     $.ajax({
-        url: 'scripts/dbCleanup?project=' + PM.project.id,
+        url: 'scripts/dbCleanup?project=' + WM.project.id,
         success: function(data) {
             if (data.error) {
                 $('<div title="Error Cleaning Database" />').html(data.errorText).dialog();
@@ -1678,8 +1516,8 @@ $('#dbCleanup').not('.disabled').click(function() {
                 var added =  data.added.length;
                 var deleted = data.deleted.length;
                 $('#refresh').click();
-                var text = added + ' file' + (added == 1 ? '' : 's') + ' added<br>' 
-                        + deleted + ' file' + (deleted == 1 ? '' : 's') + ' deleted'; 
+                var text = added + ' file' + (added == 1 ? '' : 's') + ' added<br>'
+                        + deleted + ' file' + (deleted == 1 ? '' : 's') + ' deleted';
                 $('<div title="Database Clean" />').html(text).dialog();
             }
         }
@@ -1688,24 +1526,24 @@ $('#dbCleanup').not('.disabled').click(function() {
 // !#refresh
 $('#refresh').click(function() { console.log('refresh()');
     if ($(this).hasClass('disabled')) { return false; }
-    
+
     if ($finder.filter(':visible').length) {
         $finder.html('');
         loadFiles(currentDir());
     }
-    
-    if (PM.interfaceWindow == 'delineate') {
-        delinImage(PM.faceimg);
-        PM.delinfunc = 'move';
+
+    if (WM.appWindow == 'delineate') {
+        delinImage(WM.faceimg);
+        WM.delinfunc = 'move';
         $('#pointer, #leftEye, #rightEye, #mouth').hide();
-    } else if (PM.interfaceWindow == 'average') {
+    } else if (WM.appWindow == 'average') {
         $('#clear-average-button').click();
         loadFiles(currentDir());
-    } else if (PM.interfaceWindow == 'transform') {
-        $('#fromimage, #toimage, #transimage').attr('src', PM.blankImg);
+    } else if (WM.appWindow == 'transform') {
+        $('#fromimage, #toimage, #transimage').attr('src', WM.blankImg);
 
         $("#transform").attr({
-            'src': PM.blankImg,
+            'src': WM.blankImg,
             'tem': '',
             'transimage': '',
             'fromimage': '',
@@ -1714,8 +1552,8 @@ $('#refresh').click(function() { console.log('refresh()');
             'color': 50,
             'texture': 50
         });
-        
-    } else if (PM.interfaceWindow == 'project') {
+
+    } else if (WM.appWindow == 'project') {
         projectList();
     }
     cursor('auto');
@@ -1723,26 +1561,26 @@ $('#refresh').click(function() { console.log('refresh()');
 });
 
 $('#autoDelineate').click(function() {
-    skyBio(PM.faceimg);
+    skyBio(WM.faceimg);
 });
 
 // !#maskBuilder
 $('#maskBuilder').click(function() {
     $mbb = $('#mask_builder_box');
-    if (PM.delinfunc == 'mask') {
-        PM.delinfunc = 'move';
+    if (WM.delinfunc == 'mask') {
+        WM.delinfunc = 'move';
         $mbb.hide();
     } else {
-        PM.delinfunc = 'mask';
+        WM.delinfunc = 'mask';
         $mbb.show();
     }
 });
 
 // !#fitTemplate
 $('#fitTemplate').not('.disabled').click(function() {
-    
+
     clickPt(0);
-    PM.delinfunc = 'fit';
+    WM.delinfunc = 'fit';
     $('.pt').remove();
 
     if ($finder.filter(':visible').length) {
@@ -1753,37 +1591,37 @@ $('#fitTemplate').not('.disabled').click(function() {
         });
         if (files.length > 0) {
             $('#footer').html('0 of ' + files.length + ' image' + ((files.length == 1) ? '' : 's') + ' fitted to template <code>' + $('#currentTem_name').text() + '</code>');
-            PM.selectedFile = 0;
+            WM.selectedFile = 0;
             var url = files[0];
-            var name = PM.project.id + urlToName(url);
+            var name = WM.project.id + urlToName(url);
             delinImage(name, false);
-            PM.eyeClicks = [];
+            WM.eyeClicks = [];
             $('#template').hide();
-            PM.delinfunc = '3pt';
+            WM.delinfunc = '3pt';
             cursor('crosshair');
         } else {
             growl('You need to select files to fit templates.', 1500);
-            PM.delinfunc = 'move';
+            WM.delinfunc = 'move';
             quickhelp();
         }
-    } else if (PM.interfaceWindow == 'delineate') {
+    } else if (WM.appWindow == 'delineate') {
         $('#footer').html('Fitting template <code>' + $('#currentTem_name').text() + '</code>');
-        PM.eyeClicks = [];
+        WM.eyeClicks = [];
         $('#template').hide();
-        PM.delinfunc = '3pt';
+        WM.delinfunc = '3pt';
         cursor('crosshair');
     }
 });
 
 // !#newLine
 $('#newLine').click(function() {
-    if (PM.delinfunc != 'lineadd') {
-        PM.delinfunc = 'lineadd';
+    if (WM.delinfunc != 'lineadd') {
+        WM.delinfunc = 'lineadd';
         quickhelp('New line: press &lsquo;enter&rsquo; to end');
         cursor('lineadd');
-        PM.current.lines.push([]);
-        var line = PM.current.lines.length - 1;
-        PM.delin.lineColors[line] = 'red';
+        WM.current.lines.push([]);
+        var line = WM.current.lines.length - 1;
+        WM.delin.lineColors[line] = 'red';
         $('#footer').html('Starting new line');
     }
     updateUndoList();
@@ -1791,12 +1629,12 @@ $('#newLine').click(function() {
 });
 // !#deleteLine
 $('#deleteLine').click(function() {
-    if (PM.delinfunc != 'linesub') {
-        PM.delinfunc = 'linesub';
+    if (WM.delinfunc != 'linesub') {
+        WM.delinfunc = 'linesub';
         quickhelp('Click a line to delete it');
         cursor('linesub');
     }
-    
+
     drawTem();
 });
 // !#closeMouth
@@ -1805,8 +1643,8 @@ $('#closeMouth').click(function() {
         for (var i = 94; i < 99; i++) {
             var fromPt = i + 5;
             var toPt = i;
-            PM.current.tem[toPt].x = PM.current.tem[fromPt].x;
-            PM.current.tem[toPt].y = PM.current.tem[fromPt].y;
+            WM.current.tem[toPt].x = WM.current.tem[fromPt].x;
+            WM.current.tem[toPt].y = WM.current.tem[fromPt].y;
         }
         drawTem();
     }
@@ -1866,7 +1704,7 @@ $('.batch_name').on('click', 'span:not(.multibatch)', function() {
         if (e.which == KEYCODE.enter) $(this).blur();
     }).blur(function() {
         var val = $(this).val();
-        
+
         if ($this.hasClass('batch_superfolder')) {
             if (val.length === 0) {
                 $(this).closest('div.batch_name').find('.toggle_superfolder').prop('checked', false);
@@ -1915,27 +1753,27 @@ $('#cropDialog input').keyup(function() {
     var b = parseInt($('#cropDialog input[name=bottom]').val());
     var l = parseInt($('#cropDialog input[name=left]').val());
     var r = parseInt($('#cropDialog input[name=right]').val());
-    
+
     origh = (isNaN(origh)) ? 0 : origh;
     origw = (isNaN(origw)) ? 0 : origw;
     t = (isNaN(t)) ? 0 : t;
     b = (isNaN(b)) ? 0 : b;
     l = (isNaN(l)) ? 0 : l;
     r = (isNaN(r)) ? 0 : r;
-    
+
     var neww = origw + l + r;
-    var newh = origh + t + b;        
+    var newh = origh + t + b;
     $('#cropBoxWidth').text(neww + 'px');
     $('#cropBoxHeight').text(newh + 'px');
 
     $('#cropDialog .batchList table tbody tr').each( function() {
         var $td = $(this).find('td');
-        
+
         var origW = parseInt($td.eq(1).text());
         var origH = parseInt($td.eq(2).text());
         var newW = origW + l + r;
         var newH = origH + t + b;
-        
+
         $td.eq(3).text(Math.round(newW));
         $td.eq(4).text(Math.round(newH));
     });
@@ -1943,7 +1781,7 @@ $('#cropDialog input').keyup(function() {
     // change default order of tabbing to go clockwise
     if (e.which == KEYCODE.tab) {
         e.preventDefault();
-        
+
         var n = $(this).attr('name');
         if (n == 'top') {
             $('#cropDialog input[name=right]').focus().select();
@@ -1978,23 +1816,23 @@ $('#scrambleExample').on('click', 'div', function(e) {
         miny,
         maxx,
         maxy;
-    
+
     $theDiv = $(this);
     $theDiv.toggleClass('selected');
     $scram = $('#scrambleExample');
     thisSel = $theDiv.data();
-    
+
     if (e.ctrlKey || e.metaKey || e.shiftKey) {
-        
+
         lastSel = $scram.data('lastSel');
-        
+
         if (lastSel !== undefined && lastSel.hasOwnProperty('x')) {
             minx = Math.min(thisSel.x, lastSel.x);
             maxx = Math.max(thisSel.x, lastSel.x);
             miny = Math.min(thisSel.y, lastSel.y);
             maxy = Math.max(thisSel.y, lastSel.y);
             $scramDivs = $scram.find('div');
-        
+
             for (x = minx; x <= maxx; x++) {
                 for (y = miny; y <= maxy; y++) {
                     $scramDivs.filterByData('x', x).filterByData('y', y).addClass('selected');
@@ -2003,7 +1841,7 @@ $('#scrambleExample').on('click', 'div', function(e) {
             }
         }
     }
-    
+
     if ($theDiv.hasClass('selected')) {
         $scram.data('lastSel', thisSel);
     }
@@ -2027,8 +1865,8 @@ $('#mirror').not('.disabled').click( function() {
 $('#symmetrise').not('.disabled').click(function() {
     batchSymmetrise();
 });
-// !movie functions 
-$('#transMovieSteps').change( function () {
+// !movie functions
+$('#transMovieSteps').change( function() {
     var value = parseInt($(this).val());
     $('#transMovieStepsDisplay').html("(" + (value+1) + " images in " + (Math.round(1000/value)/10) + "% steps)");
 });
@@ -2050,7 +1888,7 @@ $('#movieOriginalHeight').click( function() {
     $.ajax({
         url: 'scripts/imgDimensions',
         type: 'GET',
-        data: { img: PM.project.id + urlToName($('#movieBox').attr('src')) },
+        data: { img: WM.project.id + urlToName($('#movieBox').attr('src')) },
         success: function(data) {
             $('#movieHeight').slider('value', data.h);
             $('#movieBox').css({
@@ -2068,19 +1906,19 @@ function calcMovieLen() {
     var speed = $('#movieSpeed').slider('value');
     var pause = $('#moviePause').slider('value');
     var files = filesGetSelected('.image');
-    
+
     var len = speed * files.length;
-    
+
     if ($('#movieRev').prop('checked')) {
-        len = 2 * (len - speed + pause);    
+        len = 2 * (len - speed + pause);
     }
-    
+
     $('#movieLength').html(Math.round(len / 100) / 10);
 }
 
 $('#movieRev').change( function() {
     calcMovieLen();
-    
+
     if ($('#movieRev').prop('checked')) {
         $('#moviePauseSection').show();
     } else {
@@ -2112,25 +1950,25 @@ $('#moviePause').slider({
 // !webcam functions
 $('#webcamPhoto').click( function() {
     if ($(this).hasClass('disabled')) { return false; }
-    
+
     webcamPhoto();
 });
 
 // !#movingGif
 $('#movingGif').not('.disabled').click(function() {
-    
+
     movingGif();
 });
 
 // !#batchAverage
 $('#batchAverage').not('.disabled').click(function() {
-    
+
     batchAverage();
 });
 
 // !batchTransform
 $('#batchTransform').not('.disabled').click(function() {
-    
+
     batchTransform();
 });
 
@@ -2140,12 +1978,12 @@ $('#SBTdialog').delegate('textarea', 'keydown', function(e) {
         var start = $(this).get(0).selectionStart;
         var end = $(this).get(0).selectionEnd;
         var theChar = (e.which == KEYCODE.tab) ? "\t" : "\n";
-        
+
         // set textarea value to: text before caret + tab + text after caret
         $(this).val($(this).val().substring(0, start)
                     + theChar
                     + $(this).val().substring(end));
-        
+
         // put caret at right position again
         $(this).get(0).selectionStart = $(this).get(0).selectionEnd = start + 1;
     }
@@ -2194,7 +2032,7 @@ $('#batchTag').not('.disabled').click(function() {
     var files = filesGetSelected('.jpg', regex);
     if (files.length > 0) {
         $('<div />').html('Tag(s) (separate tags with semi-colons):' + '<input type="text" />').dialog({
-            title: 'Add Tags', 
+            title: 'Add Tags',
             buttons: {
                 Cancel: function() { $(this).dialog("close"); },
                 'Delete': {
@@ -2253,10 +2091,10 @@ $('#fmButtons').on('click', 'li', function() {
     $('#fm_name').val($(this).text());
     $('#fm_equation').val($(this).attr('data-equation'));
 });
-$('#fm_delete').droppable({ 
+$('#fm_delete').droppable({
     drop: function( event, ui ) {
         var $eq_to_remove = ui.draggable;
-    
+
         $.ajax({
             data: {
                 name: $eq_to_remove.text()
@@ -2271,7 +2109,7 @@ $('#fm_delete').droppable({
             }
 
         });
-        
+
     },
     scope: 'fm',
     hoverClass: "hover",
@@ -2280,43 +2118,43 @@ $('#fm_delete').droppable({
 $('#fm_results').on('dblclick', 'thead th+th', function() {
     // delete column when double-clicking header
     var column_n = $('#fm_results thead th').index($(this));
-    
+
     $("#fm_results tbody tr").each(function() {
         $(this).find("td:eq("+column_n+")").remove();
     });
-    
+
     $(this).remove();
 });
 $('#fm_new').click(function() {
     fmAddEquation();
 });
 $('#facialMetrics').not('.disabled').click(function() {
-    
+
     batchFacialmetrics();
 });
 // !undo
 $('#undo').not('.disabled').click(function() {
-    
-    if (PM.interfaceWindow == 'delineate') {
-        if (PM.delinfunc == 'move') {
-            PM.undo.level = Math.max(0, PM.undo.level - 1);
-            PM.current.tem = $.extend(true, [], PM.undo.tem[PM.undo.level]);
-            PM.current.lines = $.extend(true, [], PM.undo.lines[PM.undo.level]);
-            if (PM.undo.level == 0) $('#delin_save').removeClass('unsaved');
+
+    if (WM.appWindow == 'delineate') {
+        if (WM.delinfunc == 'move') {
+            WM.undo.level = Math.max(0, WM.undo.level - 1);
+            WM.current.tem = $.extend(true, [], WM.undo.tem[WM.undo.level]);
+            WM.current.lines = $.extend(true, [], WM.undo.lines[WM.undo.level]);
+            if (WM.undo.level == 0) $('#delin_save').removeClass('unsaved');
             drawTem();
-        } else if (PM.delinfunc == 'sym' && PM.symPts.n > 0) {
-            PM.symPts.n = PM.symPts.order.pop();
+        } else if (WM.delinfunc == 'sym' && WM.symPts.n > 0) {
+            WM.symPts.n = WM.symPts.order.pop();
             nextSymPt('start');
-        } else if (PM.delinfunc == '3pt') {
+        } else if (WM.delinfunc == '3pt') {
             // remove last item in eyeClicks
-            var n = PM.eyeClicks.length;
+            var n = WM.eyeClicks.length;
             if (n == 1) {
                 $('#leftEye').hide();
-                PM.eyeClicks.pop();
+                WM.eyeClicks.pop();
                 clickPt(0);
             } else if (n == 2 ) {
                 $('#rightEye').hide();
-                PM.eyeClicks.pop();
+                WM.eyeClicks.pop();
                 clickPt(1);
             }
         }
@@ -2324,12 +2162,12 @@ $('#undo').not('.disabled').click(function() {
 });
 // !redo
 $('#redo').not('.disabled').click(function() {
-    if (PM.interfaceWindow == 'delineate') {
-        if (PM.delinfunc == 'move') {
-            PM.undo.level = Math.min(PM.undo.level + 1, PM.undo.tem.length - 1);
-            PM.current.tem = $.extend(true, [], PM.undo.tem[PM.undo.level]);
-            PM.current.lines = $.extend(true, [], PM.undo.lines[PM.undo.level]);
-            if (PM.undo.level > 0) $('#delin_save').addClass('unsaved');
+    if (WM.appWindow == 'delineate') {
+        if (WM.delinfunc == 'move') {
+            WM.undo.level = Math.min(WM.undo.level + 1, WM.undo.tem.length - 1);
+            WM.current.tem = $.extend(true, [], WM.undo.tem[WM.undo.level]);
+            WM.current.lines = $.extend(true, [], WM.undo.lines[WM.undo.level]);
+            if (WM.undo.level > 0) $('#delin_save').addClass('unsaved');
             drawTem();
         }
     }
@@ -2342,7 +2180,7 @@ $('#select').not('.disabled').click(function() {
                                .filter(':not(.closed)')
                                .filter(':last');
         $openFolder.find('li.folder.selected').removeClass('selected'); // unselect selected folders
-        
+
         var $allfiles = $openFolder.find('> ul > li.file')
                                .filter(':visible:not(.nosearch)');
         if ($allfiles.length == $allfiles.filter('.selected').length) {
@@ -2353,7 +2191,7 @@ $('#select').not('.disabled').click(function() {
             $imagebox.hide().appendTo($allfiles.eq(0));
         }
         updateSelectedFiles();
-    } else if (PM.interfaceWindow == 'delineate') {
+    } else if (WM.appWindow == 'delineate') {
         if ($('.pt').length == $('.pt.selected').length) {
             // unselect all delineation points
             $('.pt').removeClass('selected');
@@ -2365,14 +2203,14 @@ $('#select').not('.disabled').click(function() {
 });
 // !createTransform
 $('#createTransform').not('.disabled').click(function() {
-    if (PM.interfaceWindow == 'average') {
+    if (WM.appWindow == 'average') {
         getAverage();
-    } else if (PM.interfaceWindow == 'transform') {
+    } else if (WM.appWindow == 'transform') {
         getTransform({async:true});
-    } else if (PM.interfaceWindow == 'finder') {
+    } else if (WM.appWindow == 'finder') {
         var regex = new RegExp("(.tem$)", "g");
         var selTems = filesGetSelected('.tem', regex);
-        
+
         if (selTems.length > 1) {
             $('#showAverage').click();
         } else {
@@ -2399,18 +2237,18 @@ $('#isNewTem').click( function() {
 });
 // !editTemplate
 $('#editTemplate').not('.disabled').click(function() {
-    
+
     editTemplate();
 });
 $('#setPointLabels').not('.disabled').click(function() {
-    
-    if (PM.delin.tem.length != PM.current.tem.length) {
+
+    if (WM.delin.tem.length != WM.current.tem.length) {
         growl('The current template does not match the template <code>' + $('#currentTem_name').text() + '</code>');
     } else {
         // check if the current user has access to edit this template
         $.ajax({
             url: '/scripts/userCheckAccess',
-            data: { table: 'tem', id: PM.delin.temId },
+            data: { table: 'tem', id: WM.delin.temId },
             success: function(data) {
                 if (data.error) {
                     growl(data.errorText);
@@ -2424,10 +2262,10 @@ $('#setPointLabels').not('.disabled').click(function() {
 $('#labelDialog ol').on('focus', 'input', function() {
     // point to and highlight the corresponding point when the label is in focus
     var n = parseInt($(this).attr('name'));
-    
+
     // unselect all points first
     $('.pt').removeClass('selected');
-    var pt = PM.pts[n];
+    var pt = WM.pts[n];
     pt.addClass('selected');
 
     var imgoffset = $delin.offset();
@@ -2443,7 +2281,7 @@ $('#setSymPoints').not('.disabled').click(function() {
     setSymPoints();
 });
 // !whatsnew
-$('#whatsnew').click( function() { 
+$('#whatsnew').click( function() {
     $('#whatsnewDialog').dialog({ height: 500 });
 });
 // !menuhelp
@@ -2460,9 +2298,9 @@ $('.tinyhelp').click(function() {
 });
 // !emailLisa
 $('#emailLisa').click(function() {
-    PM.noOnBeforeUnload = true;
+    WM.noOnBeforeUnload = true;
     location.assign("mailto:lisa.debruine@glasgow.ac.uk?subject=Online PsychoMorph");
-    PM.noOnBeforeUnload = false;
+    WM.noOnBeforeUnload = false;
 });
 // !show_thumbs
 $('#show_thumbs').change(function() {
@@ -2501,21 +2339,21 @@ $('#maskDialog ul input[type=checkbox]').change(function() {
 });
 // !#transButton
 $('#transButton').button().click(function() {
-    var list = filesGetSelected('.image.hasTem', PM.project.id);
-    
+    var list = filesGetSelected('.image.hasTem', WM.project.id);
+
     if (list.length > 1) {
         var fromimage = urlToName($("#fromimage").attr('src'));
         var toimage = urlToName($("#toimage").attr('src'));
         var shape = parseFloat($("#shapePcnt0").val());
         var color = parseFloat($("#colorPcnt0").val());
         var texture = parseFloat($("#texturePcnt0").val());
-    
+
         var batchText = '';
         $.each(list, function(i, img) {
             var newimg = '/trans' + img;
             batchText += img + "\t" + fromimage + "\t" + toimage + "\t" + shape + "\t" + color + "\t" + texture + "\t" + newimg + "\n";
         });
-    
+
         $('#batchTransform').click();
         $('#SBTdialog textarea').val(batchText.trim()).show();
     } else {
@@ -2559,11 +2397,11 @@ $('#toggle_recent').click(function() {
 $delin.click(function(e) {
     if (e.shiftKey && (e.metaKey || e.altKey)) {
         newDelinPoint(e);
-    } else if (PM.eyeClicks.length < 3) {
+    } else if (WM.eyeClicks.length < 3) {
         threePtDelin(e);
     }
 }).dblclick(function() {
-    if (PM.delinfunc == 'move') {
+    if (WM.delinfunc == 'move') {
         $('.pt.selected').removeClass('selected'); // unselect all delineation points
         $('#selectBox').hide(); // and reset the selectBox
         drawTem();
@@ -2581,7 +2419,7 @@ $delin.click(function(e) {
         });
     }
 }).mousemove(function(e) {
-    if ($('#selectBox').prop('x') !== false && e.shiftKey && PM.pageEvents.mousebutton[1]) {
+    if ($('#selectBox').prop('x') !== false && e.shiftKey && WM.pageEvents.mousebutton[1]) {
         boxHover(e);
     } else {
         resetSelectBox();
@@ -2592,7 +2430,7 @@ $('#selectBox').mouseup(function(e) {
         boxSelect(e);
     }
 }).mousemove(function(e) {
-    if ($('#selectBox').prop('x') !== false && e.shiftKey && PM.pageEvents.mousebutton[1]) {
+    if ($('#selectBox').prop('x') !== false && e.shiftKey && WM.pageEvents.mousebutton[1]) {
         boxHover(e);
     } else {
         resetSelectBox();
@@ -2606,88 +2444,89 @@ $delin.on("click", ".pt", function(e) {
         var connectedPoints = $(this).data('connectedPoints');
         if ($(this).hasClass("selected")) {
             $.each(connectedPoints, function(j, pt) {
-                PM.pts[pt].removeClass('selected');
-            });    
+                WM.pts[pt].removeClass('selected');
+            });
         } else {
             $.each(connectedPoints, function(j, pt) {
-                PM.pts[pt].addClass('selected');
-            });    
+                WM.pts[pt].addClass('selected');
+            });
         }
     }
     drawTem();
 });
 
 $delin.on("mouseenter", ".pt", function(e) {
-    if (PM.delinfunc == 'lineadd') {
+    if (WM.delinfunc == 'lineadd') {
         cursor('lineadd');
-    } else if (PM.delinfunc == 'label') { 
+    } else if (WM.delinfunc == 'label') {
         return false;
     } else {
         //cursor('pointer');
     }
-    
+
     var i = parseInt($(this).attr('n'));
-    
-    var pointName = (PM.delin.tem[i] !== undefined) ? PM.delin.tem[i].name : 'undefined';
-    
-    var thisx = round(PM.current.tem[i].x, 1);
-    var thisy = round(PM.current.tem[i].y, 1);
-    
-    var footertext = '[' + i + '] ' + pointName + 
-                     ' x=<span class="x">' + thisx + '</span>; ' + 
+
+    var pointName = (WM.delin.tem[i] !== undefined) ? WM.delin.tem[i].name : 'undefined';
+
+    var thisx = round(WM.current.tem[i].x, 1);
+    var thisy = round(WM.current.tem[i].y, 1);
+
+    var footertext = '[' + i + '] ' + pointName +
+                     ' x=<span class="x">' + thisx + '</span>; ' +
                      'y=<span class="y">' + thisy + '</span>';
     $('#footer').prop('data-persistent', $('#footer').html()).html(footertext);
-    
+
     if (e.metaKey || e.ctrlKey) {
         var conPts = $(this).data('connectedPoints');
         $.each(conPts, function(i,pt) {
-            PM.pts[pt].addClass('couldselect');
+            WM.pts[pt].addClass('couldselect');
         });
     }
     drawTem();
 });
 
-$delin.on("mouseup mouseout", ".pt", function(e) {
-    if (PM.delinfunc == 'label') { return false; }
-    
+$delin.on("mouseup", ".pt", function(e) {
+    if (WM.delinfunc == 'label') { return false; }
+
     if (e.shiftKey && (e.metaKey || e.ctrlKey)) {
         cursor('crosshair');
-    } else if (PM.delinfunc == 'lineadd') {
+    } else if (WM.delinfunc == 'lineadd') {
         cursor('lineadd');
     } else {
         //cursor('auto');
     }
-    
+
     $('.pt').removeClass('couldselect');
-    
+
     updateUndoList();
-    // remove point name and replace with whatever is in data-persistent
-    $('#footer').html($('#footer').prop('data-persistent')); 
     drawTem();
+}).on("mouseout", ".pt", function(e) {
+    // remove point name and replace with whatever is in data-persistent
+    $('#footer').html($('#footer').prop('data-persistent'));
 });
 
 $delin.on("mousedown", ".pt", function(e) {
-    if (PM.delinfunc == 'label') { 
+    if (WM.delinfunc == 'label') {
         return false;
-    } else if (PM.delinfunc == 'lineadd') {
-        var line = PM.current.lines.length - 1;
+    } else if (WM.delinfunc == 'lineadd') {
+        var line = WM.current.lines.length - 1;
         var i = parseInt($(this).attr('n'));
         // check if last point if the same as this one
-        var lastPt = PM.current.lines[line][PM.current.lines[line].length - 1];
+        var lastPt = WM.current.lines[line][WM.current.lines[line].length - 1];
         if (lastPt === undefined || lastPt != i) {
-            PM.current.lines[line].push(i);
-            var t = 'Added a point to the new line [' + PM.current.lines[line].join() + ']';
+            WM.current.lines[line].push(i);
+            var t = 'Added a point to the new line [' + WM.current.lines[line].join() + ']';
             $('#footer').html(t).prop('data-persistent', t);
         }
-    } else if (PM.delinfunc == 'sym') {
+    } else if (WM.delinfunc == 'sym') {
         nextSymPt($(this).attr('n'));
-    } else if (PM.delinfunc == "mask") {
+    } else if (WM.delinfunc == "mask") {
         if (e.metaKey || e.ctrlKey) {
             var conLines = $(this).data('connectedLines');
-            
+
             $.each(conLines, function(idx, line) {
                 addToCustomMask(';');
-                $.each(PM.current.lines[line], function(idx2, pt) {
+                $.each(WM.current.lines[line], function(idx2, pt) {
                     addToCustomMask(pt);
                 });
             });
@@ -2784,16 +2623,16 @@ $('.buttonset').buttonset();
 
 // ! queue setup
 $queue_n.hide();
-PM.queue = new queue();
-PM.queue.queueCountUpdate();
+WM.queue = new queue();
+WM.queue.queueCountUpdate();
 
-$('#clearQueue').click( function() { PM.queue.clear(); });
+$('#clearQueue').click( function() { WM.queue.clear(); });
 
-$('#clearComplete').click( function() { PM.queue.clear('complete');    });
+$('#clearComplete').click( function() { WM.queue.clear('complete');    });
 
-$('#pauseQueue').click( function() { PM.queue.pauseAll(); });
+$('#pauseQueue').click( function() { WM.queue.pauseAll(); });
 
-$('#restartQueue').click( function() { PM.queue.restartAll(); });
+$('#restartQueue').click( function() { WM.queue.restartAll(); });
 
 $queue.on('click', 'li.queueItem:not(.active)', function(e) {
     if (e.which == KEYCODE.ctrl || e.which == KEYCODE.cmd) {
@@ -2803,9 +2642,9 @@ $queue.on('click', 'li.queueItem:not(.active)', function(e) {
     fileShow($(this).data('obj').returnData.newFileName);
 }).on('click', 'li.queueItem.paused', function(){
     $(this).data('obj').wait();
-}).on('click', 'li.queueItem.waiting', function(){        
+}).on('click', 'li.queueItem.waiting', function(){
     $(this).data('obj').pause();
-}).on('click', 'li.queueItem.active', function(){        
+}).on('click', 'li.queueItem.active', function(){
     growl('You cannot pause or delete an active process', 1000);
 }).on('click', 'li.queueItem.ui-state-error', function() {
     growl($(this).data('obj').errorText);
@@ -2814,9 +2653,9 @@ $queue.on('click', 'li.queueItem:not(.active)', function(e) {
 $('#masktest').click( function() {
     //var m = drawMask("145,146,147,148,149,150,151,152,153,154,155,156,157;157,184,183,145"); // halo
     var m = drawMask("111,186,110,185,109,134,135,136,137,138,139,140,141,142,143,144,112,187,113,188,114;114,133,132,131,130,129,128,127,126,125,111 : 112,120,121,122,123,124,114 ; 114,188,113,187,112 : 111,186,110,185,109 ; 109,115,116,117,118,119,111", 5); // face ears
-    
+
     var $maskDialog = $('<div title="Masked Image" />').append(m);
-    m.css({'width': '100%', 'max-width': PM.originalWidth + 'px', 'height': 'auto'});
+    m.css({'width': '100%', 'max-width': WM.originalWidth + 'px', 'height': 'auto'});
     $maskDialog.dialog({
         position: { my: 'right top', at: 'right bottom', of: $('#delin_toolbar') },
         width: 450
@@ -2829,18 +2668,9 @@ sizeToViewport();
 
 $("body").removeClass("loading");
 
-if (PM.user.id) {
-    var $spinner = bodySpinner();
-    $('#projectInterface').show();
-    msgGet();
-    prefGet();
-    projectList();
-    menubar('project');
-    $('#showProjects .checkmark').show();
-    $spinner.remove();
+if (WM.user.id) {
+    $('#menu_window li').removeClass('disabled');
+    userLoad();
 } else {
-    menubar('login');
-    $('#loginInterface').show();
-    $('#login_email').focus();
+    interfaceChange('login');
 }
-

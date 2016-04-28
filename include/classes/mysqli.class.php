@@ -227,14 +227,14 @@ class myQuery {
         }
         
         $sort = ($sortable) ? ' sortable' : '';
-        $return = '<table class="query' . $sort . '">' . ENDLINE;
+        $return = '<table class="query' . $sort . '">' . PHP_EOL;
         
         // table header
         if ($header) {
         $return .= '<thead><tr>';
             $keys = array_keys($array);
             foreach ($array[$keys[0]] as $h => $v) {
-                $return .= "    <th>$h</th>" . ENDLINE;
+                $return .= "    <th>$h</th>" . PHP_EOL;
             }
             $return .= '</tr></thead>';
         }
@@ -244,16 +244,16 @@ class myQuery {
         foreach($array as $a) {
             $return .= "<tr>";
             foreach ($a as $v) {
-                $return .= "    <td>$v</td>" . ENDLINE;
+                $return .= "    <td>$v</td>" . PHP_EOL;
             }
-            $return .= '</tr>' . ENDLINE;
+            $return .= '</tr>' . PHP_EOL;
         }
         $return .= "</tbody>";
         
-        $return .= '</table>' . ENDTAG;
+        $return .= '</table>' . PHP_EOL . PHP_EOL;
         
         // add sorting script
-        if ($sortable) $return .= '<script src="/include/js/sorttable.js"></script>' . ENDLINE;
+        if ($sortable) $return .= '<script src="/include/js/sorttable.js"></script>' . PHP_EOL;
         
         return $return;
     }

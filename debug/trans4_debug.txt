@@ -1,0 +1,43 @@
+Starting transform (Thu Apr 28 15:30:02 BST 2016)
+Using output folder: /Users/lisad/images/1/.tmp/
+Loading NEW /female/agata
+    Reading template from /Users/lisad/images/1/female/agata.tem
+    Reading image from /Users/lisad/images/1/female/agata.jpg
+Loading NEW /female/alexandra
+    Reading template from /Users/lisad/images/1/female/alexandra.tem
+    Reading image from /Users/lisad/images/1/female/alexandra.jpg
+Loading NEW /female/alica
+    Reading template from /Users/lisad/images/1/female/alica.tem
+    Reading image from /Users/lisad/images/1/female/alica.jpg
+    shapePcnt[0] = 0.5
+    colorPcnt[0] = 0.5
+    texturePcnt[0] = 0.5
+    sampleContours[0] = true
+    norm[0] = 3
+    warp[0] = 0
+Load Images Time: 5
+Making Transform...
+Transform Time: 6865
+Memory used: 91MB of 2731MB
+JSON Response: 
+[{ 
+"error": false, 
+"errorText": "", 
+"transimg": "/female/agata.jpg",
+"fromimg": "/female/alexandra.jpg",
+"toimg": "/female/alica.jpg",
+"shape": "50.0%",
+"color": "50.0%",
+"texture": "50.0%",
+"norm": "none",
+"normpoints": "",
+"warp": "multiscale",
+"contours": "true",
+"savefolder": "/.tmp/","img": "tran3004430256208423941.jpg",
+"tem": "tran3004430256208423941.tem",
+"width": 1350, 
+"height": 1800, 
+"memory": 91,
+"load-image-time": 5,
+"transform-time": 6865
+ }]

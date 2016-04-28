@@ -6,7 +6,7 @@ function currentDir() {  //console.log('currentDir()');
     var cDir = '',
         openFolders,
         sf;
-    
+
     openFolders = $('li.folder').filter(':not(.closed):visible').last();
     if (openFolders.length) {
         cDir = openFolders.attr('path');
@@ -22,7 +22,7 @@ function currentDir() {  //console.log('currentDir()');
 // access a private file
 function fileAccess(img, thumb) {
     if (img.substr(-4, 1) != '.') { img += '.jpg'; }
-    
+
     if (thumb == null) {
         return "/scripts/fileAccess?file=" + img;
     } else {
@@ -32,14 +32,14 @@ function fileAccess(img, thumb) {
 
 function emptyTrash() {
     var file_n;
-    
+
     file_n = $('#trash li.file').length;
     if (file_n == 0 ) {
         growl('There are no files to delete', 1000);
         return false;
     }
-    
-    $('<div />').html('Are you sure you want to permanently remove these ' + 
+
+    $('<div />').html('Are you sure you want to permanently remove these ' +
                        file_n + ' files? This cannot be undone.').dialog({
         title: 'Empty Trash',
         buttons: {
@@ -50,12 +50,12 @@ function emptyTrash() {
                     $(this).dialog("close");
                     $.ajax({
                         url: 'scripts/dirTrashEmpty',
-                        data: { project: PM.project.id },
+                        data: { project: WM.project.id },
                         success: function(data) {
                             if (data.error) {
                                 growl(data.errorText);
                             } else {
-                                loadFiles(PM.project.id + '/.trash');
+                                loadFiles(WM.project.id + '/.trash');
                             }
                         }
                     });
@@ -69,9 +69,9 @@ function folderNew() {
     // get base directory to add folder to
     var cDir,
         theHTML;
-    
-    if (PM.project.perm == 'read-only') { return false; }
-        
+
+    if (WM.project.perm == 'read-only') { return false; }
+
     cDir = currentDir();
     var theHTML = 'Add a folder to the directory <code>' + urlToName(cDir) + '</code>?' + '<p>Folder name: <input type="text" /></p>';
     $('<div />').html(theHTML).dialog({
@@ -85,7 +85,7 @@ function folderNew() {
                 class: 'ui-state-focus',
                 click: function() {
                     var dirname = $(this).find('input').val();
-                    
+
                     $(this).dialog("close");
                     $.ajax({
                         url: 'scripts/dirAdd',
@@ -113,9 +113,9 @@ function fileUpload() {
         uploadList,
         filenames,
         $uploadDialog;
-        
-    if (PM.project.perm == 'read-only') { return false; }
-    
+
+    if (WM.project.perm == 'read-only') { return false; }
+
     cDir = currentDir();
     uploadedFiles = document.getElementById('upload').files;
     uploadList = $('<ul class="batchList" />');
@@ -125,21 +125,21 @@ function fileUpload() {
             name_parts,
             suffix,
             prefix;
-            
+
         name = uploadedFiles.item(i).name;
         uploadList.append('<li>' + name + '</li>');
-        
+
         name_parts = name.split('.');
         suffix = name_parts.pop();
         prefix = name_parts.join('.');
-        
+
         if (filenames[prefix] == undefined) {
             filenames[prefix] = [];
         }
         filenames[prefix].push(uploadedFiles.item(i));
     }
-    $uploadDialog = $('<div />').html('Upload ' + uploadedFiles.length + ' file' + 
-                      (uploadedFiles.length == 1 ? '' : 's') + ' to <code>' + 
+    $uploadDialog = $('<div />').html('Upload ' + uploadedFiles.length + ' file' +
+                      (uploadedFiles.length == 1 ? '' : 's') + ' to <code>' +
                       urlToName(cDir) + '</code>?').append(uploadList).dialog({
         title: "Files to Upload",
         buttons: {
@@ -159,14 +159,14 @@ function fileUpload() {
                         $errorList,
                         $progressBar,
                         $progressBox
-                    
+
                     uploadList.hide();
-                    
+
                     $(this).parent().find('.ui-dialog-buttonpane').hide();
                     $(this).text('');
 
                     totalFiles = uploadedFiles.length;
-                    
+
                     $progressUpdate = $('<p />').html('0 of ' + totalFiles + ' files uploaded');
                     $errorList = $('<ol />').css('clear', 'both').css('max-height', '10em').css('overflow', 'auto');
                     $progressBar = $('<div />').addClass('progressBar');
@@ -175,7 +175,7 @@ function fileUpload() {
                         title: 'Upload Images'
                     });
                     $progressBar.css('width', '0%');
-                    
+
                     $.each(filenames, function(i, files) {
                         var formData = new FormData();
                         $.each(files, function(j, file) {
@@ -203,7 +203,7 @@ function fileUpload() {
                             complete: function() {
                                 uploadedAttempts += files.length;
                                 $progressBar.css('width', (100 * (uploadedAttempts) / totalFiles) + '%');
-                                
+
                                 if (uploadedAttempts == totalFiles) {
                                     loadFiles(cDir);
                                     $('#upload').val('');
@@ -226,16 +226,16 @@ function filePaste() {
     $fileList,
     cutlist,
     action;
-    
-    if (PM.project.perm == 'read-only') { return false; }
-    
-    nImages = PM.pasteBoard.length;
-    
+
+    if (WM.project.perm == 'read-only') { return false; }
+
+    nImages = WM.pasteBoard.length;
+
     if (nImages) {
         toDir = currentDir();
         $fileList = $('<ul />').css('max-height', '200px');
         cutlist = 0;
-        $.each(PM.pasteBoard, function(i, v) {
+        $.each(WM.pasteBoard, function(i, v) {
             $fileList.append('<li>' + urlToName(v) + '</li>');
             if ($('li.to_cut[url="' + v + '"]').length) cutlist++;
         });
@@ -244,7 +244,7 @@ function filePaste() {
             url: 'scripts/fileCopy',
             data: {
                 toDir: toDir,
-                files: PM.pasteBoard,
+                files: WM.pasteBoard,
                 action: action
             },
             success: function(data) {
@@ -257,14 +257,14 @@ function filePaste() {
                     $finder.find('li.folder').addClass('closed');
                     $finder.find('li.file').removeClass('selected');
                     if (action == 'move') {
-                        PM.pasteBoard = [];
-                    } // clear PM.pasteBoard if moved, not if copied
+                        WM.pasteBoard = [];
+                    } // clear WM.pasteBoard if moved, not if copied
                     loadFiles(toDir);
                     $('#footer').html(nImages + ' files pasted to <code>' + toDir + '</code>');
                 }
             }
         });
-    }   
+    }
 }
 
 function fileDelete(confirm) {
@@ -274,20 +274,20 @@ function fileDelete(confirm) {
         $fileItems,
         dirToDelete,
         $selFolders;
-        
-    if (PM.project.perm == 'read-only') { return false; }
-    
+
+    if (WM.project.perm == 'read-only') { return false; }
+
     files = filesGetSelected();
     $fileItems = $finder.find('li.file.selected'); //.filter(':visible');
     nFiles = files.length;
-    
+
     if (nFiles) {    // at least one file is selected
         $fileList = $('<ul class="file" />').css('max-height', '15em');
-        
+
         $.each(files, function(i, url) {
             $fileList.append('<li>' + urlToName(url) + '</li>');
         });
-        
+
         if (confirm) {
             $('<div />').html('Move these ' + nFiles + ' files to the Trash?').append($fileList).dialog({
                 title: "Delete Files",
@@ -337,18 +337,18 @@ function fileDelete(confirm) {
     } else {  // no files are selected, check if there are subfolders
         //var $lastFolder = $finder.find('li.folder:not(.closed):last');
         $selFolders = $finder.find('li.folder.selected, li.folder.selected li.folder').not('#trash');
-        
+
         if ($selFolders.length) {
             dirToDelete = [];
-            $selFolders.addClass('.selected'); 
+            $selFolders.addClass('.selected');
             $selFolders.each( function() {
                 var path = $(this).attr('path');
-                
-                if (path !== PM.project.id + '/' && path !== PM.project.id + '/.trash/') {
+
+                if (path !== WM.project.id + '/' && path !== WM.project.id + '/.trash/') {
                     dirToDelete.unshift(path);
                 }
             });
-            
+
             if (dirToDelete.length == 0) {
                 return false;
             } else if ($selFolders.find('li.file').length) {
@@ -357,13 +357,13 @@ function fileDelete(confirm) {
                 fileDelete(true);
                 return false;
             }
-            
-            
+
+
             if (confirm) {
-                var delTitle = (dirToDelete.length == 1) ? 
-                               'Delete directory <code>' + urlToName(dirToDelete[0]) + '</code>?' : 
+                var delTitle = (dirToDelete.length == 1) ?
+                               'Delete directory <code>' + urlToName(dirToDelete[0]) + '</code>?' :
                                'Delete ' + dirToDelete.length + ' directories?';
-                
+
                 $('<div />').html(delTitle).dialog({
                     title: 'Delete Directory',
                     buttons: {
@@ -382,7 +382,7 @@ function fileDelete(confirm) {
                                         });
                                     } else {
                                         // modify enclosing folder contents so it will be reloaded on next finder refresh
-                                        $selFolders.closest('li.folder').data('contents', ''); 
+                                        $selFolders.closest('li.folder').data('contents', '');
                                         $selFolders.remove();
                                     }
                                 }
@@ -401,7 +401,7 @@ function fileDelete(confirm) {
                             });
                         } else {
                             // modify enclosing folder contents so it will be reloaded on next finder refresh
-                            $selFolders.closest('li.folder').data('contents', ''); 
+                            $selFolders.closest('li.folder').data('contents', '');
                             $selFolders.remove();
                         }
                     }
@@ -419,9 +419,9 @@ function fileRename() {
         w,
         $newnameinput,
         fname;
-        
-    if (PM.project.perm == 'read-only') { return false; }
-    
+
+    if (WM.project.perm == 'read-only') { return false; }
+
     $theFileItem = $finder.find('li.file.selected:first');
     $theSpan = $theFileItem.find('span');
     oldurl = $finder.find('li.file.selected:first').attr('url');
@@ -429,10 +429,10 @@ function fileRename() {
     oldname = $theSpan.html();
     w = $theSpan.closest('li').width();
     $newnameinput = $('<input />').val(oldname).attr('type', 'text').width(w);
-    
+
     $newnameinput.keydown(function(e) {
         var newname = $(this).val();
-        
+
         if (e.which == KEYCODE.enter) {
             e.stopPropagation();
             if (newname !== '' && newname !== oldname) {
@@ -463,7 +463,7 @@ function fileRename() {
         $(this).remove();
         $theSpan.show();
     });
-    
+
     $theSpan.hide().before($newnameinput);
     fname = oldname.replace(/\.(jpg|gif|png|tem)$/,'').length;
     $newnameinput.focus().selectRange(0,fname);
@@ -476,19 +476,19 @@ function folderRename() {
         oldname,
         w,
         $newnameinput;
-        
-    if (PM.project.perm == 'read-only') { return false; }
-    
+
+    if (WM.project.perm == 'read-only') { return false; }
+
     $theFolder = $finder.find('li.folder').not('.closed').last();
-    
+
     if ($theFolder.attr('id') == "trash") return false;
-    
+
     $theSpan = $theFolder.find('> span');
     olddir = $theFolder.attr('path');
     oldname = $theSpan.html();
     w = $theSpan.closest('li').width();
     $newnameinput = $('<input />').val(oldname).attr('type', 'text').width(w);
-    
+
     $newnameinput.keydown(function(e) {
         e.stopPropagation();
         var newname = $(this).val();
@@ -528,16 +528,16 @@ function folderRename() {
 
 function folderMoveProject() {
     if ($finder.find('li.file.selected').filter(':visible').length) return false;
-    
+
     var $theFolder = $finder.find('li.folder').not('.closed').last();
-    
+
     if ($theFolder.attr('id') == "trash") return false;
-    
+
     var fpath = $theFolder.attr('path');
     var $project = $('#default_project').clone();
-    $project.find('option[value=' + PM.project.id + ']').remove();
+    $project.find('option[value=' + WM.project.id + ']').remove();
     $project.find('option.readOnly').remove();
-    
+
     var $dialog = $('<div />').html('Copy the folder <code>' + fpath + '</code> to ').append($project).dialog({
         title: "Copy Folder to Project",
         buttons: {
@@ -559,7 +559,7 @@ function folderMoveProject() {
                             } else {
                                 loadFiles();
                             }
-                            
+
                         }
                     });
                     $(this).dialog("close");
@@ -593,12 +593,12 @@ function folderMoveProject() {
 }
 
 
-function filesGetSelected(filter, replaced) { console.log('filesGetSelected(' + filter + ', ' + replaced + ')');
+function filesGetSelected(filter, replaced) { //console.log('filesGetSelected(' + filter + ', ' + replaced + ')');
     var sf = [];
     if (filter == null) filter = '';
     if (replaced == null) replaced = '';
     var $selFiles = '';
-    if ($finder.find('li.folder.selected').length > 1) { 
+    if ($finder.find('li.folder.selected').length > 1) {
         $selFiles = $finder.find('li.folder.selected li').filter('.file' + filter);
     } else {
         $selFiles = $finder.find('li.file.selected').filter(':visible' + filter);
@@ -610,9 +610,9 @@ function filesGetSelected(filter, replaced) { console.log('filesGetSelected(' + 
 }
 
 function fileListGet() {
-    var files = filesGetSelected('.image', PM.project.id);
+    var files = filesGetSelected('.image', WM.project.id);
     var fileList;
-    
+
     if (files.length > 0) {
         fileList = files.join("\n");
         $('<div />').html("<textarea style='width:100%; height: 200px;'>" + fileList + "</textarea>").dialog({
@@ -623,7 +623,7 @@ function fileListGet() {
         var $allfiles = $finder.find('li[url^="' + cd + '"].file.image');
         $allfiles.addClass('selected');
         updateSelectedFiles();
-        files = filesGetSelected('.image', PM.project.id);
+        files = filesGetSelected('.image', WM.project.id);
         fileList = files.join("\n");
         $('<div />').html("<textarea style='width:100%; height: 200px;'>" + fileList + "</textarea>").dialog({
             title: 'File List for ' + cd + ' (' + files.length + ' images)',
@@ -636,27 +636,27 @@ function fileListGet() {
 function updateSelectedFiles() { //console.log('updateSelectedFiles()');
     var $selFolders = $finder.find('li.folder.selected').filter(':visible');
     var s = $finder.find('li.file.selected').filter(':visible').length;
-    
+
     if ($selFolders.length > 1) {
         var nFiles = $selFolders.find('li.file').length;
         $('#footer').html($selFolders.length + ' folders selected containing ' + nFiles + ' files');
     } else {
         var cdir = currentDir();
         var vFiles = $finder.find('li.folder[path="' + cdir + '"] > ul > li.file').length;
-        
+
         $('#footer').html('<code>' + urlToName(cdir) + '</code> (' + s + ' of ' + vFiles + ' file' + (vFiles == 1 ? '' : 's') + ' selected)');
     }
-    
-    if (PM.interfaceWindow == 'average') { 
-        checkAvgAbility(); 
-    } else if (PM.interfaceWindow == 'transform') { 
+
+    if (WM.appWindow == 'average') {
+        checkAvgAbility();
+    } else if (WM.appWindow == 'transform') {
         if (s > 1) {
             $('#transButton').button('option', 'label', 'Transform All');
         } else {
             $('#transButton').button('option', 'label', 'Transform');
         }
     }
-    
+
     if (s == 1 && !$finder.hasClass('image-view')) {
         $('#imagebox').show();
     } else {
@@ -670,14 +670,14 @@ function imagesWithTems() {
     var $files = $finder.find('li.file');
     var $tems = $files.filter('.tem');
     $tems.removeClass('hasImg');
-    
+
     var temList = {};
     $tems.each(function() {
         var v = $(this);
         temList[v.attr('url')] = v;
     });
-    
-    
+
+
     $files.filter('.image').each( function() {
         var theURL = $(this).attr('url');
         var theTem = theURL.replace(/\.(jpg|tem|gif|png)$/, '.tem');
@@ -688,8 +688,8 @@ function imagesWithTems() {
             $(this).removeClass('hasTem');
         }
     });
-    
-    if (PM.interfaceWindow == 'average' || PM.interfaceWindow == 'transform') { 
+
+    if (WM.appWindow == 'average' || WM.appWindow == 'transform') {
         $files.hide().filter('.image.hasTem').show();
     }
     console.timeEnd('imagesWithTems()');
@@ -697,10 +697,10 @@ function imagesWithTems() {
 
 function finder(dir) { console.log('finder(' + dir + ')');
     this.dir = dir;
-    
+
     this.load = function(subdir) {
         subdir = subdir || this.dir;
-        
+
         $.ajax({
             url: 'scripts/dirLoad',
             data: { subdir: subdir },
@@ -708,7 +708,7 @@ function finder(dir) { console.log('finder(' + dir + ')');
                 if (data.error) {
                     $('<div title="Error Loading Files" />').html(data.errorText).dialog();
                 } else {
-                    
+
                     this.imagesWithTems();
                 }
             },
@@ -718,15 +718,15 @@ function finder(dir) { console.log('finder(' + dir + ')');
             }
         });
     };
-    
+
     this.folder = function(url, container) {
         var theItem = container.find('.file[url="' + url + '"]');
     };
-    
+
     this.file = function(url, container) {
-        var theItem = container.find('.file[url="' + url + '"]');    
-        
-        if (!theItem.length) { 
+        var theItem = container.find('.file[url="' + url + '"]');
+
+        if (!theItem.length) {
             var ext = url.substring(url.length - 4);
             var theClass = 'file';
             var img = false;
@@ -753,28 +753,28 @@ function finder(dir) { console.log('finder(' + dir + ')');
                 img = true;
             }
             var shortName = url.replace(/^.*\//, '');
-            theItem = $('<li class="' + theClass + '" url="' + url + '"><span>' + shortName + '</span></li>'); 
-            
+            theItem = $('<li class="' + theClass + '" url="' + url + '"><span>' + shortName + '</span></li>');
+
             if (img && $('#show_thumbs').prop('checked')) {
                 theItem.css('background-image', 'url(/scripts/fileAccess?thumb&file=' + url + ')');
             }
         }
         return theItem;
     };
-    
+
     this.imagesWithTems = function() { console.time('imagesWithTems()');
         // mark all images and tems in the finder with a class if they have a corresponding img/tem
         var $files = $finder.find('li.file');
         var $tems = $files.filter('.tem');
         $tems.removeClass('hasImg');
-        
+
         var temList = {};
         $tems.each(function() {
             var v = $(this);
             temList[v.attr('url')] = v;
         });
-        
-        
+
+
         $files.filter('.image').each( function() {
             var theURL = $(this).attr('url');
             var theTem = theURL.replace(/\.(jpg|tem|gif|png)$/, '.tem');
@@ -785,8 +785,8 @@ function finder(dir) { console.log('finder(' + dir + ')');
                 $(this).removeClass('hasTem');
             }
         });
-        
-        if (PM.interfaceWindow == 'average' || PM.interfaceWindow == 'transform') { 
+
+        if (WM.appWindow == 'average' || WM.appWindow == 'transform') {
             $files.hide().filter('.image.hasTem').show();
         }
         console.timeEnd('imagesWithTems()');
@@ -796,13 +796,13 @@ function finder(dir) { console.log('finder(' + dir + ')');
 function loadFiles(selected_dir, subdir) { console.log('loadFiles(' + selected_dir + ', ' + subdir + ')');
     $('#footer').html('Loading Files...');
     var $spinner = bodySpinner();
-    
+
     if (subdir === true && selected_dir !== undefined) {
         subdir = selected_dir.replace(/\/$/, '').replace(/[^\/]+$/, '');
-    } else if (subdir === undefined) { 
-        subdir = PM.project.id; 
-    }  
-    
+    } else if (subdir === undefined) {
+        subdir = WM.project.id;
+    }
+
     $.ajax({
         url: 'scripts/dirLoad',
         data: { subdir: subdir },
@@ -824,29 +824,29 @@ function loadFiles(selected_dir, subdir) { console.log('loadFiles(' + selected_d
                     folderize(data.dir, $finder);
                 }
                 console.timeEnd('folderize()');
-                
+
                 // fix first ul
                 var firstul = $finder.find('> ul');
-                firstul.css('margin-left', (-1 * firstul.width()) - 1).find('> li.folder:eq(0) > span').click(); 
-                
+                firstul.css('margin-left', (-1 * firstul.width()) - 1).find('> li.folder:eq(0) > span').click();
+
                 // hide trash
-                var $trash = $finder.find('li.folder[path="' + PM.project.id + '/.trash/"]');
+                var $trash = $finder.find('li.folder[path="' + WM.project.id + '/.trash/"]');
                 $trash.attr('id', 'trash');
                 $trash.find('> span').text('Trash');
-                
+
                 if ($('#toggletrash span.checkmark').css('display') == 'block') {
                     $trash.show();
                 } else {
                     $trash.hide();
                 }
-                
+
                 updateSelectedFiles();
                 finderFunctions();
 
                 if (selected_dir !== undefined && selected_dir.length > 0) {
                     fileShow(selected_dir);
                 }
-                $('#footer').html($finder.find('li.file').length + ' files loaded'); 
+                $('#footer').html($finder.find('li.file').length + ' files loaded');
             }
             imagesWithTems();
             $finder.css('background-image', 'none');
@@ -874,9 +874,9 @@ function fileShow(filename) {
     });
 }
 
-function folderize(json, appendElement) { 
+function folderize(json, appendElement) {
     //console.time(' - folderize(' + Object.keys(json).length + ' items, ' + appendElement.attr('path') + ')');
-    
+
     appendElement.removeClass('closed'); // open folder to be able to calculate width
     var theFolder = appendElement.find('> ul');
     if (!theFolder.length) {
@@ -887,10 +887,10 @@ function folderize(json, appendElement) {
     appendElement.siblings('li').find('> ul').css('margin-left', w);
     theFolder.css('margin-left', w);
 
-    var $allItems = theFolder.find('> li').addClass('oldfinder'); // mark all items as old    
-    
+    var $allItems = theFolder.find('> li').addClass('oldfinder'); // mark all items as old
+
     var fItems = [];
-    
+
     for (var folder in json) {
         if (json.hasOwnProperty(folder)) {
             var contents = json[folder];
@@ -903,27 +903,27 @@ function folderize(json, appendElement) {
                 // contents are more files/folders
                 theItem = $allItems.filter('.folder[path="' + folder + '/"]');
                 var oldC = '';
-                
-                if (!theItem.length) { 
+
+                if (!theItem.length) {
                     var shortName = folder.replace(/^.*\//, '');
-                    theItem = $('<li class="folder closed" path="' + folder + '/"><span>' + shortName + '</span></li>'); 
+                    theItem = $('<li class="folder closed" path="' + folder + '/"><span>' + shortName + '</span></li>');
                 } else {
                     theItem.removeClass('oldfinder folderDrop');
                     oldC = JSON.stringify(theItem.data('contents'));
                 }
-    
+
                 var newC = JSON.stringify(contents);
                 if (newC !== oldC) { theItem.data('contents', contents).addClass('tofolderize'); }
             }
             fItems.push(theItem);
         }
     }
-    
+
     theFolder.append(fItems);
     $allItems.filter('.oldfinder').remove(); // remove any old items
     appendElement.append(theFolder);
     //console.timeEnd(' - folderize(' + Object.keys(json).length + ' items, ' + appendElement.attr('path') + ')');
-    
+
     theFolder.find('> li.folder.tofolderize').each( function() {
         if ($(this).data('contents') !== undefined) {
             $(this).removeClass('tofolderize');
@@ -935,9 +935,9 @@ function folderize(json, appendElement) {
 }
 
 function fileNew(url, container) {
-    var theItem = container.find('.file[url="' + url + '"]');    
-    
-    if (!theItem.length) { 
+    var theItem = container.find('.file[url="' + url + '"]');
+
+    if (!theItem.length) {
         var ext = url.substring(url.length - 4);
         var theClass = 'file';
         var img = false;
@@ -964,8 +964,8 @@ function fileNew(url, container) {
             img = true;
         }
         var shortName = url.replace(/^.*\//, '');
-        theItem = $('<li class="' + theClass + '" url="' + url + '"><span>' + shortName + '</span></li>'); 
-        
+        theItem = $('<li class="' + theClass + '" url="' + url + '"><span>' + shortName + '</span></li>');
+
         if (img && $('#show_thumbs').prop('checked')) {
             theItem.css('background-image', 'url(/scripts/fileAccess?thumb&file=' + url + ')');
         }
@@ -977,8 +977,8 @@ function finderFunctions() { console.time('finderFunctions()');
 
     $('#searchbar:visible').keyup();
 
-    var thisContainment = (PM.interfaceWindow == 'finder') ? '#finder' : 'window';
-    
+    var thisContainment = (WM.appWindow == 'finder') ? '#finder' : 'window';
+
     $finder.find('li.file').not('.ui-draggable').draggable({
         helper: function() {
             var $helper = $('<ul />').addClass('filehelper');
@@ -995,7 +995,7 @@ function finderFunctions() { console.time('finderFunctions()');
             if (!$(this).hasClass('selected') && !(event.ctrlKey || event.metaKey || event.shiftKey)) {
                 $finder.find('li.file.selected').removeClass('selected');
             }
-        
+
             $(this).addClass('selected');
             $('#imagebox').hide().insertAfter($finder);
             $finder.find('li.file.selected').filter(':visible').each( function(i, v) {
@@ -1005,7 +1005,7 @@ function finderFunctions() { console.time('finderFunctions()');
             $('#cutItems').click();
         },
         stop: function(event, ui) {
-            PM.pasteBoard = [];
+            WM.pasteBoard = [];
             $finder.find('li.file').removeClass('to_cut'); // clear all to_cut files
         }
     });
@@ -1032,13 +1032,13 @@ function finderFunctions() { console.time('finderFunctions()');
         tolerance: "pointer",
         over: function(e, ui) {
             var to_move = ui.helper.find('li.folder').attr('path');
-            if (typeof to_move === 'undefined') { 
+            if (typeof to_move === 'undefined') {
                 var l = ui.helper.find('li.file').length;
-                to_move = l + ' file' + ((l >1) ? 's' : ''); 
+                to_move = l + ' file' + ((l >1) ? 's' : '');
             } else {
                 to_move = '<code>' + urlToName(to_move) + '</code>';
             }
-            
+
             if ($(this).hasClass('folder')) {
                 $folder = $(this);
             } else {
@@ -1056,9 +1056,9 @@ function finderFunctions() { console.time('finderFunctions()');
             } else {
                 $folder = $(this).closest('li.folder');
             }
-            
-            if (PM.pasteBoard.length) {
-                var itemPath = PM.pasteBoard[0].replace(/\/[^\/]+$/, '/');
+
+            if (WM.pasteBoard.length) {
+                var itemPath = WM.pasteBoard[0].replace(/\/[^\/]+$/, '/');
                 if ($folder.attr('path') != itemPath) {
                     $folder.find('> span').click();
                     if (e.ctrlKey || e.metaKey) { $finder.find('li.to_cut').removeClass('to_cut'); }
@@ -1073,7 +1073,7 @@ function finderFunctions() { console.time('finderFunctions()');
                 var folder_to_move = ui.helper.find('li.folder').attr('path');
                 var move_to = $folder.attr('path');
                 var action = (e.ctrlKey || e.metaKey) ? 'copy' : 'move';
-                
+
                 // check if moving files to same folder
                 if (move_to == folder_to_move.replace(/[^\/]+\/$/, '')) { return false; }
 
@@ -1091,7 +1091,7 @@ function finderFunctions() { console.time('finderFunctions()');
             }
         }
     });
-    
+
     /*
     // this takes a lot of time and isn't very functional
     console.time('set files selectable');
@@ -1110,14 +1110,14 @@ function finderFunctions() { console.time('finderFunctions()');
     });
     console.timeEnd('set files selectable');
     */
-    
+
     console.timeEnd('finderFunctions()');
 }
 
 function autoLoadTem(theTem, theLines) {
     // auto-load default template if option is selected and default doesn't match current
 
-    if ((PM.delin.tem.length != theTem.length) || (PM.delin.lines.length != theLines.length)) {
+    if ((WM.delin.tem.length != theTem.length) || (WM.delin.lines.length != theLines.length)) {
         // try to autoload the current tem
         var $matched_opts = $('#currentTem li[data-points="' + theTem.length + '"][data-lines="' + theLines.length + '"]');
         if ($matched_opts.length) {
@@ -1125,8 +1125,8 @@ function autoLoadTem(theTem, theLines) {
             setCurrentTem(defaultTemId);
         } else {
             //var defaultTemId = $('#defaultTemplate').val() || 1;
-            PM.delin.tem = theTem;
-            PM.delin.lines = theLines;
+            WM.delin.tem = theTem;
+            WM.delin.lines = theLines;
             $('#currentTem_name').text('Unknown ' + theTem.length + '-point template');
         }
     }
@@ -1134,7 +1134,7 @@ function autoLoadTem(theTem, theLines) {
 
 function initVideo() {
     var video = document.querySelector('video');
- 
+
     function successCallback(stream) {
         // Set the source of the video element with the stream from the camera
         if (video.mozSrcObject !== undefined) {
@@ -1143,19 +1143,19 @@ function initVideo() {
             video.src = (window.URL && window.URL.createObjectURL(stream)) || stream;
         }
         video.play();
-        PM.webcam = true;
+        WM.webcam = true;
     }
-    
+
     function errorCallback(error) {
         console.error('An error occurred: [CODE ' + error.code + ']');
         $('#webcamDialog').dialog("close");
         growl('Sorry, web camera streaming was not authorised', 2000);
-        PM.webcam = false;
+        WM.webcam = false;
     }
-    
+
     navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia;
     window.URL = window.URL || window.webkitURL || window.mozURL || window.msURL;
-    
+
     // Call the getUserMedia method with our callback functions
     if (navigator.getUserMedia) {
         navigator.getUserMedia({video: true}, successCallback, errorCallback);
@@ -1163,13 +1163,13 @@ function initVideo() {
         console.log('Native web camera streaming (getUserMedia) not supported in this browser.');
         $('#webcamDialog').dialog("close");
         growl('Sorry, web camera streaming is not available in this browser', 2000);
-        PM.webcam = false;
+        WM.webcam = false;
     }
 }
 
 function webcamPhoto() {
-    if (!PM.webcam) { initVideo(); } // initialise video use and get permission if not already done
-    
+    if (!WM.webcam) { initVideo(); } // initialise video use and get permission if not already done
+
     var video = document.querySelector('video');
     $('#webcamvas').show().attr({
         'width': 640,
@@ -1177,20 +1177,20 @@ function webcamPhoto() {
     });
     $('#webcam').hide();
     video.play();
-    
+
     var context = $('#webcamvas').get(0).getContext('2d');
     context.translate(640, 0);
     context.scale(-1,1);
     var showWebCamIntervalId = setInterval(showWebCam, 30);
-    
+
     function showWebCam() { //console.log('showWebCam()');
         if (video.videoWidth > 0 ) {
             context.drawImage(video, 0, 0);
         }
     }
-    
+
     $('#webcamFolder').html(urlToName(currentDir()));
-    
+
     $('#webcamDialog').dialog({
         width: 670,
         beforeClose: function(e,ui) {
@@ -1198,10 +1198,10 @@ function webcamPhoto() {
             clearInterval(showWebCamIntervalId);
         },
         buttons: {
-            Cancel: function() { 
+            Cancel: function() {
                 video.pause();
                 clearInterval(showWebCamIntervalId);
-                $(this).dialog("close"); 
+                $(this).dialog("close");
             },
             "Take Photo": {
                 id: "webcam_take",
@@ -1226,7 +1226,7 @@ function webcamPhoto() {
                 text: "Save",
                 click: function() {
                     var $wcn = $('#webcamName');
-                
+
                     if (!video.paused) {
                         growl('Take the photo first', 1000);
                         return false;
@@ -1235,19 +1235,19 @@ function webcamPhoto() {
                         growl('Name the image', 1000);
                         return false;
                     }
-                    
+
                     var newname = currentDir() + $wcn.val();
-                    if (!nameIsAvailable(newname)) { 
+                    if (!nameIsAvailable(newname)) {
                         growl(newname + ' is already taken', 1000);
                         $wcn.focus();
-                        return false; 
+                        return false;
                     }
-                    
+
                     var dataURL = $('#webcamvas').get(0).toDataURL('image/jpeg', 1.0);
-                    
+
                     $.ajax({
                         url: "scripts/webcamUpload",
-                        data: { 
+                        data: {
                             basedir: currentDir(),
                             name: $wcn.val(),
                             imgBase64: dataURL,

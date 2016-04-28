@@ -649,12 +649,13 @@
         <li><span class="cmd"></span>-click or &#8963;-click on a point to select or unselect the whole line.</li>
         <li>Hold shift and drag over the image select all points inside the box.</li>
         <li>Move a group of selected points by moving any selected point with the mouse or using the arrow keys.</li>
-        <li>Use <span class="opt">+</span> and <span class="opt">-</span> to increase or decrease the size of a selected group of delineation points.</li>
-        <li>Double-click on the image (or <span class="cmd">A</span>) to unselect all points.</li>
+        <li><span class="opt">+</span> and <span class="opt">-</span> to increase or decrease the size of a selected group of delineation points.</li>
+        <li><span class="opt">&larr;</span> and <span class="opt">&rarr;</span> to rotate a selected group of delineation points.</li>
+        <li><span class="cmd">A</span> (or double-click on the image) to unselect all points.</li>
         <li>Hover over a point to see where it should go (see the footer).</li>
-        <li>&#8679;<span class="cmd"></span>-click to add a new point.</li>
+        <li><span class="shiftcmd"></span>-click to add a new point.</li>
         <li><span class="cmd">L</span> to start drawing a new line. Click 'enter' to end the line.</li>
-        <li>&#8679;<span class="cmd">L</span> to delete a line.</li>
+        <li><span class="shiftcmd">L</span> to delete a line.</li>
     </ul>    
 </div>
 

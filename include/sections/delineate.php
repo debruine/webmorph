@@ -1,4 +1,4 @@
-<div id='delineationInterface' class='interface'>
+<div id='delineateInterface' class='interface'>
 
     <!-- images to be used in delineation -->
     <img id='cross' src='/include/images/delin/cross.php' />

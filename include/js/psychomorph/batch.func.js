@@ -4,37 +4,37 @@
 
 function batchWatch(files, scriptName, theData) {  console.log('batchWatch(' + files.length + ' file, ' + scriptName + ')');
     // takes file list files, sends each separately to scriptName with data from theData
-    
+
     if (files.length === 0) {
         growl('No files were selected', 1500);
         return false;
     }
-    
+
     $.each(files, function(i, filename) {
-        var myData, 
+        var myData,
             q;
-        
+
         // theData is either the same for all files (an object) or one for each file (an array)
         if (theData.length !== undefined) {
             myData = $.extend(true, {}, theData[i]);
-        } else { 
+        } else {
             myData = $.extend(true, {}, theData);
         }
-        
+
         // each file is added to myData.img
         myData.img = filename;
-        
+
         // if **DIRECTORY** is in subfolder, replace with the image directory
         if (myData.hasOwnProperty('subfolder') && myData.subfolder.indexOf('**DIRECTORY**') > -1) {
             var regex,
                 imgdir;
-                
+
             regex = new RegExp('^' + currentDir() + '(.+)\/[^\/]+$');
-            imgdir = filename.match(regex);    // matches 
+            imgdir = filename.match(regex);    // matches
             console.log('imgdir (' + filename + ') = ' + imgdir[1]);
             myData.subfolder = myData.subfolder.replace('**DIRECTORY**', imgdir[1]);
         }
-        
+
         // process is added to the queue
         q = new queueItem({
             url: scriptName,
@@ -47,7 +47,7 @@ function batchWatch(files, scriptName, theData) {  console.log('batchWatch(' + f
 function nameIsAvailable(name) {
     //if (name.substr(-4,1) !== '.') { name = name + '.jpg'; }
     var available;
-    
+
     available = ($finder.find('li.file[url="'+name+'"]').length === 0);
     console.log('checking for ' + name + ' : ' + available);
     return available;
@@ -60,23 +60,23 @@ function batchToggle(toggle) {
         mb,
         cd,
         defaultName;
-    
+
     theClass = toggle.className.replace('toggle_', '');
     $bn = $(toggle).closest('div.batch_name');
     $n = $bn.find('.batch_' + theClass);
     mb = ($finder.find('li.folder.selected').length > 1); // part of a multibatch
     cd = urlToName(currentDir());
-    
+
     if ($(toggle).prop('checked')) {
         $n.show();
 
         if (theClass == 'subfolder' && mb) {
-            $bn.find('input.toggle_superfolder').prop('checked', false).change(); 
+            $bn.find('input.toggle_superfolder').prop('checked', false).change();
         } else if (theClass == 'superfolder' && mb) {
-            $bn.find('input.toggle_subfolder').prop('checked', false).change(); 
+            $bn.find('input.toggle_subfolder').prop('checked', false).change();
             $bn.find('.multibatch').html('**DIRECTORY**');
         }
-        
+
         if ($n.html() == cd || $n.html() == '') {
             defaultName = $bn.attr('default');
             if (theClass == 'superfolder') {
@@ -90,7 +90,7 @@ function batchToggle(toggle) {
             }
         }
     } else if (!mb && theClass == 'subfolder' ) {
-        $n.show().html(cd);    
+        $n.show().html(cd);
     } else if (mb && theClass == 'superfolder' ) {
         $bn.find('.multibatch').html(cd + '**DIRECTORY**');
         $n.hide();
@@ -101,35 +101,35 @@ function batchToggle(toggle) {
 
 function batchNewName(theDialog, theType) {
     var $d, bn, $tp, $ts, $tsub, $tsup;
-        
+
     $d = $(theDialog);
-    
+
     bn = $('#batch_names').val();
-    
+
     if (typeof theType !== 'string') theType = $d.find('.batch_name').attr('default');
-    
+
     if ($d.find('.batch_name code').length == 0) {
-         var bnn_interface = "<code>\n" + 
-            "    <span class='batch_superfolder'></span>" + 
-                "<span class='multibatch'>**DIRECTORY**</span>" + 
-                "<span class='batch_subfolder'></span>" + 
-                "<span class='batch_prefix'></span>" + 
-                "**IMAGE**" + 
-                "<span class='batch_suffix'></span>." + 
-                "<select class='batch_ext'>\n" + 
-            "        <option value='jpg'>jpg</option>\n" + 
-            "        <option value='png'>png</option>\n" + 
-            "        <option value='gif'>gif</option>\n" + 
-            "    </select>\n" + 
-            "</code><br>\n" + 
-            "<label><input type='checkbox' class='toggle_superfolder'> Superfolder</label>\n" + 
-            "<label><input type='checkbox' class='toggle_subfolder'> Subfolder</label>\n" + 
-            "<label><input type='checkbox' class='toggle_prefix'> Prefix</label>\n" + 
+         var bnn_interface = "<code>\n" +
+            "    <span class='batch_superfolder'></span>" +
+                "<span class='multibatch'>**DIRECTORY**</span>" +
+                "<span class='batch_subfolder'></span>" +
+                "<span class='batch_prefix'></span>" +
+                "**IMAGE**" +
+                "<span class='batch_suffix'></span>." +
+                "<select class='batch_ext'>\n" +
+            "        <option value='jpg'>jpg</option>\n" +
+            "        <option value='png'>png</option>\n" +
+            "        <option value='gif'>gif</option>\n" +
+            "    </select>\n" +
+            "</code><br>\n" +
+            "<label><input type='checkbox' class='toggle_superfolder'> Superfolder</label>\n" +
+            "<label><input type='checkbox' class='toggle_subfolder'> Subfolder</label>\n" +
+            "<label><input type='checkbox' class='toggle_prefix'> Prefix</label>\n" +
             "<label><input type='checkbox' class='toggle_suffix'> Suffix</label>\n";
-            
+
         $d.find('.batch_name').append(bnn_interface);
     }
-    
+
     $tp = $d.find('.toggle_prefix');
     $ts = $d.find('.toggle_suffix');
     $tsub = $d.find('.toggle_subfolder');
@@ -139,7 +139,7 @@ function batchNewName(theDialog, theType) {
     $tp.prop('checked', (bn == 'prefix')).change();
     $ts.prop('checked', (bn == 'suffix')).change();
     $tsub.prop('checked', (bn == 'folder')).change();
-    
+
     if ($finder.find('li.folder.selected').length > 1) {
         $tsup.parent().show();
         $d.find('.batch_superfolder').show();
@@ -153,21 +153,21 @@ function batchNewName(theDialog, theType) {
 }
 
 function batchNewNameGet(theDialog) {
-    var $d, 
-        mb, 
-        sup = '', 
-        sub = '', 
-        dir = '', 
-        subfolder = '', 
+    var $d,
+        mb,
+        sup = '',
+        sub = '',
+        dir = '',
+        subfolder = '',
         name = {};
-    
+
     $d = $(theDialog);
     mb = ($finder.find('li.folder.selected').length > 1);
-    
+
     name.prefix = $d.find('.toggle_prefix').prop('checked') ? $d.find('.batch_prefix').html() : '';
     name.suffix = $d.find('.toggle_suffix').prop('checked') ? $d.find('.batch_suffix').html() : '';
     name.ext = $d.find('.batch_ext').val();
-    
+
     if (mb) {
         sup = $d.find('.toggle_superfolder').prop('checked') ? $d.find('.batch_superfolder').html() : '';
         sub = $d.find('.toggle_subfolder').prop('checked') ? $d.find('.batch_subfolder').html() : '';
@@ -176,47 +176,77 @@ function batchNewNameGet(theDialog) {
         sub = $d.find('.batch_subfolder').html()
     }
 
-    name.subfolder = PM.project.id + '/' + sup + '/' + dir + '/' + sub;
+    name.subfolder = WM.project.id + '/' + sup + '/' + dir + '/' + sub;
     name.subfolder = name.subfolder.replace(/[\/]+/g, '/').replace(/\/$/, ''); // remove  multiple slashes and trailing slash
-    
+
     return name;
 }
 
 function batchRenameChecks() {
-    var repcheck = $('#replacecheck:checked').length > 0;
-    var precheck = $('#prefixcheck:checked').length > 0;
-    var sufcheck = $('#suffixcheck:checked').length > 0;
-    var indexcheck = $('#indexcheck:checked').length > 0;
-
-    var search = $('#batchRenameFind').val().split(';');
-    var rep = $('#batchRenameReplace').val().split(';');
-    var prefix = $('#batchRenamePrefix').val();
-    var suffix = $('#batchRenameSuffix').val();
-    var indexpos = $('#batchRenameIndex').val();
-    var $table = $('#batchRenameDialog .batchList table tbody > tr');
-    var indexpad = $table.length.toString().length;
-    var index = 0;
+    var $tablerows,
+        repcheck,
+        precheck,
+        sufcheck,
+        indexcheck,
+        search,
+        rep,
+        prefix,
+        suffix,
+        indexpos,
+        index,
+        fileN,
+        imgN,
+        temN,
+        maxN,
+        indexpad;
     
-    $table.each( function(i) {
-        var $orig = $(this).find('td:first');
-        var $new = $(this).find('td:last');
-        var newName = $orig.text();
+    $tablerows = $('#batchRenameDialog .batchList table tbody > tr');
+    repcheck = $('#replacecheck:checked').length > 0;
+    precheck = $('#prefixcheck:checked').length > 0;
+    sufcheck = $('#suffixcheck:checked').length > 0;
+    indexcheck = $('#indexcheck:checked').length > 0;
+
+    search = $('#batchRenameFind').val().split(';');
+    rep = $('#batchRenameReplace').val().split(';');
+    prefix = $('#batchRenamePrefix').val();
+    suffix = $('#batchRenameSuffix').val();
+    indexpos = $('#batchRenameIndex').val();
+    index = 0;
+    
+    // get padding length
+    if (indexcheck) {
+        fileN = filesGetSelected().length;
+        imgN = filesGetSelected('.image.hasTem').length;
+        temN = filesGetSelected('.tem.hasImg').length;
+        maxN = (fileN == imgN) + temN ? imgN : fileN;
+        indexpad = maxN.toString().length;
+    }
+
+    $tablerows.each( function(i) {
+        var $orig,
+            $new,
+            newName,
+            s;
         
-        if (repcheck) { 
+        $orig = $(this).find('td:first');
+        $new = $(this).find('td:last');
+        newName = $orig.text();
+
+        if (repcheck) {
             if (rep.length == 1) {
                 if (search.length == 1) {
-                    var s = new RegExp(search[0], 'g');
-                    newName = newName.replace(s, rep[0]); 
+                    s = new RegExp(search[0], 'g');
+                    newName = newName.replace(s, rep[0]);
                 } else {
                     $.each(search, function(i, se) {
-                        var s = new RegExp(se, 'g');
-                        newName = newName.replace(s, rep[0]); 
+                        s = new RegExp(se, 'g');
+                        newName = newName.replace(s, rep[0]);
                     });
                 }
             } else if (rep.length == search.length) {
                 $.each(search, function(i, se) {
-                    var s = new RegExp(se, 'g');
-                    newName = newName.replace(s, rep[i]); 
+                    s = new RegExp(se, 'g');
+                    newName = newName.replace(s, rep[i]);
                 });
             } else {
                 // won't work
@@ -224,17 +254,17 @@ function batchRenameChecks() {
         }
         if (precheck) { newName = prefix + newName; }
         if (sufcheck) { newName = newName.replace(/(\.[^\.]*)?$/, suffix + '$1'); }
-        if (indexcheck) { 
+        if (indexcheck) {
             if (newName.substr(-4) !== '.tem') {
                 index++;
             }
             if (indexpos == 'after') {
-                newName = newName.replace(/(\.[^\.]*)?$/, pad(index, indexpad, '0') + '$1'); 
+                newName = newName.replace(/(\.[^\.]*)?$/, pad(index, indexpad, '0') + '$1');
             } else if (indexpos == 'before') {
                 newName = pad(index, indexpad, '0') + newName;
             }
         }
-        
+
         $new.text(newName);
     });
 }
@@ -242,13 +272,13 @@ function batchRenameChecks() {
 function batchColorCalibrate() {
     // color-calibrate all selected images -- DOES NOT WORK YET!!
     var files = filesGetSelected('.image');
-    if (files.length === 0) { 
+    if (files.length === 0) {
         growl('No files were selected', 1000);
-        return false; 
-    }    
+        return false;
+    }
 
     batchNewName('#colorCalibrateDialog', 'color_calibrated');
-    
+
     $('#colorCalibrateDialog').dialog({
         title: 'Batch color Calibrate ' + files.length + ' File' + ((files.length == 1) ? '' : 's'),
         buttons: {
@@ -272,9 +302,9 @@ function batchColorCalibrate() {
 function batchModDelin() {
     // put all tem files in a list
     var files = filesGetSelected('.tem');
-    if (files.length === 0) { 
+    if (files.length === 0) {
         growl('No tem files were selected', 1000);
-        return false; 
+        return false;
     }
 
     batchNewName('#modifyDelineation', 'newdelin');
@@ -288,11 +318,11 @@ function batchModDelin() {
             $temlist.html('');
             if (data.temPoints !== null) {
                 autoLoadTem(data.temPoints, data.lineVectors);    // set defaults for this delineation
-                
+
                 $.each(data.temPoints, function(i, v) {
                     var $li = $('<li />').html('<input type="checkbox" tem="' + i + '" /> ' + i);
-                    if (PM.delin.tem[i].name !== undefined) {
-                        $li.append(' (' + PM.delin.tem[i].name + ')');
+                    if (WM.delin.tem[i].name !== undefined) {
+                        $li.append(' (' + WM.delin.tem[i].name + ')');
                     }
                     $temlist.append($li);
                 });
@@ -302,7 +332,7 @@ function batchModDelin() {
             }
         }
     });
-        
+
     $('#modifyDelineation').dialog({
         title: 'Batch Modify ' + files.length + ' Delineation' + ((files.length == 1) ? '' : 's'),
         buttons: {
@@ -316,17 +346,17 @@ function batchModDelin() {
                     // get points to delete
                     var dp = [],
                         theData;
-                        
+
                     $('#modDelinPoints input:checked').each(function(i) {
                         dp.push($(this).attr('tem'));
                     });
                     $('#modifyDelineation input[type!=checkbox]').blur(); // make sure all inputs are blurred so batch name is valid
-                    
+
                     theData = batchNewNameGet('#modifyDelineation');
                     theData.img = null;
                     theData.deletePoints = dp;
                     theData.newLines = $('#modDelinLines').val();
-                    
+
                     batchWatch(files, 'temModify', theData);
                     $(this).dialog('close');
                 }
@@ -338,17 +368,17 @@ function batchModDelin() {
 function batchTemConvert(old_tem, new_tem) {
     var files,
         newTemName;
-        
+
     files = filesGetSelected('.tem');
-    if (files.length === 0) { 
+    if (files.length === 0) {
         growl('No files were selected', 1000);
-        return false; 
+        return false;
     }
-    
+
     newTemName = $('#defaultTemplate option[value=' + new_tem + ']').text();
-        
+
     batchNewName('#temConvertDialog', newTemName);
-    
+
     $('#temConvertDialog').dialog({
         title: 'Batch Convert to ' + newTemName + ': ' + files.length + ' Template' + ((files.length == 1) ? '' : 's'),
         buttons: {
@@ -358,14 +388,14 @@ function batchTemConvert(old_tem, new_tem) {
                 class: 'ui-state-focus',
                 click: function() {
                     var theData;
-                    
+
                     $(this).dialog("close");
                     theData = batchNewNameGet('#temConvertDialog');
                     theData.img = null;
-                    theData.tem_id = PM.delin.temId;
+                    theData.tem_id = WM.delin.temId;
                     theData.old_tem = old_tem;
                     theData.new_tem = new_tem;
-                        
+
                     batchWatch(files, 'temConvert', theData);
                 }
             },
@@ -394,37 +424,37 @@ function resetGrids() {
         newGridBox,
         theClass,
         displayGridSize;
-    
+
     $se = $('#scrambleExample');
-    
+
     xOffset = $('#scramble_x_offset').val();
     yOffset = $('#scramble_y_offset').val();
     origW = $se.data('origW');
     origH = $se.data('origH');
-    
+
     if (xOffset >= origW || xOffset < 0) {
         xOffset = 0;
         $('#scramble_x_offset').val(xOffset);
         $se.css('padding-left', xOffset + 'px');
     }
-    
+
     if (yOffset >= origH || yOffset < 0) {
         yOffset = 0;
         $('#scramble_y_offset').val(yOffset);
         $se.css('padding-top', yOffset + 'px');
     }
-    
+
     gridSize = $('#grid_size').val();
     ratio = $se.data('ratio');
 
     maxVal = Math.floor( Math.min(origW-xOffset, origH-yOffset) / 2 );
-    
+
     if (gridSize > maxVal || gridSize < 1) {
         gridSize = maxVal;
         $('#grid_size').val(gridSize);
-        
+
     }
-    
+
     if (gridSize < 5) {
         $se.find('div').remove();
         growl('With a grid size less than 5 pixels, you can only scramble all boxes with no grid lines.');
@@ -434,38 +464,38 @@ function resetGrids() {
 
     xgrids = Math.floor( (origW - xOffset) / gridSize );
     ygrids = Math.floor( (origH - yOffset) / gridSize );
-    
+
     $se.find('div').each( function() {
         var $this;
-        
+
         $this = $(this);
-        
+
         if ($this.data('x') == 0) {
             chosen.push([]);
         }
-        
+
         chosen[$this.data('y')].push( $this.hasClass('ui-selected') );
     });
-    
+
     $se.find('div').remove();
-    
+
     for (y = 0; y < ygrids; y++) {
         for (x = 0; x < xgrids; x++) {
             theClass = '';
-            
+
             if (x === 0) {
-                theClass += 'rowstart';  
+                theClass += 'rowstart';
             }
             if (chosen[y] !== undefined && chosen[y][x] !== undefined && chosen[y][x]) {
-                theClass += ' ui-selected'; 
+                theClass += ' ui-selected';
             }
-            
+
             newGridBox = '<div class="' + theClass + '" data-x="' + x + '" data-y="' + y + '" title="' + x + ',' + y + '"></div>';
-            
+
             $se.append(newGridBox);
         }
     }
-    
+
     displayGridSize = Math.round(gridSize*ratio*10)/10;
     $se.find('div').css({
         width: displayGridSize + 'px',
@@ -475,11 +505,11 @@ function resetGrids() {
 
 function batchScramble() {
     var files = filesGetSelected('.image');
-    if (files.length === 0) { 
+    if (files.length === 0) {
         growl('No files were selected', 1000);
-        return false; 
+        return false;
     }
-    
+
     // get image dimensions
     $.ajax({
         url: 'scripts/imgDimensions',
@@ -487,13 +517,13 @@ function batchScramble() {
         data: { img: files[0] },
         success: function(data) {
             var ratio;
-            
+
             if (data.h <= 800) {
                 ratio = 1;
             } else {
-                ratio = 800 / data.h;   
+                ratio = 800 / data.h;
             }
-            
+
             $('#scrambleExample').css({
                 'background-image': 'url(' + fileAccess(files[0]) + ')',
                 'width': data.w * ratio,
@@ -503,15 +533,15 @@ function batchScramble() {
                 origH: data.h,
                 ratio: ratio
             });
-            
+
             $('#scramble_orig_width').html(data.w);
             $('#scramble_orig_height').html(data.h);
-            
+
             resetGrids();
         }
     });
-    
-    
+
+
     batchNewName('#scrambleDialog', 'scramble');
 
     $('#scrambleDialog').dialog({
@@ -540,19 +570,19 @@ function batchScramble() {
                 class: 'ui-state-focus',
                 click: function() {
                     var theData;
-                    
+
                     $(this).dialog("close");
                     theData = batchNewNameGet('#scrambleDialog');
                     theData.img = null;
                     theData.grid = $('#grid_size').val();
                     theData.x = $('#scramble_x_offset').val();
                     theData.y = $('#scramble_y_offset').val();
-                    
+
                     if (theData.grid < 5) {
                         theData.chosen = 'all';
                     } else {
                         theData.chosen = [];
-                        
+
                         $('#scrambleExample div.ui-selected').each( function() {
                             theData.chosen.push([
                                 $(this).data('x'),
@@ -560,7 +590,7 @@ function batchScramble() {
                             ]);
                         });
                     }
-                    
+
                     if ($('#grid_lines').prop('checked')) {
                         theData.line_color = $('#grid_line_color').slider('values');
                     }
@@ -574,11 +604,11 @@ function batchScramble() {
 
 function batchMirror() {
     var files = filesGetSelected('.image');
-    if (files.length === 0) { 
+    if (files.length === 0) {
         growl('No files were selected', 1000);
-        return false; 
+        return false;
     }
-        
+
     batchNewName('#mirrorDialog', 'mirror');
     $('#mirrorDialog').dialog({
         title: 'Batch Mirror ' + files.length + ' Image' + ((files.length == 1) ? '' : 's'),
@@ -589,11 +619,11 @@ function batchMirror() {
                 class: 'ui-state-focus',
                 click: function() {
                     var theData;
-                    
+
                     $(this).dialog("close");
                     theData = batchNewNameGet('#mirrorDialog');
                     theData.img = null;
-                    theData.tem_id = PM.delin.temId;
+                    theData.tem_id = WM.delin.temId;
 
                     batchWatch(files, 'imgMirror', theData);
                 }
@@ -604,11 +634,11 @@ function batchMirror() {
 
 function batchSymmetrise() {
     var files = filesGetSelected('.image.hasTem');
-    if (files.length === 0) { 
+    if (files.length === 0) {
         growl('No files were selected', 1000);
-        return false; 
+        return false;
     }
-        
+
     batchNewName('#symDialog', 'sym');
     $('#symDialog').dialog({
         title: 'Batch Symmetrise ' + files.length + ' Image' + ((files.length == 1) ? '' : 's'),
@@ -619,15 +649,15 @@ function batchSymmetrise() {
                 class: 'ui-state-focus',
                 click: function() {
                     var theData;
-                    
+
                     $(this).dialog("close");
                     theData = batchNewNameGet('#symDialog');
                     theData.img = null;
-                    theData.tem_id = PM.delin.temId;
+                    theData.tem_id = WM.delin.temId;
                     theData.shape = ($('#sym_shape').prop('checked')) ? 'true' : 'false';
                     theData.color = ($('#sym_color').prop('checked')) ? 'true' : 'false';
                     theData.sym = $('#custom_sym').val();
-                    
+
                     batchWatch(files, 'imgSym', theData);
                 }
             },
@@ -637,11 +667,11 @@ function batchSymmetrise() {
 
 function batchRename() {
     var files = filesGetSelected();
-    if (files.length === 0) { 
+    if (files.length === 0) {
         growl('No files were selected', 1500);
-        return false; 
+        return false;
     }
-    
+
     $('#batchRenameDialog .batchList').html("<table><thead><tr><th>Original Name</th><th>New Name</th></tr></thead><tbody></tbody></table>");
     var $table = $('#batchRenameDialog .batchList table tbody');
     $.each(files, function(i, f) {
@@ -650,7 +680,7 @@ function batchRename() {
     });
     $('#batchRenameDialog .batchList').stripe();
     batchRenameChecks();
-    
+
     $('#batchRenameDialog').dialog({
         title: 'Batch Rename ' + files.length + ' File' + ((files.length == 1) ? '' : 's'),
         buttons: {
@@ -662,16 +692,16 @@ function batchRename() {
                     var theData = [],
                         theFiles = [],
                         j = 0;
-                        
+
                     $(this).dialog("close");
-                    
+
                     $table.find('>tr').each( function(i) {
                         var oldURL, oldName, newName;
-                        
+
                         oldUrl = files[i];
                         oldName = $(this).find('td:first').text();
                         newName = $(this).find('td:last').text();
-                        
+
                         if (oldName !== newName) {
                             theData[j] = {
                                 oldurl: oldUrl,
@@ -682,34 +712,71 @@ function batchRename() {
                             j++;
                         }
                     });
-                    
-                    batchWatch(theFiles, 'fileRename', theData); 
+
+                    batchWatch(theFiles, 'fileRename', theData);
                 }
             }
         }
     });
 }
 
+function fmAddEquation() {
+    // validate data
+    var error = false;
+
+    if ($('#fm_name').val() == '') {
+        error = true;
+        $('#fm_name').addClass('error').focus().select();
+    } else {
+        $('#fm_name').removeClass('error');
+    }
+
+    if ($('#fm_equation').val() == '') {
+        error = true;
+        $('#fm_equation').addClass('error').focus().select();
+    } else {
+        $('#fm_equation').removeClass('error');
+    }
+
+    if (!error) {
+        $.ajax({
+            url: "scripts/fmAddEquation",
+            data: {
+                name: $('#fm_name').val(),
+                eq: $('#fm_equation').val(),
+                desc: 'Description'
+            },
+            success: function(data) {
+                var $newEQ = $('<li/>').attr({
+                    'title': data.desc,
+                    'data-equation': data.eq,
+                }).text(data.name);
+                $('#fmButtons').append($newEQ);
+            }
+        });
+    }
+}
+
 function batchFacialmetrics() {
     // put all tem files in a list
     var files, fm_list;
-    
+
     files = filesGetSelected('.tem');
-    if (files.length === 0) { 
+    if (files.length === 0) {
         growl('No tem files were selected', 1000);
-        return false; 
+        return false;
     }
-    
+
     fm_list = [];
     $('#fm_results').html('<table></table>').hide(); // reset the results list
-        
+
     $('#facialmetricEQ').dialog({
         title: 'Batch Calculate Facialmetrics ' + files.length + ' Delineation' + ((files.length == 1) ? '' : 's'),
         modal: false,
         open: function(e,ui) {
             // set max-height of fm_resuts so that the dialog is never taller than the finder
             var h, f, newmax;
-            
+
             h = $(this).closest('div.ui-dialog').outerHeight();
             f = $finder.height();
             newmax = (f-h)>100 ? f-h : 100;
@@ -721,10 +788,10 @@ function batchFacialmetrics() {
             },
             "All XY": function() {
                 var eq, eqname;
-                
+
                 eq = $('#fm_equation').val();
                 eqname = $('#fm_name').val();
-                
+
                 if ($('#fm_results tr').length === 0) {
                     $('#fm_results table').empty().append('<thead><tr><th>Image</th></tr></thead>').show();
                     fm_list[0] = 'name';
@@ -782,7 +849,7 @@ function batchFacialmetrics() {
                         fm_list[0] = fm_list[0] + "," + eqname;
                         $.each(data.eq, function(i, v) {
                             var ob = {};
-                            
+
                             $('#fm_results tr#image' + i).append('<td>' + v + '</td>');
                             ob[eqname] = v;
                             fm_list[i + 1] = fm_list[i + 1] + "," + v;
@@ -813,7 +880,7 @@ function batchFacialmetrics() {
                         },
                         url: "scripts/txtSave",
                         success: function(data) {
-                            
+
                         }
                     });
                 } else {
@@ -822,15 +889,15 @@ function batchFacialmetrics() {
             }
             */
         }
-    });    
+    });
 }
 
 function batchCrop() {
     var files = filesGetSelected('.image');
-    if (files.length === 0) { 
+    if (files.length === 0) {
         growl('No files were selected', 1000);
-        return false; 
-    }    
+        return false;
+    }
 
     batchNewName('#cropDialog', 'cropped');
 
@@ -842,28 +909,28 @@ function batchCrop() {
         success: function(data) {
             var $dimList,
                 $dimListBody;
-            
-            if (data.error) { 
-                growl( JSON.stringify(data.errorText) ); 
+
+            if (data.error) {
+                growl( JSON.stringify(data.errorText) );
                 return false;
             }
-            
+
             $dimList = $('<table><thead><tr><th>Image</th><th colspan="2">original w x h</th><th colspan="2">new w x h</th></tr></thead><tbody></tbody></table>');
             $dimListBody = $dimList.find('tbody');
             $.each(data.w, function(i, w) {
                 $dimListBody.append('<tr><td>' + urlToName(files[i]) + '</td><td>' + w + '</td><td>' + data.h[i] + '</td><td>' + w + '</td><td>' + data.h[i] + '</td></tr>');
             });
             $dimList.stripe();
-            
+
             $('#cropDialog .batchList').empty().append($dimList);
-            
+
             $('#cropBoxHeight').attr('orig', data.h[0]);
             $('#cropBoxWidth').attr('orig', data.w[0]);
             $('#cropDialog input[name=top]').trigger('keyup').focus().select();
         }
     });
-    
-    
+
+
     $('#cropDialog').dialog({
         title: 'Batch Crop ' + files.length + ' Image' + ((files.length == 1) ? '' : 's'),
         buttons: {
@@ -873,9 +940,9 @@ function batchCrop() {
                 class: 'ui-state-focus',
                 click: function() {
                     var theData;
-                    
+
                     $(this).dialog("close");
-                    
+
                     theData = batchNewNameGet('#cropDialog');
                     theData.img = null;
                     theData.t = $('#cropDialog input[name=top]').val();
@@ -899,18 +966,18 @@ function batchCrop() {
 function batchAlign() {
     // align all selected images
     var files = filesGetSelected('.image.hasTem');
-    if (files.length === 0) { 
+    if (files.length === 0) {
         growl('No files were selected', 1000);
-        return false; 
+        return false;
     }
-    
+
     //set up defaults
     if ($('#alignDialog input[name=width]').val() === '') {
         alignEyesReset();
     }
-    
+
     batchNewName('#alignDialog', 'aligned');
-    
+
     $('#alignDialog').dialog({
         title: 'Batch Align ' + files.length + ' Image' + ((files.length == 1) ? '' : 's'),
         buttons: {
@@ -921,10 +988,10 @@ function batchAlign() {
                 class: 'ui-state-focus',
                 click: function() {
                     var theData;
-                    
+
                     $(this).dialog("close");
                     $('#alignDialog input[type!=checkbox]').blur(); // make sure all inputs are blurred so batch name is valid
-                    
+
                     theData = batchNewNameGet('#alignDialog');
                     theData.img = null;
                     theData.rgb = $('#align_color').slider('values');
@@ -936,11 +1003,11 @@ function batchAlign() {
                     theData.y2 = $('#custom_align input[name="y2"]').val();
                     theData.width = $('#custom_align input[name="width"]').val();
                     theData.height = $('#custom_align input[name="height"]').val();
-                        
+
                     batchWatch(files, 'imgAlign', theData);
                 }
             },
-            
+
         }
     });
 }
@@ -959,15 +1026,15 @@ function alignEyesReset() {
 function batchResize() {
     // resize all selected images
     var files, $rsd;
-    
+
     files = filesGetSelected('.image');
-    if (files.length === 0) { 
+    if (files.length === 0) {
         growl('No image files were selected', 1500);
-        return false; 
+        return false;
     }
-    
+
     $rsd = $('#resizeDialog');
-    
+
     // get image dimensions
     $.ajax({
         url: 'scripts/imgDimensions',
@@ -975,21 +1042,21 @@ function batchResize() {
         data: { img: files },
         success: function(data) {
             var $dimList, $dimListBody;
-            
-            if (data.error) { 
-                growl( JSON.stringify(data.errorText) ); 
+
+            if (data.error) {
+                growl( JSON.stringify(data.errorText) );
                 return false;
             }
-            
+
             $dimList = $('<table><thead><tr><th>Image</th>' +
                          '<th colspan="2">original w x h</th>' +
                          '<th colspan="2">new w x h</th></tr>' +
                          '</thead><tbody></tbody></table>');
             $dimListBody = $dimList.find('tbody');
             $.each(data.w, function(i, w) {
-                $dimListBody.append('<tr><td>' + urlToName(files[i]) + 
-                                    '</td><td>' + w + '</td><td>' + data.h[i] + 
-                                    '</td><td>' + w + '</td><td>' + data.h[i] + 
+                $dimListBody.append('<tr><td>' + urlToName(files[i]) +
+                                    '</td><td>' + w + '</td><td>' + data.h[i] +
+                                    '</td><td>' + w + '</td><td>' + data.h[i] +
                                     '</td></tr>');
             });
             $dimList.stripe();
@@ -998,9 +1065,9 @@ function batchResize() {
             calcNewSizes();
         }
     });
-    
+
     batchNewName('#resizeDialog', 'resized');
-    
+
     $rsd.dialog({
         title: "Batch Resize " + files.length + ' Image' + ((files.length == 1) ? '' : 's'),
         buttons: {
@@ -1010,7 +1077,7 @@ function batchResize() {
                 class: "ui-state-focus",
                 click: function() {
                     var theData;
-                    
+
                     $rsd.find('input[type!=checkbox]').blur(); // make sure all inputs are blurred so batch name is valid
                     theData = batchNewNameGet('#resizeDialog');
                     theData.img = null;
@@ -1018,7 +1085,7 @@ function batchResize() {
                     theData.y = $rsd.find('input[name=y]').val();
                     theData.w = $rsd.find('input[name=w]').val();
                     theData.h = $rsd.find('input[name=h]').val();
-                    
+
                     if (theData.x || theData.y || theData.w || theData.h) {
                         $(this).dialog("close");
                         batchWatch(files, 'imgResize', theData);
@@ -1033,14 +1100,14 @@ function batchResize() {
 
 function calcNewSizes(name) {
     var $rsd, $inputs, $w, $h, $x, $y, w, h, x, y;
-    
+
     $rsd = $('#resizeDialog');
     $inputs = $rsd.find('input');
     $w = $inputs.filter('[name=w]');
     $h = $inputs.filter('[name=h]');
     $x = $inputs.filter('[name=x]');
     $y = $inputs.filter('[name=y]');
-    
+
     if (name !== undefined && $inputs.filter('[name='+name+']').val() !== '') {
         if (name == 'x' || name == 'y') {
             $w.val('');
@@ -1050,38 +1117,38 @@ function calcNewSizes(name) {
             $y.val('');
         }
     }
-    
+
     w = parseFloat($w.val());
     h = parseFloat($h.val());
     x = parseFloat($x.val());
     y = parseFloat($y.val());
-    
+
     if (!isNaN(w) || !isNaN(h)) {
         $rsd.find('.batchList table tbody tr').each( function() {
             var $td, origW, origH, newW, newH;
-            
+
             $td = $(this).find('td');
-            origW = parseInt($td.eq(1).text()); 
+            origW = parseInt($td.eq(1).text());
             origH = parseInt($td.eq(2).text());
             newH = (isNaN(h)) ? (w/origW) * origH : h;
             newW = (isNaN(w)) ? (h/origH) * origW : w;
-        
+
             $td.eq(3).text(Math.round(newW));
             $td.eq(4).text(Math.round(newH));
         });
     } else if (!isNaN(x) || !isNaN(y)) {
         if (isNaN(x)) { x = y; } else if (isNaN(y)) { y = x; }
-    
+
         $rsd.find('.batchList table tbody tr').each( function() {
             var $td, origW, origH, newW, newH;
-            
+
             $td = $(this).find('td');
-            
+
             origW = parseInt($td.eq(1).text());
             origH = parseInt($td.eq(2).text());
             newW = (x/100) * origW;
             newH = (y/100) * origH;
-            
+
             $td.eq(3).text(Math.round(newW));
             $td.eq(4).text(Math.round(newH));
         });
@@ -1098,15 +1165,15 @@ function calcNewSizes(name) {
 function batchRotate() {
     // resize all selected images
     var files = filesGetSelected('.image');
-    if (files.length === 0) { 
+    if (files.length === 0) {
         growl('No image files were selected', 1500);
-        return false; 
+        return false;
     }
-    
+
     var $rsd = $('#rotateDialog');
-    
+
     batchNewName('#rotateDialog', 'rotated');
-    
+
     $rsd.dialog({
         title: "Batch Rotate " + files.length + ' Image' + ((files.length == 1) ? '' : 's'),
         buttons: {
@@ -1134,7 +1201,7 @@ function batchConvert() {
         growl('No image files were selected', 1500);
         return false;
     }
-    
+
     var nFiles = files.length;
     var fileList = $('<ul class="file" />').css('max-height', '15em');
     if (nFiles) {
@@ -1142,9 +1209,9 @@ function batchConvert() {
             fileList.append('<li>' + url + '</li>');
         });
     }
-    
+
     var title = (files.length==1) ? "Convert this image?" : "Convert these " + files.length + " images?";
-    
+
     $('#convertDialog').html(title).append(fileList).dialog({
         title: "Batch Convert",
         buttons: {
@@ -1154,17 +1221,17 @@ function batchConvert() {
             "JPG": function() {
                 $(this).dialog("close");
                 var theData = {'to': 'jpg'};
-                batchWatch(files, 'imgConvert', theData); 
+                batchWatch(files, 'imgConvert', theData);
             },
             "PNG": function() {
                 $(this).dialog("close");
                 var theData = {'to': 'png'};
-                batchWatch(files, 'imgConvert', theData); 
+                batchWatch(files, 'imgConvert', theData);
             },
             "GIF": function() {
                 $(this).dialog("close");
                 var theData = {'to': 'gif'};
-                batchWatch(files, 'imgConvert', theData); 
+                batchWatch(files, 'imgConvert', theData);
             }
         }
     });
@@ -1172,9 +1239,9 @@ function batchConvert() {
 
 function batchMask() {
     var files = filesGetSelected('.image.hasTem');
-    if (files.length === 0) { 
+    if (files.length === 0) {
         growl('No files were selected', 1000);
-        return false; 
+        return false;
     }
 
     // trigger change event on all checkboxes to update image and background color
@@ -1182,8 +1249,8 @@ function batchMask() {
     if ($('#maskDialog ul input[type=checkbox]:checked').length === 0) {
         $('#mask_face').prop('checked', true);
     }
-    
-    $('#maskDialog ul input[type=checkbox]').change(); 
+
+    $('#maskDialog ul input[type=checkbox]').change();
 
     batchNewName('#maskDialog', 'masked');
     $('#maskDialog').dialog({
@@ -1200,7 +1267,7 @@ function batchMask() {
             },
 
             "Custom Mask": function() {
-        
+
                 var cm = $('#custom_mask').val().replace(/\s/g, '');
                 console.log('custom mask: ' + $('#custom_mask').val());
                 var cm_match = cm.match(/^(\d{1,3},)+\d{1,3}(;(\d{1,3},)+\d{1,3})*(:(\d{1,3},)+\d{1,3}(;(\d{1,3},)+\d{1,3})*)*$/);
@@ -1210,7 +1277,7 @@ function batchMask() {
                 } else if (cm === '' || cm_match === null || cm_match.length === 0 || cm_match[0] != cm) {
                     $('#custom_mask_box p').html('Your custom mask is not properly formatted. You need to include each point number in a line, separated by commas, each line separated by semicolons, and each separate mask separated by a colon (e.g., <code>18,19,20,21,22 ; 22,30,29,28,18 : 23,24,25,26,27 ; 27,33,32,31,23</code>). Make sure that the last point in each line is the same as the first point in the next line and the last point in the last line is the same as the first point in the first line. For a simple, one-line mask, just put all the points in a line, separated by commas, and make the first point the same as the last point.');
                 } else {
-                    $( this ).dialog( "close" ); 
+                    $( this ).dialog( "close" );
                     maskImages('custom', cm);
                 }
             }
@@ -1255,7 +1322,7 @@ function maskImages(masktype, custom) {  console.log('maskImages(' + masktype + 
     theData.transparent = $('#mask_trans').prop('checked');
     theData.mask = masktype;
     theData.custom = custom;
-    
+
     files = filesGetSelected('.image');
     batchWatch(files, 'imgMask', theData);
 }
@@ -1279,12 +1346,12 @@ function maskViewCheck(type, checked) {
     } else if (type == 'mouth') {
         fList = ['teeth'];
     }
-    if (checked) { 
+    if (checked) {
         maskToggle(fList, 'hide');
     } else {
         maskToggle(fList, 'show');
     }
-    
+
     function maskToggle(featureList, vis) {
         $.each(featureList, function(i, f) {
             if (vis == "hide") {
@@ -1300,13 +1367,13 @@ function batchTransform() {
     var $sbt = $('#SBTdialog');
     var $tbody = $sbt.find('table tbody').empty();
     var SBTdata = [];
-    
+
     $sbt.find('textarea').val('').show();
     $sbt.find('p').html('Paste your batch file from Excel into the box below.');
 
     $sbt.find('div.progressBox').hide();
     $sbt.find('ol').html('');
-    
+
     $sbt.dialog({
         title: 'Batch Transform',
         modal: false,
@@ -1326,7 +1393,7 @@ function batchTransform() {
             "Transform": makeBatchTransform
         }
     });
-    
+
     function makeBatchTransform() {
         $tbody.empty();
         var rows = $sbt.find('textarea').val().trim().split('\n');
@@ -1351,9 +1418,9 @@ function batchTransform() {
                 'texturePcnt': parseFloat(cols[5]),
                 'outname': (cols[6])
             };
-            
+
             // checks for all data
-            if ($finder.find('li.image.hasTem[url="' + PM.project.id + SBTdata[i].transimage + '"]').length === 0) {
+            if ($finder.find('li.image.hasTem[url="' + WM.project.id + SBTdata[i].transimage + '"]').length === 0) {
                 // image does not exist
                 if ($.inArray(SBTdata[i].transimage, outnames) == -1) {
                     // not in previous rows' outnames either (not a newly created image)
@@ -1361,7 +1428,7 @@ function batchTransform() {
                     errors++;
                 }
             }
-            if ($finder.find('li.image.hasTem[url="' + PM.project.id + SBTdata[i].fromimage + '"]').length === 0) {
+            if ($finder.find('li.image.hasTem[url="' + WM.project.id + SBTdata[i].fromimage + '"]').length === 0) {
                 if ($.inArray(SBTdata[i].fromimage, outnames) == -1) {
                     row.find('td:eq(1)')
                         .attr('title', 'From-image missing.')
@@ -1369,7 +1436,7 @@ function batchTransform() {
                     errors++;
                 }
             }
-            if ($finder.find('li.image.hasTem[url="' + PM.project.id + SBTdata[i].toimage + '"]').length === 0) {
+            if ($finder.find('li.image.hasTem[url="' + WM.project.id + SBTdata[i].toimage + '"]').length === 0) {
                 if ($.inArray(SBTdata[i].toimage, outnames) == -1) {
                     row.find('td:eq(2)')
                         .attr('title', 'To-image missing.')
@@ -1400,14 +1467,14 @@ function batchTransform() {
                     .attr('title', 'You must give each image a unique outname.')
                     .addClass('ui-state-error');
                 errors++;
-            } else if ($finder.find('li.image[url="' + PM.project.id + SBTdata[i].outname + '"]').length) {
+            } else if ($finder.find('li.image[url="' + WM.project.id + SBTdata[i].outname + '"]').length) {
                 row.find('td:eq(6)')
                     .attr('title', 'This image already exists, please give it a different name.')
                     .addClass('ui-state-error');
                 errors++;
             }
             outnames.push(SBTdata[i].outname);
-            
+
             $('#SBTdialog table').append(row);
         });
         $('#SBTdialog textarea').hide();
@@ -1417,12 +1484,12 @@ function batchTransform() {
             var savedImages = 0;
             $sbt.dialog('close');
 /*
-/nicol.jpg    /_male.jpg    /_female.jpg    100    0    0    /newtrans/nicol.jpg    
-/oleg.jpg    /_male.jpg    /_female.jpg    100    100    100    /newtrans/oleg.jpg    
-/perla.jpg    /_male.jpg    /_female.jpg    100    0    0    /newtrans/perla.jpg    
+/nicol.jpg    /_male.jpg    /_female.jpg    100    0    0    /newtrans/nicol.jpg
+/oleg.jpg    /_male.jpg    /_female.jpg    100    100    100    /newtrans/oleg.jpg
+/perla.jpg    /_male.jpg    /_female.jpg    100    0    0    /newtrans/perla.jpg
 /mojmir.jpg    /_male.jpg    /_female.jpg    50    50    50    /newtrans/mojmir.jpg
-*/                    
-            $.each(SBTdata, function(i, d) {    
+*/
+            $.each(SBTdata, function(i, d) {
                 getTransform(d, true);
             });
         }
@@ -1455,17 +1522,17 @@ function batchAverage() {
             }
         }
     });
-    
+
     function makeBatchAverages() {
         // set up table and check for errors in the average file
         $('#BAdialog table tbody').empty();
         $('#BAdialog textarea').hide();
-        
+
         var rows = $('#BAdialog textarea').val().split('\n');
         var errors = 0;
         var outnames = [];
         var hasDependencies = false;
-        
+
         $.each(rows, function(i, r) {
             var row = $('<tr />');
             var cols = r.split('\t');
@@ -1478,7 +1545,7 @@ function batchAverage() {
                             .attr('title', 'You must give each image a unique outname.')
                             .addClass('ui-state-error');
                         errors++;
-                    } else if ($finder.find('li.image[url="' + PM.project.id + cols[j] + '"]').length > 0) {
+                    } else if ($finder.find('li.image[url="' + WM.project.id + cols[j] + '"]').length > 0) {
                         row.find('th:eq(' + j + ')')
                             .attr('title', 'This image already exists, please give it a different name.')
                             .addClass('ui-state-error');
@@ -1494,7 +1561,7 @@ function batchAverage() {
                     if (cols[j] !== '') {
                         BAdata[j].images.push(cols[j]);
                         if ($.inArray(cols[j], outnames) == -1) {
-                            var theImg = $finder.find('li.image[url="' + PM.project.id + cols[j] + '"]');
+                            var theImg = $finder.find('li.image[url="' + WM.project.id + cols[j] + '"]');
                             if (theImg.length === 0) {
                                 row.find('td:eq(' + j + ')')
                                     .attr('title', 'This image does not exist.')
@@ -1514,16 +1581,16 @@ function batchAverage() {
             });
             $('#BAdialog table').append(row);
         }); // end $.each(rows, function(i, r)
-    
+
         // notify and stop if error are found
         if (errors > 0) {
             $('#BAdialog p').html(errors + ' errors were found. Hover over the highlighted boxes for more information.');
             return false;
         }
-        
+
         $('#footer').html('Your batch file was successfully validated.');
         $('#BAdialog').dialog('close');
-        
+
         $.each(BAdata, function(i, d) {
             getAverage(d, true);
         });
@@ -1532,7 +1599,7 @@ function batchAverage() {
 
 function queue(items) {
     this.itemList = [];
-    
+
     if (Array.isArray(items)) {
         var thisQueue = this;
         $.each(items, function(i, item) { thisQueue.add(item); });
@@ -1543,37 +1610,37 @@ function queue(items) {
             this.itemList.push(item);
             $queue.append(item.menuItem);
             this.next();
-            
+
             return true;
         }
         return false;
     };
-    
+
     this.getCount = function() {
         return this.itemList.length;
     };
-    
+
     this.getStatusCount = function() {
         var n = this.itemList.length;
         var statusCount = {
             'complete': [],
             'waiting': [],
             'paused': [],
-            'active': []    
+            'active': []
         };
-        
+
         // check contents of queue
         for (var i = 0; i < n; i++) {
             var item = this.itemList[i];
             statusCount[item.status].push(item);
         }
-        
+
         return statusCount;
     };
-    
+
     this.next = function() {
         var statusCount = this.getStatusCount();
-        
+
         if (statusCount.active.length === 0) {
             if (statusCount.waiting.length > 0) {    // start next waiting item
                 var nextItem = statusCount.waiting[0];
@@ -1592,48 +1659,48 @@ function queue(items) {
             this.queueCountUpdate();
         }
     };
-    
+
     this.queueCountUpdate = function(loadImg) {
         var statusCount = this.getStatusCount();
         var a = statusCount.active.length;
         var w = statusCount.waiting.length;
         var p = statusCount.paused.length;
         var c = statusCount.complete.length;
-        
+
         var n = a + w + p;
         $queue_n.text(n).show();
         if (n === 0) { $queue_n.hide(); }
-        
+
         if (a + w === 0 && typeof loadImg === 'string') {
             growl('Batch processing has finished. <a class="loadFiles">Click here</a> to load new files in the Finder.');
             $('div.growl a.loadFiles').click( function() { loadFiles(loadImg); $('div.growl').remove(); } );
         }
-        
+
         if (c === 0) {
             $('#clearComplete').addClass('disabled');
         } else {
             $('#clearComplete').removeClass('disabled');
         }
-        
+
         if (c+a+w+p === 0) {
             $('#clearAll').addClass('disabled');
         } else {
             $('#clearAll').removeClass('disabled');
         }
-        
+
         if (w === 0) {
             $('#pauseQueue').addClass('disabled');
         } else {
             $('#pauseQueue').removeClass('disabled');
         }
-        
+
         if (p === 0) {
             $('#restartQueue').addClass('disabled');
         } else {
             $('#restartQueue').removeClass('disabled');
         }
     };
-    
+
     this.clear = function(filter) {
         var n = this.itemList.length;
         var newList = [];
@@ -1647,7 +1714,7 @@ function queue(items) {
         }
         this.itemList = newList;
     };
-    
+
     this.restartAll = function() {
         var n = this.itemList.length;
         for (var i = 0; i < n; i++) {
@@ -1658,7 +1725,7 @@ function queue(items) {
             }
         }
     };
-    
+
     this.pauseAll = function() {
         var n = this.itemList.length;
         for (var i = 0; i < n; i++) {
@@ -1683,20 +1750,20 @@ function queueItem(data) {
     thisItem.error = false;
     thisItem.errorText = '';
     thisItem.completed = false;
-    
+
     thisItem.menuItem = $('<li class="queueItem waiting" />').text(this.msg)
                             .append('<span class="shortcut">&nbsp;</span>')
                             .prepend('<span class="status">&nbsp;</span>');
     thisItem.menuItem.data('obj', thisItem);
-    
+
     thisItem.start = function() {
         // only waiting queueItems can be started
         if (thisItem.status !== 'waiting') { return false; }
-        
+
         thisItem.status = 'active';
         thisItem.menuItem.addClass('active').removeClass('waiting');
         var startTime = new Date();
-        
+
         $.ajax({
             url: 'scripts/' + thisItem.url,
             async: thisItem.async,
@@ -1719,8 +1786,8 @@ function queueItem(data) {
                 growl(xmlReq.responseText);
             },
             complete: function() {
-                if (typeof thisItem.completefunc == 'function') { 
-                    thisItem.completefunc(thisItem.returnData); 
+                if (typeof thisItem.completefunc == 'function') {
+                    thisItem.completefunc(thisItem.returnData);
                 }
                 var endTime = new Date();
                 var elapsedTime = Math.round((endTime.getTime() - startTime.getTime())/100)/10;
@@ -1729,12 +1796,12 @@ function queueItem(data) {
                                     .removeClass('active')
                                     .find('span.shortcut')
                                     .html(elapsedTime + 's');
-                
-                PM.queue.next();
+
+                WM.queue.next();
             }
         });
     };
-    
+
     thisItem.pause = function() {
         if (thisItem.status == 'waiting') {
             thisItem.status = 'paused';
@@ -1743,25 +1810,25 @@ function queueItem(data) {
         }
         return false;
     };
-    
+
     thisItem.wait = function() {
         if (thisItem.status == 'paused') {
             thisItem.status = 'waiting';
             thisItem.menuItem.addClass('waiting').removeClass('paused');
-            PM.queue.next();
+            WM.queue.next();
             return true;
         }
         return false;
     };
-    
+
     thisItem.destroy = function() {
         if (thisItem.status == 'active') { return false; }
-        
+
         thisItem.menuItem.remove();
         thisItem.status = 'complete';
-        PM.queue.queueCountUpdate();
+        WM.queue.queueCountUpdate();
         return true;
     };
-    
-    PM.queue.add(thisItem);
+
+    WM.queue.add(thisItem);
 }

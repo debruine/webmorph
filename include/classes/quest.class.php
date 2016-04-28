@@ -40,7 +40,7 @@ class formTable {
     function get_enctype() { return $this->enctype; }
     
     function print_instructions() {
-        if ($this->instructions != '') echo "<p class='instructions'>" , $this->instructions , "</p>" . ENDLINE;
+        if ($this->instructions != '') echo "<p class='instructions'>" , $this->instructions , "</p>" . PHP_EOL;
     }
     
     function print_form() {
@@ -49,55 +49,55 @@ class formTable {
         echo "<form action='{$this->action}' 
             method='{$this->method}' 
             enctype='{$this->enctype}' 
-            id='{$this->table_id}_form'>" . ENDLINE;
+            id='{$this->table_id}_form'>" . PHP_EOL;
         
         // top submit buttons    
         if (in_array($this->button_location, array('top', 'both'))) { 
-            echo "<div class='buttons'>", ENDLINE;
+            echo "<div class='buttons'>", PHP_EOL;
             if (!empty($this->submit_text)) {
-                echo "    <input type='submit' value='", $this->submit_text, "' />", ENDLINE;
+                echo "    <input type='submit' value='", $this->submit_text, "' />", PHP_EOL;
             }
             if (!empty($this->buttons)) {
                 foreach ($this->buttons as $v => $onclick) {
-                    echo "    <input type='button' value='$v' onclick='$onclick' />", ENDLINE;
-                    //echo "    <button onclick='$onclick'>$v</button>", ENDLINE;
+                    echo "    <input type='button' value='$v' onclick='$onclick' />", PHP_EOL;
+                    //echo "    <button onclick='$onclick'>$v</button>", PHP_EOL;
                 }
             }
-            echo "</div>" , ENDTAG;
+            echo "</div>" , PHP_EOL . PHP_EOL;
         }
         
         // start table
-        echo "<table class='questionnaire' id='", $this->table_id, "'>" . ENDLINE;
+        echo "<table class='questionnaire' id='", $this->table_id, "'>" . PHP_EOL;
         
         // optional title
         if ($this->title) {
-            echo '    <thead><tr><th colspan="100">'.$this->title.'</th></tr></thead>', ENDLINE;
+            echo '    <thead><tr><th colspan="100">'.$this->title.'</th></tr></thead>', PHP_EOL;
         }
         
-        echo '    <tbody>' . ENDLINE;
+        echo '    <tbody>' . PHP_EOL;
         
         // list of questions
         foreach ($this->questionList as $q) {
             $q->print_formLine();
         }
-        echo '    </tbody>' . ENDLINE;
-        echo "</table>", ENDLINE;
+        echo '    </tbody>' . PHP_EOL;
+        echo "</table>", PHP_EOL;
         
         // bottom submit buttons    
         if (in_array($this->button_location, array('bottom', 'both'))) { 
-            echo "<div class='buttons'>", ENDLINE;
+            echo "<div class='buttons'>", PHP_EOL;
             if (!empty($this->submit_text)) {
-                echo "    <input type='submit' value='", $this->submit_text, "' />", ENDLINE;
+                echo "    <input type='submit' value='", $this->submit_text, "' />", PHP_EOL;
             }
             if (!empty($this->buttons)) {
                 foreach ($this->buttons as $v => $onclick) {
-                    echo "    <input type='button' value='$v' onclick='$onclick' />", ENDLINE;
-                    //echo "    <button onclick='$onclick'>$v</button>", ENDLINE;
+                    echo "    <input type='button' value='$v' onclick='$onclick' />", PHP_EOL;
+                    //echo "    <button onclick='$onclick'>$v</button>", PHP_EOL;
                 }
             }
-            echo "</div>" , ENDTAG;
+            echo "</div>" , PHP_EOL . PHP_EOL;
         }
-        echo "</form>" , ENDTAG;
+        echo "</form>" , PHP_EOL . PHP_EOL;
     }
     
 }
@@ -230,7 +230,7 @@ class questionnaire extends formTable {
         foreach ($this->options as $display) {
             $opt_row .= "<th style='width:{$radio_width}%'>$display</th>";
         }
-        $opt_row .= "</tr>" . ENDLINE;
+        $opt_row .= "</tr>" . PHP_EOL;
         
         return $opt_row;
     }
@@ -238,14 +238,14 @@ class questionnaire extends formTable {
     function print_form() {
         $this->print_instructions();
         
-        echo "<form action='{$this->action}' method='{$this->method}' id='quest_{$this->id}'>" . ENDLINE;
+        echo "<form action='{$this->action}' method='{$this->method}' id='quest_{$this->id}'>" . PHP_EOL;
         
         // hidden values
-        echo "<input type='hidden' name='quest_id' id='quest_id' value='" , $this->id , "' />" . ENDLINE;
+        echo "<input type='hidden' name='quest_id' id='quest_id' value='" , $this->id , "' />" . PHP_EOL;
         $starttime = ifEmpty($clean['starttime'], date('Y-m-d H:i:s'));
-        echo "<input type='hidden' name='starttime' id='starttime' value='$starttime' />" . ENDLINE;
+        echo "<input type='hidden' name='starttime' id='starttime' value='$starttime' />" . PHP_EOL;
         
-        echo "<table class='questionnaire {$this->type}' id='qTable'>" . ENDLINE;
+        echo "<table class='questionnaire {$this->type}' id='qTable'>" . PHP_EOL;
         
         // questions
         $n = 0;
@@ -254,33 +254,33 @@ class questionnaire extends formTable {
             // print radiorow option row every 10 lines, but not if there are <5 questions left (unless there are <5 questions total)
             if ( ( ( (++$n%10) == 1 &&  $n < $num_questions - 5) || $n == 1) && !empty($this->options)) { echo $this->get_option_row(); }
             
-            if (1 == $n) { echo "<tbody id='qTableBody'>", ENDLINE; }  // start body after first header
+            if (1 == $n) { echo "<tbody id='qTableBody'>", PHP_EOL; }  // start body after first header
             
             $q->print_formLine();
         }
-        echo "</tbody></table>", ENDLINE,
-             "<div class='buttons'><input type='button' value='submit' onclick='submitQ({$this->id});' /></div>", ENDLINE,
-             "</form>" , ENDTAG;
+        echo "</tbody></table>", PHP_EOL,
+             "<div class='buttons'><input type='button' value='submit' onclick='submitQ({$this->id});' /></div>", PHP_EOL,
+             "</form>" , PHP_EOL . PHP_EOL;
         
         // javascripts for ranking
         if ('ranking' == $this->type) {
-            echo    '<script>', ENDLINE,
-                    '    $j(function() {', ENDLINE,
-                    '        $j("#qTableBody").sortable({update: function() { onReorder(); } });', ENDLINE,
-                    '        $j("#qTableBody").disableSelection();', ENDLINE,
-                    '        onReorder();', ENDLINE,
-                    '    });', ENDLINE,
-                    ENDLINE,
-                    '    function onReorder() {', ENDLINE,
-                    '        stripe("#qTableBody");', ENDLINE,
-                    '        $j("#qTableBody tr td.handle").each( function(i) { $j(this).text(i+1); } );', ENDLINE,
-                    '        var items = $j("#qTableBody tr");', ENDLINE,
-                    '        items.each( function(intIndex) {', ENDLINE,
-                    '            var q_id = "#q" + $j(this).attr("id").replace("row_","");', ENDLINE,
-                    '            $j(q_id).val(intIndex+1);', ENDLINE,
-                    '        });', ENDLINE,
-                    '    }', ENDLINE,
-                    '</script>', ENDTAG;
+            echo    '<script>', PHP_EOL,
+                    '    $j(function() {', PHP_EOL,
+                    '        $j("#qTableBody").sortable({update: function() { onReorder(); } });', PHP_EOL,
+                    '        $j("#qTableBody").disableSelection();', PHP_EOL,
+                    '        onReorder();', PHP_EOL,
+                    '    });', PHP_EOL,
+                    PHP_EOL,
+                    '    function onReorder() {', PHP_EOL,
+                    '        stripe("#qTableBody");', PHP_EOL,
+                    '        $j("#qTableBody tr td.handle").each( function(i) { $j(this).text(i+1); } );', PHP_EOL,
+                    '        var items = $j("#qTableBody tr");', PHP_EOL,
+                    '        items.each( function(intIndex) {', PHP_EOL,
+                    '            var q_id = "#q" + $j(this).attr("id").replace("row_","");', PHP_EOL,
+                    '            $j(q_id).val(intIndex+1);', PHP_EOL,
+                    '        });', PHP_EOL,
+                    '    }', PHP_EOL,
+                    '</script>', PHP_EOL . PHP_EOL;
         }
     }
 }
@@ -326,23 +326,23 @@ class formElement {
     }
     
     function print_formLine($editable=false) {
-        echo "<tr title='{$this->tip}' id='{$this->id}_row'>" . ENDLINE;    
+        echo "<tr title='{$this->tip}' id='{$this->id}_row'>" . PHP_EOL;    
         
         // display question cell
-        echo "<td class='question'><label for='{$this->id}'>{$this->question}</label>" . ENDLINE;
+        echo "<td class='question'><label for='{$this->id}'>{$this->question}</label>" . PHP_EOL;
         
         if (MOBILE) {
             echo '<br />'; // put question and input on separate lines if on a mobile interface
         } else {
-            echo "</td>\n    <td class='input'>" . ENDLINE;
+            echo "</td>\n    <td class='input'>" . PHP_EOL;
         }
         
         // display input cell
         
         echo $this->get_element();
-        echo "    </td>", ENDLINE;
+        echo "    </td>", PHP_EOL;
         
-        echo "</tr>" , ENDTAG;
+        echo "</tr>" , PHP_EOL . PHP_EOL;
     }
 }
 
@@ -350,41 +350,41 @@ class msgRow extends formElement {
     function print_formLine($editable=false) {
         $content = (!empty($this->custom_input)) ? $this->custom_input : $this->value;
     
-        echo "<tr id='{$this->id}_row' title='{$this->tip}'>" . ENDLINE;
-        echo "    <td colspan='10' id='{$this->id}'>{$content}</td>", ENDLINE;
-        echo "</tr>" , ENDTAG;
+        echo "<tr id='{$this->id}_row' title='{$this->tip}'>" . PHP_EOL;
+        echo "    <td colspan='10' id='{$this->id}'>{$content}</td>", PHP_EOL;
+        echo "</tr>" , PHP_EOL . PHP_EOL;
     }
 }
 
 class hiddenInput extends formElement {
     function print_formLine($editable=false) {
-        echo "<input type='hidden'" . ENDLINE;
-        echo "    name='"     . $this->id     . "'" . ENDLINE;
-        echo "    id='"         . $this->id     . "'" . ENDLINE;
-        echo "    value='"     . $this->value     . "' />" . ENDLINE;
+        echo "<input type='hidden'" . PHP_EOL;
+        echo "    name='"     . $this->id     . "'" . PHP_EOL;
+        echo "    id='"         . $this->id     . "'" . PHP_EOL;
+        echo "    value='"     . $this->value     . "' />" . PHP_EOL;
     }
 }
 
 class ranking extends formElement {
     function print_formLine($editable=false) {
-        echo "<tr class='ranking' title='", $this->tip, "' id='row_", str_replace('q', '', $this->id), "'>" . ENDLINE;    
+        echo "<tr class='ranking' title='", $this->tip, "' id='row_", str_replace('q', '', $this->id), "'>" . PHP_EOL;    
         
         // displays dragging handle
-        echo "<td class='handle'></td>", ENDLINE;
+        echo "<td class='handle'></td>", PHP_EOL;
         
         // display question cell
-        echo "<td>{$this->question}" . ENDLINE;
+        echo "<td>{$this->question}" . PHP_EOL;
         echo $this->get_element();
-        echo "    </td>", ENDLINE;
+        echo "    </td>", PHP_EOL;
         
-        echo "</tr>" , ENDTAG;
+        echo "</tr>" , PHP_EOL . PHP_EOL;
     }
 
     function get_element() {
-        $element_text  = "<input type='hidden'" . ENDLINE;
-        $element_text .= "    name='"     . $this->id     . "'" . ENDLINE;
-        $element_text .= "    id='"         . $this->id     . "'" . ENDLINE;
-        $element_text .= "    value='"     . $this->value     . "' />" . ENDLINE;
+        $element_text  = "<input type='hidden'" . PHP_EOL;
+        $element_text .= "    name='"     . $this->id     . "'" . PHP_EOL;
+        $element_text .= "    id='"         . $this->id     . "'" . PHP_EOL;
+        $element_text .= "    value='"     . $this->value     . "' />" . PHP_EOL;
         
         return $element_text;
     }
@@ -481,35 +481,35 @@ class select extends formElement {
     function get_element() {
         $element_text = '';
         
-        $element_text .=  "<select name='{$this->id}'" . ENDLINE;
-        if (!empty($this->className)) $element_text .=  "    class='{$this->className}'" . ENDLINE;
-        $element_text .=  "    id='{$this->id}'" . ENDLINE;
+        $element_text .=  "<select name='{$this->id}'" . PHP_EOL;
+        if (!empty($this->className)) $element_text .=  "    class='{$this->className}'" . PHP_EOL;
+        $element_text .=  "    id='{$this->id}'" . PHP_EOL;
         foreach ($this->eventHandlers as $eventHandler => $function) { 
-            $element_text .=  "    $eventHandler=\"$function\"" . ENDLINE; 
+            $element_text .=  "    $eventHandler=\"$function\"" . PHP_EOL; 
         }
-        $element_text .=  ">" . ENDLINE;
+        $element_text .=  ">" . PHP_EOL;
         
         if ($this->null) { 
             $sel = ($this->value == 'NULL') ? " selected='selected'" : "";
-            $element_text .=  "    <option value='NULL'$sel></option>" . ENDLINE;
+            $element_text .=  "    <option value='NULL'$sel></option>" . PHP_EOL;
         }
         
         foreach($this->options as $value1 => $display) {
             if (is_array($display)) {
-                $element_text .=  "    <optgroup label='$value1'>" . ENDLINE;
+                $element_text .=  "    <optgroup label='$value1'>" . PHP_EOL;
                 foreach ($display as $value2 => $display2) {
                     settype($value2, "string");
                     $sel = ($this->value == $value2) ? " selected='selected'" : "";
-                    $element_text .=  "    <option value='$value2'$sel>$display2</option>" . ENDLINE;
+                    $element_text .=  "    <option value='$value2'$sel>$display2</option>" . PHP_EOL;
                 }
                 $element_text .=  "    </optgroup>\n";
             } else {
                 settype($value1, "string");
                 $sel = ($this->value == $value1) ? " selected='selected'" : "";
-                $element_text .=  "    <option value='$value1'$sel>$display</option>" . ENDLINE;
+                $element_text .=  "    <option value='$value1'$sel>$display</option>" . PHP_EOL;
             }
         }
-        $element_text .=  "</select>" . ENDTAG;
+        $element_text .=  "</select>" . PHP_EOL . PHP_EOL;
         
         return $element_text;
     }
@@ -573,16 +573,16 @@ class radio extends select {
         $element_text = '';
         
         if ($this->orientation == "vertical" ) {
-            $element_text .=  "<ul class='vertical_radio' id='{$this->id}'>" . ENDLINE;
+            $element_text .=  "<ul class='vertical_radio' id='{$this->id}'>" . PHP_EOL;
         } else {
-            $element_text .=  "<ul class='radio' id='{$this->id}'>" . ENDLINE;
+            $element_text .=  "<ul class='radio' id='{$this->id}'>" . PHP_EOL;
         }
         
         foreach($this->options as $value => $display) {
-            $element_text .=  '    <li>' . $this->create_radio($value, $display) . '</li>' . ENDLINE;
+            $element_text .=  '    <li>' . $this->create_radio($value, $display) . '</li>' . PHP_EOL;
         }
         
-        $element_text .=  "</ul>" . ENDLINE;
+        $element_text .=  "</ul>" . PHP_EOL;
         
         return $element_text;
     }
@@ -599,24 +599,24 @@ class radio extends select {
 
 class radiorow extends radio {
     function print_formLine($editable=false) {
-        echo "<tr title='{$this->tip}' id='{$this->id}_row'>" . ENDLINE;    
+        echo "<tr title='{$this->tip}' id='{$this->id}_row'>" . PHP_EOL;    
         
         if (MOBILE) {
             // put question and input on separate lines if on a mobile interface
-            echo "<td class='question' colspan='20'><label for='{$this->id}'>{$this->question}</label></td></tr>" . ENDLINE; 
+            echo "<td class='question' colspan='20'><label for='{$this->id}'>{$this->question}</label></td></tr>" . PHP_EOL; 
             echo "<tr class='mobile_radiorow_div'><td colspan='20'></td></tr><tr><td class='input'>";
         } else {
             // display question cell
-            echo "<td class='question'><label for='{$this->id}'>{$this->question}</label>" . ENDLINE;
-            echo "</td>\n    <td class='input'>" . ENDLINE;
+            echo "<td class='question'><label for='{$this->id}'>{$this->question}</label>" . PHP_EOL;
+            echo "</td>\n    <td class='input'>" . PHP_EOL;
         }
         
         // display input cell
         
         echo $this->get_element();
-        echo "    </td>", ENDLINE;
+        echo "    </td>", PHP_EOL;
         
-        echo "</tr>" , ENDTAG;
+        echo "</tr>" , PHP_EOL . PHP_EOL;
     }
 
     function get_element() {
@@ -658,24 +658,24 @@ class radioanchor extends radio {
     function get_randomize() { return $this->randomize; }
     
     function get_element() {        
-        $element_text .= "        <table class='radioanchor' id='{$this->id}'><tr>" . ENDLINE;
+        $element_text .= "        <table class='radioanchor' id='{$this->id}'><tr>" . PHP_EOL;
         
         if ($this->randomize && rand(0,1)) {
-            $element_text .= "            <td class='anchor'>{$this->high_anchor}</td>" . ENDLINE;
+            $element_text .= "            <td class='anchor'>{$this->high_anchor}</td>" . PHP_EOL;
             
             $rev_options = array_reverse($this->options, true);
             foreach($rev_options as $value => $display) {            
-                $element_text .= '            <td>' . $this->create_radio($value, $display) . '</td>' . ENDLINE;
+                $element_text .= '            <td>' . $this->create_radio($value, $display) . '</td>' . PHP_EOL;
             }
-            $element_text .=   "            <td class='anchor'>{$this->low_anchor}</td>" . ENDLINE;
+            $element_text .=   "            <td class='anchor'>{$this->low_anchor}</td>" . PHP_EOL;
         
         } else {
-            $element_text .= "            <td class='anchor'>{$this->low_anchor}</td>" . ENDLINE;
+            $element_text .= "            <td class='anchor'>{$this->low_anchor}</td>" . PHP_EOL;
             
             foreach($this->options as $value => $display) {
-                $element_text .= '            <td>' . $this->create_radio($value, $display) . '</td>' . ENDLINE;
+                $element_text .= '            <td>' . $this->create_radio($value, $display) . '</td>' . PHP_EOL;
             }
-            $element_text .=   "            <td class='anchor'>{$this->high_anchor}</td>" . ENDLINE;
+            $element_text .=   "            <td class='anchor'>{$this->high_anchor}</td>" . PHP_EOL;
         }
         $element_text .=   "        </tr></table>\n";
         
@@ -728,25 +728,25 @@ class input extends formElement {
     function get_element() {
         $element_text = '';
 
-        $element_text .=   "<input name='"         . $this->id             . "'" . ENDLINE;
-        $element_text .=   "    class='textinput'" . ENDLINE;
-        $element_text .=   "    id='"             . $this->id             . "'" . ENDLINE;
-        $element_text .=   "    type='"         . $this->type             . "'" . ENDLINE;
-        $element_text .=   "    value='"         . $this->value             . "'" . ENDLINE;
-        $element_text .=   "    maxlength='"     . $this->maxlength         . "'" . ENDLINE;
-        $element_text .=   "    autocomplete='" . $this->autocomplete     . "'" . ENDLINE;
-        $element_text .=   "    placeholder='"     . $this->placeholder     . "'" . ENDLINE;
-        $element_text .=   "    style='width:"     . $this->width             . "px'" . ENDLINE;
+        $element_text .=   "<input name='"         . $this->id             . "'" . PHP_EOL;
+        $element_text .=   "    class='textinput'" . PHP_EOL;
+        $element_text .=   "    id='"             . $this->id             . "'" . PHP_EOL;
+        $element_text .=   "    type='"         . $this->type             . "'" . PHP_EOL;
+        $element_text .=   "    value='"         . $this->value             . "'" . PHP_EOL;
+        $element_text .=   "    maxlength='"     . $this->maxlength         . "'" . PHP_EOL;
+        $element_text .=   "    autocomplete='" . $this->autocomplete     . "'" . PHP_EOL;
+        $element_text .=   "    placeholder='"     . $this->placeholder     . "'" . PHP_EOL;
+        $element_text .=   "    style='width:"     . $this->width             . "px'" . PHP_EOL;
         if ($this->required) {
-            $element_text .= "    required" . ENDLINE;
+            $element_text .= "    required" . PHP_EOL;
         }
         if ($this->int_only) {
-            $element_text .=   "    onkeyup='formatInt(this);'" . ENDLINE;
+            $element_text .=   "    onkeyup='formatInt(this);'" . PHP_EOL;
         }
         foreach ($this->eventHandlers as $eventHandler => $function) { 
-            $element_text .=   "    $eventHandler=\"$function\"" . ENDLINE; 
+            $element_text .=   "    $eventHandler=\"$function\"" . PHP_EOL; 
         }
-        $element_text .=   " />" . ENDTAG;
+        $element_text .=   " />" . PHP_EOL . PHP_EOL;
 
         return $element_text;
     }
@@ -797,24 +797,24 @@ class textarea extends formElement {
     function get_element() {
         $element_text = '';
         
-        $element_text .=   "<textarea name='{$this->name}'" . ENDLINE;
-        $element_text .=   "    id='{$this->name}'" . ENDLINE;
-        $element_text .=   "    style='width:{$this->width};height:{$this->height};'" . ENDLINE;
+        $element_text .=   "<textarea name='{$this->name}'" . PHP_EOL;
+        $element_text .=   "    id='{$this->name}'" . PHP_EOL;
+        $element_text .=   "    style='width:{$this->width};height:{$this->height};'" . PHP_EOL;
         
         foreach ($this->eventHandlers as $eventHandler => $function) { 
-            $element_text .=   "    $eventHandler=\"$function\"" . ENDLINE;
+            $element_text .=   "    $eventHandler=\"$function\"" . PHP_EOL;
         }
         
         if ($this->expandable == true) {
-            $element_text .=   "    onfocus='textarea_expand(this, {$this->minheight}, {$this->maxheight})'" . ENDLINE;
-            $element_text .=   "    onblur='this.style.height=\"{$this->minheight}px\"'" . ENDLINE;
+            $element_text .=   "    onfocus='textarea_expand(this, {$this->minheight}, {$this->maxheight})'" . PHP_EOL;
+            $element_text .=   "    onblur='this.style.height=\"{$this->minheight}px\"'" . PHP_EOL;
         }
         
         if ($this->textlimit > 0) {
-            $element_text .=   "    oninput='textlimit(this, {$this->textlimit})'" . ENDLINE;
+            $element_text .=   "    oninput='textlimit(this, {$this->textlimit})'" . PHP_EOL;
         }
         
-        $element_text .=   ">{$this->value}</textarea>" . ENDTAG;
+        $element_text .=   ">{$this->value}</textarea>" . PHP_EOL . PHP_EOL;
         
         return $element_text;
     }

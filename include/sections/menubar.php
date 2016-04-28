@@ -14,8 +14,8 @@
                     echo "            <li class='finder delineate average transform project' id='debug'>Debug</li>\n";
                 }
             ?>
-            <li class='finder delineate average transform project' id='prefs' 
-                title="Change login details and default settings">        
+            <li class='finder delineate average transform project' id='prefs'
+                title="Change login details and default settings">
                 Preferences
                 <span class="shortcut cmd">,</span>
             </li>
@@ -43,7 +43,7 @@
                 New Project
                 <span class="shortcut cmd">P</span>
             </li>
-            
+
             <li class='finder average transform no-read-only' id='newFolder'>
                 New Folder
                 <span class="shortcut cmd">N</span>
@@ -93,7 +93,7 @@
         <span>Edit</span>
         <ul>
             <li class='delineate' id='undo'>
-                Undo            
+                Undo
                 <span class="shortcut cmd">Z</span>
             </li>
             <li class='delineate' id='redo'>
@@ -183,20 +183,20 @@
         <span>Batch</span>
         <ul>
             <!--
-            <li class='finder average transform' id='createTransform'>    
+            <li class='finder average transform' id='createTransform'>
                 Create Average/Transform
                 <span class="shortcut opt">A</span>
-            </li>            
+            </li>
             <li class='separator'>
             -->
-            
+
             <li class='delineate finder average transform no-read-only' id='batchAverage'
-                title="Make several averages using a text file to specify images and output names">        
+                title="Make several averages using a text file to specify images and output names">
                 Batch Average
                 <span class="shortcut shiftcmd">A</span>
             </li>
             <li class='delineate finder average transform no-read-only' id='batchTransform'
-                title="Make several transforms using a text file to specify images and settings">        
+                title="Make several transforms using a text file to specify images and settings">
                 Batch Transform
                 <span class="shortcut shiftcmd">T</span>
             </li>
@@ -214,7 +214,7 @@
                 title="Align selected images to a standard or custom setting">
                 Align
                 <span class="shortcut shiftcmd">E</span>
-            </li>    
+            </li>
             <li class='finder average transform no-read-only' id='resize'
                 title="Resize selected images">
                 Resize
@@ -234,7 +234,7 @@
                 title="Mask off areas of selected images with a color">
                 Mask
                 <span class="shortcut shiftcmd">M</span>
-            </li>    
+            </li>
             <li class='finder average transform no-read-only' id='symmetrise'
                 title="Create versions of selected images with symmetrical shape and/or color">
                 Symmetrise
@@ -257,16 +257,16 @@
             </li>
             <li class='separator'>
             <li class='finder no-read-only' id='singlePCA' style='display: none;'
-                title="PCA">        
+                title="PCA">
                 PCA
                 <span class="shortcut shiftcmd">P</span>
             </li>
             <li class='finder no-read-only' id='batchPCA' style='display: none;'
-                title="Batch PCA">        
+                title="Batch PCA">
                 Batch PCA
             </li>
             <li class='finder no-read-only' id='PCvis' style='display: none;'
-                title="Visualise the PCs of a model">        
+                title="Visualise the PCs of a model">
                 Visualise PCs
                 <span class="shortcut shiftcmd">V</span>
             </li>
@@ -276,12 +276,12 @@
                 <span class="shortcut shiftcmd">F</span>
             </li>
             <li class='delineate finder average transform no-read-only' id='multiContinua'
-                title="Morph along a series of images in 2-20 continua">        
+                title="Morph along a series of images in 2-20 continua">
                 Multiple Continua
                 <span class="shortcut shiftcmd">C</span>
             </li>
             <li class='delineate finder average transform no-read-only' id='gridFaces'
-                title="Create a 1D or 2D array of faces in a continuum">        
+                title="Create a 1D or 2D array of faces in a continuum">
                 Grid
                 <span class="shortcut shiftcmd">G</span>
             </li>
@@ -295,7 +295,7 @@
                 title="Create versions of selected images with calibrated color (requires a color checker chart in the image)">
                 Color Calibrate
             </li>
-            
+
             <li class='finder average transform' id='batchTag'
                 title="Add or delete tags from selected images">
                 Batch Tag
@@ -326,7 +326,7 @@
             <li class='delineate no-read-only' id='maskBuilder'
                 title="Create a custom mask">
                 Custom Mask Builder
-            </li>    
+            </li>
             <li class='finder no-read-only'>Convert Templates
                 <span class="shortcut">&#9654;</span>
                 <ul class='submenu' id='convert_template_menu'>
@@ -369,23 +369,23 @@
                 title="Edit symmetry points for the default template">
                 Set Symmetry Points
             </li>
-            
+
         </ul>
     </li>
     <li class='menucategory no-read-only' id='menu_queue'>
         <span>Queue<div id="queue_n">0</div></span>
         <ul id='queue' style='max-height: 400px; overflow:auto;'>
             <li class='finder delineate average transform' id='clearComplete'>
-                Clear Completed    
+                Clear Completed
             </li>
             <li class='finder delineate average transform' id='clearQueue'>
-                Clear All    
+                Clear All
             </li>
             <li class='finder delineate average transform' id='pauseQueue'>
-                Pause All    
+                Pause All
             </li>
             <li class='finder delineate average transform' id='restartQueue'>
-                Restart All    
+                Restart All
             </li>
             <li class='separator'>
         </ul>
@@ -394,28 +394,28 @@
         <span>Window</span>
         <ul>
             <li class='project finder delineate average transform' id='showFinder'>
-                <span class="checkmark">&nbsp;</span>
-                Finder    
+                <span class="checkmark finder">&nbsp;</span>
+                Finder
                 <span class="shortcut cmd">1</span>
             </li>
             <li class='project finder delineate average transform' id='showDelineate'>
-                <span class="checkmark">&nbsp;</span>
+                <span class="checkmark delineate">&nbsp;</span>
                 Delineate
                 <span class="shortcut cmd">2</span>
             </li>
             <li class='project finder delineate average transform' id='showAverage'>
-                <span class="checkmark">&nbsp;</span>
+                <span class="checkmark average">&nbsp;</span>
                 Average
                 <span class="shortcut cmd">3</span>
-            </li>    
+            </li>
             <li class='project finder delineate average transform' id='showTransform'>
-                <span class="checkmark">&nbsp;</span>
+                <span class="checkmark transform">&nbsp;</span>
                 Transform
                 <span class="shortcut cmd">4</span>
             </li>
             <li class='project finder delineate average transform' id='showProjects'>
-                <span class="checkmark">&nbsp;</span>
-                Projects    
+                <span class="checkmark project">&nbsp;</span>
+                Projects
                 <span class="shortcut cmd">5</span>
             </li>
         </ul>

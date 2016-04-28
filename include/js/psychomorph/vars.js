@@ -18,13 +18,13 @@ var $queue = $('#queue');
 var $queue_n = $('#queue_n');
 var $delin = $('#delin');
 
-var PM = {
+var WM = {
     user: {
         id: null,
         accountSize: 0
     },
     queue: null,
-    interfaceWindow : 'login',
+    appWindow : 'login',
     noOnBeforeUnload : false,
     showThumbs: false,
     project: {
@@ -32,14 +32,14 @@ var PM = {
         perm: 'read-only'
     },
     blankBG : "url(/include/images/blankface.php)",
-    blankImg : "/include/images/blankface.php", 
+    blankImg : "/include/images/blankface.php",
     loadImg: "/include/images/loaders/circle.svg",
-    
+
     delinContext: $('#template').get(0).getContext('2d'),
     originalHeight : 400,
     originalWidth : 300,
     faceimg: "",
-    
+
     showTem: true,
     delinfunc: 'move',
     symPts: [],
