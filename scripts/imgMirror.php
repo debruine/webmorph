@@ -20,8 +20,7 @@ if (file_exists($tem)) {
     $img = new PsychoMorph_Image($_POST['img']);
 }
 
-$tem_id = intval($_POST['tem_id']) > 1 ? intval($_POST['tem_id']) : 1;
-$img->mirror($tem_id);
+$img->mirror();
     
 $newFileName = array(
     'subfolder' => $_POST['subfolder'],

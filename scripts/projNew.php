@@ -32,6 +32,11 @@ try {
         copy(DOC_ROOT . '/include/examples/_female_avg.tem', $mydir . '/_female_avg.tem');
         copy(DOC_ROOT . '/include/examples/_male_avg.jpg', $mydir . '/_male_avg.jpg');
         copy(DOC_ROOT . '/include/examples/_male_avg.tem', $mydir . '/_male_avg.tem');
+        
+        copy(DOC_ROOT . '/include/examples/webmorph_template_batchAvg.txt', $mydir . '/_batchAvg_template.txt');
+        copy(DOC_ROOT . '/include/examples/webmorph_template_batchTrans.txt', $mydir . '/_batchTrans_template.txt');
+        copy(DOC_ROOT . '/include/examples/webmorph_template_batchEdit.txt', $mydir . '/_batchEdit_template.txt');
+        
         $return['project'] = $new_proj_id;
         
         $q = new myQuery("INSERT INTO project_user (project_id, user_id) VALUES ($new_proj_id, $user)");

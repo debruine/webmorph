@@ -268,6 +268,13 @@
     </div>-->
 </div>
 
+<!-- !- pixelsDialog -->
+<div id='pixelsDialog' class='modal'>
+    <p>Create CSV files with the Lab* values for each pixel. Check 'ignore mask' 
+        to omit pixel values that are the same as the top left pixel color.</p>
+    <input type='checkbox' id='ignore_mask' checked='checked' /> <label for='ignore_mask'>Ignore Mask</label>
+</div>
+
 <!-- !- cropDialog -->
 <div id='cropDialog' class='modal'>
     <div class='batch_name' default='cropped'>Cropped image name:</div>
@@ -420,11 +427,37 @@
     <ol start='0'></ol>
 </div>
 
-<!-- !- SBTdialog -->
-<div id='SBTdialog' class='modal'>
-    <p>Paste your batch file from Excel into the box below.</p>
-    <ol class="errorList"></ol>
-    <div id='SBTtablescroll'>
+<!-- !- batchEditDialog -->
+<div id='batchEditDialog' class='modal'>
+    <p>Paste your batch file into the box below (<a href='/include/examples/webmorph_template_batchEdit.txt'>download template</a>). Color is optional and in the form of <code>rgb(R,G,B)</code> or <code>transparent</code>.</p>
+    <dl>
+        <dt>image</dt><dd>The path to the image file: e.g., <code>/male/avg.jpg</code></dd>
+        <dt>align</dt><dd>pt1, pt2, x1, y1, x2, y2, width, height, [color]<br>e.g., <code>0,1,497,825,853,825,1350,1800,rgb(0,0,0)</code> or <code>DEFAULT</code></dd>
+        <dt>resize</dt><dd>width, height<br>e.g., <code>50%,50%</code> or <code>300px,400px</code> or <code>null,400px</code></dd>
+        <dt>rotate</dt><dd>degrees, [color]<br>e.g., <code>90,rgb(255,255,255)</code></dd>
+        <dt>crop</dt><dd>top, right, bottom, left, [color]<br>e.g., <code>-100,100,-100,100,rgb(0,0,0)</code></dd>
+        <dt>mask</dt><dd>(mask names or custom mask), blur, [color]<br>e.g., <code>(face,neck,ears),0,rgb(255,255,255)</code> or <code>(face),10,transparent</code></dd>
+        <dt>sym</dt><dd><code>shape</code> and/or <code>color</code></dd>
+        <dt>mirror</dt><dd><code>true</code> or leave blank</dd>
+        <dt>order</dt><dd>defaults to <code>align,resize,rotate,crop,mask,sym,mirror</code></dd>
+        <dt>outname</dt><dd>The path to save the result to: e.g., <code>/male/edited/avg.jpg</code></dd>
+    </dl>
+        
+    <p class='warning'></p>
+    <div class='batchTableScroll'>
+        <table>
+            <thead><tr><th>image</th><th>align</th><th>resize</th><th>rotate</th><th>crop</th><th>mask</th><th>sym</th><th>mirror</th><th>order</th><th>outname</th></tr></thead>
+            <tbody></tbody>
+        </table>
+    </div>
+    <textarea></textarea>
+</div>
+
+<!-- !- batchTransDialog -->
+<div id='batchTransDialog' class='modal'>
+    <p>Paste your batch file into the box below (<a javascript='postIt("/include/examples/webmorph_template_batchTrans.txt");'>download template</a>).</p>
+    <p class='warning'></p>
+    <div class='batchTableScroll'>
         <table>
             <thead><tr><th>trans-img</th><th>from-img</th><th>to-img</th><th>shape</th><th>color</th><th>texture</th><th>outname</th></tr></thead>
             <tbody></tbody>
@@ -433,13 +466,13 @@
     <textarea></textarea>
 </div>
 
-<!-- !- BAdialog -->
-<div id='BAdialog' class='modal'>
-    <p>Paste your batch file from Excel into the box below. Put the name of each average on the first row and the images in the average in the rows below. Put each average in a new column.</p>
-    <ol class="errorList"></ol>
+<!-- !- batchAvgDialog -->
+<div id='batchAvgDialog' class='modal'>
+    <p>Paste your batch file into the box below (<a javascript='postIt("/include/examples/webmorph_template_batchAvg.txt");'>download template</a>). Put the name of each average on the first row and the images in the average in the rows below. Put each average in a new column.</p>
+    <p class='warning'></p>
     <div class="imageList"><div></div></div>
     
-    <div id='BAtablescroll'>
+    <div class='batchTableScroll'>
         <table>
             <tbody></tbody>
         </table>

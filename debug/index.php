@@ -15,7 +15,7 @@ if ($_SESSION['user_id'] !== 1) {
 
 <html xmlns:fb='http://www.facebook.com/2008/fbml' lang='en'>
 <head>
-	<title>Psychomorph Online Debug</title>
+	<title>WebMorph Debug</title>
 	<meta charset='utf-8'>
 	<meta name='author' content='Lisa DeBruine and Bernard Tiddeman' />
 	<meta name='description' content='Online tools for manipulating faces' />
@@ -30,7 +30,7 @@ if ($_SESSION['user_id'] !== 1) {
 	<meta name='apple-mobile-web-app-status-bar-style' content='black' />
 	<link rel='shortcut icon' href='/include/images/favicon.ico' />
 	<link rel='apple-touch-icon-precomposed' href='/include/images/apple-touch-icon-precomposed.png' />
-	<link rel='stylesheet' type='text/css' href='/include/css/style.php'>
+	<link rel='stylesheet' type='text/css' href='/include/css/style.css'>
 	<link rel='stylesheet' type='text/css' href='<?= JQUERYUI_THEME ?>'>
 </head>
 

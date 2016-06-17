@@ -171,12 +171,12 @@ function threePtDelin(e) {
             if (WM.selectedFile >= files.length) {
                 growl('Batch Fit Template finished. '
                       + files.length + ' files aligned.', 3000);
-                $('#footer').html('');
+                $('#footer-text').html('');
                 files = [];
                 WM.selectedFile = 0;
                 WM.delinfunc = 'move';
             } else {
-                $('#footer').html(WM.selectedFile + ' of '
+                $('#footer-text').html(WM.selectedFile + ' of '
                                   + files.length + ' templates fitted.');
                 var url = files[WM.selectedFile];
                 var name = WM.project.id + urlToName(url);
@@ -208,14 +208,14 @@ function delinImage(name, async) { console.log('delinImage(' + name + ', ' + asy
                 "height": h + 'px'
             });
             WM.faceimg = data.imgname;
-            $('#footer').html('Loaded <code>' + urlToName(WM.faceimg) + '</code>');
+            $('#footer-text').html('Loaded <code>' + urlToName(WM.faceimg) + '</code>');
 
             $delin.css({
                 "width": w + "px ",
                 "background": "white 0 0 no-repeat url(" + fileAccess(WM.faceimg) + ")",
                 "background-size": "100%"
             });
-            $('#imgname').html(WM.faceimg).attr('title', WM.faceimg);
+            $('#imgname').html(urlToName(WM.faceimg));
             $('#delin_save').removeClass('unsaved');
             var needsDelin = false;
 
@@ -907,7 +907,7 @@ function temPaste() {
         updateUndoList();
         drawTem();
     } else {
-        $('#footer').html('No points were copied');
+        $('#footer-text').html('No points were copied');
     }
 }
 
@@ -1033,7 +1033,7 @@ function saveTem() {
                 //growl(data, 500);
                 var now = new Date();
                 var theTime = pad(now.getHours(), 2, '0') + ':' + pad(now.getMinutes(), 2, '0') + ':' + pad(now.getSeconds(), 2, '0');
-                $('#footer').html(urlToName(WM.faceimg) + ' saved (' + theTime + ')');
+                $('#footer-text').html(urlToName(WM.faceimg) + ' saved (' + theTime + ')');
                 $('#delin_save').removeClass('unsaved');
             } else {
                 growl(data.errorText);
@@ -1300,7 +1300,7 @@ function setPointLabels() {
         title: "Set Point Labels",
         modal: false,
         height: 500,
-        position: { my: 'right top', at: 'right bottom', of: $('#delin_toolbar') },
+        position: { my: 'right top', at: 'right bottom', of: $('.menubar') },
         buttons: {
             Cancel: function() { $(this).dialog('close'); },
             "Save": function() {

@@ -1,6 +1,26 @@
 <!-- !- what's new Dialog -->
 <div id='whatsnewDialog' class='modal' title='What&apos;s New?'>
     <dl>
+        <dt>(2016-06-11) Touch Compatability</dt>
+        <dd>WebMorph is now more compatible with touch devices. Let me know 
+        if there is anything you can't do on a touch device.</dd>
+        
+        <dt>(2016-06-11) Batch Edit</dt>
+        <dd>There is a new Batch function called Batch Edit 
+        (<span class='shiftcmd'>E</span>). You can align, resize, rotate, crop, 
+        mask, symmetrise and/or mirror images in a single step from a batch 
+        script. I've also provided demo scripts for 
+        <a href='/include/examples/webmorph_template_batchAvg.txt'>Batch Average</a>, 
+        <a href='/include/examples/webmorph_template_batchTrans.txt'>Batch Transform</a> and 
+        <a href='/include/examples/webmorph_template_batchEdit.txt'>Batch Edit</a>. 
+        Just download them and open them in Excel.</dd>
+        
+        <dt>(2016-06-11) Finder Loading</dt>
+        <dd>The finder shouldn't reload all of the time and should load images 
+        from the queue as they are made. There are definitely a few bugs, so just 
+        refresh (<span class='cmd'>R</span>) the finder if your file structure 
+        doesn't look right.</dd>
+        
         <dt>(2016-04-20) Read-Only Project Members</dt>
         <dd>Projects can now have read-only members. Click on the A or R next to 
         a project member's name to toggle their access permission. I have not 

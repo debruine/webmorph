@@ -107,7 +107,7 @@ function userRegister(e) {
 }
 
 function userLogin() {
-    $('#footer').html('Checking Login Details...');
+    $('#footer-text').html('Checking Login Details...');
     if ($('#loginInterface .reg_item:visible').length) {
         $('#loginInterface .reg_item').hide();
         $('#loginInterface .login_item').show();
@@ -154,7 +154,7 @@ function userLogin() {
         success: function(data) {
             if (data.error) {
                 $('#login_error').html(data.errorText);
-                $('#footer').html('');
+                $('#footer-text').html('');
             } else {
                 console.log('Logged in as user ' + data.user);
                 $('#login_password').val('');
@@ -176,15 +176,19 @@ function userLoad() { console.log('userLoad()');
 
     $spinner.remove();
     if (hash.appWindow == 'F') {
+        projectList();
         projectSet(hash.project_id, 'F');
     } else if (hash.appWindow == 'D') {
+        projectList();
         if (hash.file) {
             delinImage(hash.project_id + hash.file);
         }
         projectSet(hash.project_id, 'D');
     } else if (hash.appWindow == 'A') {
+        projectList();
         projectSet(hash.project_id, 'A');
     } else if (hash.appWindow == 'T') {
+        projectList();
         projectSet(hash.project_id, 'T');
     } else {
         $('#showProjects').click();
@@ -199,6 +203,7 @@ function userLogout() {
                 $(this).dialog("close");
             },
             "Logout": function() {
+                $.xhrPool.abortAll();
                 $.ajax({
                     url: 'scripts/userLogout',
                     success: function(data) {
@@ -212,7 +217,7 @@ function userLogout() {
 }
 
 function prefGet(callback) {  console.time('prefGet()');
-    $('#footer').html('Loading Preferences...');
+    $('#footer-text').html('Loading Preferences...');
     $.ajax({
         url: 'scripts/userPrefGet',
         type: 'GET',
@@ -333,7 +338,7 @@ function prefGet(callback) {  console.time('prefGet()');
             drawTem();
         },
         complete: function() {
-            $('#footer').html('Preferences Loaded');
+            $('#footer-text').html('Preferences Loaded');
             console.timeEnd('prefGet()');
             callback;
         }
@@ -363,7 +368,7 @@ function msgGet(msg_id) { console.log('msgGet('+msg_id+')');
 }
 
 function prefSet() {  console.log('prefSet()');
-    $('#footer').html('Saving Preferences...');
+    $('#footer-text').html('Saving Preferences...');
     var prefData = {
         email: $('#pref_email').val(),
         password: $('#pref_password').val(),
@@ -413,7 +418,7 @@ function prefSet() {  console.log('prefSet()');
             }
         },
         complete: function() {
-            $('#footer').html('Preferences Saved');
+            $('#footer-text').html('Preferences Saved');
         }
     });
 }

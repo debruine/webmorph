@@ -75,7 +75,7 @@ class myQuery {
     function get_query()             { return $this->query;             }
     function get_affected_rows()     { return $this->affected_rows;     }
     function get_insert_id()         { return $this->insert_id;         }
-    function get_num_rows()         { return $this->num_rows;         }
+    function get_num_rows()          { return $this->num_rows;         }
     
     function execute_query() {
         global $db;

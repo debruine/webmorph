@@ -63,20 +63,20 @@ function imgSave() {
 
                     $(this).dialog("close");
                     savename = WM.project.id + '/' + $(this).find('input').val();
-                    savename.replace(/\/\//g, '/');
                     $.ajax({
                         url: 'scripts/fileSave2',
                         data: {
                             tags: 'average',
                             img: img,
                             tem: tem,
-                            name: savename,
+                            name: savename.replace(/\/{2,}/g, '/'),
                             desc: getDesc()
                         },
                         success: function(data) {
                             if (!data.error[0]) {
-                                $('#footer').html(data.newFileName + ' saved');
-                                loadFiles(data.newFileName);
+                                $('#footer-text').html(data.newFileName + ' saved');
+                                //loadFiles(data.newFileName);
+                                WM.finder.addFile(data.newFileName, true);
                             } else {
                                 $('<div title="Problem Saving Image" />').html(data.errorText).dialog();
                             }
@@ -137,7 +137,7 @@ function saveImage(data) { console.log('saveImage(' + (typeof data === 'object' 
         data: {
             img: data.img,
             tem: data.tem,
-            name: data.outname,
+            name: data.outname.replace(/\/{2,}/g, '/'),
             desc: data.desc
         },
         success: function(data2) {
@@ -204,8 +204,8 @@ function averageListCheck() {
     var $avgList = $('#average-list li');
 
     $avgList.each( function() {
-        var url = $(this).data('url'); console.debug(url);
-        var $dup =  $('#average-list li[data-url="'+url+'"]'); console.debug($dup.length);
+        var url = $(this).data('url');
+        var $dup =  $('#average-list li[data-url="'+url+'"]');
 
         if ($dup.length > 1) {
             $(this).addClass('dupavg');
@@ -215,7 +215,7 @@ function averageListCheck() {
     });
 
     var l = $avgList.length;
-    $('#footer').html(l + " file" + (l==1 ? '' : 's') + " in average");
+    $('#footer-text').html(l + " file" + (l==1 ? '' : 's') + " in average");
 
     checkAvgAbility();
 }
@@ -341,7 +341,7 @@ function getAverage(tVars, addToQueue) {
                     avgTimer = setInterval(function() {
                         var nowTime = new Date();
                         var avgInterval = Math.round((nowTime.getTime() - startAvgTime)/1000);
-                        $('#footer').html('This average will take about ' + mtsec + ' seconds (' + avgInterval + ')');
+                        $('#footer-text').html('This average will take about ' + mtsec + ' seconds (' + avgInterval + ')');
                     }, 1000);
 
                 }
@@ -378,7 +378,7 @@ function getAverage(tVars, addToQueue) {
             },
             complete: function() {
                 clearInterval(avgTimer);
-                $('#footer').html("Average complete");
+                $('#footer-text').html("Average complete");
                 if (typeof tVars.completeAvg === 'function') { tVars.completeAvg(errorReport); }
                 $spinner.remove();
                 $average.show();
@@ -399,7 +399,7 @@ function checkTransAbility() {
 
 function getTransform(tVars, addToQueue) {
     //console.debug('getTransform(' + (typeof tVars === 'object' ? JSON.stringify(tVars) : '') + ')');
-    $('#footer').html("Starting Transform...");
+    $('#footer-text').html("Starting Transform...");
 
     var errorReport = {
         error: false,
@@ -457,16 +457,16 @@ function getTransform(tVars, addToQueue) {
     if (transimage == "" || fromimage == "" || toimage == "") {
         growl("You must drag images to each of the first three boxes");
     } else if (steps > 0 && endShapePcnt == startShapePcnt && startColorPcnt == endColorPcnt) {
-        $('#footer').html("The start and end percent of either shape or color transformation must be different");
+        $('#footer-text').html("The start and end percent of either shape or color transformation must be different");
         $("#endShapePcnt").focus().select();
     } else if (steps === 0 && isNaN(shapePcnt)) {
-        $('#footer').html('Please set the shape transformation. Set it to 0 if you do not want shape to alter.');
+        $('#footer-text').html('Please set the shape transformation. Set it to 0 if you do not want shape to alter.');
         $("#shapePcnt0").focus().select();
     } else if (steps === 0 && isNaN(colorPcnt)) {
-        $('#footer').html('Please set the color transformation. Set it to 0 if you do not want color to alter.');
+        $('#footer-text').html('Please set the color transformation. Set it to 0 if you do not want color to alter.');
         $("#colorPcnt0").focus().select();
     } else if (steps === 0 && isNaN(texturePcnt)) {
-        $('#footer').html('Please set the texture transformation. Set it to 0 if you do not want texture to alter.');
+        $('#footer-text').html('Please set the texture transformation. Set it to 0 if you do not want texture to alter.');
         $("#texturePcnt0").focus().select();
     } else {
         var theData = {
@@ -482,7 +482,7 @@ function getTransform(tVars, addToQueue) {
 
         for (var i = 0; i <= steps; i++) {
             var tnumber = (steps>0) ? " " + (i+1) : "";
-            $('#footer').html("Starting Transform" + tnumber + "...");
+            $('#footer-text').html("Starting Transform" + tnumber + "...");
 
             newShapePcnt = (steps === 0) ? shapePcnt : startShapePcnt + (i * (endShapePcnt - startShapePcnt) / steps);
             newColorPcnt = (steps === 0) ? colorPcnt : startColorPcnt + (i * (endColorPcnt - startColorPcnt) / steps);
@@ -530,7 +530,7 @@ function getTransform(tVars, addToQueue) {
                 });
 
                 if (i == steps) {
-                    $('#footer').html("Continuum queued");
+                    $('#footer-text').html("Continuum queued");
                     $('#transButton').button({ disabled: false });
                 }
             } else {
@@ -571,7 +571,7 @@ function getTransform(tVars, addToQueue) {
                             transTimer = setInterval(function() {
                                 var nowTime = new Date();
                                 var transInterval = Math.round((nowTime.getTime() - startTransTime)/1000);
-                                $('#footer').html('This transform will take about ' + mtsec + ' seconds (' + transInterval + ')');
+                                $('#footer-text').html('This transform will take about ' + mtsec + ' seconds (' + transInterval + ')');
                             }, 1000);
                         }
                     }
@@ -598,7 +598,7 @@ function getTransform(tVars, addToQueue) {
 
                         if (steps > 0) {
                             imagelength++;
-                            $('#footer').html(imagelength + ' of ' + (steps+1) + ' images made');
+                            $('#footer-text').html(imagelength + ' of ' + (steps+1) + ' images made');
                         }
 
                         // if an outname is set, save the image
@@ -623,7 +623,7 @@ function getTransform(tVars, addToQueue) {
                     },
                     complete: function() {
                         clearInterval(transTimer);
-                        $('#footer').html("Transform complete");
+                        $('#footer-text').html("Transform complete");
                         $transform.show();
                         $spinner.remove();
                         $('#transButton').button({ disabled: false });
@@ -720,7 +720,7 @@ function getPCvis() {
         title: 'Visualise Principal Components',
         buttons: {
             Cancel: function() {
-                $('#footer').html("");
+                $('#footer-text').html("");
                 $(this).dialog("close");
             },
             "Create": {
@@ -775,7 +775,7 @@ function getBatchPCA() {  console.log('getBatchPCA()');
         title: 'Batch PCA',
         buttons: {
             Cancel: function() {
-                $('#footer').html("");
+                $('#footer-text').html("");
                 $(this).dialog("close");
             },
             "Reset": function() {
@@ -789,7 +789,7 @@ function getBatchPCA() {  console.log('getBatchPCA()');
                 text: 'PCA',
                 class: 'ui-state-focus',
                 click: function() {
-                    $('#footer').html("Checking PCA batch file");
+                    $('#footer-text').html("Checking PCA batch file");
                     $('#batchPcaDialog p.warning').remove();
 
                     var rows = $('#batchPcaDialog textarea').val().split('\n');
@@ -886,7 +886,7 @@ function getBatchPCA() {  console.log('getBatchPCA()');
                         return false;
                     }
 
-                    $('#footer').html('Your batch file was successfully validated.');
+                    $('#footer-text').html('Your batch file was successfully validated.');
                     $('#batchPcaDialog').dialog('close');
 
                     var texture = ($('#texture').prop('checked') == 1) ? true : false;
@@ -930,7 +930,7 @@ function getPCA() {  console.log('getPCA()');
     } else if (imgfiles.length == 1) {
         growl('You need to choose more than 1 image file to create a new PCA', 1000);
     }
-    $('#footer').html("Procesing " + imgfiles.length + " images.");
+    $('#footer-text').html("Procesing " + imgfiles.length + " images.");
 
     // populate pca file names
     $('#pcafilename').html('');
@@ -975,14 +975,14 @@ function getPCA() {  console.log('getPCA()');
         title: 'PCA ' + imgfiles.length + ' File' + ((imgfiles.length == 1) ? '' : 's'),
         buttons: {
             Cancel: function() {
-                $('#footer').html("");
+                $('#footer-text').html("");
                 $(this).dialog("close");
             },
             "PCA": {
                 text: 'PCA',
                 class: 'ui-state-focus',
                 click: function() {
-                    $('#footer').html("Starting PCA");
+                    $('#footer-text').html("Starting PCA");
                     $('#pcaDialog input').blur(); // make sure all inputs are blurred so file names are valid
                     $('#pcaDialog p.warning').remove();
 
@@ -1211,7 +1211,8 @@ function createGrid() {
                     } else {
                         $updatebox.html('<h2>' + savedImages + ' images saved</h2><img src="' + fileAccess(data.newFileName) + '" style="width: 300px" />');
                         $updatebox.dialog('option', 'position', 'center');
-                        loadFiles(data.newFileName);
+                        //loadFiles(data.newFileName);
+                        WM.finder.addFile(data.newFileName, true);
                     }
                 }
             });
@@ -1303,7 +1304,7 @@ function movingGif() {
                     newFileName;
 
                 clearInterval(incImage);
-                $('#footer').html('Making movie...');
+                $('#footer-text').html('Making movie...');
 
                 $spinner = spinner({
                     'font-size':  $mbox.height(),
@@ -1338,12 +1339,13 @@ function movingGif() {
                     success: function(data) {
                         $mbox.attr("src", fileAccess(data.gif)).show();
                         $spinner.remove();
-                        loadFiles(data.gif);
-                        $('#footer').html('Movie created');
+                        //loadFiles(data.gif);
+                        WM.finder.addFile(data.gif, true);
+                        $('#footer-text').html('Movie created');
                     },
                     error: function() {
                         $spinner.remove();
-                        $('#footer').html('Error creating movie');
+                        $('#footer-text').html('Error creating movie');
                     }
                 });
             },

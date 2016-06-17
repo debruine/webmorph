@@ -3,7 +3,7 @@
 //====================================
 
 function projectList() { console.time('projectList()');
-    $('#footer').html('Loading Project List...');
+    $('#footer-text').html('Loading Project List...');
     $.ajax({
         url: 'scripts/projListGet',
         type: 'GET',
@@ -84,13 +84,15 @@ function projectList() { console.time('projectList()');
             $('#project_list').show().stripe();
 
             WM.user.accountSize = 0;
-            $.each(data.projects, function(i, p) {
-                if (p.filemtime == $('tr[data-id=' + p.id + ']').data('filemtime')) {
-                    projectSizeUpdate(p.id, data.userAllocation.allocation);
-                } else {
-                    projectSizeGet(p.id, data.userAllocation.allocation);
-                }
-            });
+            if (WM.appWindow == 'project') {
+                $.each(data.projects, function(i, p) {
+                    if (p.filemtime == $('tr[data-id=' + p.id + ']').data('filemtime')) {
+                        projectSizeUpdate(p.id, data.userAllocation.allocation);
+                    } else {
+                        projectSizeGet(p.id, data.userAllocation.allocation);
+                    }
+                });
+            }
 
             // set up user list
             userlist = [];
@@ -122,7 +124,7 @@ function projectList() { console.time('projectList()');
         },
         complete: function() {
             console.timeEnd('projectList()');
-            $('#footer').html('Project List Loaded');
+            $('#footer-text').html('Project List Loaded');
         }
     });
 }
@@ -159,6 +161,7 @@ function projectSet(id, appWindow) {
                     }
                 } else if (WM.appWindow == 'project') {
                     $('#showFinder').click();
+                    loadFiles(WM.project.id);
                 } else {
                     loadFiles(WM.project.id);
                 }
@@ -173,7 +176,7 @@ function projectSet(id, appWindow) {
             }
         },
         complete: function() {
-            $('#footer').html('Project ' + WM.project.id + ' set');
+            $('#footer-text').html('Project ' + WM.project.id + ' set');
         }
     });
 }
@@ -258,7 +261,7 @@ function projectNew() {
 
 
 function projectEdit(td, category) {
-    $('#footer').html('Editing Project...');
+    $('#footer-text').html('Editing Project...');
     var oldname = $(td).text();
     var w = $(td).width();
     var $newnameinput;
@@ -291,10 +294,10 @@ function projectEdit(td, category) {
                 success: function(data) {
                     if (data.error) {
                         growl(data.errorText);
-                        $('#footer').html('Project Not Edited');
+                        $('#footer-text').html('Project Not Edited');
                     } else {
                         oldname = newname;
-                        $('#footer').html('Project Edited');
+                        $('#footer-text').html('Project Edited');
                     }
                 },
                 complete: function() {
@@ -303,7 +306,7 @@ function projectEdit(td, category) {
             });
         } else {
             $(td).html(oldname);
-            $('#footer').html('');
+            $('#footer-text').html('');
         }
     }).focusout(function() {
         $(this).blur();
@@ -314,7 +317,7 @@ function projectEdit(td, category) {
 }
 
 function projectOwnerAdd(button) {
-    $('#footer').html('Adding Project Owner...');
+    $('#footer-text').html('Adding Project Owner...');
     var $input = $(button);
     var project = $input.closest('tr').data('id');
 
@@ -322,7 +325,7 @@ function projectOwnerAdd(button) {
 
     if (!(project > 0 && owner > 0)) {
 
-        $('#footer').html('User not found');
+        $('#footer-text').html('User not found');
         $input.val('').focus();
         return false;
     }
@@ -338,11 +341,11 @@ function projectOwnerAdd(button) {
         success: function(data) {
             if (data.error) {
                 $('<div title="Error Adding Owner" />').html(data.errorText).dialog();
-                $('#footer').html('Project Owner Not Added');
+                $('#footer-text').html('Project Owner Not Added');
                 $input.show().val('');
             } else {
                 $('#refresh').click();
-                $('#footer').html('Project Owner Added');
+                $('#footer-text').html('Project Owner Added');
             }
         }
     });
@@ -367,18 +370,18 @@ function projectOwnerPermToggle() {
         success: function(data) {
             if (data.error) {
                 $('<div title="Error Changing Owner Permissions" />').html(data.errorText).dialog();
-                $('#footer').html('Project owner permissions not changed');
+                $('#footer-text').html('Project owner permissions not changed');
                 $input.show().val('');
             } else {
                 $('#refresh').click();
-                $('#footer').html('Project owner permissions changed');
+                $('#footer-text').html('Project owner permissions changed');
             }
         }
     });
 }
 
 function projectOwnerDeleteConfirmed(project, owner) { console.log('projectOwnerDeleteConfirmed('+project+', '+owner+')');
-    $('#footer').html('Deleting Owner...');
+    $('#footer-text').html('Deleting Owner...');
     $.ajax({
         url: 'scripts/projOwnerDelete',
         data: {
@@ -388,10 +391,10 @@ function projectOwnerDeleteConfirmed(project, owner) { console.log('projectOwner
         success: function(data) {
             if (data.error) {
                 $('<div title="Error Deleting Owner" />').html(data.errorText).dialog();
-                $('#footer').html('Owner Not Deleted');
+                $('#footer-text').html('Owner Not Deleted');
             } else {
                 $('#refresh').click();
-                $('#footer').html('Owner Deleted');
+                $('#footer-text').html('Owner Deleted');
             }
         }
     });

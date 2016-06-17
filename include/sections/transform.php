@@ -18,7 +18,7 @@
             <input type='number' step='any' id='shapePcnt0' value='50' maxlength='7' /> %</span>
 
             <!-- color percent transformation -->
-            <span id='color_pcnt_trans'><label for='colorPcnt0'>color</label>
+            <span id='color_pcnt_trans'><label for='colorPcnt0'>Color</label>
             <input type='number' step='any' id='colorPcnt0' value='50' maxlength='7' /> %</span>
             
             <!-- texture percent transformation -->
@@ -33,7 +33,7 @@
             <input type='number' step='any' id='startShapePcnt' size='7' maxlength='7' value='0' /> to 
             <input type='number' step='any' id='endShapePcnt' size='7' maxlength='7' value='100' /> %
         </li>
-        <li class='movie_settings'><label>color:</label>
+        <li class='movie_settings'><label>Color:</label>
             <input type='number' step='any' id='startColorPcnt' size='7' maxlength='7' value='0' /> to 
             <input type='number' step='any' id='endColorPcnt' size='7' maxlength='7' value='100' /> %
         </li>

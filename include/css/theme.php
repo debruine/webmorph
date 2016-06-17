@@ -25,9 +25,9 @@ PAGE COLORS FOR DYNAMIC STYLES
         $shade = 'hsl(200,0%,25%)';         // dark grey
         $highlight = 'hsl(200,0%,50%)';     // medium grey
         $theme = 'hsl(200,0%,70%)';         // light grey
-        $text = 'hsl(200,0%,90%)';          // very light grey
+        $text = 'hsl(200,0%,80%)';          // very light grey
         $text_on_theme = 'hsl(200,0%,0%)';  // black
-        $border_color = 'hsl(200,0%,0%)';   // black
+        $border_color = 'hsl(200,0%,10%)';  // very dark grey
         $bgpattern = '/include/images/bgpatterns/congruent_outline';
     } else {
         // colourful themes
@@ -85,7 +85,7 @@ body.loading {
     border-color: <?= $theme ?>;
 }
 
-pre, code, .file {
+pre, code, .file, #imgname {
     color: <?= $theme ?>;
 }
 
@@ -254,6 +254,10 @@ p.msg {
 .context_menu li:hover {
     background-color: <?= $theme ?>;
     color: <?= $text_on_theme ?>;
+}
+
+.menubar .menucategory ul li.disabled:hover {
+	background-color:<?= $theme ?>!important;
 }
 
 .menubar .menucategory ul li:hover .submenu {

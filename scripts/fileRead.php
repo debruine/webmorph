@@ -16,12 +16,15 @@ $file = IMAGEBASEDIR . safeFileName($filename);
 
 if (!file_exists($file)) {
     $return['errorText'] .= "The file <code>$filename</code> does not exist.";
+} else if (filesize($file) > 1000000) {
+    $return['error'] = false;
+    $return['text'] =  'This file is ' . formatBytes(filesize($file));
+    $return['created'] = date('Y-m-d H:i:s', filemtime($file));
 } else if (!($mytext = file($file))) {
     $return['errorText'] .= "The file <code>$filename</code> could not be read.";
 } else if (count($mytext) < 1) {
     $return['errorText'] .= "The file <code>$filename</code> had no data.";
 } else {
-
     $return['error'] = false;
     $return['text'] =  implode("", $mytext);
     $return['created'] = date('Y-m-d H:i:s', filemtime($file));

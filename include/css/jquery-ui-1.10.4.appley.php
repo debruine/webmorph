@@ -689,10 +689,15 @@ button.ui-button::-moz-focus-inner {
 .ui-tabs {
 	position: relative;/* position: relative prevents IE scroll bug (element with position: relative inside container with overflow: auto appear as "fixed") */
 	padding: .2em;
+	border: 1px solid rgb(25,25,25);
 }
 .ui-tabs .ui-tabs-nav {
 	margin: 0;
-	padding: .2em .2em 0;
+	padding: 0em .2em 0;
+}
+.ui-tabs-nav {
+    background: rgba(0,0,0,0) !important;
+    padding-bottom: 1.6em !important;
 }
 .ui-tabs .ui-tabs-nav li {
 	list-style: none;
@@ -710,6 +715,9 @@ button.ui-button::-moz-focus-inner {
 	text-decoration: none;
 }
 a.ui-tabs-anchor  {
+    border: 1px solid rgb(25,25,25);
+    border-top-left-radius: 0.5em;
+    border-top-right-radius: 0.5em;
 	border-bottom-width: 0 !important;
 }
 .ui-tabs .ui-tabs-nav li.ui-tabs-active {

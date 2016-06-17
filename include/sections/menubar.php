@@ -117,7 +117,7 @@
                 Copy to Project
             </li>
             <li class='separator'></li>
-            <li class='finder average transform' id='find'>
+            <li class='finder average transform project' id='find'>
                 Find
                 <span class="shortcut cmd">F</span>
             </li>
@@ -160,6 +160,11 @@
                 Delineation
                 <span class="shortcut cmd">T</span>
             </li>
+            <li class='delineate' id='toggle_delintoolbar'
+                title="Show or hide the delineation toolbar">
+                <span class="checkmark">&nbsp;</span>
+                Delineation Toolbar
+            </li>
 
             <li class='separator'></li>
             <li class='delineate average transform' id='zoomin'>
@@ -189,7 +194,11 @@
             </li>
             <li class='separator'>
             -->
-
+            <li class='delineate finder average transform no-read-only' id='batchEdit'
+                title="Align, resize, rotate, crop, mask, symmetrize and/or mirror selected images">
+                Batch Edit
+                <span class="shortcut shiftcmd">E</span>
+            </li>
             <li class='delineate finder average transform no-read-only' id='batchAverage'
                 title="Make several averages using a text file to specify images and output names">
                 Batch Average
@@ -213,7 +222,7 @@
             <li class='finder average transform no-read-only' id='alignEyes'
                 title="Align selected images to a standard or custom setting">
                 Align
-                <span class="shortcut shiftcmd">E</span>
+                <span class="shortcut shiftcmd">H</span>
             </li>
             <li class='finder average transform no-read-only' id='resize'
                 title="Resize selected images">
@@ -237,7 +246,7 @@
             </li>
             <li class='finder average transform no-read-only' id='symmetrise'
                 title="Create versions of selected images with symmetrical shape and/or color">
-                Symmetrise
+                Symmetrize
                 <span class="shortcut shiftcmd">Y</span>
             </li>
             <li class='finder average transform no-read-only' id='mirror'
@@ -269,6 +278,11 @@
                 title="Visualise the PCs of a model">
                 Visualise PCs
                 <span class="shortcut shiftcmd">V</span>
+            </li>
+            <li class='finder' id='pixels'
+                title="Create CSV files with Lab* pixel values">
+                Lab* Pixels
+                <span class="shortcut shiftcmd">X</span>
             </li>
             <li class='finder average transform' id='facialMetrics'
                 title="Compute metrics for selected faces using delineation coordinates">

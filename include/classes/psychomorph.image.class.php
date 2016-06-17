@@ -247,9 +247,9 @@ function rgb2rgbpoly($rgb, $number) {
  *************************************************************************/
  
 class PsychoMorph_Image extends PsychoMorph_File {
-    private $_image;
-    private $_description;
-    private $_embeddedTem;
+    private $_image = false;
+    public $_description = '';
+    private $_embeddedTem = '';
     private $_id;
     
     public function __destruct() {
@@ -348,6 +348,8 @@ class PsychoMorph_Image extends PsychoMorph_File {
         
         return imagesy($this->_image); 
     }
+    
+    public function getImg() { return $this; }
     
     private function _makeThumb($original_image) {
         // Get new dimensions
@@ -607,7 +609,7 @@ class PsychoMorph_Image extends PsychoMorph_File {
     }
     
     public function colourCalibrate($colours, $expand = 25, $SD = 2) {
-        // $colours lists x-coordinate, y-coordinate, and L8, a* and b* values for each colour on the checker chart
+        // $colours lists x-coordinate, y-coordinate, and L, a* and b* values for each colour on the checker chart
         // $expand = number of pixels plus or minus the reference x and y-corrdinates
         // $SD = exclude pixels more than $sd standard deviations from the mean for that area
         

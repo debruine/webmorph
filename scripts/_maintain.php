@@ -65,7 +65,7 @@ function recursive_delete($deletedir) {
 //recursive_copy($source, $dest);
 
 // delete a specific directory
-$deletedir = IMAGEBASEDIR . '71/self_res';
+$deletedir = IMAGEBASEDIR . '0/test';
 //recursive_delete($deletedir);
 
 // remake .tmp directories

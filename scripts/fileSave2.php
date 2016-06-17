@@ -104,6 +104,7 @@ if (file_exists(IMAGEBASEDIR . $newFileName)) {
     $return['error'] = true;
     $return['errorText'] .= preg_replace("/^(\d{1,11}\/)/", "/", $newFileName) . ' already exists. Delete, rename, or move it first.';
 } else if ($img !== null && $img->save($newFileName)) {
+    $return['newFileName'] = $img->getImg()->getURL();
     $return['error'] = false;
 } else if (in_array($ext, array('txt', 'csv', 'pci', 'pca'))) {
     rename($tmp_name, IMAGEBASEDIR . $newFileName);

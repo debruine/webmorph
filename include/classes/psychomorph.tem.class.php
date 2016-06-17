@@ -242,9 +242,36 @@ class PsychoMorph_Tem extends PsychoMorph_File {
         }
     }
     
+    public function getID() {
+        $ps = $this->getPointNumber();
+        $ls = count($this->_lines);
+        $user_id = $_SESSION['user_id'];
+        
+        $q = new myQuery("SELECT tem.id, 
+                            COUNT(DISTINCT p.n) as ps, 
+                            COUNT(DISTINCT l.n) as ls,
+                            COUNT(DISTINCT sym) as syms 
+                            FROM tem 
+                            LEFT JOIN point as p on p.tem_id=tem.id 
+                            LEFT JOIN line as l on l.tem_id=tem.id
+                            WHERE tem.public=1 OR tem.user_id={$user_id}
+                            GROUP BY tem.id
+                            HAVING ps={$ps} AND ls={$ls} AND syms>0");
+                            
+        if ($q->get_num_rows() >= 1) {
+            return intval($q->get_one());
+        } else {
+            return false;
+        }
+    }
+    
     public function mirror($sym, $w) {
         // create the mirror-reversed version of the file
         // use the sym file in argument1
+        
+        if (empty($sym)) {
+            $sym = $this->getID();
+        }
         
         if (is_int($sym)) {
             // $sym is a tem_id, get the sym file from the database

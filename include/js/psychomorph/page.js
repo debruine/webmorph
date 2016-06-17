@@ -6,6 +6,8 @@ if (navigator.userAgent.indexOf('Mac OS X') != -1) {
     $("body").addClass("pc");
 }
 
+$.Finger.pressDuration == 1000;
+
 // !contextmenu functions
 $(document).on('contextmenu', '#finder *, #delin', function(e) {
     e.preventDefault();
@@ -147,7 +149,7 @@ $(document).on('contextmenu', '#finder *, #delin', function(e) {
     e.stopPropagation();
 
     $file = $(this).closest('li.file').addClass('selected');
-    updateSelectedFiles();
+    WM.finder.updateSelectedFiles();
     tf = $finder.find('li.file.selected').length;
     total_files = (tf > 1) ? ' ' + tf + ' Files' : '';
 
@@ -252,9 +254,9 @@ $('#project_list').on('click', '.go_to_project', function() {
     projectOwnerDelete(proj_id, $(this).data('id'));
 }).on('keydown', 'tr[data-perm=all] .projectOwnerAdd', function(e) {
     if (e.which == KEYCODE.enter) { projectOwnerAdd(this); }
-}).on('dblclick', 'tr[data-perm=all] td:nth-child(2)', function() {
+}).on('dblclick doubletap', 'tr[data-perm=all] td:nth-child(2)', function() {
     projectEdit(this, "name");
-}).on('dblclick', 'tr[data-perm=all] td:nth-child(3)', function() {
+}).on('dblclick doubletap', 'tr[data-perm=all] td:nth-child(3)', function() {
     projectEdit(this, "notes");
 }).on('click', '.ownerPermToggle', projectOwnerPermToggle);
 
@@ -402,11 +404,13 @@ $(document).mousedown(function(e) {
             } else if (e.which == KEYCODE.d) {
                 $('#batchModDelin').click();         // shift-cmd-D
             } else if (e.which == KEYCODE.e) {
-                $('#alignEyes').click();             // shift-cmd-E
+                $('#batchEdit').click();             // shift-cmd-E
             } else if (e.which == KEYCODE.f) {
                 $('#facialMetrics').click();         // shift-cmd-F
             } else if (e.which == KEYCODE.g) {
                 $('#gridFaces').click();             // shift-cmd-G
+            } else if (e.which == KEYCODE.h) {
+                $('#alignEyes').click();             // shift-cmd-H
             } else if (e.which == KEYCODE.i) {
                 $('#mirror').click();                // shift-cmd-I
             } else if (e.which == KEYCODE.k) {
@@ -431,6 +435,8 @@ $(document).mousedown(function(e) {
                 $('#PCvis').click();                 // shift-cmd-V
             } else if (e.which == KEYCODE.w) {
                 $('#webcamPhoto').click();           // shift-cmd-W
+            } else if (e.which == KEYCODE.x) {
+                $('#pixels').click();                // shift-cmd-X
             } else if (e.which == KEYCODE.y) {
                 $('#symmetrise').click();            // shift-cmd-Y
             } else if (e.which == KEYCODE.z) {
@@ -550,14 +556,14 @@ $(document).mousedown(function(e) {
         line = WM.current.lines.length - 1;
         WM.delin.lineColors[line] = 'default';
         if (WM.current.lines[line].length < 2) {
-            $('#footer').html('New line cancelled');
+            $('#footer-text').html('New line cancelled');
             WM.current.lines.pop();
         } else {
             var t;
 
             drawTem();
             t = 'New line finished [' + WM.current.lines[line].join() + ']';
-            $('#footer').html(t).prop('data-persistent', t);
+            $('#footer-text').html(t).prop('data-persistent', t);
         }
     } else if (e.which == KEYCODE.enter
                 && $finder.filter(':visible').length
@@ -591,7 +597,7 @@ $(document).mousedown(function(e) {
                 $lastOpen.find('> span').click();
             }
             $finder.find('li.file.selected').removeClass('selected');
-            updateSelectedFiles();
+            WM.finder.updateSelectedFiles();
         }
     } else if (e.which == KEYCODE.up_arrow) { // pressed up
         if (WM.appWindow == 'delineate') {
@@ -607,7 +613,7 @@ $(document).mousedown(function(e) {
                 $lastOpen.find('> span').click();
             }
             $finder.find('li.file.selected').removeClass('selected');
-            updateSelectedFiles();
+            WM.finder.updateSelectedFiles();
         } else if ($finder.filter(':visible').length) {
             $finder.find('li.file.selected, li.folder:not(.closed)')
                    .last().prevAll('li:visible').first().find('> span').click();
@@ -679,6 +685,9 @@ $('ul.menubar li.menucategory').mouseleave(function() {
         }
     }, 300);
 });
+$('ul.menubar li.menucategory > span').click(function() {
+    $(this).parent().find('>ul').toggle();
+});
 $('#menu_username').click( function() {
     $('#prefs').click();
 });
@@ -735,7 +744,7 @@ $('#avg_image_box').droppable({
     hoverClass: 'hoverdrag',
     tolerance: "pointer",
     drop: function(event, ui) {
-        var $files = ui.helper.find('li.file');
+        var $files = ui.helper.find('li.file.image.hasTem');
 
         $files.each( function() {
             var url,
@@ -757,8 +766,7 @@ $('#destimages img:not(.nodrop), #grid img').droppable({
     hoverClass: 'hoverdrag',
     tolerance: "pointer",
     drop: function(event, ui) {
-        // ! [FIX] png and gif images don't show up in transform drop
-        this.src = fileAccess($(ui.draggable).attr('url').replace('.tem', '.jpg'));
+        this.src = fileAccess($(ui.draggable).attr('url'));
         setTimeout(function() {
             var $ti = $('#transimage');
 
@@ -795,17 +803,17 @@ $('#clear-average-button').button().click(function() {
     $('#average').show().css('background-image', WM.blankBG).attr({
         'averaged': ''
     });
-    $('#footer').html('');
+    $('#footer-text').html('');
 });
 // ! save buttons
 $('#save-button, #trans-save-button').button({
     disabled: true
-}).click(imgSave());
+}).click(imgSave);
 
 // remove growl and message notifications on double-click
-$('body').on('dblclick', '.growl', function() {
+$('body').on('dblclick doubletap', '.growl', function() {
     $(this).remove();
-}).on('dblclick', '.msg', function() {
+}).on('dblclick doubletap', '.msg', function() {
     msgGet($(this).data('msg_id'));
 });
 
@@ -816,7 +824,12 @@ $('#imagebox').click( function(e) {
 });
 
 // ! ***** finder functions *****
-$finder.on('dblclick', 'li.file.image, li.file.tem', function() {
+WM.finder = new finder();
+$('#recent_creations').draggable().resizable();
+//$finder.draggable().resizable();
+$finder.on('click', function() {
+    $('.context_menu').remove();
+}).on('dblclick doubletap', 'li.file.image, li.file.tem', function() {
     // open in delineator on double-click
     delinImage($(this).attr('url'));
 }).on('click', '> ul > li.folder ul', function(e) {
@@ -850,7 +863,7 @@ $finder.on('dblclick', 'li.file.image, li.file.tem', function() {
     }
     $(this).toggleClass('selected');
     $(this).siblings('li.folder').addClass('closed').removeClass('selected').find('li.folder').addClass('closed');
-    updateSelectedFiles();
+    WM.finder.updateSelectedFiles();
 }).on('click', 'li.file.image', function(e) {
     // show image in imgbox on click
     var theURL,
@@ -989,6 +1002,12 @@ $finder.on('dblclick', 'li.file.image, li.file.tem', function() {
     if ($selFolders.length == 1) {
         $selFolders.removeClass('closed');                                       // if 1 remaining selected folder, open it
         $finder.find('li.file.selected').removeClass('selected');             // unselect all files
+        
+        // add draggable functions to files
+        var $dragFiles = $selFolders.find('>ul>li.file:not(.ui-draggable)')
+        $dragFiles.trigger('DOMNodeInserted');
+        
+        $selFolders.find('>ul').css('margin-left', $selFolders.width());
     }
 
     if ($finder.hasClass('image-view')) {
@@ -999,7 +1018,7 @@ $finder.on('dblclick', 'li.file.image, li.file.tem', function() {
     }
 
     $finder.scrollLeft($finder.width());                                    // scroll all the way to the right
-    updateSelectedFiles();
+    WM.finder.updateSelectedFiles();
 });
 
 // ! ***** menu item functions *****
@@ -1264,6 +1283,25 @@ $('#download').not('.disabled').click(function() {
         growl('You have not selected any files.', 1500);
     }
 });
+
+// !#toggle_delintoolbar
+$('#toggle_delintoolbar').not('.disabled').click(function() {
+    var $dt = $('#delin_toolbar');
+    
+    if ($dt.filter(':visible').length) {
+        $dt.hide();
+        $(this).find('span.checkmark').hide();
+    } else {
+        $dt.show();
+        /*$dt.css({
+            left:20,
+            top:$delin.position().top,
+            width:$('#delineationInterface').innerWidth(),
+            height:30
+        });*/
+        $(this).find('span.checkmark').show();
+    }
+});
 // !#toggletem
 $('#toggletem').not('.disabled').click(function() {
 
@@ -1350,7 +1388,7 @@ $('#fitsize').not('.disabled').click(function() {
         fitWidth,
         resize;
 
-    availableWidth = $('#delin_toolbar').width();
+    availableWidth = $('#delineateInterface').innerWidth();
     availableHeight = $(window).height() - $delin.offset().top - $('#footer').height() - 20;
     fitWidth = availableWidth*WM.originalHeight/WM.originalWidth;
 
@@ -1409,7 +1447,7 @@ $('#zoomoriginal').not('.disabled').click(function() {
         $('#destimages').css('width', '310px');
         sizeToViewport();
     } else if (WM.appWindow == 'average') {
-        $('#average').css('width', '310px');
+        $('#avg_image_box').css('width', '310px').css('height', '450px');
         sizeToViewport();
     }
 });
@@ -1420,7 +1458,7 @@ $('#cutItems').not('.disabled').click(function() {
     $finder.find('li.file.selected:visible').each(function(i, v) {
         $(this).addClass('to_cut');
     });
-    $('#footer').html(WM.pasteBoard.length + ' files cut');
+    $('#footer-text').html(WM.pasteBoard.length + ' files cut');
 });
 // !#copyItems
 $('#copyItems').not('.disabled').click(function() {
@@ -1437,11 +1475,11 @@ $('#copyItems').not('.disabled').click(function() {
             }
         });
 
-        $('#footer').html(WM.pasteBoard.length + ' points copied');
+        $('#footer-text').html(WM.pasteBoard.length + ' points copied');
     } else {
         WM.pasteBoard = filesGetSelected();
         $finder.find('li.file').removeClass('to_cut'); // clear all to_cut files
-        $('#footer').html(WM.pasteBoard.length + ' files copied');
+        $('#footer-text').html(WM.pasteBoard.length + ' files copied');
     }
 });
 // !#pasteItems
@@ -1461,25 +1499,38 @@ $('#moveFolderToProject').click( function() {
 });
 // !#find
 $('#find').not('.disabled').click(function() {
-
-    $('#searchbar').toggle().val('').focus();
-    sizeToViewport();
-
-    if ($('#searchbar:visible').length === 0) {
-        $finder.find('li.file').show();
+    var $sb;
+    if ($finder.filter(':visible').length) {
+        $sb = $('#searchbar');
+    } else if (WM.appWindow == 'project') {
+        $sb = $('#projectsearchbar');
     }
-
+    
+    $sb.toggle().val('').focus().trigger('keyup');
+    sizeToViewport();
 });
 // !#searchbar
 $('#searchbar').keyup(function() {
     var searchtext = $(this).val();
     var $allFiles = $finder.find('li.file');
+    
     $allFiles.show();
     if (searchtext !== '') {
         $allFiles.not(':contains("' + searchtext + '")').hide();
     }
-    updateSelectedFiles();
-});
+    WM.finder.updateSelectedFiles();
+}).hide();
+
+$('#projectsearchbar').keyup(function() {
+    var searchtext = $(this).val();
+    var $allProjects = $('#project_list tbody tr');
+    
+    $allProjects.show();
+    if (searchtext !== '') {
+        $allProjects.not(':contains("' + searchtext + '")').hide();
+    }
+}).hide();
+
 // !#deleteItems
 $('#deleteItems').not('.disabled').click(function() {
 
@@ -1590,7 +1641,7 @@ $('#fitTemplate').not('.disabled').click(function() {
             files[i] = $(this).attr('url');
         });
         if (files.length > 0) {
-            $('#footer').html('0 of ' + files.length + ' image' + ((files.length == 1) ? '' : 's') + ' fitted to template <code>' + $('#currentTem_name').text() + '</code>');
+            $('#footer-text').html('0 of ' + files.length + ' image' + ((files.length == 1) ? '' : 's') + ' fitted to template <code>' + $('#currentTem_name').text() + '</code>');
             WM.selectedFile = 0;
             var url = files[0];
             var name = WM.project.id + urlToName(url);
@@ -1605,7 +1656,7 @@ $('#fitTemplate').not('.disabled').click(function() {
             quickhelp();
         }
     } else if (WM.appWindow == 'delineate') {
-        $('#footer').html('Fitting template <code>' + $('#currentTem_name').text() + '</code>');
+        $('#footer-text').html('Fitting template <code>' + $('#currentTem_name').text() + '</code>');
         WM.eyeClicks = [];
         $('#template').hide();
         WM.delinfunc = '3pt';
@@ -1622,7 +1673,7 @@ $('#newLine').click(function() {
         WM.current.lines.push([]);
         var line = WM.current.lines.length - 1;
         WM.delin.lineColors[line] = 'red';
-        $('#footer').html('Starting new line');
+        $('#footer-text').html('Starting new line');
     }
     updateUndoList();
     drawTem(); // adds or deletes new line object
@@ -1677,6 +1728,10 @@ $('#batchRenameDialog input, #batchRenameDialog select').change( function() {
 // !#resize
 $('#resize').not('.disabled').click(function() {
     batchResize();
+});
+// !#pixels
+$('#pixels').not('.disabled').click(function() {
+    batchPixels();
 });
 $('#resizeDialog input').blur( function() {
     if ($(this).hasClass('disabled')) { return false; }
@@ -1950,29 +2005,30 @@ $('#moviePause').slider({
 // !webcam functions
 $('#webcamPhoto').click( function() {
     if ($(this).hasClass('disabled')) { return false; }
-
     webcamPhoto();
 });
 
 // !#movingGif
 $('#movingGif').not('.disabled').click(function() {
-
     movingGif();
+});
+
+// !#batchEdit
+$('#batchEdit').not('.disabled').click(function() {
+    batchEdit();
 });
 
 // !#batchAverage
 $('#batchAverage').not('.disabled').click(function() {
-
     batchAverage();
 });
 
 // !batchTransform
 $('#batchTransform').not('.disabled').click(function() {
-
     batchTransform();
 });
 
-$('#SBTdialog').delegate('textarea', 'keydown', function(e) {
+$('#batchTransDialog, #batchEditDialog, #batchAvgDialog').delegate('textarea', 'keydown', function(e) {
     if (e.which == KEYCODE.tab || e.which == KEYCODE.enter) {
         e.preventDefault();
         var start = $(this).get(0).selectionStart;
@@ -2115,7 +2171,7 @@ $('#fm_delete').droppable({
     hoverClass: "hover",
     tolerance: 'touch'
 });
-$('#fm_results').on('dblclick', 'thead th+th', function() {
+$('#fm_results').on('dblclick doubletap', 'thead th+th', function() {
     // delete column when double-clicking header
     var column_n = $('#fm_results thead th').index($(this));
 
@@ -2190,7 +2246,7 @@ $('#select').not('.disabled').click(function() {
             $allfiles.addClass('selected');
             $imagebox.hide().appendTo($allfiles.eq(0));
         }
-        updateSelectedFiles();
+        WM.finder.updateSelectedFiles();
     } else if (WM.appWindow == 'delineate') {
         if ($('.pt').length == $('.pt.selected').length) {
             // unselect all delineation points
@@ -2355,7 +2411,7 @@ $('#transButton').button().click(function() {
         });
 
         $('#batchTransform').click();
-        $('#SBTdialog textarea').val(batchText.trim()).show();
+        $('#batchTransDialog textarea').val(batchText.trim()).show();
     } else {
         getTransform({async: true});
     }
@@ -2400,7 +2456,7 @@ $delin.click(function(e) {
     } else if (WM.eyeClicks.length < 3) {
         threePtDelin(e);
     }
-}).dblclick(function() {
+}).on('dblclick doubletap', function() {
     if (WM.delinfunc == 'move') {
         $('.pt.selected').removeClass('selected'); // unselect all delineation points
         $('#selectBox').hide(); // and reset the selectBox
@@ -2453,6 +2509,19 @@ $delin.on("click", ".pt", function(e) {
         }
     }
     drawTem();
+}).on("doubletap", ".pt", function(e) {
+    e.stopPropagation();
+    var connectedPoints = $(this).data('connectedPoints');
+    if ($(this).hasClass("selected")) {
+        $.each(connectedPoints, function(j, pt) {
+            WM.pts[pt].removeClass('selected');
+        });
+    } else {
+        $.each(connectedPoints, function(j, pt) {
+            WM.pts[pt].addClass('selected');
+        });
+    }
+    drawTem();
 });
 
 $delin.on("mouseenter", ".pt", function(e) {
@@ -2474,7 +2543,7 @@ $delin.on("mouseenter", ".pt", function(e) {
     var footertext = '[' + i + '] ' + pointName +
                      ' x=<span class="x">' + thisx + '</span>; ' +
                      'y=<span class="y">' + thisy + '</span>';
-    $('#footer').prop('data-persistent', $('#footer').html()).html(footertext);
+    $('#footer-text').prop('data-persistent', $('#footer-text').html()).html(footertext);
 
     if (e.metaKey || e.ctrlKey) {
         var conPts = $(this).data('connectedPoints');
@@ -2502,7 +2571,7 @@ $delin.on("mouseup", ".pt", function(e) {
     drawTem();
 }).on("mouseout", ".pt", function(e) {
     // remove point name and replace with whatever is in data-persistent
-    $('#footer').html($('#footer').prop('data-persistent'));
+    $('#footer-text').html($('#footer-text').prop('data-persistent'));
 });
 
 $delin.on("mousedown", ".pt", function(e) {
@@ -2516,7 +2585,7 @@ $delin.on("mousedown", ".pt", function(e) {
         if (lastPt === undefined || lastPt != i) {
             WM.current.lines[line].push(i);
             var t = 'Added a point to the new line [' + WM.current.lines[line].join() + ']';
-            $('#footer').html(t).prop('data-persistent', t);
+            $('#footer-text').html(t).prop('data-persistent', t);
         }
     } else if (WM.delinfunc == 'sym') {
         nextSymPt($(this).attr('n'));
@@ -2537,7 +2606,40 @@ $delin.on("mousedown", ".pt", function(e) {
     return false;
 });
 
+$('#delin_toolbar').draggable().resizable({
+      minHeight:30,
+      minWidth:30
+    });
+
 $('#pointer').draggable();
+
+// !#delin_close
+$("#delin_close").button({
+    text: false,
+    icons: {
+        primary: "	ui-icon-close"
+    }
+}).click(function() {
+    $('#toggle_delintoolbar').click();
+});
+// !#delin_undo
+$("#delin_undo").button({
+    text: false,
+    icons: {
+        primary: "	ui-icon-arrowreturn-1-s"
+    }
+}).click(function() {
+    $('#undo').click();
+});
+// !#delin_redo
+$("#delin_redo").button({
+    text: false,
+    icons: {
+        primary: "	ui-icon-arrowreturn-1-n"
+    }
+}).click(function() {
+    $('#redo').click();
+});
 // !#delin_fitsize
 $("#delin_fitsize").button({
     text: false,
@@ -2615,7 +2717,7 @@ $("#showDelinHelp").button({
     }
 }).click(function() {
     $('#delinHelp').dialog({
-        position: { my: 'right top', at: 'right bottom', of: $('#delin_toolbar') },
+        position: { my: 'right top', at: 'right bottom', of: $('.menubar') },
         width: 450
     });
 });
@@ -2657,7 +2759,7 @@ $('#masktest').click( function() {
     var $maskDialog = $('<div title="Masked Image" />').append(m);
     m.css({'width': '100%', 'max-width': WM.originalWidth + 'px', 'height': 'auto'});
     $maskDialog.dialog({
-        position: { my: 'right top', at: 'right bottom', of: $('#delin_toolbar') },
+        position: { my: 'right top', at: 'right bottom', of: $('.menubar') },
         width: 450
     });
 });

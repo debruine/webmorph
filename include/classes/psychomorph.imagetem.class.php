@@ -180,8 +180,8 @@ function drawSpline($pts, $t = 0.3){
  *************************************************************************/
 
 class PsychoMorph_ImageTem {
-    private $_img;
-    private $_tem;
+    private $_img = false;
+    private $_tem = false;
     private $_overWrite = false;
     
     public function __construct($imgpath, $tempath = null) {
@@ -260,7 +260,7 @@ class PsychoMorph_ImageTem {
         return $this;
     }
     
-    public function mask($mask = array("face", "neck", "ears"), $rgba = array(255,255,255,1), $blur = 0, $custom = null) {
+    public function mask($mask = array("face", "neck", "left_ear", "right_ear"), $rgba = array(255,255,255,1), $blur = 0, $custom = null) {
         ini_set('memory_limit','1024M');
         
         $default_masks = array(
@@ -495,6 +495,92 @@ class PsychoMorph_ImageTem {
         if ($this->_img) $this->getImg()->mirror();
         $w = $this->getImg()->getWidth();
         if ($this->_tem) $this->getTem()->mirror($sym, $w);
+        
+        return $this;
+    }
+    
+    public function sym($shape, $colortex, $sym = null) {
+        // $shape and $colortex are transform proportions, usually 0 or 0.5
+        
+        if (preg_match('/^(\d{1,11})(\/.+)(.jpg|.gif|.png)$/', $this->getURL(), $url)) {
+            $project_id = $url[1];
+            $ext = $url[3];
+        } else {
+            return false;
+        }
+
+        // make a mirrored image
+        $clone = clone $this;
+        $mirror = clone $this;
+        $mirror->mirror($sym);
+        $mirrorName = IMAGEBASEDIR . $project_id . '/.tmp/mirror_' . time() . $ext;
+        $cloneName = IMAGEBASEDIR . $project_id . '/.tmp/clone_' . time() . $ext;
+        if ($mirror->save($mirrorName) && $clone->save($cloneName)) {
+            $mirrorURL = str_replace(IMAGEBASEDIR . $project_id, '', $mirrorName);
+            $cloneURL = str_replace(IMAGEBASEDIR . $project_id, '', $cloneName);
+            unset($mirror);
+            unset($clone);
+        } else {
+            return false;
+        }
+        
+        $url = 'http://' . $_SERVER["SERVER_NAME"] . '/tomcat/psychomorph/trans?';
+        // get this user's default prefs from database
+        $q = new myQuery("SELECT pref, prefval FROM pref WHERE user_id='{$_SESSION['user_id']}'");
+        $myprefs = $q->get_assoc(false, 'pref', 'prefval');
+        
+        $theData = array(
+            'subfolder' => $project_id,
+            'savefolder' =>  '/.tmp/',
+            'count' => 1,
+            'shape0' => $shape,
+            'color0' => $colortex,
+            'texture0' => $colortex,
+            'sampleContours0' => $myprefs['sample_contours'],
+            'transimage0' => $cloneURL,
+            'fromimage0' => $cloneURL,
+            'toimage0' => $mirrorURL,
+            'norm0' => 'none', // other norms can produce tilted images
+            'warp0' => $myprefs['warp'],
+            'normPoint0_0' => 0,
+            'normPoint1_0' => 1,
+            'format' => $myprefs['default_imageformat']
+        );
+        
+        $paramsJoined = array();
+        foreach($theData as $param => $value) {
+           $paramsJoined[] = "$param=$value";
+        }
+        $query = implode('&', $paramsJoined);
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url . $query);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 60);
+        $data = curl_exec($ch);
+        curl_close($ch);
+        
+        // delete the tmp files
+        unlink($cloneName);
+        unlink(preg_replace('@\.(jpg|png|gif)$@', '.tem', $cloneName));
+        unlink($mirrorName);
+        unlink(preg_replace('@\.(jpg|png|gif)$@', '.tem', $mirrorName));
+        
+        $transdata = json_decode($data, true);
+        
+        $symimg = $project_id . '/.tmp/' . $transdata[0]['img'];
+        $symtem = $project_id . '/.tmp/' . $transdata[0]['tem'];
+        
+        $desc = $this->getImg()->_description;
+
+        $this->_img = new PsychoMorph_Image($symimg); 
+        $this->_tem = new PsychoMorph_Tem($symtem);
+        
+        // describe image
+        $symtype = ($shape == 0) ? 
+            (($colortex == 0) ? 'Un-' : 'Color-only ') : 
+            (($colortex == 0) ? 'Shape-only ' : 'Shape & color ');
+        array_push($desc, array('sym' => $symtype));
+        $this->setDescription($desc);
         
         return $this;
     }

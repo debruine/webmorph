@@ -23,6 +23,7 @@ var WM = {
         id: null,
         accountSize: 0
     },
+    finder: null,
     queue: null,
     appWindow : 'login',
     noOnBeforeUnload : false,

@@ -5,9 +5,22 @@
         <span class="shortcut shiftcmd">&#x232b;</span> or 
         <span class="shortcut shiftcmd">-backspace</span>. This is likely to 
         be a little buggy at first, so make sure you back up your important 
-        files regularly (which you should already be doing).</p>
+        files regularly (which you should already be doing).
+    </p>
+    <p class="msg" data-msg_id="finder_changes">I've made a lot of changes to
+        the finder. It shouldn't reload all of the time and should load images 
+        from the queue as they are made. There are definitely a few bugs, so just 
+        refresh (<span class='cmd'>R</span>) the finder if your file structure 
+        doesn't look right.
+    </p>
+    <p class="msg" data-msg_id="batchEdit">There is a new Batch function called 
+        Batch Edit (<span class='shiftcmd'>E</span>). You can align, resize, 
+        rotate, crop, mask, symmetrise and/or mirror images in a single step 
+        from a batch script. I've also provided demo scripts for Batch Average, 
+        Batch Transform and Batch Edit. Just download them and open them in Excel.
+    </p>
         
-    <input type="search" id="searchbar">
+    <input type="search" id="searchbar" name="searchbar" placeholder="Search for a file">
     
     <ul id='imagebox'>
         <img id='selectedImage' src='/include/images/loaders/circle' />

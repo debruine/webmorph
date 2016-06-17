@@ -193,6 +193,7 @@ function fileUpload() {
                                 if (!data.error) {
                                     uploadedSuccesses += files.length;
                                     $progressUpdate.html(uploadedSuccesses + ' of ' + totalFiles + ' files uploaded');
+                                    WM.finder.addFile(data.newFileName, (files.length == 2));
                                 } else {
                                     $errorList.append('<li>' + data.errorText + '</li>');
                                 }
@@ -205,7 +206,7 @@ function fileUpload() {
                                 $progressBar.css('width', (100 * (uploadedAttempts) / totalFiles) + '%');
 
                                 if (uploadedAttempts == totalFiles) {
-                                    loadFiles(cDir);
+                                    //loadFiles(cDir);
                                     $('#upload').val('');
                                     if (uploadedSuccesses == totalFiles) {
                                         $uploadDialog.dialog("close");
@@ -220,9 +221,8 @@ function fileUpload() {
     });
 }
 
-function filePaste() {
+function filePaste(toDir) { console.log('filePaste(' + (toDir == undefined ? '' : toDir) + ')');
     var nImages,
-    toDir,
     $fileList,
     cutlist,
     action;
@@ -232,7 +232,8 @@ function filePaste() {
     nImages = WM.pasteBoard.length;
 
     if (nImages) {
-        toDir = currentDir();
+        if (toDir == undefined) { toDir = currentDir(); }
+        
         $fileList = $('<ul />').css('max-height', '200px');
         cutlist = 0;
         $.each(WM.pasteBoard, function(i, v) {
@@ -260,7 +261,7 @@ function filePaste() {
                         WM.pasteBoard = [];
                     } // clear WM.pasteBoard if moved, not if copied
                     loadFiles(toDir);
-                    $('#footer').html(nImages + ' files pasted to <code>' + toDir + '</code>');
+                    $('#footer-text').html(nImages + ' files pasted to <code>' + toDir + '</code>');
                 }
             }
         });
@@ -309,8 +310,10 @@ function fileDelete(confirm) {
                                     });
                                 } else {
                                     loadFiles($fileItems.closest('li.folder').attr('path')); // reload so trash is updated
+                                    //$fileItems.addClass('to_cut');
+                                    //filePaste(WM.project.id + '/.trash/');
                                 }
-                                updateSelectedFiles();
+                                WM.finder.updateSelectedFiles();
                             }
                         });
                     },
@@ -329,8 +332,10 @@ function fileDelete(confirm) {
                         });
                     } else {
                         loadFiles($fileItems.closest('li.folder').attr('path')); // reload so trash is updated
+                        //$fileItems.addClass('to_cut');
+                        //filePaste(WM.project.id + '/.trash/');
                     }
-                    updateSelectedFiles();
+                    WM.finder.updateSelectedFiles();
                 }
             });
         }
@@ -622,7 +627,7 @@ function fileListGet() {
         var cd = currentDir();
         var $allfiles = $finder.find('li[url^="' + cd + '"].file.image');
         $allfiles.addClass('selected');
-        updateSelectedFiles();
+        WM.finder.updateSelectedFiles();
         files = filesGetSelected('.image', WM.project.id);
         fileList = files.join("\n");
         $('<div />').html("<textarea style='width:100%; height: 200px;'>" + fileList + "</textarea>").dialog({
@@ -633,69 +638,10 @@ function fileListGet() {
     }
 }
 
-function updateSelectedFiles() { //console.log('updateSelectedFiles()');
-    var $selFolders = $finder.find('li.folder.selected').filter(':visible');
-    var s = $finder.find('li.file.selected').filter(':visible').length;
-
-    if ($selFolders.length > 1) {
-        var nFiles = $selFolders.find('li.file').length;
-        $('#footer').html($selFolders.length + ' folders selected containing ' + nFiles + ' files');
-    } else {
-        var cdir = currentDir();
-        var vFiles = $finder.find('li.folder[path="' + cdir + '"] > ul > li.file').length;
-
-        $('#footer').html('<code>' + urlToName(cdir) + '</code> (' + s + ' of ' + vFiles + ' file' + (vFiles == 1 ? '' : 's') + ' selected)');
-    }
-
-    if (WM.appWindow == 'average') {
-        checkAvgAbility();
-    } else if (WM.appWindow == 'transform') {
-        if (s > 1) {
-            $('#transButton').button('option', 'label', 'Transform All');
-        } else {
-            $('#transButton').button('option', 'label', 'Transform');
-        }
-    }
-
-    if (s == 1 && !$finder.hasClass('image-view')) {
-        $('#imagebox').show();
-    } else {
-        $('#imagebox').hide();
-    }
-}
-
-function imagesWithTems() {
-    console.time('imagesWithTems()');
-    // mark all images and tems in the finder with a class if they have a corresponding img/tem
-    var $files = $finder.find('li.file');
-    var $tems = $files.filter('.tem');
-    $tems.removeClass('hasImg');
-
-    var temList = {};
-    $tems.each(function() {
-        var v = $(this);
-        temList[v.attr('url')] = v;
-    });
-
-
-    $files.filter('.image').each( function() {
-        var theURL = $(this).attr('url');
-        var theTem = theURL.replace(/\.(jpg|tem|gif|png)$/, '.tem');
-        if (theTem in temList) {
-            $(this).addClass('hasTem');
-            temList[theTem].addClass('hasImg');
-        } else {
-            $(this).removeClass('hasTem');
-        }
-    });
-
-    if (WM.appWindow == 'average' || WM.appWindow == 'transform') {
-        $files.hide().filter('.image.hasTem').show();
-    }
-    console.timeEnd('imagesWithTems()');
-}
-
-function finder(dir) { console.log('finder(' + dir + ')');
+function finder(dir) { console.log('finder(' + (dir == undefined ? '' : dir) + ')');
+    this.currentDir = null;
+    this.selectedFiles = {};
+    
     this.dir = dir;
 
     this.load = function(subdir) {
@@ -713,23 +659,129 @@ function finder(dir) { console.log('finder(' + dir + ')');
                 }
             },
             complete: function() {
-                updateSelectedFiles();
+                WM.finder.updateSelectedFiles();
                 $finder.css('background-image', 'none');
             }
         });
     };
 
-    this.folder = function(url, container) {
-        var theItem = container.find('.file[url="' + url + '"]');
+    this.folder = function(path) {
+        // find or create a folder from a path in the format #/subdir/
+        var $theFolder,
+            $sibFolders,
+            $container,
+            containerPath,
+            shortName;
+        
+        $theFolder = $finder.find('li.folder[path="' + path + '"]');
+        
+        if (!$theFolder.length) {
+            // create a new folder
+            shortName = path.match(/^\d{1,10}\/(?:([^\/]+)\/)*$/)[1];
+            $theFolder = $('<li class="folder closed" path="'+path+'"><span>' + shortName + '</span><ul></ul></li>');
+            
+            // check for the containing folder
+            containerPath = path.match(/^(\d{1,10}(?:\/[^\/]+)*\/)[^\/]+\/$/)[1];
+            $container = this.folder(containerPath);
+            
+            // get list of folders in container and insert in alphabetical order
+            $sibFolders = $container.find('> ul > li.folder');
+            
+            if ($sibFolders.length > 0) {
+                $sibFolders.each( function(i) {
+                    if (path < $(this).attr('path')) {
+                        $(this).before($theFolder);
+                        return false;
+                    } else if (i == $sibFolders.length - 1) {
+                        $(this).after($theFolder);
+                    }
+                });
+            } else {
+                $container.find('> ul').prepend($theFolder);
+            }
+        }
+        
+        return $theFolder;
     };
 
-    this.file = function(url, container) {
-        var theItem = container.find('.file[url="' + url + '"]');
+    this.addFile = function(url, addTem) { console.log('addFile(' + url + ', ' + addTem + ')');
+        var regexURL,
+            $theDir,
+            $theFile,
+            $theUL,
+            $sibFiles,
+            shortName,
+            project_id,
+            subdir,
+            theClass,
+            wasClosed,
+            ext,
+            w,
+            img = false;
+        
+        // 0 = valid, 1 = project_id, 2 = subfolders, 3 = shortname, 4 = ext    
+        regexURL = url.match(/^(\d{1,10})((?:\/[^\/]*)*\/)([^\/]+)\.([a-z]{3})$/);
+        if (regexURL == null || regexURL.length != 5) {
+            console.debug('Problem with the file URL: ' + url);
+            return false;
+        }
+        
+        project_id = regexURL[1];
+        subdir = regexURL[2];
+        shortName = regexURL[3];
+        ext = regexURL[4];
+            
+        if (!regexURL) {
+            return false;
+        }
 
-        if (!theItem.length) {
-            var ext = url.substring(url.length - 4);
-            var theClass = 'file';
-            var img = false;
+        $theDir = this.folder(project_id + subdir);
+        
+        $theFile = this.file(url, $theDir);
+
+        $theUL = $theDir.find('>ul');
+        
+        $sibFiles = $theUL.find('>li.file');
+            
+        if ($sibFiles.length > 0) {
+            $sibFiles.each( function(i) {
+                if (url < $(this).attr('url')) {
+                    $(this).before($theFile);
+                    return false;
+                } else if (i == $sibFiles.length - 1) {
+                    $(this).after($theFile);
+                }
+            });
+        } else {
+            $theUL.append($theFile);
+        }
+        
+        if (addTem === true) {
+            this.addFile(project_id + subdir + shortName + '.tem');
+        }
+        
+        return $theFile;
+    }
+
+    this.file = function(url, container) {
+        // find or create a file from a url in the format #/subdir/filename.ext
+        
+        var $theFile,
+            ext,
+            theClass,
+            img,
+            shortName;
+        
+        if (container == undefined) {
+            container = $finder;
+        }
+        
+        $theFile = container.find('.file[url="' + url + '"]');
+
+        if (!$theFile.length) {
+            ext = url.substring(url.length - 4);
+            theClass = 'file';
+            img = false;
             if (ext == '.tem') {
                 theClass += ' tem';
             } else if (ext == '.txt') {
@@ -752,14 +804,14 @@ function finder(dir) { console.log('finder(' + dir + ')');
                 theClass += ' gif image';
                 img = true;
             }
-            var shortName = url.replace(/^.*\//, '');
-            theItem = $('<li class="' + theClass + '" url="' + url + '"><span>' + shortName + '</span></li>');
+            shortName = url.replace(/^.*\//, '');
+            $theFile = $('<li class="' + theClass + '" url="' + url + '"><span>' + shortName + '</span></li>');
 
             if (img && $('#show_thumbs').prop('checked')) {
-                theItem.css('background-image', 'url(/scripts/fileAccess?thumb&file=' + url + ')');
+                $theFile.css('background-image', 'url(/scripts/fileAccess?thumb&file=' + url + ')');
             }
         }
-        return theItem;
+        return $theFile;
     };
 
     this.imagesWithTems = function() { console.time('imagesWithTems()');
@@ -791,10 +843,181 @@ function finder(dir) { console.log('finder(' + dir + ')');
         }
         console.timeEnd('imagesWithTems()');
     };
+    
+    this.updateSelectedFiles = function() { //console.log('WM.finder.updateSelectedFiles()');
+        var $selFolders = $finder.find('li.folder.selected').filter(':visible');
+        var s = $finder.find('li.file.selected').filter(':visible').length;
+    
+        if ($selFolders.length > 1) {
+            var nFiles = $selFolders.find('li.file').length;
+            $('#footer-text').html($selFolders.length + ' folders selected containing ' + nFiles + ' files');
+        } else {
+            var cdir = currentDir();
+            var vFiles = $finder.find('li.folder[path="' + cdir + '"] > ul > li.file').length;
+    
+            $('#imgname').html(urlToName(cdir));
+            $('#footer-text').html(s + ' of ' + vFiles + ' file' + (vFiles == 1 ? '' : 's') + ' selected');
+        }
+    
+        if (WM.appWindow == 'average') {
+            checkAvgAbility();
+        } else if (WM.appWindow == 'transform') {
+            if (s > 1) {
+                $('#transButton').button('option', 'label', 'Transform All');
+            } else {
+                $('#transButton').button('option', 'label', 'Transform');
+            }
+        }
+    
+        if (s == 1 && !$finder.hasClass('image-view')) {
+            $('#imagebox').show();
+        } else {
+            $('#imagebox').hide();
+        }
+    }
 }
 
+
+
+$("#finder").on('DOMNodeInserted', "li.file:not(.ui-draggable)", function() { 
+    //console.debug('Draggable file: ' + $(this).attr('url'));
+    var thisContainment = (WM.appWindow == 'finder') ? '#finder' : 'window';
+    
+    $(this).draggable({
+        helper: function() {
+            var $helper = $('<ul />').addClass('filehelper');
+            return $helper;
+        },
+        opacity: 0.7,
+        delay: 300,
+        stack: '.filehelper',
+        containment: thisContainment,
+        appendTo: 'body',
+        handle: "span",
+        start: function(event, ui) {
+            // remove other selections if this file is not currently selected
+            if (!$(this).hasClass('selected') && !(event.ctrlKey || event.metaKey || event.shiftKey)) {
+                $finder.find('li.file.selected').removeClass('selected');
+            }
+
+            $(this).addClass('selected');
+            $('#imagebox').hide().insertAfter($finder);
+            $finder.find('li.file.selected').filter(':visible').each( function(i, v) {
+                var $clone = $(this).clone().removeClass('selected');
+                ui.helper.append($clone);
+            });
+            $('#cutItems').click();
+        },
+        stop: function(event, ui) {
+            WM.pasteBoard = [];
+            $finder.find('li.file').removeClass('to_cut'); // clear all to_cut files
+        }
+/*    }).selectable({
+        selected: function(e,ui){
+            $(this).addClass('selected');
+        },
+        selecting: function(e,ui){
+            $(this).addClass('selected');
+        },
+        unselected: function(e,ui){
+            $(this).removeClass('selected');
+        },
+        unselecting: function(e,ui){
+            $(this).removeClass('selected');
+        }*/
+    });
+});
+
+$("#finder").on('DOMNodeInserted', "li.folder:not(.ui-draggable)", function() { 
+    //console.debug('Draggable folder: ' + $(this).attr('path'));
+    $(this).draggable({
+        helper: function() {
+            var $helper = $('<ul />').addClass('filehelper');
+            return $helper;
+        },
+        opacity: 0.7,
+        handle: "span",
+        delay: 300,
+        containment: '#finder',
+        start: function(event, ui) {
+            var $clone = $(this).clone().addClass('closed');
+            ui.helper.append($clone);
+        }
+    });
+});
+
+$("#finder").on('DOMNodeInserted', "> ul li.folder > ul:not(.ui-droppable), li.folder:not(.ui-droppable)", function() { 
+    //console.debug('Droppable ' + ($(this).attr('path') != undefined ? 'folder: ' + $(this).attr('path') : 'ul: ' + $(this).parent().attr('path')));
+    $(this).droppable({
+        accept: 'li.folder, li.file',
+        greedy: true,
+        hoverClass: 'folderDrop',
+        tolerance: "pointer",
+        over: function(e, ui) {
+            var to_move = ui.helper.find('li.folder').attr('path');
+            if (typeof to_move === 'undefined') {
+                var l = ui.helper.find('li.file').length;
+                to_move = l + ' file' + ((l >1) ? 's' : '');
+            } else {
+                to_move = '<code>' + urlToName(to_move) + '</code>';
+            }
+
+            if ($(this).hasClass('folder')) {
+                $folder = $(this);
+            } else {
+                $folder = $(this).closest('li.folder');
+            }
+            var action = (e.ctrlKey || e.metaKey) ? 'Copy' : 'Move';
+            $('#footer-text').html(action + ' ' + to_move + ' to <code>' + urlToName($folder.attr('path')) + '</code>');
+        },
+        out: function(e, ui) {
+            $('#footer-text').html('');
+        },
+        drop: function( e, ui ) {
+            if ($(this).hasClass('folder')) {
+                $folder = $(this);
+            } else {
+                $folder = $(this).closest('li.folder');
+            }
+
+            if (WM.pasteBoard.length) {
+                var itemPath = WM.pasteBoard[0].replace(/\/[^\/]+$/, '/');
+                if ($folder.attr('path') != itemPath) {
+                    $folder.find('> span').click();
+                    if (e.ctrlKey || e.metaKey) { $finder.find('li.to_cut').removeClass('to_cut'); }
+                    $('#pasteItems').click();
+                }
+            } else if (ui.helper.hasClass('tcimage')) {
+                // save tomcat image
+                ui.draggable.click();
+                $(this).click();
+                $('#save').click();
+            } else {
+                var folder_to_move = ui.helper.find('li.folder').attr('path');
+                var move_to = $folder.attr('path');
+                var action = (e.ctrlKey || e.metaKey) ? 'copy' : 'move';
+
+                // check if moving files to same folder
+                if (move_to == folder_to_move.replace(/[^\/]+\/$/, '')) { return false; }
+
+                $.ajax({
+                    url: 'scripts/fileCopy',
+                    data: {
+                        files: [folder_to_move],
+                        toDir: move_to,
+                        action: action
+                    },
+                    success: function(data) {
+                        loadFiles(move_to);
+                    }
+                });
+            }
+        }
+    });
+});
+
 function loadFiles(selected_dir, subdir) { console.log('loadFiles(' + selected_dir + ', ' + subdir + ')');
-    $('#footer').html('Loading Files...');
+    $('#footer-text').html('Loading Files...');
     var $spinner = bodySpinner();
 
     if (subdir === true && selected_dir !== undefined) {
@@ -840,17 +1063,28 @@ function loadFiles(selected_dir, subdir) { console.log('loadFiles(' + selected_d
                     $trash.hide();
                 }
 
-                updateSelectedFiles();
-                finderFunctions();
+                WM.finder.updateSelectedFiles();
+                //WM.finder.finderFunctions();
 
                 if (selected_dir !== undefined && selected_dir.length > 0) {
                     fileShow(selected_dir);
                 }
-                $('#footer').html($finder.find('li.file').length + ' files loaded');
+                $('#footer-text').html($finder.find('li.file').length + ' files loaded');
             }
-            imagesWithTems();
+            WM.finder.imagesWithTems();
             $finder.css('background-image', 'none');
             $spinner.remove();
+            sizeToViewport();
+            
+            // set WM.faceimg
+            if (WM.faceimg == '') {
+                var firstHasTem = $finder.find('li.file.hasTem').not('[url*=".trash"]');
+                
+                if (firstHasTem.length) {
+                    WM.faceimg = firstHasTem.attr('url');
+                    console.log('WM.faceimg set to ' + WM.faceimg);
+                }
+            }
         }
     });
 }
@@ -883,10 +1117,12 @@ function folderize(json, appendElement) {
         theFolder = $('<ul />');
     }
 
+    /*
     var w = appendElement.width();
     appendElement.siblings('li').find('> ul').css('margin-left', w);
     theFolder.css('margin-left', w);
-
+    */
+    
     var $allItems = theFolder.find('> li').addClass('oldfinder'); // mark all items as old
 
     var fItems = [];
@@ -898,7 +1134,7 @@ function folderize(json, appendElement) {
             if (typeof contents === 'string') {
                 // contents are an image name
                 var url = folder.replace(/^i/, '');
-                theItem = fileNew(url, theFolder).removeClass('oldfinder');
+                theItem = WM.finder.file(url, theFolder).removeClass('oldfinder');
             } else {
                 // contents are more files/folders
                 theItem = $allItems.filter('.folder[path="' + folder + '/"]');
@@ -932,186 +1168,6 @@ function folderize(json, appendElement) {
             console.warn('Tried to folderize contentless folder: ' + $(this).attr('path'));
         }
     });
-}
-
-function fileNew(url, container) {
-    var theItem = container.find('.file[url="' + url + '"]');
-
-    if (!theItem.length) {
-        var ext = url.substring(url.length - 4);
-        var theClass = 'file';
-        var img = false;
-        if (ext == '.tem') {
-            theClass += ' tem';
-        } else if (ext == '.txt') {
-            theClass += ' txt';
-        } else if (ext == '.csv') {
-            theClass += ' csv';
-        } else if (ext == '.pca') {
-            theClass += ' pca';
-        } else if (ext == '.fimg') {
-            theClass += ' fimg';
-        } else if (ext == '.pci') {
-            theClass += ' pci';
-        } else if (ext == '.jpg') {
-            theClass += ' jpg image';
-            img = true;
-        } else if (ext == '.png') {
-            theClass += ' png image';
-            img = true;
-        } else if (ext == '.gif') {
-            theClass += ' gif image';
-            img = true;
-        }
-        var shortName = url.replace(/^.*\//, '');
-        theItem = $('<li class="' + theClass + '" url="' + url + '"><span>' + shortName + '</span></li>');
-
-        if (img && $('#show_thumbs').prop('checked')) {
-            theItem.css('background-image', 'url(/scripts/fileAccess?thumb&file=' + url + ')');
-        }
-    }
-    return theItem;
-}
-
-function finderFunctions() { console.time('finderFunctions()');
-
-    $('#searchbar:visible').keyup();
-
-    var thisContainment = (WM.appWindow == 'finder') ? '#finder' : 'window';
-
-    $finder.find('li.file').not('.ui-draggable').draggable({
-        helper: function() {
-            var $helper = $('<ul />').addClass('filehelper');
-            return $helper;
-        },
-        opacity: 0.7,
-        delay: 300,
-        stack: '.filehelper',
-        containment: thisContainment,
-        appendTo: 'body',
-        handle: "span",
-        start: function(event, ui) {
-            // remove other selections if this file is not currently selected
-            if (!$(this).hasClass('selected') && !(event.ctrlKey || event.metaKey || event.shiftKey)) {
-                $finder.find('li.file.selected').removeClass('selected');
-            }
-
-            $(this).addClass('selected');
-            $('#imagebox').hide().insertAfter($finder);
-            $finder.find('li.file.selected').filter(':visible').each( function(i, v) {
-                var $clone = $(this).clone().removeClass('selected');
-                ui.helper.append($clone);
-            });
-            $('#cutItems').click();
-        },
-        stop: function(event, ui) {
-            WM.pasteBoard = [];
-            $finder.find('li.file').removeClass('to_cut'); // clear all to_cut files
-        }
-    });
-
-    $finder.find('li.folder').not('.ui-draggable').draggable({
-        helper: function() {
-            var $helper = $('<ul />').addClass('filehelper');
-            return $helper;
-        },
-        opacity: 0.7,
-        handle: "span",
-        delay: 300,
-        containment: '#finder',
-        start: function(event, ui) {
-            var $clone = $(this).clone().addClass('closed');
-            ui.helper.append($clone);
-        }
-    });
-
-    $finder.find('> ul > li.folder ul, li.folder').not('.ui-droppable').droppable({
-        accept: 'li.folder, li.file',
-        greedy: true,
-        hoverClass: 'folderDrop',
-        tolerance: "pointer",
-        over: function(e, ui) {
-            var to_move = ui.helper.find('li.folder').attr('path');
-            if (typeof to_move === 'undefined') {
-                var l = ui.helper.find('li.file').length;
-                to_move = l + ' file' + ((l >1) ? 's' : '');
-            } else {
-                to_move = '<code>' + urlToName(to_move) + '</code>';
-            }
-
-            if ($(this).hasClass('folder')) {
-                $folder = $(this);
-            } else {
-                $folder = $(this).closest('li.folder');
-            }
-            var action = (e.ctrlKey || e.metaKey) ? 'Copy' : 'Move';
-            $('#footer').html(action + ' ' + to_move + ' to <code>' + urlToName($folder.attr('path')) + '</code>');
-        },
-        out: function(e, ui) {
-            $('#footer').html('');
-        },
-        drop: function( e, ui ) {
-            if ($(this).hasClass('folder')) {
-                $folder = $(this);
-            } else {
-                $folder = $(this).closest('li.folder');
-            }
-
-            if (WM.pasteBoard.length) {
-                var itemPath = WM.pasteBoard[0].replace(/\/[^\/]+$/, '/');
-                if ($folder.attr('path') != itemPath) {
-                    $folder.find('> span').click();
-                    if (e.ctrlKey || e.metaKey) { $finder.find('li.to_cut').removeClass('to_cut'); }
-                    $('#pasteItems').click();
-                }
-            } else if (ui.helper.hasClass('tcimage')) {
-                // save tomcat image
-                ui.draggable.click();
-                $(this).click();
-                $('#save').click();
-            } else {
-                var folder_to_move = ui.helper.find('li.folder').attr('path');
-                var move_to = $folder.attr('path');
-                var action = (e.ctrlKey || e.metaKey) ? 'copy' : 'move';
-
-                // check if moving files to same folder
-                if (move_to == folder_to_move.replace(/[^\/]+\/$/, '')) { return false; }
-
-                $.ajax({
-                    url: 'scripts/fileCopy',
-                    data: {
-                        files: [folder_to_move],
-                        toDir: move_to,
-                        action: action
-                    },
-                    success: function(data) {
-                        loadFiles(move_to);
-                    }
-                });
-            }
-        }
-    });
-
-    /*
-    // this takes a lot of time and isn't very functional
-    console.time('set files selectable');
-    $finder.find('li.folder > ul').selectable({
-        start: function(e, ui) {
-            if (!(e.ctrlKey || e.metaKey || e.shiftKey)) {
-                // unselect other files if ctrl/cmd/shift NOT held down
-                $('li.file.selected').removeClass('selected');
-            }
-        },
-        selecting: function(event, ui) {
-            $(ui.selecting).filter('li.file').addClass('selected');
-            updateSelectedFiles();
-        },
-        distance: 1
-    });
-    console.timeEnd('set files selectable');
-    */
-
-    console.timeEnd('finderFunctions()');
 }
 
 function autoLoadTem(theTem, theLines) {

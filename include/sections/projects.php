@@ -9,8 +9,10 @@
          that you don't own to read-only, you will need to ask the owner to 
          reinstate your permissions.</p>
          
-         <p id="total_space">Your project list is loading. This will take 5-30 seconds, 
+    <p id="total_space">Your project list is loading. This will take 5-30 seconds, 
          depending on the size of your account.</p>
+    
+    <input type="search" id="projectsearchbar" name="projectsearchbar" placeholder="Search for a project">
 
     <table id='project_list'>
         <thead><tr><th></th><th>Project</th><th>Description</th><th>Files</th><th>Owners</th></tr></thead>

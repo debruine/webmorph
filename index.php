@@ -14,7 +14,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . '/include/main_func.php';
     <!--<meta name='verify-v1' content='oCEvWF1olBQ+/+nyyAZfRnSeVVGeEVlD0Qw8aHTRvAU=' />-->
     <meta property='og:site_name' content='WebMorph'/>
     <meta property='og:image' content='/include/images/logo.png'/>
-    <meta name="viewport" id="vp" content="initial-scale=1.0,user-scalable=no,maximum-scale=1" media="(device-height: 568px)" />
+    <meta name="viewport" id="vp" content="initial-scale=1.0,user-scalable=no,maximum-scale=1" />
     <meta name='apple-mobile-web-app-capable' content='yes' />
     <link rel='apple-touch-startup-image' href='/include/images/logo.png' />
     <link rel='apple-touch-startup-image' sizes='640x920' href='/include/images/logo@2x.png' />
@@ -70,7 +70,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . '/include/main_func.php';
 </div><!-- /content -->
 
 <div data-role='footer'>
-    <footer id='footer' data-persistent=''></footer>
+    <footer id='footer'><span id='footer-text' data-persistent=''></span><span id='imgname'></span></footer>
 </div>
 
 </div><!-- /page -->
@@ -79,6 +79,8 @@ require_once $_SERVER['DOCUMENT_ROOT'] . '/include/main_func.php';
 
 <script src='<?= JQUERY ?>'></script> 
 <script src='<?= JQUERYUI ?>'></script>
+<script src='/include/js/jquery/jquery-finger-0.1.2.js'></script>
+<script src='/include/js/jquery/jquery.ui.touch-punch.min.js'></script>
 <script src='/include/js/psychomorph/vars.js'></script>
 <?php if (LOGGEDIN) echo "<script>WM.user.id = {$_SESSION['user_id']};</script>\n"; ?>
 
