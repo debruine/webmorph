@@ -757,6 +757,7 @@ function finder(dir) { console.log('finder(' + (dir == undefined ? '' : dir) + '
         }
         
         if (addTem === true) {
+            $theFile.addClass('hasTem');
             this.addFile(project_id + subdir + shortName + '.tem');
         }
         

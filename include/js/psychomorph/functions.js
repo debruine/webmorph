@@ -454,6 +454,8 @@ function interfaceChange(e) {
         $('#recent_creations').hide();
         if ($finder.html() == '') { loadFiles(); }
         $finder.find('li.file').show().filter('ui-draggable').draggable('option', 'containment', '#finder');
+        $finder.find('li.folder.ui-draggable').draggable('enable');
+        console.log('fc');
     } else if (appWindow == 'delineate') {
         $('#recent_creations').hide();
     } else if (appWindow == 'average') {
@@ -462,6 +464,7 @@ function interfaceChange(e) {
         $('#individual_image_box').insertAfter($('#avg_image_box')).css("padding-left", padwidth);
         $finder.appendTo($('#individual_image_box'));
         $finder.find('li.file').hide().filter('.image.hasTem').show().filter('.ui-draggable').draggable('option', 'containment', 'window');
+        $finder.find('li.folder.ui-draggable').draggable('disable');
         $('#recent_creations').insertAfter($('#individual_image_box')).show();
         $('#view-average-button, #save-button').button({ disabled: true });
         checkAvgAbility();
@@ -472,6 +475,7 @@ function interfaceChange(e) {
         $('#individual_image_box').insertAfter($('#continua')).css("padding-left", padwidth);
         $finder.appendTo($('#individual_image_box'));
         $finder.find('li.file').filter('.image.hasTem').show().filter('.ui-draggable').draggable('option', 'containment', 'window');
+        $finder.find('li.folder.ui-draggable').draggable('disable');
         $('#recent_creations').insertAfter($('#individual_image_box')).show();
         $('#transButton, #trans-save-button').button({ disabled: true });
         checkTransAbility();
