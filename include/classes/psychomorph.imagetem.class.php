@@ -511,15 +511,18 @@ class PsychoMorph_ImageTem {
 
         // make a mirrored image
         $clone = clone $this;
+        $cloneName = IMAGEBASEDIR . $project_id . '/.tmp/clone_' . time() . $ext;
+        if ($clone->save($cloneName)) {
+            $cloneURL = str_replace(IMAGEBASEDIR . $project_id, '', $cloneName);
+            unset($clone);
+        }
+        
         $mirror = clone $this;
         $mirror->mirror($sym);
         $mirrorName = IMAGEBASEDIR . $project_id . '/.tmp/mirror_' . time() . $ext;
-        $cloneName = IMAGEBASEDIR . $project_id . '/.tmp/clone_' . time() . $ext;
-        if ($mirror->save($mirrorName) && $clone->save($cloneName)) {
+        if ($mirror->save($mirrorName)) {
             $mirrorURL = str_replace(IMAGEBASEDIR . $project_id, '', $mirrorName);
-            $cloneURL = str_replace(IMAGEBASEDIR . $project_id, '', $cloneName);
             unset($mirror);
-            unset($clone);
         } else {
             return false;
         }
