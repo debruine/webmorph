@@ -1316,6 +1316,25 @@ button.unsaved {
 	box-shadow:0 0 4px rgba(0,0,0,0.5);
 }
 
+#lightTable { 
+    display:none;
+    height:450px;
+    padding: 0;
+}
+#lightTable div { 
+    padding-top: 150px;
+    text-align:center;
+    width:100%;
+}
+
+#lightTable img {
+    box-shadow:0 0 4px rgba(0,0,0,0.5);
+    width: auto;
+    height:200px;
+    float: left;
+    margin: 5px;
+}
+
 #uploadbar {
 	position:absolute;
 	top:-100px;
@@ -1355,6 +1374,12 @@ button.unsaved {
 	background-repeat:no-repeat;
 	background-size:auto 1.1em,auto auto;
 	color:hsl(200,0%,100%);
+    -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none;   /* Chrome/Safari/Opera */
+    -khtml-user-select: none;    /* Konqueror */
+    -moz-user-select: none;      /* Firefox */
+    -ms-user-select: none;       /* Internet Explorer/Edge */
+    user-select: none; 
 }
 
 #finder li.folder.closed {

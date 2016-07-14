@@ -141,6 +141,11 @@
                 title="">
                 Icon View
             </li>
+            <li class='finder' id='toggle_lightTable'
+                title="Show or hide the Light Table">
+                <span class="checkmark">&nbsp;</span>
+                Light Table
+            </li>
             <li class='finder average transform' id='toggletrash'
                 title="Show or hide the Trash folder">
                 <span class="checkmark">&nbsp;</span>

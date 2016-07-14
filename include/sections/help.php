@@ -1,6 +1,11 @@
 <!-- !- what's new Dialog -->
 <div id='whatsnewDialog' class='modal' title='What&apos;s New?'>
     <dl>
+        <dt>(2016-07-14) Light Table</dt>
+        <dd>You can trun on the Light Table under the View menu to compare 
+        images dragged onto the Light Table. Double-click on images to remove 
+        them.</dd>
+        
         <dt>(2016-06-11) Touch Compatability</dt>
         <dd>WebMorph is now more compatible with touch devices. Let me know 
         if there is anything you can't do on a touch device.</dd>

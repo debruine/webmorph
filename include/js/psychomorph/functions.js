@@ -453,7 +453,7 @@ function interfaceChange(e) {
         $finder.insertAfter($('#uploadbar'));
         $('#recent_creations').hide();
         if ($finder.html() == '') { loadFiles(); }
-        $finder.find('li.file').show().filter('ui-draggable').draggable('option', 'containment', '#finder');
+        $finder.find('li.file').show().filter('ui-draggable').draggable('option', 'containment', 'window'); // '#finder');
         $finder.find('li.folder.ui-draggable').draggable('enable');
         console.log('fc');
     } else if (appWindow == 'delineate') {

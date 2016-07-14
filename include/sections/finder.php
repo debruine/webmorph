@@ -42,4 +42,6 @@
     <span id="finderpath"></span>
 
     <div id='finder' path='finder'></div>
+    
+    <div id='lightTable'><div>Drag images here to view or compare them.<br>Drag images to reorder and double-click to remove them.</div></div>
 </div>
