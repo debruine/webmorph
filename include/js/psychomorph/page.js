@@ -2225,6 +2225,10 @@ $('#batchModDelin').not('.disabled').click(function() {
 $('#fmButtons').on('click', 'li', function() {
     $('#fm_name').val($(this).text());
     $('#fm_equation').val($(this).attr('data-equation'));
+}).sortable({
+    items: 'li',
+    scope: 'fm',
+    containment: '#facialmetricEQ'
 });
 $('#fm_delete').droppable({
     drop: function( event, ui ) {

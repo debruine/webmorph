@@ -2,7 +2,7 @@
 <div id='whatsnewDialog' class='modal' title='What&apos;s New?'>
     <dl>
         <dt>(2016-07-14) Light Table</dt>
-        <dd>You can trun on the Light Table under the View menu to compare 
+        <dd>You can turn on the Light Table under the View menu to compare 
         images dragged onto the Light Table. Double-click on images to remove 
         them.</dd>
         

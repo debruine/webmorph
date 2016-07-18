@@ -293,18 +293,13 @@ function prefGet(callback) {  console.time('prefGet()');
             + '</style>').appendTo('head');
 
             // fm equations
-            $('#fmButtons li').not('#fm_new, #fm_eyes, #fm_FWH').remove();    // clear all user equations
+            $('#fmButtons li').not('#fm_eyes, #fm_FWH').remove();    // clear all user equations
             $.each(data.fm, function(i, f) {
                 var $newEQ = $('<li/>').attr({
                     'title': f.description,
                     'data-equation': f.equation,
                 }).text(f.name);
-                $('#fm_new').before($newEQ);
-            });
-            $('#fmButtons').sortable({
-                items: 'li:not(#fm_new)',
-                scope: 'fm',
-                containment: '#facialmetricEQ'
+                $('#fmButtons').append($newEQ);
             });
 
             if (data.prefs.pca == 1) {
