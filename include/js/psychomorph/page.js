@@ -247,6 +247,11 @@ $('#project_list').on('click', '.go_to_project', function() {
     $.xhrPool.abortAll();
     proj_id = $(this).closest('tr').data('id');
     projectSet(proj_id);
+}).on('click', '.delete_project', function() {
+    var proj_id;
+
+    proj_id = $(this).closest('tr').data('id');
+    projectDelete(proj_id);
 }).on('click', 'tr[data-perm=all] .projectOwnerDelete', function() {
     var proj_id;
 

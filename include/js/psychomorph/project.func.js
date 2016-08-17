@@ -13,12 +13,16 @@ function projectList() { console.time('projectList()');
             // add projects
             $('#default_project').html('');
             $('#currentProject').html('');
+            
+            $('#project_list tr').addClass('old');
+            
             $.each(data.projects, function(i, p) {
                 var $opt,
                     $menuopt,
                     owners,
                     tr,
-                    td;
+                    td
+                    delProj = '';
 
                 $opt = $('<option />').val(p.id)
                                       .html(p.name)
@@ -67,7 +71,8 @@ function projectList() { console.time('projectList()');
                 tr = $('tr[data-id=' + p.id + ']');
 
                 if (tr.length == 0) {
-                    tr = '<tr data-id="' + p.id + '" data-perm="' + p.perm + '"><td><span class="go_to_project tinybutton">Go</span>'
+                    tr = '<tr data-id="' + p.id + '" data-perm="' + p.perm + '" data-owner="' + p.user_id + '">'
+                             + '<td><span class="go_to_project tinybutton">Go</span>'
                              + '</td><td>' + p.name
                              + '</td><td>' + p.notes
                              + '</td><td><img src="/include/images/menu/queue_loading.svg" />'
@@ -75,12 +80,16 @@ function projectList() { console.time('projectList()');
                     $('#project_list tbody').append(tr);
                 } else {
                     tr.attr('data-perm', p.perm);
+                    tr.attr('data-owner', p.user_id);
                     td = tr.find('td');
                     td.eq(1).html(p.name);
                     td.eq(2).html(p.notes);
                     td.eq(4).html(owners);
+                    tr.removeClass('old');
                 }
             });
+            
+            $('#project_list tr.old').remove();
             $('#project_list').show().stripe();
 
             WM.user.accountSize = 0;
@@ -107,6 +116,10 @@ function projectList() { console.time('projectList()');
             $('input.projectOwnerAdd').closest('li').remove();
             $('tr[data-perm=all] ul.project_owners').append('<li><input class="projectOwnerAdd" '
                                         + 'placeholder="Type Name to Add" /></li>');
+            
+            // add delete project button where user is the owner and has all permissions
+            $('span.delete_project').remove();                            
+            $('tr[data-perm=all][data-owner='+WM.user.id+'] span.go_to_project').after('<span class="delete_project tinybutton" title="Delete Project">-</span>');
 
             $('.projectOwnerAdd').autocomplete({
                 source: userlist,
@@ -258,6 +271,34 @@ function projectNew() {
     });
 }
 
+function projectDelete(proj_id) {
+    $('<div />').html('Are you sure you want to delete this project? This is permanent.').dialog({
+        title: 'Delete Project',
+        buttons: {
+            Cancel: function() {
+                $(this).dialog("close");
+            },
+            'Delete': {
+                text: 'Delete',
+                click: function() {
+                    $(this).dialog("close");
+
+                    $.ajax({
+                        url: 'scripts/projDelete',
+                        data: { proj_id: proj_id},
+                        success: function(data) {
+                            if (data.error) {
+                                $('<div title="Error Deleting Project" />').html(data.errorText).dialog();
+                            } else {
+                                projectList();
+                            }
+                        }
+                    });
+                }
+            }
+        }
+    });
+}
 
 
 function projectEdit(td, category) {

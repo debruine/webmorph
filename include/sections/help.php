@@ -1,6 +1,10 @@
 <!-- !- what's new Dialog -->
 <div id='whatsnewDialog' class='modal' title='What&apos;s New?'>
     <dl>
+        <dt>(2016-08-17) Delet Projects</dt>
+        <dd>You can now delete projects if you are the owner. Please be careful; 
+        it is not easy to undelete projects.</dd>
+        
         <dt>(2016-07-14) Light Table</dt>
         <dd>You can turn on the Light Table under the View menu to compare 
         images dragged onto the Light Table. Double-click on images to remove 
