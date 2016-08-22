@@ -31,6 +31,7 @@ function empty_trash($deletedir) {
 if (projectPerm($_POST['project'])) {
     empty_trash(IMAGEBASEDIR . $_POST['project'] . '/.trash');
     empty_trash(IMAGEBASEDIR . $_POST['project'] . '/.tmp');
+    updateDirMod();
 } else {
     $return['error'] = true;
     $return['errorText'] = "You do not have permission to delete files in this project.";

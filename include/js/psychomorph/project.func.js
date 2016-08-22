@@ -71,12 +71,14 @@ function projectList() { console.time('projectList()');
                 tr = $('tr[data-id=' + p.id + ']');
 
                 if (tr.length == 0) {
-                    tr = '<tr data-id="' + p.id + '" data-perm="' + p.perm + '" data-owner="' + p.user_id + '">'
-                             + '<td><span class="go_to_project tinybutton">Go</span>'
+                    tr = $('<tr data-id="' + p.id + '" data-perm="' + p.perm + '" data-owner="' + p.user_id + '" />');
+                    tr.html(   '<td><span class="go_to_project tinybutton">Go</span>'
                              + '</td><td>' + p.name
                              + '</td><td>' + p.notes
                              + '</td><td><img src="/include/images/menu/queue_loading.svg" />'
-                             + '</td><td>' + owners + '</td></tr>';
+                             + '</td><td>' + owners + '</td>'
+                    );
+                             
                     $('#project_list tbody').append(tr);
                 } else {
                     tr.attr('data-perm', p.perm);
@@ -87,6 +89,14 @@ function projectList() { console.time('projectList()');
                     td.eq(4).html(owners);
                     tr.removeClass('old');
                 }
+                
+                if (p.hasOwnProperty('size')) {
+                    tr.data('filemtime', p.filemtime);
+                    tr.data('files', p.files);
+                    tr.data('tmp', p.tmp);
+                    tr.data('size', p.size);
+                    tr.data('mysize', p.mysize);
+                }
             });
             
             $('#project_list tr.old').remove();
@@ -95,7 +105,8 @@ function projectList() { console.time('projectList()');
             WM.user.accountSize = 0;
             if (WM.appWindow == 'project') {
                 $.each(data.projects, function(i, p) {
-                    if (p.filemtime == $('tr[data-id=' + p.id + ']').data('filemtime')) {
+                    //if (p.filemtime == $('tr[data-id=' + p.id + ']').data('filemtime')) {
+                    if (p.hasOwnProperty('size')) {
                         projectSizeUpdate(p.id, data.userAllocation.allocation);
                     } else {
                         projectSizeGet(p.id, data.userAllocation.allocation);
@@ -196,7 +207,7 @@ function projectSet(id, appWindow) {
 
 function projectSizeGet(proj_id, alloc) {
     $.ajax({
-        url: '    scripts/projSizeGet',
+        url: 'scripts/projSizeGet',
         type: 'POST',
         data: {
             proj_id: proj_id

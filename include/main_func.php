@@ -353,6 +353,11 @@
         return true;
     }
     
+    // update filemtime for entire project
+    function updateDirMod() {
+        touch(IMAGEBASEDIR . $_SESSION['project_id']);
+    }
+    
     // rotate an array
     function rotate_array($array) {
         $rotated_array = array();

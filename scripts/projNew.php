@@ -64,6 +64,9 @@ CREATE TABLE project (
     name VARCHAR(32) NOT NULL,
     notes TEXT,
     dt DATETIME,
+    filemtime INT(10),
+    files INT(8),
+    size BIGINT,
     PRIMARY KEY (id)
 );
 
@@ -89,12 +92,20 @@ DELETE FROM project_user;
 
 INSERT INTO project_user SELECT id, id FROM user;
 
+// update pref and img tables for projects
+
 REPLACE INTO pref SELECT id, 'default_project', id FROM user;
 
 ALTER TABLE img ADD COLUMN project_id INT(11) AFTER dt;
 UPDATE img SET project_id = user_id;
 DROP index name ON img;
 CREATE UNIQUE INDEX project_name ON img(project_id, name);
+
+// added project size variables 2016-09-22
+
+ALTER TABLE project ADD filemtime INT(10);
+ALTER TABLE project ADD files INT(8);
+ALTER TABLE project ADD size BIGINT;
 
 */
 

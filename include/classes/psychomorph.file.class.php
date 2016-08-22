@@ -46,20 +46,26 @@ class PsychoMorph_File {
     }
     
     public function getURL() {
-        $pattern = '@^' . IMAGEBASEDIR . '@';
+        $pattern = '@^' . (IMAGEBASEDIR) . '@';
         return preg_replace($pattern, '', $this->_path);
+    }
+    
+    public function getProject() {
+        $pattern = '@^' . (IMAGEBASEDIR) . '(\d+)/.+@';
+        preg_match($pattern, $this->_path, $output);
+        return $output[1];
     }
     
     public function getUserPath() {
         // users shouldn't see the path structure below their user directory
-        $pattern = '@^' . IMAGEBASEDIR . '@';
+        $pattern = '@^' . (IMAGEBASEDIR) . '@';
         return preg_replace($pattern, '', $this->_path);
     }
     
     private function _validateFilePath($name) {
         // handle several different versions of file paths
         $filename     = '/([^?;:{}/]+/)*[^?;:{}/]+(\.(gif|png|jpg|tem))?$@';
-        $withroot     = '@^' . IMAGEBASEDIR .'\d{1,11}' . $filename;
+        $withroot     = '@^' . (IMAGEBASEDIR) .'\d{1,11}' . $filename;
         $upload        = '@^/private/var/tmp' . $filename;
         $upload2    = '@^/tmp' . $filename;
         $noroot     = '@^\d{1,11}' . $filename;

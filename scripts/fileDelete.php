@@ -60,6 +60,8 @@ if (count($_POST['files']) < 1) {
             }
         }
     }
+    
+    updateDirMod();
 }
 
 scriptReturn($return);

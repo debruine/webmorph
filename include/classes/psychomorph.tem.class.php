@@ -331,7 +331,8 @@ class PsychoMorph_Tem extends PsychoMorph_File {
             return false;
         }
         
-        chmod($filepath, IMGPERMS);                        // make sure only web user can access                    
+        chmod($filepath, IMGPERMS);                // make sure only web user can access
+        touch(IMAGEBASEDIR . $this->getProject()); // update filemtime for the project directory
         
         return true;
     }

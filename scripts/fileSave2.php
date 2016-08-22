@@ -108,6 +108,7 @@ if (file_exists(IMAGEBASEDIR . $newFileName)) {
     $return['error'] = false;
 } else if (in_array($ext, array('txt', 'csv', 'pci', 'pca'))) {
     rename($tmp_name, IMAGEBASEDIR . $newFileName);
+    updateDirMod();
     $return['error'] = false;
 } else {
     $return['error'] = true;

@@ -769,7 +769,8 @@ class PsychoMorph_Image extends PsychoMorph_File {
         }
         
         if ($success) {
-            chmod($filepath, IMGPERMS);            // make sure the file is nly readable by the web user
+            chmod($filepath, IMGPERMS);            // make sure the file is only readable by the web user
+            touch(IMAGEBASEDIR . $this->getProject()); // update filemtime for the project directory
             $this->_setPath($filepath);
             $this->_nextImg();                // add to or update img table
             

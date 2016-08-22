@@ -1,7 +1,11 @@
 <!-- !- what's new Dialog -->
 <div id='whatsnewDialog' class='modal' title='What&apos;s New?'>
     <dl>
-        <dt>(2016-08-17) Delet Projects</dt>
+        <dt>(2016-08-22) Project size listing</dt>
+        <dd>I updated how the project sizes load so that initial loading of the 
+        project list is faster.</dd>
+        
+        <dt>(2016-08-17) Delete Projects</dt>
         <dd>You can now delete projects if you are the owner. Please be careful; 
         it is not easy to undelete projects.</dd>
         
