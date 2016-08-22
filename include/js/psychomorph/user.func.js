@@ -62,6 +62,7 @@ function userRegister(e) {
                 email: $('#login_email').val(),
                 //password: $('#login_password').val(),
                 invite: $('#login_auth').val(),
+                reason: $('#reg_reason').val(),
                 //login_keep: $('#login_keep').prop('checked'),
                 firstname: $('#reg_firstname').val(),
                 lastname: $('#reg_lastname').val(),
@@ -95,10 +96,12 @@ function userRegister(e) {
         var $la = $('#login_auth').closest('tr');
         if (e.ctrlKey || e.metaKey) {
             $la.show();
+            $('#reg_reason').hide().val('');
             $('#loginBox thead th').html('Register for an Account');
             $('#register-button').button('option', 'label', 'Register');
         } else {
             $la.hide();
+            $('#reg_reason').show();
             $('#loginBox thead th').html('Request an Account');
             $('#register-button').button('option', 'label', 'Request Account');
         }

@@ -615,6 +615,12 @@ p.msg {
 	display:none;
 }
 
+#reg_reason {
+    float: right;
+    width: 70%;
+    height: 6em;
+}
+
 #introLinks {
 	font-size:.80em;
 	text-align:center;

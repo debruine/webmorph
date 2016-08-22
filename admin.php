@@ -48,11 +48,14 @@ if ($_SESSION['user_id'] != 1) {
 <?php
     $q = new myQuery('SELECT user.id as ID, 
                              CONCAT(lastname, ", ", firstname) as Name, 
-                             email as Email,
+                             IF(status+0<3, CONCAT(email, "<br><span class=\'smallnote\'>",reason,"</span>"), email) as Email,
                              status,
                              DATE(regdate) as "Date Registered",
+                             ROUND(SUM(size)/1024/1024/1024, 1) as "Size (GB)",
                              IF(status+0<3, "<span class=\"tinybutton\">AUTH</span>", "<span class=\"tinybutton\">DE-AUTH</span>") as Authorise
                       FROM user
+                      LEFT JOIN project ON user.id=project.user_id
+                      GROUP BY user.id
                       ORDER BY status+0, regdate');
                 echo $q->get_result_as_table();
 ?>

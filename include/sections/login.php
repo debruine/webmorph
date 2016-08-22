@@ -16,7 +16,7 @@
                 <td><label for='login_password'>password</label></td>
                 <td><input type='password' id='login_password' /></td>
             </tr>
-            <tr class='reg_item' title='Access to WebMorph is currently restricted. Ask Lisa for an invite code if you would like to be an alpha tester.'>
+            <tr class='reg_item' title='Access to WebMorph is currently restricted. Ask Lisa for an invite code if you would like to be a beta tester.'>
                 <td><label for='login_auth'>invite code</label></td>
                 <td><input type='text' id='login_auth' /></td>
             </tr>
@@ -50,6 +50,7 @@
             <tr class='reg_item'>
                 <td><label for='reg_use'>I plan to use WebMorph for</label></td>
                 <td><div id='reg_use'>
+                    <textarea id='reg_reason' placeholder='Explain why you want to use WebMorph. Accounts will be allocated based on this.'></textarea>
                     <input type='checkbox' id='reg_use_research' name='reg_use_research' value='research' />
                     <label for='reg_use_research'>research</label><br>
                     <input type='checkbox' id='reg_use_school' name='reg_use_school' value='school' />
@@ -114,7 +115,7 @@
         open-source Java library <a href="http://users.aber.ac.uk/bpt/jpsychomorph/version6/javadoc/">FaceMorphLib</a> 
         and is developed and maintained by <a href="http://facelab.org/debruine/">Lisa DeBruine</a>.</p>
     
-    <p>WebMorph is currently in alpha testing and is likely to remain so for some time. 
+    <p>WebMorph is currently in beta testing and is likely to remain so for some time. 
         This means that there will be bugs and you cannot rely on the website being functional 
         100% of the time. Lisa will try to fix any problems as fast as possible, but she is the 
         only person working on this project, so please be patient. If you're curious about the 

@@ -39,10 +39,11 @@ if (empty($email)) {
         $school = ($_POST['school'] == 'true') ? 1 : 0;
         $art = ($_POST['art'] == 'true') ? 1 : 0;
         $status = ($_POST['invite'] === 'faces94') ? 'user' : 'requested';
+        $reason = my_clean($_POST['reason']);
                     
         $q = new myQuery("INSERT INTO user 
-            (email, password, firstname, lastname, organisation, sex, research, business, personal, art, school, status, regdate) 
-            VALUES ('$email', '$hash', '$firstname', '$lastname', '$org', '$sex', $research, $business, $personal, $art, $school, '$status', NOW())");
+            (email, password, firstname, lastname, organisation, sex, research, business, personal, art, school, status, reason, regdate) 
+            VALUES ('$email', '$hash', '$firstname', '$lastname', '$org', '$sex', $research, $business, $personal, $art, $school, '$status', '$reason', NOW())");
         
         date_default_timezone_set('Europe/London');
         include DOC_ROOT . '/include/classes/PHPMailer/PHPMailerAutoload.php';
@@ -55,7 +56,7 @@ if (empty($email)) {
                         "<p>Hi $firstname $lastname,</p>\n" .
                         "<p>You (or someone) just created an account at <a href='http://webmorph.org'>WebMorph</a>.</p>\n" .
                         "<p>You will receive an email with your password when your account is authorized. 
-                        Because WebMorph is in alpha testing, we are limiting the number of users. 
+                        Because WebMorph is in beta testing, we are limiting the number of users. 
                         You are number {$wait_list} on the wait list.</p>\n" .
                         "<p>Kind regards,</p>\n" .
                         "<p>Lisa DeBruine</p>\n" .
@@ -63,7 +64,7 @@ if (empty($email)) {
         
             $text_message = "Hi  $firstname $lastname,\n" .
                         "You (or someone) just created an account at <a href='http://webmorph.org'>WebMorph</a>.\n\n" .
-                        "You will receive an email with your password when your account is authorized. Because WebMorph is in alpha testing, we are limiting the number of users. You are number {$wait_list} on the wait list.\n" .
+                        "You will receive an email with your password when your account is authorized. Because WebMorph is in beta testing, we are limiting the number of users. You are number {$wait_list} on the wait list.\n" .
                         "Kind regards,\n" .
                         "Lisa DeBruine\n.";            
         } else {

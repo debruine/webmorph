@@ -156,8 +156,7 @@ echo '<pre>' .  $img->getTem()->printTem() . '</pre>';
 
 echo "<h3>Users</h3>";
 
-$q = new myQuery(array('CREATE TEMPORARY TABLE tmp_users 
-				SELECT user.id, 
+$q = new myQuery(array('CREATE TEMPORARY TABLE tmp_users SELECT user.id, 
 				    IF((lastname = "" OR lastname IS NULL), email, CONCAT(lastname, ", ", firstname)) as user, 
 					MAX(logintime) as last_login,
 					COUNT(*) as logins
@@ -168,53 +167,8 @@ $q = new myQuery(array('CREATE TEMPORARY TABLE tmp_users
 				LEFT JOIN img ON tmp_users.id=img.user_id
 				GROUP BY tmp_users.id
 				ORDER BY last_login DESC;'));
-echo '<div id="usertable">' . $q->get_result_as_table() . '</div>';
+echo '<div id="usertabley">' . $q->get_result_as_table() . '</div>';
 
-echo "<h3>My Image Base Dir</h3>";
-
-class VisibleOnlyFilter extends RecursiveFilterIterator
-{
-    public function accept()
-    {
-        $fileName = $this->getInnerIterator()->current()->getFileName();
-        $firstChar = $fileName[0];
-        return $firstChar !== '.';
-    }
-}
-
-class FilesOnlyFilter extends RecursiveFilterIterator
-{
-    public function accept()
-    {
-        $iterator = $this->getInnerIterator();
-
-        // allow traversal
-        if ($iterator->hasChildren()) {
-            return true;
-        }
-
-        // filter entries, only allow true files
-        return $iterator->current()->isFile();
-    }
-}
-
-$fileinfos = new RecursiveIteratorIterator(
-    new FilesOnlyFilter(
-        new VisibleOnlyFilter(
-            new RecursiveDirectoryIterator(
-                IMAGEBASEDIR,
-                FilesystemIterator::SKIP_DOTS
-                    | FilesystemIterator::UNIX_PATHS
-            )
-        )
-    ),
-    RecursiveIteratorIterator::LEAVES_ONLY,
-    RecursiveIteratorIterator::CATCH_GET_CHILD
-);
-
-foreach ($fileinfos as $pathname => $fileinfo) {
-    //echo $fileinfos->getSubPathname(), "<br>";
-}
 
 /*
 echo "<h3>My Tmp Dir</h3>";

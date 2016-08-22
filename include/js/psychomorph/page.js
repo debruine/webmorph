@@ -1627,9 +1627,9 @@ $('#deleteItems').not('.disabled').click(function() {
         }
     }
 });
-// !#debug
-$('#debug').click(function() {
-    window.open("/debug/");
+// !#admin
+$('#admin').click(function() {
+    window.open("/admin");
 });
 
 // !#newProject
