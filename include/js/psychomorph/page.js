@@ -18,30 +18,58 @@ $(document).on('contextmenu', '#finder *, #delin', function(e) {
 
     item_info = [
         {
+            name: 'Download Tem PNG',
+            func: function() {
+                temSVG(true, 'plus', false, 'png');
+                $('.context_menu').remove();
+            }
+        },
+        {
+            name: 'Download Lines PNG',
+            func: function() {
+                temSVG(true, false, false, 'png');
+                $('.context_menu').remove();
+            }
+        },
+        {
+            name: 'Download Points PNG',
+            func: function() {
+                temSVG(false, 'circle', false, 'png');
+                $('.context_menu').remove();
+            }
+        },
+        {
+            name: 'Download Numbered PNG',
+            func: function() {
+                temSVG(true, 'numbers', false), 'png';
+                $('.context_menu').remove();
+            }
+        },
+        {
             name: 'Download Tem SVG',
             func: function() {
-                temSVG(true, 'plus', false);
+                temSVG(true, 'plus', false, 'svg');
                 $('.context_menu').remove();
             }
         },
         {
             name: 'Download Lines SVG',
             func: function() {
-                temSVG(true, false, false);
+                temSVG(true, false, false, 'svg');
                 $('.context_menu').remove();
             }
         },
         {
             name: 'Download Points SVG',
             func: function() {
-                temSVG(false, 'circle', false);
+                temSVG(false, 'circle', false, 'svg');
                 $('.context_menu').remove();
             }
         },
         {
             name: 'Download Numbered SVG',
             func: function() {
-                temSVG(true, 'numbers', false);
+                temSVG(true, 'numbers', false), 'svg';
                 $('.context_menu').remove();
             }
         }

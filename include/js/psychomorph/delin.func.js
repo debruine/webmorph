@@ -450,8 +450,9 @@ function drawBezier(ctx, v, begin) {
             cp = cp.concat(getControlPoints(pts[j], pts[j + 1], pts[j + 2], pts[j + 3], pts[j + 4], pts[j + 5]));
         }
         cp = cp.concat(cp[0], cp[1]);
+        ctx.moveTo(pts[2], pts[3]);
         for (j = 2; j < n + 2; j += 2) {
-            ctx.moveTo(pts[j], pts[j + 1]);
+            //ctx.moveTo(pts[j], pts[j + 1]);
             ctx.bezierCurveTo(cp[2 * j - 2], cp[2 * j - 1], cp[2 * j], cp[2 * j + 1], pts[j + 2], pts[j + 3]);
         }
     } else {
@@ -469,37 +470,55 @@ function drawBezier(ctx, v, begin) {
     ctx.stroke();
 }
 
-function svgBezier(v, lineWidth, stkColor) {
+function svgBezier(v, lineWidth, stkColor, lineName) {
     var pts = [],
         cp = [], // array of control points, as x0,y0,x1,y1,...
         n,
         j,
         ctx = {},
-        path = '    <path d="';
+        path = '';
+        
+    if (typeof lineName === 'undefined') { lineName = 'line'; }
+    
+    path = '    <path name="' + lineName + '"\n          d="';
 
     ctx = {
         moveTo: function(x, y) {
-            path += 'M' + x + ' ' + y;
+            x = round(x, 2);
+            y = round(y, 2);
+            path += 'M ' + x + ' ' + y;
         },
         lineTo: function(x, y) {
-            path += ' L ' + x + ' ' + y;
+            x = round(x, 2);
+            y = round(y, 2);
+            path += '\n             L ' + x + ' ' + y;
         },
         stroke: function() {
             if (typeof stkColor === 'undefined' && typeof lineWidth === 'undefined') {
-                path += '"/>';
+                path += '"\n    />';
             } else if (typeof lineWidth === 'undefined') {
-                path += '" stroke="' + stkColor + '"/>';
+                path += '"\n             stroke="' + stkColor + '"\n    />';
             } else if (typeof stkColor === 'undefined') {
-                path += '" stroke-width="' + lineWidth + '"/>';
+                path += '"\n             stroke-width="' + lineWidth + '"\n    />';
             } else {
-                path += '" stroke="' + stkColor + ' stroke-width="' + lineWidth + '"/>';
+                path += '"\n             stroke="' + stkColor + '\n             stroke-width="' + lineWidth + '"\n    />';
             }
         },
         quadraticCurveTo: function(x1, y1, x, y) {
-            path += ' Q ' + x1 + ' ' + y1 + ', ' + x + ' ' + y;
+            x1 = round(x1, 2);
+            y1 = round(y1, 2);
+            x = round(x, 2);
+            y = round(y, 2);
+            path += '\n             Q ' + x1 + ' ' + y1 + ', ' + x + ' ' + y;
         },
         bezierCurveTo: function(x1, y1, x2, y2, x, y) {
-            path += ' C ' + x1 + ' ' + y1 + ', ' + x2 + ' ' + y2 + ', ' + x + ' ' + y;
+            x1 = round(x1, 2);
+            y1 = round(y1, 2);
+            x2 = round(x2, 2);
+            y2 = round(y2, 2);
+            x = round(x, 2);
+            y = round(y, 2);
+            path += '\n             C ' + x1 + ' ' + y1 + ', ' + x2 + ' ' + y2 + ', ' + x + ' ' + y;
         }
     };
 
@@ -532,8 +551,9 @@ function svgBezier(v, lineWidth, stkColor) {
             cp = cp.concat(getControlPoints(pts[j], pts[j + 1], pts[j + 2], pts[j + 3], pts[j + 4], pts[j + 5]));
         }
         cp = cp.concat(cp[0], cp[1]);
+        ctx.moveTo(pts[2], pts[3]);
         for (j = 2; j < n + 2; j += 2) {
-            ctx.moveTo(pts[j], pts[j + 1]);
+            
             ctx.bezierCurveTo(cp[2 * j - 2], cp[2 * j - 1], cp[2 * j], cp[2 * j + 1], pts[j + 2], pts[j + 3]);
         }
     } else {
@@ -787,10 +807,12 @@ function drawTem() {
     });
 }
 
-function temSVG(lines, points, image) {
+function temSVG(lines, points, image, theType) {
     var nlines, i, j, x, y,
         defaultLineWidth,
         bez = [],
+        theLine,
+        lineName,
         npoints,
         lineWidth,
         stkColor,
@@ -815,14 +837,16 @@ function temSVG(lines, points, image) {
 
         nlines = WM.current.lines.length;
         for (i = 0; i < nlines; i++) {
+            theLine = WM.current.lines[i],
             bez = [],
             sel = 0,
             csel=0,
-            npoints = WM.current.lines[i].length;
+            npoints = theLine.length,
+            lineName = WM.delin.tem[theLine[0]].name + ' to ' + WM.delin.tem[theLine[npoints-1]].name;
 
             for (j = 0; j < npoints; j++) {
-                x = WM.current.tem[WM.current.lines[i][j]].x;
-                y = WM.current.tem[WM.current.lines[i][j]].y;
+                x = WM.current.tem[theLine[j]].x;
+                y = WM.current.tem[theLine[j]].y;
 
                 bez.push([x, y]);
             }
@@ -833,7 +857,7 @@ function temSVG(lines, points, image) {
             lineWidth = (typeof WM.delin.lineWidths[i]=='undefined' || WM.delin.lineWidths[i] == 'default') ?
                             undefined : WM.delin.lineWidths[i];
 
-            paths.push(svgBezier(bez, lineWidth, stkColor));
+            paths.push(svgBezier(bez, lineWidth, stkColor, lineName));
         }
 
         paths.push('</g>');
@@ -847,17 +871,17 @@ function temSVG(lines, points, image) {
         npoints = WM.current.tem.length;
 
         for (i = 0; i < npoints; i++) {
-            x = WM.current.tem[i].x;
-            y = WM.current.tem[i].y;
+            x = round(WM.current.tem[i].x, 2);
+            y = round(WM.current.tem[i].y, 2);
 
             if (points == 'circle') {
-                paths.push('    <circle id="pt' + i + '" name="' + WM.delin.tem[i].name + '" cx="' + x + '" cy="' + y + '" r="' + pointSize + '" />');
+                paths.push('    <circle id="pt' + i + '" name="' + WM.delin.tem[i].name + '"\n          cx="' + x + '" cy="' + y + '" r="' + pointSize + '" />');
             } else if (points == 'numbers') {
-                paths.push('    <circle id="pt' + i + '" name="' + WM.delin.tem[i].name + '" cx="' + x + '" cy="' + y + '" r="' + 1 + '" />');
+                paths.push('    <circle id="pt' + i + '" name="' + WM.delin.tem[i].name + '"\n          cx="' + x + '" cy="' + y + '" r="' + 1 + '" />');
 
             } else {
-                paths.push('    <line name="' + WM.delin.tem[i].name + '" x1="' + x + '" y1="' + (y-pointSize) + '" x2="' + x + '" y2="' + (y+pointSize) + '" />');
-                paths.push('    <line name="' + WM.delin.tem[i].name + '" x1="' + (x-pointSize) + '" y1="' + y + '" x2="' + (x+pointSize) + '" y2="' + y + '" />');
+                paths.push('    <line name="' + WM.delin.tem[i].name + '"\n          x1="' + x + '" y1="' + (y-pointSize) + '" x2="' + x + '" y2="' + (y+pointSize) + '" />');
+                paths.push('    <line name="' + WM.delin.tem[i].name + '"\n          x1="' + (x-pointSize) + '" y1="' + y + '" x2="' + (x+pointSize) + '" y2="' + y + '" />');
             }
         }
 
@@ -868,7 +892,7 @@ function temSVG(lines, points, image) {
             for (i = 0; i < npoints; i++) {
                 x = WM.current.tem[i].x;
                 y = WM.current.tem[i].y;
-                paths.push('    <text  id="n' + i + '" name="' + WM.delin.tem[i].name + '" x="' + x + '" y="' + y + '">' + i + '</text>');
+                paths.push('    <text  id="n' + i + '" name="' + WM.delin.tem[i].name + '"\n          x="' + x + '" y="' + y + '">' + i + '</text>');
             }
             paths.push('</g>');
         }
@@ -880,7 +904,8 @@ function temSVG(lines, points, image) {
     url = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(paths.join("\r\n"));
     postIt('scripts/temDownload', {
         img: WM.faceimg,
-        svg: paths.join("\r\n")
+        svg: paths.join("\r\n"),
+        type: theType
     });
 }
 
