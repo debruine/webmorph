@@ -5,10 +5,17 @@
 require_once $_SERVER['DOCUMENT_ROOT'] . '/include/main_func.php';
 auth();
 
+
+preg_match("/^\d{1,11}\//", $_POST['img'], $project);
+$project = str_replace('/', '', $project[0]);
+$userCanDownloadThisFile = in_array($project, $_SESSION['projects']); 
+
 $filename = pathinfo($_POST['img'], PATHINFO_FILENAME);
 $filename = ifEmpty($filename, "template") . '.svg';
 
-if ($_POST['type'] == 'png') {
+if (!$userCanDownloadThisFile) {
+    exit;
+} else if ($_POST['type'] == 'png') {
     $svg = base64_encode($_POST['svg']);
     echo "    
 <html><script>

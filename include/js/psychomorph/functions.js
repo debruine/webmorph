@@ -273,8 +273,33 @@ function bodySpinner() {
 }
 
 function rgbToArray(rgb) {
-    if (typeof rgb !== 'string') return [127,127,127];
-    return rgb.replace('rgb(', '').replace(')','').split(',');
+    var rgbarray = [127,127,127,255];
+    if (typeof rgb !== 'string') return rgbarray;
+    
+    rgbarray = rgb.replace('rgb(', '')
+                  .replace('rgba(', '')
+                  .replace(')', '')
+                  .split(',');
+    
+    if (rgbarray.length == 3) {
+        rgbarray.push(255);
+    } else if (rgbarray.length == 4) {
+        rgbarray[3] = rgbarray[3]*255;
+    }
+    
+    return rgbarray;
+}
+
+function array2rgb(arr) {
+    var rgb = 'rgba(127,127,127,1)';
+    
+    if (arr.length == 3) {
+        rgb = 'rgba(' + arr[0] + ',' + arr[1] + ',' + arr[2] + ', 1)';
+    } else if (arr.length == 4) {
+        rgb = 'rgba(' + arr[0] + ',' + arr[1] + ',' + arr[2] + ',' + round(arr[3]/255,2) + ')';
+    }
+    
+    return rgb;
 }
 
 /*

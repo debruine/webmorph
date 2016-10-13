@@ -804,6 +804,9 @@ function finder(dir) { console.log('finder(' + (dir == undefined ? '' : dir) + '
             } else if (ext == '.gif') {
                 theClass += ' gif image';
                 img = true;
+            } else if (ext == '.svg') {
+                theClass += ' svg image';
+                img = true;
             }
             shortName = url.replace(/^.*\//, '');
             $theFile = $('<li class="' + theClass + '" url="' + url + '"><span>' + shortName + '</span></li>');

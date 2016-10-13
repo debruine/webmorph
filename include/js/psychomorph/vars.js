@@ -40,7 +40,7 @@ var WM = {
     originalHeight : 400,
     originalWidth : 300,
     faceimg: "",
-
+    timer: null,
     showTem: true,
     delinfunc: 'move',
     symPts: [],

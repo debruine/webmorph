@@ -92,6 +92,33 @@ class PsychoMorph_File {
         return false;
     }
     
+    public function newPathFromArray($filepath) {
+        // create new directory if does not exist
+        $oldpath = $this->getPath();
+        $ext = pathinfo($oldpath, PATHINFO_EXTENSION);
+        $name = pathinfo($oldpath, PATHINFO_FILENAME);
+        
+        if (array_key_exists('name',$filepath)) $name = $filepath['name'];
+        if (in_array($filepath['ext'], array('jpg', 'gif', 'png', 'tem', 'svg'))) $ext = $filepath['ext'];
+        
+        $subfolder = safeFileName($filepath['subfolder']);
+        $prefix = str_replace('/', '_', safeFileName($filepath['prefix']));
+        $suffix = str_replace('/', '_', safeFileName($filepath['suffix']));
+        
+        $basedir = IMAGEBASEDIR . $subfolder . '/';
+        $basedir = str_replace('//', '/', $basedir);
+
+        if (!is_dir($basedir)) {
+            if (!mkdir($basedir, DIRPERMS, true)) {
+                //$return['errorText'] .= "The new directory <code>$subfolder</code> could not be created. ";
+                return false;
+            }
+        }
+        
+        $newpath = $basedir . $prefix . $name . $suffix . '.' . $ext;
+        return $this->_validateFilePath($newpath);
+    }
+    
     public function save($filepath = null, $overWrite = false) {
         // if filepath is empty, just save with original name,
         // if filepath is a string, check for overwrite and save with that name
@@ -100,30 +127,7 @@ class PsychoMorph_File {
         if (empty($filepath)) { 
             $filepath = $this->getPath(); 
         } else if (is_array($filepath)) {
-            // create new directory if does not exist
-            $oldpath = $this->getPath();
-            $ext = pathinfo($oldpath, PATHINFO_EXTENSION);
-            $name = pathinfo($oldpath, PATHINFO_FILENAME);
-            
-            if (array_key_exists('name',$filepath)) $name = $filepath['name'];
-            if (in_array($filepath['ext'], array('jpg', 'gif', 'png', 'tem'))) $ext = $filepath['ext'];
-            
-            $subfolder = safeFileName($filepath['subfolder']);
-            $prefix = str_replace('/', '_', safeFileName($filepath['prefix']));
-            $suffix = str_replace('/', '_', safeFileName($filepath['suffix']));
-            
-            $basedir = IMAGEBASEDIR . $subfolder . '/';
-            $basedir = str_replace('//', '/', $basedir);
-
-            if (!is_dir($basedir)) {
-                if (!mkdir($basedir, DIRPERMS, true)) {
-                    //$return['errorText'] .= "The new directory <code>$subfolder</code> could not be created. ";
-                    return false;
-                }
-            }
-            
-            $newpath = $basedir . $prefix . $name . $suffix . '.' . $ext;
-            $filepath = $this->_validateFilePath($newpath);
+            $filepath = $this->newPathFromArray($filepath);
 
             if (!$overWrite && is_file($filepath)) {
                 // path exists and $overWrite is not set to true

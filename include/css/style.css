@@ -577,6 +577,10 @@ p.msg {
 	display:none;
 }
 
+#delineateInterface {
+    padding-top: 2em;
+}
+
 #loadingInterface.interface {
 	display:block;
 	font-size:100px;
@@ -641,20 +645,43 @@ p.msg {
 #prefDialog-1 input[type=text],#prefDialog-1 input[type=password],
 #prefDialog-1 input[type=email],#loginBox input[type=text],
 #loginBox input[type=password],#loginBox input[type=email] {
-	width:30em;
+	width:255px;
 }
 
 #prefDialog table {
 	padding:0;
 }
 
-.hue_chooser,.rgb_chooser {
+.hue_chooser,.rgb_chooser,.rgba_chooser {
 	height:2em;
-	width:28em;
+	width:510px;
 	background-color:hsl(200,0%,40%);
 	background-size:contain!important;
 	background-position:center center;
 	background-repeat:repeat;
+}
+
+.rgba_chooser {
+    height: 2.67em;
+}
+
+.rgba_chooser_bg {
+    background-image: url(/include/images/bgpatterns/escheresque);
+    width:510px;
+}
+
+.rgba_text {
+    display: inline-block;
+    width: 13em;
+}
+
+#grid_line_color,
+#prefDialog .hue_chooser, 
+#prefDialog .rgb_chooser, 
+#prefDialog .rgba_chooser, 
+#prefDialog .rgba_chooser_bg {
+    width: 255px;
+    font-size: 100%;
 }
 
 .mask_color:not(#mask_color) {
@@ -662,29 +689,54 @@ p.msg {
 	margin-bottom:.5em;
 }
 
-.hue_chooser .ui-slider-handle,.rgb_chooser .ui-slider-handle {
-	width:2.5em;
-	height:2.5em;
+.hue_chooser .ui-slider-handle,
+.rgb_chooser .ui-slider-handle,
+.rgba_chooser .ui-slider-handle {
+	width:1em;
+	height:0.75em;
 	text-align:center;
-	padding:.3em 0 .5em 0;
+	vertical-align: center;
+	padding:0em;
 	background-color:hsl(200,0%,100%);
 	color:hsl(200,0%,100%);
 }
 
 .hue_chooser .ui-slider-handle {
 	border:2px solid #000;
+	width:2.5em;
+	height:2.5em;
+	padding:.3em 0 .5em 0;
 }
 
-.rgb_chooser .ui-slider-handle:nth-child(1) {
+.rgb_chooser .ui-slider-handle:hover,
+.rgba_chooser .ui-slider-handle:hover {
+    background-image: none !important;
+}
+
+.rgb_chooser .ui-slider-handle:nth-child(1), 
+.rgba_chooser .ui-slider-handle:nth-child(1)  {
 	border:2px solid red;
+	background-color: red;
 }
 
-.rgb_chooser .ui-slider-handle:nth-child(2) {
+.rgb_chooser .ui-slider-handle:nth-child(2),
+.rgba_chooser .ui-slider-handle:nth-child(2) {
 	border:2px solid green;
+	background-color: green;
+	margin-top: 0.75em;
 }
 
-.rgb_chooser .ui-slider-handle:nth-child(3) {
+.rgb_chooser .ui-slider-handle:nth-child(3),
+.rgba_chooser .ui-slider-handle:nth-child(3) {
 	border:2px solid blue;
+	background-color: blue;
+	margin-top: 1.5em;
+}
+
+.rgba_chooser .ui-slider-handle:nth-child(4) {
+	border:2px solid grey;
+	background-color: grey;
+	margin-top: 2.25em;
 }
 
 #login_error {
@@ -1202,7 +1254,7 @@ li.disabled span.checkmark,li.disabled:hover > span.checkmark {
 	display:block;
 	height:400px;
 	width:300px;
-	background:url(/include/images/bgpatterns/escheresque_trans) 0 0 repeat;
+	background:url(/include/images/bgpatterns/escheresque) 0 0 repeat;
 	overflow:visible;
 	z-index:70;
 	-webkit-user-select:none;
@@ -1690,7 +1742,7 @@ span.shiftopt:before {
 }
 
 #selectedImage {
-	background:url(/include/images/bgpatterns/escheresque_trans) 0 0 repeat;
+	background:url(/include/images/bgpatterns/escheresque) 0 0 repeat;
 }
 
 #imagebox textarea {

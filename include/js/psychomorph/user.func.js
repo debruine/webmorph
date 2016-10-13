@@ -261,10 +261,20 @@ function prefGet(callback) {  console.time('prefGet()');
             if (WM.project.id == null) { WM.project.id = data.prefs.default_project; }
 
             WM.delin.lineColor = data.prefs.line_color;
-            $('#line_color').slider('values', rgbToArray(data.prefs.line_color));
-            $('#cross_color').slider('values', rgbToArray(data.prefs.cross_color));
-            $('#selcross_color').slider('values', rgbToArray(data.prefs.selcross_color));
-            $('.mask_color').slider('values', rgbToArray(data.prefs.mask_color));
+            
+            var pc = rgbToArray(data.prefs.cross_color);
+            var sc = rgbToArray(data.prefs.selcross_color);
+            var lc = rgbToArray(data.prefs.line_color);
+            var mc = rgbToArray(data.prefs.mask_color);
+
+            $('#line_color').slider('values', lc);
+            $('#cross_color').slider('values', pc);
+            $('#selcross_color').slider('values', sc);
+            $('.mask_color').slider('values', mc);
+            
+            $('#tem_point_color').slider('values', pc);
+            $('#tem_point_fill').slider('values', pc);
+            $('#tem_line_color').slider('values', lc);
 
             $('#pref_theme').slider('value', data.prefs.theme);
             if (data.prefs.theme == 361) {

@@ -180,6 +180,10 @@ class myQuery {
         return $this->get_assoc(false, $id);
     }
     
+    function get_key_val($key, $val) {
+        return $this->get_assoc(false, $key, $val);
+    }
+    
     function get_row($row = 0) {
         return $this->get_assoc($row, false, false);
     }

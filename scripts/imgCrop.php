@@ -54,7 +54,7 @@ if (!$return['error']) {
     
     if ($img->save($newFileName)) {
         $return['error'] = false;
-        $return['newFileName'] = $img->getImg()->getURL();
+        $return['newFileName'] = $img->getURL();
     } else {
         $return['errorText'] .= 'The image was not saved. ';
         $return['newFileName'] = '';

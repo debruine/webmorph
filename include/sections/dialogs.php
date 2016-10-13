@@ -169,7 +169,7 @@
         </tr>
         <tr>
             <td><label for="line_color">Delineation Line</label></td>
-            <td><div id='line_color' class='rgb_chooser'></div></td>
+            <td><div id='line_color' class='rgba_chooser'></div></td>
         </tr>
         <tr>
             <td><label for="defaultLineWidth">Default Line Width</label></td>
@@ -365,9 +365,31 @@
     X-offset: <input type='integer' step='1' min='1' value='0' id='scramble_x_offset' maxlength='4' />
     Y-offset: <input type='integer' step='1' min='1' value='0' id='scramble_y_offset' maxlength='4' />
     <br>
-    <input type='checkbox' id='grid_lines' checked='checked' /> <label for='grid_lines'>Grid Lines</label> <div id='grid_line_color' class='rgb_chooser'></div>
+    <input type='checkbox' id='grid_lines' checked='checked' /> <label for='grid_lines'>Grid Lines</label> 
+    <div id='grid_line_color' class='rgb_chooser'></div>
     <p>Click on the squares you want to scramble. Drag for multiple select.</p>
     <div id='scrambleExample'></div>
+</div>
+
+<!-- !- temVisDialog -->
+<div id='temVisDialog' class='modal'>
+    <div class='batch_name' default='tem'>Template image name:</div>
+    <ul>
+        <li>Point Style: <select id='tem_point_style'>
+            <option value='none'>None</option>
+            <option value='cross'>Cross</option>
+            <option value='circle'>Circle</option>
+            <option value='star'>Star</option>
+            <option value='numbers'>Numbers</option>
+        </select></li>
+        <li><label for="tem_point_color">Point Outline Color:</label> <div id='tem_point_color' class='rgba_chooser'></div></li>
+        <li><label for="tem_point_fill">Point Fill Color:</label>  <div id='tem_point_fill' class='rgba_chooser'></div></li>
+        <li><label for="tem_point_strokewidth">Outline Width:</label>  <input type='integer' step='1' min='1' value='2' id='tem_point_strokewidth' maxlength='2' /></li>
+        <li><label for="tem_point_radius">Radius:</label>  <input type='integer' step='1' min='1' value='5' id='tem_point_radius' maxlength='2' /></li>
+        <li><label for="tem_line_color">Line Color:</label>  <div id='tem_line_color' class='rgba_chooser'></div></li>
+        <li><label for="tem_line_strokewidth">Line Width:</label>  <input type='integer' step='1' min='1' value='2' id='tem_line_strokewidth' maxlength='2' /></li>
+        <!--<li><input type='checkbox' id='tem_image' /> <label for='tem_image'>Image</label></li>-->
+    </ul>
 </div>
 
 <!-- !- maskDialog -->

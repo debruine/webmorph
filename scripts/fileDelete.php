@@ -14,7 +14,7 @@ if (count($_POST['files']) < 1) {
     $return['error'] = true;
     $return['errorText'] .= 'There were no files to delete';
 } else {    
-    $allowed_ext = array('jpg', 'png', 'gif', 'tem', 'txt', 'pca', 'csv', 'fimg', 'pci');
+    $allowed_ext = array('jpg', 'png', 'gif', 'tem', 'txt', 'pca', 'csv', 'fimg', 'pci', 'svg');
     
     foreach ($_POST['files'] as $name) {
         

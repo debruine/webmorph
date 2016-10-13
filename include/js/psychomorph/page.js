@@ -11,6 +11,7 @@ $.Finger.pressDuration == 1000;
 // !contextmenu functions
 $(document).on('contextmenu', '#finder *, #delin', function(e) {
     e.preventDefault();
+/*
 }).on('contextmenu', '#delin', function(e) {
     var item_info;
 
@@ -75,6 +76,7 @@ $(document).on('contextmenu', '#finder *, #delin', function(e) {
         }
     ];
     context_menu(item_info, e);
+*/
 }).on('contextmenu', '#trash > span', function(e) {
     var item_info = [];
 
@@ -435,7 +437,7 @@ $(document).mousedown(function(e) {
             } else if (e.which == KEYCODE.c) {
                 $('#multiContinua').click();         // shift-cmd-C
             } else if (e.which == KEYCODE.d) {
-                $('#batchModDelin').click();         // shift-cmd-D
+                $('#temVis').click();                // shift-cmd-D
             } else if (e.which == KEYCODE.e) {
                 $('#batchEdit').click();             // shift-cmd-E
             } else if (e.which == KEYCODE.f) {
@@ -836,6 +838,7 @@ $('#clear-average-button').button().click(function() {
     $('#average').show().css('background-image', WM.blankBG).attr({
         'averaged': ''
     });
+    clearInterval(WM.timer);
     $('#footer-text').html('');
 });
 // ! save buttons
@@ -862,7 +865,7 @@ $('#recent_creations').draggable().resizable();
 //$finder.draggable().resizable();
 $finder.on('click', function() {
     $('.context_menu').remove();
-}).on('dblclick doubletap', 'li.file.image, li.file.tem', function() {
+}).on('dblclick doubletap', 'li.file.image:not(.svg), li.file.tem', function() {
     // open in delineator on double-click
     delinImage($(this).attr('url'));
 }).on('click', '> ul > li.folder ul', function(e) {
@@ -1113,66 +1116,90 @@ $('#prefs').not('.disabled').click(function() {
         }
     });
 });
+
+function hue_change($chooser, ui) {
+    var hue = ui.value;
+    $chooser.css('background-image', "none");
+    var hsl = 'hsl(' + hue + ', 100%, 30%)';
+    if (hue === 0) {
+        hsl = 'hsl(200, 0%, 30%)';
+    } else if (hue == 361) {
+        hsl = 'hsl(200, 0%, 0%)';
+        hue = 'B';
+    }
+    $chooser.css('background-color', hsl);
+    $chooser.find('.ui-slider-handle').css('border-color', hsl).text(hue);
+}
+
 $('.hue_chooser').slider({
     value: 200,
     min: 0,
     max: 361,
     step: 1,
     slide: function(event, ui) {
-        var hue = ui.value;
-        $(this).css('background-image', "none");
-        var hsl = 'hsl(' + hue + ', 100%, 30%)';
-        if (hue === 0) {
-            hsl = 'hsl(200, 0%, 30%)';
-        } else if (hue == 361) {
-            hsl = 'hsl(200, 0%, 0%)';
-            hue = 'B';
-        }
-        $(this).css('background-color', hsl);
-        $(this).find('.ui-slider-handle').css('border-color', hsl).text(hue);
+        hue_change($(this), ui);
     },
     change: function(event, ui) {
-        var hue = ui.value;
-        $(this).css('background-image', "none");
-        var hsl = 'hsl(' + hue + ', 100%, 30%)';
-        if (hue === 0) {
-            hsl = 'hsl(200, 0%, 30%)';
-        } else if (hue == 361) {
-            hsl = 'hsl(200, 0%, 0%)';
-            hue = 'B';
-        }
-        $(this).css('background-color', hsl);
-        $(this).find('.ui-slider-handle').css('border-color', hsl).text(hue);
+        hue_change($(this), ui);
     }
 });
 
+function rgba_change($chooser, $rgba, ui) {
+    var r = ui.values[0];
+    var g = ui.values[1];
+    var b = ui.values[2];
+
+    $rgba.find('span.r').text(r);
+    $rgba.find('span.g').text(g);
+    $rgba.find('span.b').text(b);
+    
+    if (ui.values.length == 4) {
+        var a = round(ui.values[3]/255, 2);
+        $chooser.css('background-color', 'rgba(' + r + ', ' + g + ', ' + b + ',' + a + ')');
+        $rgba.find('span.a').text(a);
+    } else {
+        $chooser.css('background-color', 'rgb(' + r + ', ' + g + ', ' + b + ')');
+    }
+}
+
 $('.rgb_chooser').each( function() {
+    var $rgba = $('<span class="rgba_text" />');
+    $rgba.html('rgb(<span class="r"></span>, <span class="g"></span>, <span class="b"></span></span>)');
+    $(this).before($rgba);
+    
     $(this).slider({
         values: [127, 127, 127],
         min: 0,
         max: 255,
         step: 1,
         slide: function(event, ui) {
-            var r = ui.values[0];
-            var g = ui.values[1];
-            var b = ui.values[2];
-            $(this).css('background-color', 'rgb(' + r + ', ' + g + ', ' + b + ')');
-            var handles = $(this).find('.ui-slider-handle');
-            handles.eq(0).text(r);
-            handles.eq(1).text(g);
-            handles.eq(2).text(b);
+            rgba_change($(this), $rgba, ui);
         },
         change: function(event, ui) {
-            var r = ui.values[0];
-            var g = ui.values[1];
-            var b = ui.values[2];
-            $(this).css('background-color', 'rgb(' + r + ', ' + g + ', ' + b + ')');
-            var handles = $(this).find('.ui-slider-handle');
-            handles.eq(0).text(r);
-            handles.eq(1).text(g);
-            handles.eq(2).text(b);
+            rgba_change($(this), $rgba, ui);
         }
-    });
+    }).slider('values', [127, 127, 127]);
+});
+
+$('.rgba_chooser').each( function() {
+    var $rgba = $('<span class="rgba_text" />');
+    var $wrap = $('<div class="rgba_chooser_bg" />');
+    $rgba.html(' rgba(<span class="r"></span>, <span class="g"></span>, <span class="b"></span>, <span class="a"></span>)');
+    $(this).wrap($wrap);
+    $(this).parent(".rgba_chooser_bg").before($rgba);
+    
+    $(this).slider({
+        values: [127, 127, 127, 255],
+        min: 0,
+        max: 255,
+        step: 1,
+        slide: function(event, ui) {
+            rgba_change($(this), $rgba, ui);
+        },
+        change: function(event, ui) {
+            rgba_change($(this), $rgba, ui);
+        }
+    }).slider('values', [127, 127, 127, 255]);
 });
 
 $('#grid_line_color').slider('values', [127,127,127]);
@@ -1214,29 +1241,17 @@ $('#scramble_y_offset').change( function() {
     resetGrids();
 });
 
-$('#batch_mask_color').slider({
-    slide: function(event, ui) {
-        var r = ui.values[0];
-        var g = ui.values[1];
-        var b = ui.values[2];
-        $('#maskExample').css('background-color', 'rgb(' + r + ', ' + g + ', ' + b + ')');
-        $(this).css('background-color', 'rgb(' + r + ', ' + g + ', ' + b + ')');
-        var handles = $(this).find('.ui-slider-handle');
-        handles.eq(0).text(r);
-        handles.eq(1).text(g);
-        handles.eq(2).text(b);
-    },
-    change: function(event, ui) {
-        var r = ui.values[0];
-        var g = ui.values[1];
-        var b = ui.values[2];
-        $('#maskExample').css('background-color', 'rgb(' + r + ', ' + g + ', ' + b + ')');
-        $(this).css('background-color', 'rgb(' + r + ', ' + g + ', ' + b + ')');
-        var handles = $(this).find('.ui-slider-handle');
-        handles.eq(0).text(r);
-        handles.eq(1).text(g);
-        handles.eq(2).text(b);
-    }
+$('#batch_mask_color').on("slide", function(event, ui) {
+    var r = ui.values[0];
+    var g = ui.values[1];
+    var b = ui.values[2];
+    $('#maskExample').css('background-color', 'rgb(' + r + ', ' + g + ', ' + b + ')');
+}).on("change", function(event, ui) {
+    var r = ui.values[0];
+    var g = ui.values[1];
+    var b = ui.values[2];
+    $('#maskExample').css('background-color', 'rgb(' + r + ', ' + g + ', ' + b + ')');
+    $(this).css('background-color', 'rgba(' + r + ', ' + g + ', ' + b + ')');
 });
 
 // !#fileListGet
@@ -2139,6 +2154,43 @@ $('#batchAverage').not('.disabled').click(function() {
 $('#batchTransform').not('.disabled').click(function() {
     batchTransform();
 });
+
+// !temVis
+$('#temVis').not('.disabled').click(function() {
+    batchTemVis();
+});
+
+$('#tem_point_style').change(function() {
+    var theStyle = $(this).val();
+    var $fill = $('#tem_point_fill').closest("li");
+    var $color = $('#tem_point_color').closest('li');
+    var $width = $('#tem_point_strokewidth').closest('li');
+    var $radius = $('#tem_point_radius').closest('li');
+    
+    if (theStyle == 'none') {
+        $fill.hide();
+        $color.hide();
+        $width.hide();
+        $radius.hide();
+    } else if (theStyle == 'numbers') {
+        $fill.hide();
+        $color.show();
+        $width.hide();
+        $radius.hide();
+    } else if (theStyle == 'cross') {
+        $fill.hide();
+        $color.show();
+        $width.show();
+        $radius.show();
+    } else {
+        $fill.show();
+        $color.show();
+        $width.show();
+        $radius.show();
+    }
+});
+
+$('#tem_point_style').trigger('change');
 
 $('#batchTransDialog, #batchEditDialog, #batchAvgDialog').delegate('textarea', 'keydown', function(e) {
     if (e.which == KEYCODE.tab || e.which == KEYCODE.enter) {

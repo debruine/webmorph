@@ -318,7 +318,6 @@ function getAverage(tVars, addToQueue) {
         });
     } else {
         // get first image dimensions and estimate average time
-        var avgTimer = null;
 
         $.ajax({
             url: 'scripts/imgDimensions',
@@ -338,7 +337,7 @@ function getAverage(tVars, addToQueue) {
                     var d = new Date();
                     var startAvgTime = d.getTime();
 
-                    avgTimer = setInterval(function() {
+                    WM.timer = setInterval(function() {
                         var nowTime = new Date();
                         var avgInterval = Math.round((nowTime.getTime() - startAvgTime)/1000);
                         $('#footer-text').html('This average will take about ' + mtsec + ' seconds (' + avgInterval + ')');
@@ -377,7 +376,7 @@ function getAverage(tVars, addToQueue) {
                 $average.css('background-image', WM.blankBG);
             },
             complete: function() {
-                clearInterval(avgTimer);
+                clearInterval(WM.timer);
                 $('#footer-text').html("Average complete");
                 if (typeof tVars.completeAvg === 'function') { tVars.completeAvg(errorReport); }
                 $spinner.remove();
@@ -535,7 +534,6 @@ function getTransform(tVars, addToQueue) {
                 }
             } else {
                 // get image dimensions and estimate transform time
-                var transTimer = null;
                 var $transform = $("#transform");
                 var min = Math.min($transform.width(), $transform.height());
                 var max = Math.max($transform.width(), $transform.height());
@@ -568,7 +566,7 @@ function getTransform(tVars, addToQueue) {
                             var d = new Date();
                             var startTransTime = d.getTime();
 
-                            transTimer = setInterval(function() {
+                            WM.timer = setInterval(function() {
                                 var nowTime = new Date();
                                 var transInterval = Math.round((nowTime.getTime() - startTransTime)/1000);
                                 $('#footer-text').html('This transform will take about ' + mtsec + ' seconds (' + transInterval + ')');
@@ -622,7 +620,7 @@ function getTransform(tVars, addToQueue) {
                         $transform.attr("src", WM.blankImg);
                     },
                     complete: function() {
-                        clearInterval(transTimer);
+                        clearInterval(WM.timer);
                         $('#footer-text').html("Transform complete");
                         $transform.show();
                         $spinner.remove();

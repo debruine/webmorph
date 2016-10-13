@@ -214,30 +214,23 @@
                 Batch Transform
                 <span class="shortcut shiftcmd">T</span>
             </li>
+            <!---------------------------------------------------------------->
             <li class='separator'>
-            <li class='finder average transform no-read-only' id='convert'
-                title="Convert to a different file type">
-                Convert File Type
-            </li>
             <li class='finder average transform no-read-only' id='batchRename'
                 title="Rename a group of files">
                 Rename
                 <span class="shortcut shiftcmd">N</span>
             </li>
+            <li class='finder average transform no-read-only' id='convert'
+                title="Convert to a different file type">
+                Convert File Type
+            </li>
+            <!---------------------------------------------------------------->
+            <li class='separator'>
             <li class='finder average transform no-read-only' id='alignEyes'
                 title="Align selected images to a standard or custom setting">
                 Align
                 <span class="shortcut shiftcmd">H</span>
-            </li>
-            <li class='finder average transform no-read-only' id='resize'
-                title="Resize selected images">
-                Resize
-                <span class="shortcut shiftcmd">R</span>
-            </li>
-            <li class='finder average transform no-read-only' id='rotate'
-                title="Rotate selected images">
-                Rotate
-                <span class="shortcut shiftcmd">L</span>
             </li>
             <li class='finder average transform no-read-only' id='crop'
                 title="Crop selected images">
@@ -249,27 +242,65 @@
                 Mask
                 <span class="shortcut shiftcmd">M</span>
             </li>
-            <li class='finder average transform no-read-only' id='symmetrise'
-                title="Create versions of selected images with symmetrical shape and/or color">
-                Symmetrize
-                <span class="shortcut shiftcmd">Y</span>
-            </li>
             <li class='finder average transform no-read-only' id='mirror'
                 title="Create versions of selected images that are mirrored horizontally">
                 Mirror
                 <span class="shortcut shiftcmd">I</span>
+            </li>
+            <li class='finder average transform no-read-only' id='resize'
+                title="Resize selected images">
+                Resize
+                <span class="shortcut shiftcmd">R</span>
+            </li>
+            <li class='finder average transform no-read-only' id='rotate'
+                title="Rotate selected images">
+                Rotate
+                <span class="shortcut shiftcmd">L</span>
             </li>
             <li class='finder average transform no-read-only' id='scramble'
                 title="Create scrambled versions of selected images">
                 Scramble
                 <span class="shortcut shiftcmd">B</span>
             </li>
-            <li class='finder average transform no-read-only' id='batchModDelin'
-                title="Delete selected template points from selected images">
-                Modify Delineation
+            <li class='finder average transform no-read-only' id='symmetrise'
+                title="Create versions of selected images with symmetrical shape and/or color">
+                Symmetrize
+                <span class="shortcut shiftcmd">Y</span>
+            </li>
+            <li class='finder average transform no-read-only' id='temVis'
+                title="Visualize selected templates as SVGs or PNGs">
+                Visualize Template
                 <span class="shortcut shiftcmd">D</span>
             </li>
+            <!---------------------------------------------------------------->
             <li class='separator'>
+            <li class='delineate finder average transform no-read-only' id='gridFaces'
+                title="Create a 1D or 2D array of faces in a continuum">
+                Grid
+                <span class="shortcut shiftcmd">G</span>
+            </li>
+            <li class='finder average transform no-read-only' id='movingGif'
+                title="Create a moving gif of the selected images">
+                Moving Gif
+                <span class="shortcut shiftcmd">O</span>
+            </li>
+            <li class='delineate finder average transform no-read-only' id='multiContinua'
+                title="Morph along a series of images in 2-20 continua">
+                Multiple Continua
+                <span class="shortcut shiftcmd">C</span>
+            </li>
+            <!---------------------------------------------------------------->
+            <li class='separator'>
+            <li class='finder average transform' id='facialMetrics'
+                title="Compute metrics for selected faces using delineation coordinates">
+                Calculate FacialMetrics
+                <span class="shortcut shiftcmd">F</span>
+            </li>
+            <li class='finder' id='pixels'
+                title="Create CSV files with Lab* pixel values">
+                Lab* Pixels
+                <span class="shortcut shiftcmd">X</span>
+            </li>
             <li class='finder no-read-only' id='singlePCA' style='display: none;'
                 title="PCA">
                 PCA
@@ -284,31 +315,7 @@
                 Visualise PCs
                 <span class="shortcut shiftcmd">V</span>
             </li>
-            <li class='finder' id='pixels'
-                title="Create CSV files with Lab* pixel values">
-                Lab* Pixels
-                <span class="shortcut shiftcmd">X</span>
-            </li>
-            <li class='finder average transform' id='facialMetrics'
-                title="Compute metrics for selected faces using delineation coordinates">
-                Calculate FacialMetrics
-                <span class="shortcut shiftcmd">F</span>
-            </li>
-            <li class='delineate finder average transform no-read-only' id='multiContinua'
-                title="Morph along a series of images in 2-20 continua">
-                Multiple Continua
-                <span class="shortcut shiftcmd">C</span>
-            </li>
-            <li class='delineate finder average transform no-read-only' id='gridFaces'
-                title="Create a 1D or 2D array of faces in a continuum">
-                Grid
-                <span class="shortcut shiftcmd">G</span>
-            </li>
-            <li class='finder average transform no-read-only' id='movingGif'
-                title="Create a moving gif of the selected images">
-                Moving Gif
-                <span class="shortcut shiftcmd">O</span>
-            </li>
+
             <!--
             <li class='finder average transform' id='colorCalibrate'
                 title="Create versions of selected images with calibrated color (requires a color checker chart in the image)">
@@ -359,6 +366,10 @@
                     <li class='finder' data-from='18' data-to='18'>Nubility_body_new to NBM for GMM</li>
                     <li class='finder' data-from='1' data-to='36'>FRL (189) to Footballers (255)</li>
                 </ul>
+            </li>
+            <li class='finder average transform no-read-only' id='batchModDelin'
+                title="Delete selected template points from selected images">
+                Modify Delineation
             </li>
             <li class='delineate' id='closeMouth'
                 title="Set internal lip points on the red line to the position of the internal lip points on the blue line (only works for the FRL-189 template)">

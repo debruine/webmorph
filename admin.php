@@ -41,7 +41,7 @@ if ($_SESSION['user_id'] != 1) {
 <!-- START BODY -->
 
 <body>
-    
+
 <h3>Users</h3>
 
     <div id="usertable">
@@ -67,6 +67,7 @@ if ($_SESSION['user_id'] != 1) {
 <script src='<?= JQUERYUI ?>'></script>
 
 <script>
+    
     $('span.tinybutton').click( function() {
         var authType = this.innerHTML == "AUTH" ? 'user' : 'disabled';
         var userID = $(this).closest('tr').find('td:eq(0)').text();

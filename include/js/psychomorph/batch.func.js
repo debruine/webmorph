@@ -99,8 +99,12 @@ function batchToggle(toggle) {
     }
 }
 
-function batchNewName(theDialog, theType) {
+function batchNewName(theDialog, theType, theExts) {
     var $d, bn, $tp, $ts, $tsub, $tsup;
+    
+    if (theExts == undefined) {
+        theExts = ['jpg', 'png', 'gif'];
+    }
 
     $d = $(theDialog);
 
@@ -109,19 +113,25 @@ function batchNewName(theDialog, theType) {
     if (typeof theType !== 'string') theType = $d.find('.batch_name').attr('default');
 
     if ($d.find('.batch_name code').length == 0) {
-         var bnn_interface = "<code>\n" +
+        var bnn_interface = "<code>\n" +
             "    <span class='batch_superfolder'></span>" +
                 "<span class='multibatch'>**DIRECTORY**</span>" +
                 "<span class='batch_subfolder'></span>" +
                 "<span class='batch_prefix'></span>" +
                 "**IMAGE**" +
-                "<span class='batch_suffix'></span>." +
-                "<select class='batch_ext'>\n" +
-            "        <option value='jpg'>jpg</option>\n" +
-            "        <option value='png'>png</option>\n" +
-            "        <option value='gif'>gif</option>\n" +
-            "    </select>\n" +
-            "</code><br>\n" +
+                "<span class='batch_suffix'></span>.";
+        
+        if (theExts.length == 1) {
+            bnn_interface +=  "<input type='hidden' class='batch_ext' value='"+theExts[0]+"'>" + theExts[0];
+        } else {
+            bnn_interface += "<select class='batch_ext'>\n";
+            $.each(theExts, function(i, ext) {
+                 bnn_interface +=  "        <option value='"+ext+"'>"+ext+"</option>\n";
+            });
+            bnn_interface += "    </select>\n";
+        }
+        
+        bnn_interface += "</code><br>\n" +
             "<label><input type='checkbox' class='toggle_superfolder'> Superfolder</label>\n" +
             "<label><input type='checkbox' class='toggle_subfolder'> Subfolder</label>\n" +
             "<label><input type='checkbox' class='toggle_prefix'> Prefix</label>\n" +
@@ -293,6 +303,60 @@ function batchColorCalibrate() {
                     theData.img = null;
 
                     batchWatch(files, 'imgcolorCalibrate', theData);
+                }
+            }
+        }
+    });
+}
+
+function batchTemVis() {
+    // put all tem files in a list
+    var files = filesGetSelected('.tem');
+    if (files.length === 0) {
+        growl('No tem files were selected', 1000);
+        return false;
+    }
+
+    batchNewName('#temVisDialog', 'tem', ['png', 'svg']);
+    
+    $('#temVisDialog').dialog({
+        title: 'Batch Modify ' + files.length + ' Delineation' + ((files.length == 1) ? '' : 's'),
+        buttons: {
+            Cancel: function() {
+                $(this).dialog('close');
+            },
+            "Visualize Templates": {
+                text: "Visualize Templates",
+                class: "ui-state-focus",
+                click: function() {
+                    // get points to delete
+                    var dp = [],
+                        theData;
+
+                    theData = batchNewNameGet('#temVisDialog');
+                    theData.img = null;
+                    if ($('#tem_point_style').val() !== 'none') {
+                        theData.points = {
+                            style: $('#tem_point_style').val(),
+                            color: array2rgb($('#tem_point_color').slider('values')),
+                            fill: array2rgb($('#tem_point_fill').slider('values')),
+                            strokewidth: $('#tem_point_strokewidth').val(),
+                            radius: $('#tem_point_radius').val()
+                        };
+                    }
+                    if ($('#tem_line_strokewidth').val() > 0) {
+                        theData.lines = {
+                            color: array2rgb($('#tem_line_color').slider('values')),
+                            strokewidth: $('#tem_line_strokewidth').val(),
+                        };
+                    }
+                    
+                    if ($('#tem_image').prop('checked')) {
+                        theData.image = true;
+                    }
+
+                    batchWatch(files, 'temVis', theData);
+                    $(this).dialog('close');
                 }
             }
         }
@@ -2033,12 +2097,13 @@ function queueItem(data) {
     thisItem.menuItem.data('obj', thisItem);
 
     thisItem.start = function() {
+        var startTime, showTem;
         // only waiting queueItems can be started
         if (thisItem.status !== 'waiting') { return false; }
 
         thisItem.status = 'active';
         thisItem.menuItem.addClass('active').removeClass('waiting');
-        var startTime = new Date();
+        startTime = new Date();
 
         $.ajax({
             url: 'scripts/' + thisItem.url,
@@ -2054,7 +2119,13 @@ function queueItem(data) {
                     thisItem.returnData = data;
                     if (data.newFileName !== undefined) {
                         // add file to finder
-                        WM.finder.addFile(data.newFileName, true);
+                        if ($.isArray(data.newFileName)) {
+                            $.each(data.newFileName, function(i, f) {
+                                WM.finder.addFile(f);
+                            })
+                        } else {
+                            WM.finder.addFile(data.newFileName);
+                        }
                     }
                 }
             },
