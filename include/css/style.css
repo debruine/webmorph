@@ -286,6 +286,10 @@ dd pre {
 	padding-top:1.5em;
 }
 
+#aboutDialog img {
+    max-height: 100px;
+}
+
 #whatsnewDialog ul {
 	list-style:circle outside;
 	margin:.5em .5em .5em 1.5em;

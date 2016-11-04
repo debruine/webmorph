@@ -1096,10 +1096,9 @@ $('#showDelineate').not('.disabled').click({appWindow: 'delineate'}, interfaceCh
 $('#showAverage').not('.disabled').click({appWindow: 'average'}, interfaceChange);
 // !#showTransform
 $('#showTransform').not('.disabled').click({appWindow: 'transform'}, interfaceChange);
-// !#aboutPsychomoprh
-$('#aboutPsychomorph').click(function() {
-    $('#aboutDialog').dialog();
-});
+// !#aboutWebmorph
+$('#aboutWebmorph').click(function() { $('#aboutDialog').dialog(); });
+$('#citation').click(function() { $('#aboutDialog').dialog(); });
 // !#prefs
 $('#prefDialog').tabs();
 $('#prefs').not('.disabled').click(function() {

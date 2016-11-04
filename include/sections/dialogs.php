@@ -729,7 +729,7 @@
         open-source Java library <a href="http://users.aber.ac.uk/bpt/jpsychomorph/version6/javadoc/">FaceMorphLib</a> 
         and is developed and maintained by <a href="http://facelab.org/debruine/">Lisa DeBruine</a>.</p>
     
-    <p>WebMorph is currently in alpha testing and is likely to remain so for some time. 
+    <p>WebMorph is currently in beta testing and is likely to remain so for some time. 
         This means that there will be bugs and you cannot rely on the website being functional 
         100% of the time. Lisa will try to fix any problems as fast as possible, but she is the 
         only person working on this project, so please be patient. If you're curious about the 
@@ -740,7 +740,21 @@
     <p>DeBruine, L. M. &amp; Tiddeman, B. P. (<?= date("Y, F j", filemtime(DOC_ROOT . $_SERVER['PHP_SELF'])) ?>). <i>WebMorph</i>. Retrieved from http://<?= $_SERVER['SERVER_NAME'] ?></p>
     <p>Access the code at <a href="https://github.com/debruine/webmorph">GitHub</a>.</p>
     <p>To cite the methods, see <a href="http://users.aber.ac.uk/bpt/jpsychomorph/" target="_blank">Bernie Tiddeman's webpage</a>.</p>
-    <h3>To cite provided images</h3>
-    <p>DeBruine, L. M. &amp; Jones, B. C. (2015, October 13). Average Faces. <i>Open Science Framework</i>. <a href="http://osf.io/gzy7m " target="_blank">osf.io/gzy7m</a></p>
+    <h3>To cite (or download) provided images</h3>
+    <p>
+        <img src="/include/examples/f_african">
+        <img src="/include/examples/f_easian">
+        <img src="/include/examples/f_wasian">
+        <img src="/include/examples/f_white">
+        <img src="/include/examples/f_multi"><br>
+        <img src="/include/examples/m_african">
+        <img src="/include/examples/m_easian">
+        <img src="/include/examples/m_wasian">
+        <img src="/include/examples/m_white">
+        <img src="/include/examples/m_multi"><br>
+        DeBruine, Lisa (2016): Young adult composite faces. <i>figshare</i>. <a href="https://dx.doi.org/10.6084/m9.figshare.4055130.v1">dx.doi.org/10.6084/m9.figshare.4055130.v1</a></p>
+    <p><img src="/include/examples/_female_avg">
+        <img src="/include/examples/_male_avg"><br>
+        DeBruine, L. M. &amp; Jones, B. C. (2015, October 13). Average Faces. <i>Open Science Framework</i>. <a href="http://osf.io/gzy7m " target="_blank">osf.io/gzy7m</a></p>
     
 </div>

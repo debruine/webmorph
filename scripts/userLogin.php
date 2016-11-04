@@ -66,11 +66,22 @@ if (empty($email)) {
                 } else {
                     mkdir($mydir . '/.tmp', DIRPERMS);
                     mkdir($mydir . '/.trash', DIRPERMS);
-                    copy(DOC_ROOT . '/include/examples/_female_avg.jpg', $mydir . '/_female_avg.jpg');
-                    copy(DOC_ROOT . '/include/examples/_female_avg.tem', $mydir . '/_female_avg.tem');
-                    copy(DOC_ROOT . '/include/examples/_male_avg.jpg', $mydir . '/_male_avg.jpg');
-                    copy(DOC_ROOT . '/include/examples/_male_avg.tem', $mydir . '/_male_avg.tem');
                     
+                    $example_images = array(
+                        "f_african", "f_easian", "f_multi", "f_wasian", "f_white", 
+                        "m_african", "m_easian", "m_multi", "m_wasian", "m_white.jpg"
+                    );
+                    
+                    foreach ($example_images as $img) {
+                        copy(DOC_ROOT . "/include/examples/{$img}.jpg", "{$mydir}/{$img}.jpg");
+                        copy(DOC_ROOT . "/include/examples/{$img}.tem", "{$mydir}/{$img}.tem");
+                    }
+                        
+                    copy(DOC_ROOT . '/include/examples/_female_avg.jpg', $mydir . '/3dsk_female_avg.jpg');
+                    copy(DOC_ROOT . '/include/examples/_female_avg.tem', $mydir . '/3dsk_female_avg.tem');
+                    copy(DOC_ROOT . '/include/examples/_male_avg.jpg', $mydir . '/3dsk_male_avg.jpg');
+                    copy(DOC_ROOT . '/include/examples/_male_avg.tem', $mydir . '/3dsk_male_avg.tem');
+
                     $q = new myQuery("INSERT INTO project_user (project_id, user_id) VALUES ($new_proj_id, $id)");
                     $q = new myQuery("INSERT INTO (user_id, pref, prefval) VALUES ($id, 'default_project', $new_proj_id)");
                 }

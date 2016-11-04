@@ -5,7 +5,7 @@
     <li class='menucategory'>
         <span>WebMorph</span>
         <ul>
-            <li class='finder delineate average transform login project' id='aboutPsychomorph'>
+            <li class='finder delineate average transform login project' id='aboutWebmorph'>
                 About WebMorph
             </li>
             <li class='separator'></li>
