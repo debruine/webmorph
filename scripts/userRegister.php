@@ -38,7 +38,7 @@ if (empty($email)) {
         $personal = ($_POST['personal'] == 'true') ? 1 : 0;
         $school = ($_POST['school'] == 'true') ? 1 : 0;
         $art = ($_POST['art'] == 'true') ? 1 : 0;
-        $status = ($_POST['invite'] === 'faces94') ? 'user' : 'requested';
+        $status = ($_POST['invite'] === 'faces94' || $_SESSION['user_id'] == 1) ? 'user' : 'requested';
         $reason = my_clean($_POST['reason']);
                     
         $q = new myQuery("INSERT INTO user 
@@ -104,6 +104,7 @@ if (empty($email)) {
         $mail->setFrom('lisa.debruine@glasgow.ac.uk', 'Lisa DeBruine');
         //$mail->addReplyTo('lisa.debruine@glasgow.ac.uk', 'Lisa DeBruine');
         $mail->addAddress($email, $email);
+        $mail->addBCC('lisa.debruine@glasgow.ac.uk', 'Lisa DeBruine');
         $mail->Subject = 'WebMorph account creation';
         $mail->msgHTML($message);
         $mail->AltBody = $text_message;

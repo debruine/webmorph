@@ -287,6 +287,8 @@ $('#project_list').on('click', '.go_to_project', function() {
 
     proj_id = $(this).closest('tr').data('id');
     projectOwnerDelete(proj_id, $(this).data('id'));
+}).on('click', '.project_owners_toggle', function() {
+    $(this).toggleClass('vis').siblings('.project_owners').toggle();
 }).on('keydown', 'tr[data-perm=all] .projectOwnerAdd', function(e) {
     if (e.which == KEYCODE.enter) { projectOwnerAdd(this); }
 }).on('dblclick doubletap', 'tr[data-perm=all] td:nth-child(2)', function() {

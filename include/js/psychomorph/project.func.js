@@ -39,7 +39,12 @@ function projectList() { console.time('projectList()');
                 $('#currentProject').append($menuopt);
                 $menuopt.find('span.checkmark').hide();
 
-                owners = '<ul class="project_owners">';
+                owners = '<div class="project_owners_toggle">';
+                owners += p.owners.length;
+                owners += ' user';
+                if (p.owners.length > 1) { owners += 's'; }
+                owners += '<span></span></div>';
+                owners += '<ul class="project_owners">';
                 $.each(p.owners, function() {
                     var permAbbrev;
 
@@ -104,6 +109,11 @@ function projectList() { console.time('projectList()');
 
             WM.user.accountSize = 0;
             if (WM.appWindow == 'project') {
+                if (data.projects.length > 10) {
+                    $('#projectsearchbar').show().val('').focus().trigger('keyup');
+                    sizeToViewport();
+                }
+                
                 $.each(data.projects, function(i, p) {
                     //if (p.filemtime == $('tr[data-id=' + p.id + ']').data('filemtime')) {
                     if (p.hasOwnProperty('size')) {

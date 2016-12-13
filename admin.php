@@ -44,6 +44,19 @@ if ($_SESSION['user_id'] != 1) {
 
 <h3>Users</h3>
 
+    <div style="width:45em; margin: 0 auto 1em;">
+        <input type="text" id="firstname" placeholder="First Name" style="width: 8em;" />
+        <input type="text" id="lastname" placeholder="Last Name" style="width: 12em;" />
+        <input type="email" id="email" placeholder="Email Address" style="width: 15em;" />
+        <select id='sex'>
+            <option value='NULL'>(sex)</option>
+            <option value='female'>female</option>
+            <option value="male">male</option>
+            <option value="other">other</option>
+        </select>
+        <button id="add_new_user">Add</button>
+    </div>
+
     <div id="usertable">
 <?php
     $q = new myQuery('SELECT user.id as ID, 
@@ -65,8 +78,32 @@ if ($_SESSION['user_id'] != 1) {
 
 <script src='<?= JQUERY ?>'></script> 
 <script src='<?= JQUERYUI ?>'></script>
+<script src='/include/js/psychomorph/functions.js'></script>
+
 
 <script>
+    
+    $('#add_new_user').button().click( function() {
+        // register a new user
+        $.ajax({
+            url: 'scripts/userRegister',
+            async: false,
+            data: {
+                email: $('#email').val(),
+                firstname: $('#firstname').val(),
+                lastname: $('#lastname').val(),
+                sex: $('sex').val()
+            },
+            success: function(data) {
+                if (data.error) {
+                    growl(data.errorText);
+                    $('#email').focus().select();
+                } else {
+                    location.reload();
+                }
+            }
+        });
+    });
     
     $('span.tinybutton').click( function() {
         var authType = this.innerHTML == "AUTH" ? 'user' : 'disabled';
