@@ -34,10 +34,12 @@ function setSymPoints() {
                 growl(data.errorText);
             } else {
                 var theText = '<p>To set symmetry points, look for the '
-                            + 'highlighted point and click on its corresponding '
-                            + 'point on the other side. If a point is on the '
-                            + 'midline, its corresponding point is itself. If you '
-                            + 'make a mistake, click cmd-Z to go back a point.</p>';
+                            + 'highlighted point and cmd-click on its corresponding '
+                            + 'point on the other side. You can move points out '
+                            + 'of the way to check if they are overlapping. If a '
+                            + 'point is on the midline, its corresponding point '
+                            + 'is itself. If you make a mistake, click cmd-Z to '
+                            + 'go back a point.</p>';
                 $('<div />').html(theText).dialog({
                     title: 'Set Symmetry Points for '
                             + $('#currentTem_name').text(),
@@ -1101,18 +1103,25 @@ function removeTemPoints(ptArray) { console.log('removeTemPoints(' + ptArray.joi
     var tem_map = [];
     var newi = 0;
     $.each(WM.current.tem, function(i, v) {
-        if ($.inArray(i, ptArray) > -1) {
+        if ($.inArray(i+'', ptArray) > -1) {
             tem_map[i] = 'removed';
         } else {
             tem_map[i] = newi;
             newi++;
         }
     });
+    
+    $.each(WM.current.tem, function(i, v) {
+        WM.current.tem[i].oldi = i;
+        WM.current.tem[i].name = WM.delin.tem[i].name;
+    });
     // remove all tem points so they are re-generated at the end
     $('.pt').remove();
+    // remove deleted points
     $.each(ptArray, function(i, v) {
         WM.current.tem.splice(v, 1);
     });
+    // log new index
     $.each(WM.current.tem, function(i, v) {
         WM.current.tem[i].i = i;
     });
@@ -1120,6 +1129,7 @@ function removeTemPoints(ptArray) { console.log('removeTemPoints(' + ptArray.joi
     var ln = WM.current.lines.length;
     for (var i = ln - 1; i >= 0; i--) {
         var line = WM.current.lines[i];
+        console.log("Line " + i + ": " + line.join());
         var n = line.length;
         for (var j = n - 1; j >= 0; j--) {
             if (tem_map[line[j]] == 'removed') {
@@ -1130,6 +1140,9 @@ function removeTemPoints(ptArray) { console.log('removeTemPoints(' + ptArray.joi
         }
         if (WM.current.lines[i].length < 2) {
             WM.current.lines.splice(i, 1);
+            console.log("* Removed Line " + i);
+        } else {
+            console.log("* Changed Line " + i + ": " + WM.current.lines[i].join());
         }
     }
     updateUndoList();
@@ -1150,6 +1163,7 @@ function nextSymPt(i) {
     }
     if (n >= WM.current.tem.length) {
         WM.delinfunc = 'move';
+        $('.pt').removeClass('selected').removeClass('highlighted');
         $('#pointer').fadeOut().css({left: '-100px', top: '-100px'});
 
         $.ajax({
@@ -1166,29 +1180,22 @@ function nextSymPt(i) {
                 }
             }
         });
-    }
-    // unselect all points first
-    $.each(WM.selectedPts, function(idx, val) {
-        if (val) {
-            var pt = WM.stage.get('#d' + idx)[0];
-            pt.selected = false;
-            pt.setImage(WM.cross);
-        }
-    });
-    WM.selectedPts = [];
-    var pt = WM.stage.get('#d' + n)[0];
-    if (pt !== undefined) {
-        WM.selectedPts[n] = true;
-        pt.selected = true;
-        pt.setImage(WM.hover_cross);
-
-        var imgoffset = $delin.offset();
+    } else {
+        // unselect and unhighlight all points first
+        $('.pt').removeClass('selected').removeClass('highlighted');
+        var pt = WM.pts[n];
+        pt.addClass('highlighted');
+        $('#footer-text').prop('data-persistent', 
+                               'Cmd-click the sym point for [' + n + '] ' 
+                               + WM.delin.tem[n].name);
+        $('#footer-text').html($('#footer-text').prop('data-persistent'));
+        
+        // move pointer to left of point
         $('#pointer').css({
-            left: pt.getX() + imgoffset.left - 7 - $('#pointer').width(),
-            top: pt.getY() + imgoffset.top + 1 - $('#pointer').height()/2
+            left: pt.offset().left - $('#pointer').width(),
+            top: pt.offset().top - $('#pointer').height()/2 + pt.height()/2
         }).show();
     }
-    WM.temLayer.draw();
 }
 
 function boxHover(e) {
@@ -1214,9 +1221,25 @@ function boxHover(e) {
         x: (e.pageX - imgoffset.left),
         y: (e.pageY - imgoffset.top)
     };
+    
+    $.each(WM.current.tem, function(i, v) {
+        var ptX = v.x * WM.temRatio;
+        var ptY = v.y * WM.temRatio;
+        if (ptX >= Math.min(mousedown.x, mouseup.x)) {
+            if (ptX <= Math.max(mousedown.x, mouseup.x)) {
+                if (ptY >= Math.min(mousedown.y, mouseup.y)) {
+                    if (ptY <= Math.max(mousedown.y, mouseup.y)) {
+                        WM.pts[i].addClass('selected');
+                    }
+                }
+            }
+        }
+    });
+    /*
     $.each(WM.current.tem, function(i, v) {
         if (WM.stage.get('#d' + i).length) {
             var pt = WM.stage.get('#d' + i)[0];
+            var pt = $('.pt[n='+i+']');
             var ptX = pt.getX();
             var ptY = pt.getY();
             if (!pt.selected) {
@@ -1229,6 +1252,7 @@ function boxHover(e) {
         }
     });
     WM.temLayer.draw();
+    */
 }
 
 function boxSelect(e) {
