@@ -638,13 +638,13 @@ function fileListGet() {
     }
 }
 
-function finder(dir) { console.log('finder(' + (dir == undefined ? '' : dir) + ')');
+function finder(dir) { console.debug('finder(' + (dir == undefined ? '' : dir) + ')');
     this.currentDir = null;
     this.selectedFiles = {};
     
     this.dir = dir;
 
-    this.load = function(subdir) {
+    this.load = function(subdir) { console.log('finder.load(' + subdir + ')');
         subdir = subdir || this.dir;
 
         $.ajax({
@@ -664,6 +664,24 @@ function finder(dir) { console.log('finder(' + (dir == undefined ? '' : dir) + '
             }
         });
     };
+    
+    this.open = function(path) { console.debug("finder.open(" + path + ")");
+        // opens a file or folder in the finder
+        var pathparts = path.split('/');
+        var n = pathparts.length;
+        var thispath = '';
+        for (i = 0; i < n; i++) {
+            if (i == n-1 && path.substr(-1,1) != '/') {
+                // open a file
+                thispath += pathparts[i];
+                $finder.find('li.file[url="' + thispath + '"]').click();
+            } else {
+                // open a folder
+                thispath += pathparts[i] + '/';
+                $finder.find('li.folder[path="' + thispath+ '"] > span').click();
+            }
+        }        
+    }
 
     this.folder = function(path) {
         // find or create a folder from a path in the format #/subdir/
@@ -708,6 +726,7 @@ function finder(dir) { console.log('finder(' + (dir == undefined ? '' : dir) + '
         var regexURL,
             $theDir,
             $theFile,
+            $matchedFile,
             $theUL,
             $sibFiles,
             shortName,
@@ -759,6 +778,21 @@ function finder(dir) { console.log('finder(' + (dir == undefined ? '' : dir) + '
         if (addTem === true) {
             $theFile.addClass('hasTem');
             this.addFile(project_id + subdir + shortName + '.tem');
+        }
+        
+        // check if this file has a corresponding image/tem
+        if (ext == 'tem') {
+            $matchedFile = $finder.find('li.file.image[url*="' + project_id + subdir + shortName + '"]');
+            if ($matchedFile.length) {
+                $matchedFile.addClass('hasTem');
+                $theFile.addClass('hasImg');
+            }
+        } else if ($.inArray(ext, ['jpg','png','gif'])) {
+            $matchedFile = $finder.find('li.file.tem[url*="' + project_id + subdir + shortName + '"]');
+            if ($matchedFile.length) {
+                $matchedFile.addClass('hasImg');
+                $theFile.addClass('hasTem');
+            }
         }
         
         return $theFile;
@@ -849,6 +883,7 @@ function finder(dir) { console.log('finder(' + (dir == undefined ? '' : dir) + '
     };
     
     this.updateSelectedFiles = function() { //console.log('WM.finder.updateSelectedFiles()');
+        hashSet();
         var $selFolders = $finder.find('li.folder.selected').filter(':visible');
         var s = $finder.find('li.file.selected').filter(':visible').length;
     
@@ -1079,16 +1114,19 @@ function loadFiles(selected_dir, subdir) { console.log('loadFiles(' + selected_d
             $finder.css('background-image', 'none');
             $spinner.remove();
             sizeToViewport();
-            
-            // set WM.faceimg
+
+            // set WM.faceimg so clicks to the delineaton interface show something
             if (WM.faceimg == '') {
-                var firstHasTem = $finder.find('li.file.hasTem').not('[url*=".trash"]');
+                // set to first image
+                var firstImage= $finder.find('li.file.image').not('[url*=".trash"]');
                 
-                if (firstHasTem.length) {
-                    WM.faceimg = firstHasTem.attr('url');
-                    console.log('WM.faceimg set to ' + WM.faceimg);
+                if (firstImage.length) {
+                    WM.faceimg = firstImage.attr('url');
+                    console.debug('WM.faceimg set to ' + WM.faceimg);
                 }
             }
+            
+            WM.hashfile();
         }
     });
 }

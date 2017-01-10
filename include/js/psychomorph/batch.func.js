@@ -800,6 +800,8 @@ function batchRename() {
                                 newname: newName,
                                 nochangetem: true
                             };
+                            $finder.find('li.file[url="' + files[i] + '"]').remove();
+                            
                             theFiles[j] = files[i];
                             j++;
                         }

@@ -13,6 +13,8 @@ if (typeof console === "undefined") {
     };
 }
 
+$.fn.reverse = [].reverse;
+
 // select part of a text field
 $.fn.selectRange = function(start, end) {
     return this.each(function() {
@@ -379,7 +381,8 @@ function hashSet() { console.log('hashSet()');
     var appWindow = '',
         file = '',
         proj = '',
-        hash = '';
+        hash = '',
+        $selFile;
 
     if (WM.appWindow && WM.appWindow != 'login') {
         appWindow = WM.appWindow[0].toUpperCase();
@@ -391,25 +394,32 @@ function hashSet() { console.log('hashSet()');
     
     if (WM.faceimg != '' && appWindow == 'D') {
         file = urlToName(WM.faceimg);
+    } else if (appWindow == 'F') {
+        $selFile = $finder.find('li.file.selected').filter(':visible');
+        if ($selFile.length == 1) {
+            file = urlToName($selFile.attr('url'));
+        } else {
+            file = urlToName(currentDir());
+        }
     }
 
     hash = appWindow + proj + file;
 
-    if (hash) {
+    if (hash && '#' + hash !== location.hash) {
         location.hash = "#" + hash;
     }
 }
 
 function hashChange() { console.log('hashchange: ' + location.hash);
     var hash,
-        intWin;
+        appWin;
 
     hash = hashGet();
-    intWin = WM.appWindow[0].toUpperCase();
+    appWin = WM.appWindow[0].toUpperCase();
 
     if (!hash) return false;
 
-    if (hash.appWindow == intWin) {
+    if (hash.appWindow == appWin) {
         if (hash.project_id != WM.project.id) {
             projectSet(hash.project_id);
         }
@@ -452,15 +462,13 @@ function interfaceChange(e) {
     }
     
     console.log('interfaceChange('+appWindow+')');
-    
-    setTimeout(function(){}, 500);
-    
     WM.appWindow = appWindow;
-    
-    // menu options
+    //setTimeout(function(){}, 500);
+
+    // set menu options for this interface
     $('#menu_window .checkmark').hide().filter('.' + appWindow).show();
     $('.no-read-only').removeClass('disabled');
-    $('.menubar .average, .menubar .finder, .menubar .transform, .menubar .delineate, .menubar .project').addClass('disabled');
+    $('.menubar').find('.average, .finder, .transform, .delineate, .project').addClass('disabled');
     $('.menubar .' + appWindow).removeClass('disabled');
     
     if (WM.project.perm == 'read-only') {
@@ -480,7 +488,6 @@ function interfaceChange(e) {
         if ($finder.html() == '') { loadFiles(); }
         $finder.find('li.file').show().filter('ui-draggable').draggable('option', 'containment', 'window'); // '#finder');
         $finder.find('li.folder.ui-draggable').draggable('enable');
-        console.log('fc');
     } else if (appWindow == 'delineate') {
         $('#recent_creations').hide();
     } else if (appWindow == 'average') {
@@ -513,7 +520,7 @@ function interfaceChange(e) {
     $('ul.menubar li.menucategory > ul.submenu').hide();
 
     sizeToViewport();
-    hashSet();
+    hashSet(); 
 }
 
 function sizeToViewport() {

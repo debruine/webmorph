@@ -39,6 +39,7 @@ var WM = {
     delinContext: $('#template').get(0).getContext('2d'),
     originalHeight : 400,
     originalWidth : 300,
+    hashfile: "",
     faceimg: "",
     timer: null,
     showTem: true,

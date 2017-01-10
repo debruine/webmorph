@@ -239,7 +239,7 @@ function projectSizeUpdate(proj_id, alloc) {
     var tr = $('tr[data-id=' + proj_id + ']');
     var td =  tr.find('td').eq(3);
 
-    td.html((tr.data('files') - tr.data('tmp')) + ' files<br>' + tr.data('size'));
+    td.html((tr.data('files') - tr.data('tmp')) + '&nbsp;files<br>' + tr.data('size'));
     WM.user.accountSize += tr.data('mysize');
 
     // set warning about total space allocation

@@ -1,6 +1,6 @@
 // functions that should happen ONLOAD
 
-if (navigator.userAgent.indexOf('Mac OS X') != -1) {
+if (navigator.userAgent.indexOf('Mac OS X') != -1) {                            // change cmd-key image for mac/pc
     $("body").addClass("mac");
 } else {
     $("body").addClass("pc");
@@ -8,76 +8,10 @@ if (navigator.userAgent.indexOf('Mac OS X') != -1) {
 
 $.Finger.pressDuration == 1000;
 
-// !contextmenu functions
+// ! ****** Contextmenu ******
 $(document).on('contextmenu', '#finder *, #delin', function(e) {
     e.preventDefault();
-/*
-}).on('contextmenu', '#delin', function(e) {
-    var item_info;
-
-    e.stopPropagation();
-
-    item_info = [
-        {
-            name: 'Download Tem PNG',
-            func: function() {
-                temSVG(true, 'plus', false, 'png');
-                $('.context_menu').remove();
-            }
-        },
-        {
-            name: 'Download Lines PNG',
-            func: function() {
-                temSVG(true, false, false, 'png');
-                $('.context_menu').remove();
-            }
-        },
-        {
-            name: 'Download Points PNG',
-            func: function() {
-                temSVG(false, 'circle', false, 'png');
-                $('.context_menu').remove();
-            }
-        },
-        {
-            name: 'Download Numbered PNG',
-            func: function() {
-                temSVG(true, 'numbers', false), 'png';
-                $('.context_menu').remove();
-            }
-        },
-        {
-            name: 'Download Tem SVG',
-            func: function() {
-                temSVG(true, 'plus', false, 'svg');
-                $('.context_menu').remove();
-            }
-        },
-        {
-            name: 'Download Lines SVG',
-            func: function() {
-                temSVG(true, false, false, 'svg');
-                $('.context_menu').remove();
-            }
-        },
-        {
-            name: 'Download Points SVG',
-            func: function() {
-                temSVG(false, 'circle', false, 'svg');
-                $('.context_menu').remove();
-            }
-        },
-        {
-            name: 'Download Numbered SVG',
-            func: function() {
-                temSVG(true, 'numbers', false), 'svg';
-                $('.context_menu').remove();
-            }
-        }
-    ];
-    context_menu(item_info, e);
-*/
-}).on('contextmenu', '#trash > span', function(e) {
+}).on('contextmenu', '#trash > span', function(e) {                             // contextmenus for trash
     var item_info = [];
 
     e.stopPropagation();
@@ -101,7 +35,7 @@ $(document).on('contextmenu', '#finder *, #delin', function(e) {
     ];
 
     context_menu(item_info, e);
-}).on('contextmenu', '#finder li.folder:not(#trash)', function(e) {
+}).on('contextmenu', '#finder li.folder:not(#trash)', function(e) {             // contextmenus for folders
     var folder_name,
         item_info = [],
         upload = {},
@@ -169,7 +103,7 @@ $(document).on('contextmenu', '#finder *, #delin', function(e) {
     });
 
     context_menu(item_info, e);
-}).on('contextmenu', '#finder li.file > span', function(e) {
+}).on('contextmenu', '#finder li.file > span', function(e) {                    // contextmenus for files
     var $file,
         tf,
         total_files,
@@ -266,100 +200,88 @@ $(document).on('contextmenu', '#finder *, #delin', function(e) {
     }
 
     context_menu(item_info, e);
-}).on('mouseleave', '.context_menu', function(e) {
+}).on('mouseleave', '.context_menu', function(e) {                              // close contextmenus on mouseleave
     $(this).remove();
 });
 
-// ! project_list functions
-$('#project_list').on('click', '.go_to_project', function() {
+// !#project_list
+$('#project_list').on('click', '.go_to_project', function() {                   // go to project from projectlist
     var proj_id;
 
     $.xhrPool.abortAll();
     proj_id = $(this).closest('tr').data('id');
     projectSet(proj_id);
-}).on('click', '.delete_project', function() {
+}).on('click', '.delete_project', function() {                                  // delete a project
     var proj_id;
 
     proj_id = $(this).closest('tr').data('id');
     projectDelete(proj_id);
-}).on('click', 'tr[data-perm=all] .projectOwnerDelete', function() {
+}).on('click', 'tr[data-perm=all] .projectOwnerDelete', function() {            // delete a project owner (only perm-all project)
     var proj_id;
 
     proj_id = $(this).closest('tr').data('id');
     projectOwnerDelete(proj_id, $(this).data('id'));
-}).on('click', '.project_owners_toggle', function() {
+}).on('click', '.project_owners_toggle', function() {                           // toggle project owner visibility
     $(this).toggleClass('vis').siblings('.project_owners').toggle();
 }).on('keydown', 'tr[data-perm=all] .projectOwnerAdd', function(e) {
     if (e.which == KEYCODE.enter) { projectOwnerAdd(this); }
-}).on('dblclick doubletap', 'tr[data-perm=all] td:nth-child(2)', function() {
+}).on('dblclick doubletap', 'tr[data-perm=all] td:nth-child(2)', function() {   // edit project name (only perm-all project)
     projectEdit(this, "name");
-}).on('dblclick doubletap', 'tr[data-perm=all] td:nth-child(3)', function() {
+}).on('dblclick doubletap', 'tr[data-perm=all] td:nth-child(3)', function() {   // edit project description (only perm-all project)
     projectEdit(this, "notes");
-}).on('click', '.ownerPermToggle', projectOwnerPermToggle);
+}).on('click', '.ownerPermToggle', projectOwnerPermToggle);                     // toggle project member permissions
 
-// ! window functions
+// ! ***** Window events *****
 $(window).bind('resize', sizeToViewport)
 .blur(function() {
-    // removes growl notifications when download window is ready
-    $('div.growl').remove();
-/*}).bind('beforeunload', function() {
-    // confirm leaving the app
-    // the back button doesn't work as most would assume.
-    if (!WM.noOnBeforeUnload && WM.appWindow !== 'login') {
-        return "Do you want to leave PsychoMorph?";
-    } else {
-        WM.noOnBeforeUnload = false;
-    }
-*/
-}).on('hashchange', hashChange);
+    $('div.growl').remove();                                                    // removes growl notifications when download window is ready
+}).on('hashchange', hashChange);                                                // functions when hash changes (in functions.js file)
 
-// !document functions
-// functions to keep track of mouse and key events
-$(document).mousedown(function(e) {
+// ! ***** Document mouse & key events *****
+$(document).mousedown(function(e) {                                             // log current mousedown
     WM.pageEvents.mousebutton[e.which] = true;
 }).mouseup(function(e) {
     WM.pageEvents.mousebutton[e.which] = false;
-}).keydown(function(e) {
+}).keydown(function(e) {                                                        // log current keydown
     WM.pageEvents.key[e.which] = true;
 }).keyup(function(e) {
     WM.pageEvents.key[e.which] = false;
 }).ajaxError(function() {
     //growl("Sorry, there was an error with this function.", 1000);
-}).delegate('.ui-dialog', 'keyup', function(e) {
-    // pressing the enter key selects default button on dialogs
-    var tagName;
-
-    tagName = e.target.tagName.toLowerCase();
-    tagName = (tagName === 'input' && e.target.type === 'button') ? 'button' : tagName;
-
-    if (e.which === $.ui.keyCode.ENTER
-        && tagName !== 'textarea'
-        && tagName !== 'select'
-        && tagName !== 'button') {
-        $(this).find('.ui-dialog-buttonset button.ui-state-focus').eq(0).trigger('click');
-        return false;
+}).delegate('.ui-dialog', 'keyup', function(e) {                                // pressing the enter key selects default button on dialogs
+    if (e.which === $.ui.keyCode.ENTER) {
+        var tagName;
+    
+        tagName = e.target.tagName.toLowerCase();
+        tagName = (tagName === 'input' && e.target.type === 'button') ? 'button' : tagName;
+    
+        if (   tagName !== 'textarea'
+            && tagName !== 'select'
+            && tagName !== 'button') {
+            console.log("Pressed ENTER on a " + tagName);
+            $(this).find('.ui-dialog-buttonset button.ui-state-focus').eq(0).trigger('click');
+            return false;
+        }
     }
-}).bind('drop dragover', function(e) {
-    // drag and drop upload
+}).bind('drop dragover', function(e) {                                          // necessary for drag and drop upload
     e.preventDefault();
-}).keyup(function(e) {
-    // ! ***** keyboard shortcuts  *****
+}).keyup(function(e) {                                                          // functions on keyup (cancel some delineation visuals)
     // e.which: a=>65 ... z=>90, 0=>48 ... 9=>57
     // lookup at http://api.jquery.com/event.which/
 
-    if (WM.appWindow == 'delineate' && !((e.ctrlKey || e.metaKey)
-        && e.shiftKey) && WM.delinfunc == 'move') {
-        cursor('auto');
-        quickhelp();
-    }
-    if (WM.appWindow == 'delineate' && (e.which == KEYCODE.ctrl || e.which == KEYCODE.cmd)) {
-        // cursor is hovering over a delin point
-        $('.pt').removeClass('couldselect');
-        drawTem();
+    if (WM.appWindow == 'delineate') {
+        if (!((e.ctrlKey || e.metaKey) && e.shiftKey) && WM.delinfunc == 'move') {
+            cursor('auto');
+            quickhelp();
+        }
+        if (e.which == KEYCODE.ctrl || e.which == KEYCODE.cmd) {                // cursor is hovering over a delin point
+            $('.pt').removeClass('couldselect');
+            drawTem();
+        }
     }
 }).keydown(function(e) {
-    var navKeys,    // list of keycodes for navigation (except when in input boxes)
-        funcKeys;   // list of keycodes for text functions (except when in input boxes)
+    var navKeys,  // list of keycodes for navigation (except when in input boxes)
+        funcKeys; // list of keycodes for text functions (except when in input boxes)
 
     navKeys = [
         KEYCODE.left_arrow,
@@ -391,93 +313,93 @@ $(document).mousedown(function(e) {
         // and delete/arrow functions when dialog windows are open
         // or on the login page or an input/textarea is focussed
         return true;
-    } else if (e.altKey) {
-        // ! alt-Key shortcuts
+    } else if (e.altKey) {                                                      // ! alt-Key shortcuts
         if (e.which == KEYCODE.a) {
-            $('#createTransform').click();           // alt-A
+            $('#createTransform').click();                                      // alt-A
         } else if (e.which == KEYCODE.c) {
-            $('#closeMouth').click();                // alt-C
+            $('#closeMouth').click();                                           // alt-C
         } else if (e.which == KEYCODE.d) {
-            $('#autoDelineate').click();             // alt-D
+            $('#autoDelineate').click();                                        // alt-D
         } else if (e.which == KEYCODE.f) {
-            $('#fitTemplate').click();               // alt-F
+            $('#fitTemplate').click();                                          // alt-F
         } else if (e.which == KEYCODE.l) {
             if (e.shiftKey) {
-                $('#deleteLine').click();            // shift-alt-L
+                $('#deleteLine').click();                                       // shift-alt-L
             } else {
-                $('#newLine').click();               // alt-L
+                $('#newLine').click();                                          // alt-L
             }
         } else if (WM.appWindow == 'delineate'
                 &&   (e.which == KEYCODE.plus
                    || e.which == KEYCODE.add
                    || e.which == KEYCODE.equal_sign)) {
-            temSizeChange(1);                        // alt-plus
+            temSizeChange(1);                                                   // alt-plus
         } else if (WM.appWindow == 'delineate'
-                &&       (e.which == KEYCODE.minus
+                &&    (e.which == KEYCODE.minus
                     || e.which == KEYCODE.subtract
                     || e.which == KEYCODE.dash)) {
-            temSizeChange(-1);                       // alt-minus
-        } else if (WM.appWindow == 'delineate' && e.which ==  KEYCODE.right_arrow) {
-            temRotate(0.01745);                     // alt-right arrow
-        } else if (WM.appWindow == 'delineate' && e.which ==  KEYCODE.left_arrow) {
-            temRotate(-0.01745);                     // alt-left arrow
+            temSizeChange(-1);                                                  // alt-minus
+        } else if (WM.appWindow == 'delineate' &&
+                   e.which ==  KEYCODE.right_arrow) {
+            temRotate(0.01745);                                                 // alt-right arrow
+        } else if (WM.appWindow == 'delineate' &&
+                   e.which ==  KEYCODE.left_arrow) {
+            temRotate(-0.01745);                                                // alt-left arrow
         } else {
             return true;
         }
-    } else if (e.ctrlKey || e.metaKey) {
-        // ! shift-cmd shortcuts
+    } else if (e.ctrlKey || e.metaKey)  {                                       // ! shift-cmd shortcuts
         if (e.shiftKey) {
-            if (e.which == KEYCODE.backspace || e.which == KEYCODE.delete) {
+            if (e.which == KEYCODE.backspace || e.which == KEYCODE.delete) {    // shift-cmd-delete or shift-cmd-backspace
                 if ($finder.filter(':visible').length) {
                     // delete with no confirm
-                    fileDelete(false);               // shift-cmd-delete or shift-cmd-backspace
+                    fileDelete(false);
                 }
-            } else if (e.which == KEYCODE.a) {
-                $('#batchAverage').click();          // shift-cmd-A
-            } else if (e.which == KEYCODE.b) {
-                $('#scramble').click();              // shift-cmd-B
-            } else if (e.which == KEYCODE.c) {
-                $('#multiContinua').click();         // shift-cmd-C
-            } else if (e.which == KEYCODE.d) {
-                $('#temVis').click();                // shift-cmd-D
-            } else if (e.which == KEYCODE.e) {
-                $('#batchEdit').click();             // shift-cmd-E
-            } else if (e.which == KEYCODE.f) {
-                $('#facialMetrics').click();         // shift-cmd-F
-            } else if (e.which == KEYCODE.g) {
-                $('#gridFaces').click();             // shift-cmd-G
-            } else if (e.which == KEYCODE.h) {
-                $('#alignEyes').click();             // shift-cmd-H
-            } else if (e.which == KEYCODE.i) {
-                $('#mirror').click();                // shift-cmd-I
-            } else if (e.which == KEYCODE.k) {
-                $('#crop').click();                  // shift-cmd-K
-            } else if (e.which == KEYCODE.l) {
-                $('#rotate').click();                // shift-cmd-L
-            } else if (e.which == KEYCODE.m) {
-                $('#mask').click();                  // shift-cmd-M
-            } else if (e.which == KEYCODE.n) {
-                $('#batchRename').click();           // shift-cmd-N
-            } else if (e.which == KEYCODE.o) {
-                $('#movingGif').click();             // shift-cmd-O
-            } else if (e.which == KEYCODE.p) {
-                $('#singlePCA').click();             // shift-cmd-P
-            } else if (e.which == KEYCODE.r) {
-                $('#resize').click();                // shift-cmd-R
-            } else if (e.which == KEYCODE.s) {
-                $('#saveAs').click();                // shift-cmd-S
-            } else if (e.which == KEYCODE.t) {
-                $('#batchTransform').click();        // shift-cmd-T
-            } else if (e.which == KEYCODE.v) {
-                $('#PCvis').click();                 // shift-cmd-V
-            } else if (e.which == KEYCODE.w) {
-                $('#webcamPhoto').click();           // shift-cmd-W
-            } else if (e.which == KEYCODE.x) {
-                $('#pixels').click();                // shift-cmd-X
-            } else if (e.which == KEYCODE.y) {
-                $('#symmetrise').click();            // shift-cmd-Y
-            } else if (e.which == KEYCODE.z) {
-                $('#redo').click();                  // shift-cmd-Z
+            } else if (e.which == KEYCODE.a) {                                  // shift-cmd-A
+                $('#batchAverage').click();
+            } else if (e.which == KEYCODE.b) {                                  // shift-cmd-B
+                $('#scramble').click();
+            } else if (e.which == KEYCODE.c) {                                  // shift-cmd-C
+                $('#multiContinua').click();
+            } else if (e.which == KEYCODE.d) {                                  // shift-cmd-D
+                $('#temVis').click();
+            } else if (e.which == KEYCODE.e) {                                  // shift-cmd-E
+                $('#batchEdit').click();
+            } else if (e.which == KEYCODE.f) {                                  // shift-cmd-F
+                $('#facialMetrics').click();
+            } else if (e.which == KEYCODE.g) {                                  // shift-cmd-G
+                $('#gridFaces').click();
+            } else if (e.which == KEYCODE.h) {                                  // shift-cmd-H
+                $('#alignEyes').click();
+            } else if (e.which == KEYCODE.i) {                                  // shift-cmd-I
+                $('#mirror').click();
+            } else if (e.which == KEYCODE.k) {                                  // shift-cmd-K
+                $('#crop').click();
+            } else if (e.which == KEYCODE.l) {                                  // shift-cmd-L
+                $('#rotate').click();
+            } else if (e.which == KEYCODE.m) {                                  // shift-cmd-M
+                $('#mask').click();
+            } else if (e.which == KEYCODE.n) {                                  // shift-cmd-N
+                $('#batchRename').click();
+            } else if (e.which == KEYCODE.o) {                                  // shift-cmd-O
+                $('#movingGif').click();
+            } else if (e.which == KEYCODE.p) {                                  // shift-cmd-P
+                $('#singlePCA').click();
+            } else if (e.which == KEYCODE.r) {                                  // shift-cmd-R
+                $('#resize').click();
+            } else if (e.which == KEYCODE.s) {                                  // shift-cmd-S
+                $('#saveAs').click();
+            } else if (e.which == KEYCODE.t) {                                  // shift-cmd-T
+                $('#batchTransform').click();
+            } else if (e.which == KEYCODE.v) {                                  // shift-cmd-V
+                $('#PCvis').click();
+            } else if (e.which == KEYCODE.w) {                                  // shift-cmd-W
+                $('#webcamPhoto').click();
+            } else if (e.which == KEYCODE.x) {                                  // shift-cmd-X
+                $('#pixels').click();
+            } else if (e.which == KEYCODE.y) {                                  // shift-cmd-Y
+                $('#symmetrise').click();
+            } else if (e.which == KEYCODE.z) {                                  // shift-cmd-Z
+                $('#redo').click();
             } else if (WM.appWindow == 'delineate' && WM.delinfunc == 'move') {
                 setTimeout(function() {
                     // delay quickhelp so it doesn't show every time you use a shift-cmd shortcut
@@ -490,101 +412,88 @@ $(document).mousedown(function(e) {
             } else {
                 return true;
             }
-        } else {
-            // ! cmd-key shortcuts
-            if (e.which == KEYCODE.backspace || e.which == KEYCODE.delete) {
-                $('#deleteItems').click();             // cmd-delete or cmd-backspace
-            } else if (e.which == KEYCODE.right_arrow) {
-                nextImg();                             // cmd-right
-            } else if (e.which == KEYCODE.left_arrow) {
-                prevImg();                             // cmd-left
-            } else if (e.which == KEYCODE['0'] || e.which == KEYCODE['0n']) {
-                $('#zoomoriginal').click();            // cmd-0
-            } else if (e.which == KEYCODE['1'] || e.which == KEYCODE['1n']) {
-                $('#showFinder').click();              // cmd-1
-            } else if (e.which == KEYCODE['2'] || e.which == KEYCODE['2n']) {
-                $('#showDelineate').click();           // cmd-2
-            } else if (e.which == KEYCODE['3'] || e.which == KEYCODE['3n']) {
-                $('#showAverage').click();             // cmd-3
-            } else if (e.which == KEYCODE['4'] || e.which == KEYCODE['4n']) {
-                $('#showTransform').click();          // cmd-4
-            } else if (e.which == KEYCODE['5'] || e.which == KEYCODE['5n']) {
-                $('#showProjects').click();           // cmd-5
-            } else if (e.which == KEYCODE.a) {
-                $('#select').click();                 // cmd-a
-            } else if (e.which == KEYCODE.c) {
-                $('#copyItems').click();              // cmd-c
-            } else if (e.which == KEYCODE.d) {
-                $('#download').click();               // cmd-d
-            } else if (e.which == KEYCODE.f) {
-                $('#find').click();                   // cmd-f
-            } else if (e.which == KEYCODE.g) {
-                $('#fileListGet').click();            // cmd-g
-            } else if (e.which == KEYCODE.i) {
-                $('#getInfo').click();                // cmd-i
-            } else if (e.which == KEYCODE.m) {
-                $('#fitsize').click();                // cmd-m
-            } else if (e.which == KEYCODE.n) {
-                $('#newFolder').click();              // cmd-n
-            } else if (e.which == KEYCODE.p) {
-                $('#newProject').click();             // cmd-p
-            } else if (e.which == KEYCODE.q) {
-                $('#logout').click();                 // cmd-q
-            } else if (e.which == KEYCODE.r) {
-                $('#refresh').click();                // cmd-r
-            } else if (e.which == KEYCODE.s) {
-                $('#save').click();                   // cmd-s
-            } else if (e.which == KEYCODE.t) {
-                $('#toggletem').click();              // cmd-t
-            } else if (e.which == KEYCODE.u) {
-                $('#upload').click();                 // cmd-u
-            } else if (e.which == KEYCODE.v) {
-                $('#pasteItems').click();             // cmd-v
-            } else if (e.which == KEYCODE.w) {
-                $(".modal:visible").dialog("close");  // cmd-w
-            } else if (e.which == KEYCODE.x) {
-                $('#cutItems').click();               // cmd-x
-            } else if (e.which == KEYCODE.z) {
-                $('#undo').click();                   // cmd-z
+        } else {                                                                // ! cmd-key shortcuts
+            if (e.which == KEYCODE.backspace || e.which == KEYCODE.delete) {    // cmd-delete or cmd-backspace
+                $('#deleteItems').click();
+            } else if (e.which == KEYCODE.right_arrow) {                        // cmd-right
+                nextImg();
+            } else if (e.which == KEYCODE.left_arrow) {                         // cmd-left
+                prevImg();
+            } else if (e.which == KEYCODE['0'] || e.which == KEYCODE['0n']) {   // cmd-0
+                $('#zoomoriginal').click();
+            } else if (e.which == KEYCODE['1'] || e.which == KEYCODE['1n']) {   // cmd-1
+                $('#showFinder').click();
+            } else if (e.which == KEYCODE['2'] || e.which == KEYCODE['2n']) {   // cmd-2
+                $('#showDelineate').click();
+            } else if (e.which == KEYCODE['3'] || e.which == KEYCODE['3n']) {   // cmd-3
+                $('#showAverage').click();
+            } else if (e.which == KEYCODE['4'] || e.which == KEYCODE['4n']) {   // cmd-4
+                $('#showTransform').click();
+            } else if (e.which == KEYCODE['5'] || e.which == KEYCODE['5n']) {   // cmd-5
+                $('#showProjects').click();
+            } else if (e.which == KEYCODE.a) {                                  // cmd-a
+                $('#select').click();
+            } else if (e.which == KEYCODE.c) {                                  // cmd-c
+                $('#copyItems').click();
+            } else if (e.which == KEYCODE.d) {                                  // cmd-d
+                $('#download').click();       
+            } else if (e.which == KEYCODE.f) {                                  // cmd-f
+                $('#find').click();           
+            } else if (e.which == KEYCODE.g) {                                  // cmd-g
+                $('#fileListGet').click();    
+            } else if (e.which == KEYCODE.i) {                                  // cmd-i
+                $('#getInfo').click();        
+            } else if (e.which == KEYCODE.m) {                                  // cmd-m
+                $('#fitsize').click();        
+            } else if (e.which == KEYCODE.n) {                                  // cmd-n
+                $('#newFolder').click();      
+            } else if (e.which == KEYCODE.p) {                                  // cmd-p
+                $('#newProject').click();     
+            } else if (e.which == KEYCODE.q) {                                  // cmd-q
+                $('#logout').click();         
+            } else if (e.which == KEYCODE.r) {                                  // cmd-r
+                $('#refresh').click();        
+            } else if (e.which == KEYCODE.s) {                                  // cmd-s
+                $('#save').click();           
+            } else if (e.which == KEYCODE.t) {                                  // cmd-t
+                $('#toggletem').click();      
+            } else if (e.which == KEYCODE.u) {                                  // cmd-u
+                $('#upload').click();         
+            } else if (e.which == KEYCODE.v) {                                  // cmd-v
+                $('#pasteItems').click();     
+            } else if (e.which == KEYCODE.w) {                                  // cmd-w
+                $(".modal:visible").dialog("close");
+            } else if (e.which == KEYCODE.x) {                                  // cmd-x
+                $('#cutItems').click();       
+            } else if (e.which == KEYCODE.z) {                                  // cmd-z
+                $('#undo').click();           
             } else if (e.which == KEYCODE.plus
                     || e.which == KEYCODE.add
-                    || e.which == KEYCODE.equal_sign) {
-                $('#zoomin').click();                 // cmd-plus (+)
+                    || e.which == KEYCODE.equal_sign) {                         // cmd-plus (+)
+                $('#zoomin').click();                  
             } else if (e.which == KEYCODE.minus
                     || e.which == KEYCODE.subtract
-                    || e.which == KEYCODE.dash) {
-                $('#zoomout').click();                 // cmd-minus (-)
-            } else if (e.which == KEYCODE.comma) {
-                $('#prefs').click();                 // cmd-comma (,)
-            } else if ($('.pt:hover').length) {
-                // cursor is hovering over a delin point
-                var n,
-                    conPts;
-
-                n = $('.pt:hover').attr('n');
-                conPts = WM.pts[n].data('connectedPoints');
-                $.each(conPts, function(i,pt) {
-                    WM.pts[pt].addClass('couldselect');
-                });
-                drawTem();
+                    || e.which == KEYCODE.dash) {                               // cmd-minus (-)
+                $('#zoomout').click();           
+            } else if (e.which == KEYCODE.comma) {                              // cmd-comma (,)
+                $('#prefs').click();              
+            } else if ($('.pt:hover').length) {                                 // cursor is hovering over a delin point
+                showHoverPoints();
             } else {
                 return true;
             }
         }
         return false;
-    } else if ((e.which == KEYCODE.backspace || e.which == KEYCODE.delete)
-                && $('#average-list li.selected').length) {
-        // delete selected items for average list
+    } else if ((e.which == KEYCODE.backspace || e.which == KEYCODE.delete) &&
+                $('#average-list li.selected').length) {                        // delete selected items for average list
         $('#average-list li.selected').remove();
         averageListCheck();
-    } else if (    e.which == KEYCODE.backspace
-                && ($("input:focus").length === 0)
+    } else if (    e.which == KEYCODE.backspace                                 // pressed backspace and no inputs are focussed
+                && ($("input:focus").length === 0) 
                 && ($("textarea:focus").length === 0)
               ) {
-        // pressed backspace and no inputs are focussed
         // do nothing, just prevents accidental page back in FireFox
-    } else if (e.which == KEYCODE.enter && WM.delinfunc == 'lineadd') {
-        // end new line
+    } else if (e.which == KEYCODE.enter && WM.delinfunc == 'lineadd') {         // end new line
         var line;
 
         WM.delinfunc = 'move';
@@ -604,28 +513,23 @@ $(document).mousedown(function(e) {
         }
     } else if (e.which == KEYCODE.enter
                 && $finder.filter(':visible').length
-                && $finder.find('li.file.selected').length == 1) {
-        // pressed return and finder is visible and one file is selected
+                && $finder.find('li.file.selected').length == 1) {              // pressed return and finder is visible and one file is selected
         fileRename();
     } else if (e.which == KEYCODE.enter
                 && $finder.filter(':visible').length
                 && $finder.find('li.file.selected').length === 0
-                && $finder.find('li.folder').not('.closed').length > 0) {
-        // pressed return and finder is visible and one folder is selected
+                && $finder.find('li.folder').not('.closed').length > 0) {       // pressed return and finder is visible and one folder is selected
         folderRename();
     } else if (e.which == KEYCODE.enter
-                && $('button.ui-state-focus:visible').length == 1) {
-        // pressed enter and only 1 visible button is focussed
+                && $('button.ui-state-focus:visible').length == 1) {            // pressed enter and only 1 visible button is focussed
         $('button.ui-state-focus:visible').click();
-    } else if (e.which == KEYCODE.left_arrow) { // pressed left
+    } else if (e.which == KEYCODE.left_arrow) {                                 // pressed left arrow
         if (WM.appWindow == 'delineate') {
             nudge(-1, 0);
-        } else if ($finder.find('.image-view:visible').length) {
-            // go to previous image
+        } else if ($finder.find('.image-view:visible').length) {                // go to previous image
             $finder.find('li.file.selected, li.folder:not(.closed)')
                    .last().prevAll('li:visible').first().find('> span').click();
-        } else if ($finder.filter(':visible').length) {
-            // go up a directory
+        } else if ($finder.filter(':visible').length) {                         // go up a directory
             if ($finder.find('li.file.selected').length === 0) {
                 var $lastOpen;
 
@@ -636,11 +540,10 @@ $(document).mousedown(function(e) {
             $finder.find('li.file.selected').removeClass('selected');
             WM.finder.updateSelectedFiles();
         }
-    } else if (e.which == KEYCODE.up_arrow) { // pressed up
+    } else if (e.which == KEYCODE.up_arrow) {                                   // pressed up arrow
         if (WM.appWindow == 'delineate') {
             nudge(0, -1);
-        } else if ($finder.find('.image-view:visible').length) {
-            // go up a directory
+        } else if ($finder.find('.image-view:visible').length) {                // go up a directory
             if ($finder.find('li.file.selected').length === 0) {
                 var $lastOpen;
 
@@ -655,16 +558,14 @@ $(document).mousedown(function(e) {
             $finder.find('li.file.selected, li.folder:not(.closed)')
                    .last().prevAll('li:visible').first().find('> span').click();
         }
-    } else if (e.which == KEYCODE.right_arrow) { // pressed right
+    } else if (e.which == KEYCODE.right_arrow) {                                // pressed right arrow
         if (WM.appWindow == 'delineate') {
             nudge(1, 0);
-        } else if ($finder.find('.image-view:visible').length) {
-            // go to next image
+        } else if ($finder.find('.image-view:visible').length) {                // go to next image
             $finder.find('li.file.selected, li.folder:not(.closed)')
                    .last().nextAll('li:visible')
                    .first().find('> span').click();
-        } else if ($finder.filter(':visible').length) {
-            // go down a directory
+        } else if ($finder.filter(':visible').length) {                         // go down a directory
             $nextOpen = $finder.find('li.folder:not(.closed)')
                                 .last().find('li.folder')
                                 .first().find('>span');
@@ -676,18 +577,17 @@ $(document).mousedown(function(e) {
                        .first().click();
             }
         }
-    } else if (e.which == KEYCODE.down_arrow) { // pressed down
+    } else if (e.which == KEYCODE.down_arrow) {                                 // pressed down arrow
         if (WM.appWindow == 'delineate') {
             nudge(0, 1);
         } else if ($finder.find('.image-view:visible').length) {
             return false;
-        } else if ($finder.filter(':visible').length) {
-            // go to next image
+        } else if ($finder.filter(':visible').length) {                         // go to next image
             $finder.find('li.file.selected, li.folder:not(.closed)')
                    .last().nextAll('li:visible')
                    .first().find('> span').click();
         }
-    } else if (e.which == KEYCODE.esc) { // pressed escape
+    } else if (e.which == KEYCODE.esc) {                                        // pressed escape
         $('#refresh').click();
     } else {
         return true;
@@ -861,22 +761,19 @@ $('#imagebox').click( function(e) {
     e.stopPropagation();
 });
 
-// ! ***** finder functions *****
+// ! ***** Finder *****
 WM.finder = new finder();
 $('#recent_creations').draggable().resizable();
 //$finder.draggable().resizable();
 $finder.on('click', function() {
     $('.context_menu').remove();
-}).on('dblclick doubletap', 'li.file.image:not(.svg), li.file.tem', function() {
-    // open in delineator on double-click
+}).on('dblclick doubletap', 'li.file.image:not(.svg), li.file.tem', function() {// open in delineator on double-click
     delinImage($(this).attr('url'));
-}).on('click', '> ul > li.folder ul', function(e) {
-    // return to base directory when clicking under it
+}).on('click', '> ul > li.folder ul', function(e) {                             // return to base directory when clicking under files
     $(this).closest('li.folder').find('> span').click();
-}).on('click', '> ul > li.folder > ul li', function(e) {
-    // cancel return to base directory when clicking on an item
+}).on('click', '> ul > li.folder > ul li', function(e) {                        // cancel return to base directory when clicking on an item
     e.stopPropagation();
-}).on('click', 'li.file', function(e) {
+}).on('click', 'li.file', function(e) {                                         // click on a file icon
     $('input:visible').blur(); // blur focus on any inputs
     // manage selection of files on click or meta-click
     if (!(e.ctrlKey || e.metaKey || e.shiftKey)) {
@@ -900,10 +797,16 @@ $finder.on('click', function() {
         }
     }
     $(this).toggleClass('selected');
-    $(this).siblings('li.folder').addClass('closed').removeClass('selected').find('li.folder').addClass('closed');
+    
+    // close and unselect sibling folders
+    $(this).siblings('li.folder')
+           .addClass('closed')
+           .removeClass('selected')
+           .find('li.folder')
+           .addClass('closed');
+
     WM.finder.updateSelectedFiles();
-}).on('click', 'li.file.image', function(e) {
-    // show image in imgbox on click
+}).on('click', 'li.file.image', function(e) {                                   // show image in imgbox on click
     var theURL,
         $theImg;
 
@@ -940,7 +843,7 @@ $finder.on('click', function() {
             $imagebox.css('margin-left', $this.width())
         );
     }
-}).on('click', 'li.pca, li.fimg', function(e) {
+}).on('click', 'li.pca, li.fimg', function(e) {                                 // handle files not human readable (pca/fimg)
     if ($finder.hasClass('image-view')) { return false; }
 
     $('#selectedTem').val("PCA files are not human-readable. "
@@ -952,7 +855,7 @@ $finder.on('click', function() {
     $(this).append(
         $imagebox.css('margin-left', $(this).width())
     );
-}).on('click', 'li.txt, li.csv, li.pci', function(e) {
+}).on('click', 'li.txt, li.csv, li.pci', function(e) {                          // display text files (txt/csv/pci)
     if ($finder.hasClass('image-view')) { return false; }
 
     var theURL = $(this).attr('url');
@@ -974,8 +877,7 @@ $finder.on('click', function() {
     $(this).append(
         $imagebox.css('margin-left', $(this).width())
     );
-}).on('click', 'li.tem', function(e) {
-    // show text of file in imgbox on click
+}).on('click', 'li.tem', function(e) {                                          // show text of file in imgbox on click
     if ($finder.hasClass('image-view')) { return false; }
 
     var $this = $(this);
@@ -1006,13 +908,13 @@ $finder.on('click', function() {
     $(this).append(
         $imagebox.css('margin-left', $(this).width())
     );
-}).on('click', 'li.folder > span', function(e) {
-    $finder.find('input').blur();                                             // blur any open inputs for folder name changes
+}).on('click', 'li.folder > span', function(e) {                                // click on a folder
+    $finder.find('input').blur();                                               // blur any open inputs for folder name changes
 
-    $theFolder = $(this).parent('li.folder');                                // folder to open
-    $theFolder.find('li.folder:not(.closed)').addClass('closed');             // close all folders below this level
-    $theFolder.parents('li.folder.selected').removeClass('selected');          // unselect all folders above this level
-
+    $theFolder = $(this).parent('li.folder');                                   // folder to open
+    $theFolder.find('li.folder:not(.closed)').addClass('closed');               // close all folders below this level
+    $theFolder.parents('li.folder.selected').removeClass('selected');           // unselect all folders above this level
+    
     if (e.shiftKey) {
         $theFolder.addClass('closed');
         // select all folders between this one and the nearest selected one
@@ -1038,13 +940,13 @@ $finder.on('click', function() {
 
     var $selFolders = $finder.find('li.folder.selected');
     if ($selFolders.length == 1) {
-        $selFolders.removeClass('closed');                                       // if 1 remaining selected folder, open it
-        $finder.find('li.file.selected').removeClass('selected');             // unselect all files
-        
+        $selFolders.removeClass('closed');                                      // if 1 remaining selected folder, open it
+        $finder.find('li.file.selected').removeClass('selected');               // unselect all files
+
         // add draggable functions to files
         var $dragFiles = $selFolders.find('>ul>li.file:not(.ui-draggable)')
         $dragFiles.trigger('DOMNodeInserted');
-        
+
         $selFolders.find('>ul').css('margin-left', $selFolders.width());
     }
 
@@ -1055,11 +957,11 @@ $finder.on('click', function() {
         $theFolder.find('> ul').css('width', $finder.width());
     }
 
-    $finder.scrollLeft($finder.width());                                    // scroll all the way to the right
+    $finder.scrollLeft($finder.width());                                        // scroll all the way to the right
     WM.finder.updateSelectedFiles();
 });
 
-// ! ***** menu item functions *****
+// ! ***** Menu Items *****
 // !#imageview
 $('#imageview').click( function() {
     if ($(this).hasClass('disabled')) { return false; }
@@ -1153,13 +1055,15 @@ function rgba_change($chooser, $rgba, ui) {
     $rgba.find('span.r').text(r);
     $rgba.find('span.g').text(g);
     $rgba.find('span.b').text(b);
-    
+
     if (ui.values.length == 4) {
         var a = round(ui.values[3]/255, 2);
-        $chooser.css('background-color', 'rgba(' + r + ', ' + g + ', ' + b + ',' + a + ')');
+        $chooser.css('background-color', 
+                     'rgba(' + r + ', ' + g + ', ' + b + ',' + a + ')');
         $rgba.find('span.a').text(a);
     } else {
-        $chooser.css('background-color', 'rgb(' + r + ', ' + g + ', ' + b + ')');
+        $chooser.css('background-color', 
+                     'rgb(' + r + ', ' + g + ', ' + b + ')');
     }
 }
 
@@ -1167,7 +1071,7 @@ $('.rgb_chooser').each( function() {
     var $rgba = $('<span class="rgba_text" />');
     $rgba.html('rgb(<span class="r"></span>, <span class="g"></span>, <span class="b"></span></span>)');
     $(this).before($rgba);
-    
+
     $(this).slider({
         values: [127, 127, 127],
         min: 0,
@@ -1188,7 +1092,7 @@ $('.rgba_chooser').each( function() {
     $rgba.html(' rgba(<span class="r"></span>, <span class="g"></span>, <span class="b"></span>, <span class="a"></span>)');
     $(this).wrap($wrap);
     $(this).parent(".rgba_chooser_bg").before($rgba);
-    
+
     $(this).slider({
         values: [127, 127, 127, 255],
         min: 0,
@@ -1285,7 +1189,7 @@ $('#save').not('.disabled').click(function() {
         $('#trans-save-button').click();
     }
 });
-// !saveAs
+// !#saveAs
 /*
 $('#saveAs').not('.disabled').click(function() {
 
@@ -1336,7 +1240,7 @@ $('#download').not('.disabled').click(function() {
 // !#toggle_delintoolbar
 $('#toggle_delintoolbar').not('.disabled').click(function() {
     var $dt = $('#delin_toolbar');
-    
+
     if ($dt.filter(':visible').length) {
         $dt.hide();
         $(this).find('span.checkmark').hide();
@@ -1367,6 +1271,7 @@ $('#toggletem').not('.disabled').click(function() {
         drawTem();
     }
 });
+// !#emptyTrash
 $('#emptyTrash').not('.disabled').click( function() { emptyTrash(); });
 // !#toggletrash
 $('#toggletrash').not('.disabled').click(function() {
@@ -1381,7 +1286,7 @@ $('#toggletrash').not('.disabled').click(function() {
 });
 // !#toggle_lightTable
 $('#toggle_lightTable').not('.disabled').click(function() {
-    
+
     var $cm = $(this).find('span.checkmark')
     if ($('#lightTable').filter(':visible').length) {
         $('#lightTable').dialog('close');
@@ -1401,6 +1306,7 @@ $('#toggle_lightTable').not('.disabled').click(function() {
         lightTableResize();
     }
 });
+// !#lightTable
 $('#lightTable').on('dblclick', 'img', function() {
     $(this).remove();
     if ($('#lightTable img').css('height','800').length === 0) {
@@ -1411,8 +1317,7 @@ $('#lightTable').on('dblclick', 'img', function() {
         });
     }
     lightTableResize();
-});
-$('#lightTable').droppable({
+}).droppable({
     accept: 'li.file.image',
     tolerance: "pointer",
     drop: function(event, ui) {
@@ -1427,9 +1332,9 @@ $('#lightTable').droppable({
             $img.attr('title', urlToName(url));
             $('#lightTable').append($img);
         });
-        
+
         $(ui.helper).remove();
-        
+
         $('#lightTable img').css({ height: 800 });
         lightTableResize();
     }
@@ -1449,7 +1354,7 @@ function lightTableResize() {
     var $divs = $('#lightTable img');
     var x = $divs.height();
     var scrollHeight = $('#lightTable').prop('scrollHeight');
-    
+
     if (scrollHeight > h && x > 25) {
         x -= 10;
         $divs.css({height: x});
@@ -1633,7 +1538,7 @@ $('#find').not('.disabled').click(function() {
     } else if (WM.appWindow == 'project') {
         $sb = $('#projectsearchbar');
     }
-    
+
     $sb.toggle().val('').focus().trigger('keyup');
     sizeToViewport();
 });
@@ -1641,7 +1546,7 @@ $('#find').not('.disabled').click(function() {
 $('#searchbar').keyup(function() {
     var searchtext = $(this).val();
     var $allFiles = $finder.find('li.file');
-    
+
     $allFiles.show();
     if (searchtext !== '') {
         $allFiles.not(':contains("' + searchtext + '")').hide();
@@ -1652,7 +1557,7 @@ $('#searchbar').keyup(function() {
 $('#projectsearchbar').keyup(function() {
     var searchtext = $(this).val();
     var $allProjects = $('#project_list tbody tr');
-    
+
     $allProjects.show();
     if (searchtext !== '') {
         $allProjects.not(':contains("' + searchtext + '")').hide();
@@ -1769,7 +1674,9 @@ $('#fitTemplate').not('.disabled').click(function() {
             files[i] = $(this).attr('url');
         });
         if (files.length > 0) {
-            $('#footer-text').html('0 of ' + files.length + ' image' + ((files.length == 1) ? '' : 's') + ' fitted to template <code>' + $('#currentTem_name').text() + '</code>');
+            $('#footer-text').html('0 of ' + files.length + ' image' + 
+                 ((files.length == 1) ? '' : 's') + ' fitted to template <code>' + 
+                 $('#currentTem_name').text() + '</code>');
             WM.selectedFile = 0;
             var url = files[0];
             var name = WM.project.id + urlToName(url);
@@ -1877,9 +1784,7 @@ $('#alignEyes').not('.disabled').click(function() {
 //!.batch_name toggles
 $('.batch_name').on('change', 'input.toggle_superfolder, input.toggle_subfolder, input.toggle_prefix, input.toggle_suffix', function() {
     batchToggle(this);
-});
-
-$('.batch_name').on('click', 'span:not(.multibatch)', function() {
+}).on('click', 'span:not(.multibatch)', function() {
     var $this = $(this);
     var w = $this.width();
     var current_val = $this.html();
@@ -1890,14 +1795,18 @@ $('.batch_name').on('click', 'span:not(.multibatch)', function() {
 
         if ($this.hasClass('batch_superfolder')) {
             if (val.length === 0) {
-                $(this).closest('div.batch_name').find('.toggle_superfolder').prop('checked', false);
+                $(this).closest('div.batch_name')
+                       .find('.toggle_superfolder')
+                       .prop('checked', false);
             } else {
                 if (val.substr(0, 1) != '/') val = '/' + val;
                 if (val.substr(-1) != '/') val = val + '/';
             }
         } else if ($this.hasClass('batch_subfolder')) {
             if (val.length === 0) {
-                $(this).closest('div.batch_name').find('.toggle_subfolder').prop('checked', false);
+                $(this).closest('div.batch_name')
+                       .find('.toggle_subfolder')
+                       .prop('checked', false);
             } else {
                 if (val.substr(0, 1) != '/') val = '/' + val;
                 if (val.substr(-1) != '/') val = val + '/';
@@ -1905,12 +1814,16 @@ $('.batch_name').on('click', 'span:not(.multibatch)', function() {
         } else if ($this.hasClass('batch_prefix')) {
             val = val.replace(/\//g, '');
             if (val.length === 0) {
-                $(this).closest('div.batch_name').find('.toggle_prefix').prop('checked', false);
+                $(this).closest('div.batch_name')
+                       .find('.toggle_prefix')
+                       .prop('checked', false);
             }
         } else if ($this.hasClass('batch_suffix')) {
             val = val.replace(/\//g, '');
             if (val.length === 0) {
-                $(this).closest('div.batch_name').find('.toggle_suffix').prop('checked', false);
+                $(this).closest('div.batch_name')
+                       .find('.toggle_suffix')
+                       .prop('checked', false);
             }
         }
         $this.html(val).show();
@@ -2048,10 +1961,11 @@ $('#mirror').not('.disabled').click( function() {
 $('#symmetrise').not('.disabled').click(function() {
     batchSymmetrise();
 });
-// !movie functions
+// ! ***** Movies *****
 $('#transMovieSteps').change( function() {
     var value = parseInt($(this).val());
-    $('#transMovieStepsDisplay').html("(" + (value+1) + " images in " + (Math.round(1000/value)/10) + "% steps)");
+    $('#transMovieStepsDisplay').html("(" + (value+1) + " images in " + 
+                                       (Math.round(1000/value)/10) + "% steps)");
 });
 $('#movieHeight').slider({
     value: 200,
@@ -2151,23 +2065,23 @@ $('#batchAverage').not('.disabled').click(function() {
     batchAverage();
 });
 
-// !batchTransform
+// !#batchTransform
 $('#batchTransform').not('.disabled').click(function() {
     batchTransform();
 });
 
-// !temVis
+// !#temVis
 $('#temVis').not('.disabled').click(function() {
     batchTemVis();
 });
-
+// !#tem_point_style
 $('#tem_point_style').change(function() {
     var theStyle = $(this).val();
     var $fill = $('#tem_point_fill').closest("li");
     var $color = $('#tem_point_color').closest('li');
     var $width = $('#tem_point_strokewidth').closest('li');
     var $radius = $('#tem_point_radius').closest('li');
-    
+
     if (theStyle == 'none') {
         $fill.hide();
         $color.hide();
@@ -2192,7 +2106,7 @@ $('#tem_point_style').change(function() {
 });
 
 $('#tem_point_style').trigger('change');
-
+// !#batch*Dialog
 $('#batchTransDialog, #batchEditDialog, #batchAvgDialog').delegate('textarea', 'keydown', function(e) {
     if (e.which == KEYCODE.tab || e.which == KEYCODE.enter) {
         e.preventDefault();
@@ -2210,7 +2124,7 @@ $('#batchTransDialog, #batchEditDialog, #batchAvgDialog').delegate('textarea', '
     }
 });
 
-//!gridFaces
+// !#gridFaces
 $('#gridFaces').not('.disabled').click(function() {
     $('#showTransform').click();
     $('#destimages, #continua').hide();
@@ -2221,7 +2135,7 @@ $('#createGrid').button().click( function() {
     createGrid();
 });
 
-//!multiContinua
+//!#multiContinua
 $('#multiContinua').not('.disabled').click(function() {
     $('#showTransform').click();
     $('#destimages, #grid').hide();
@@ -2246,7 +2160,7 @@ $('#continua-imgs img').droppable({
     }
 });
 
-// !batchTag
+// !#batchTag
 $('#batchTag').not('.disabled').click(function() {
     // put all img files in a list
     var regex = new RegExp('(^/images|\.jpg$)', 'g');
@@ -2303,11 +2217,11 @@ $('#batchTag').not('.disabled').click(function() {
         });
     }
 });
-//!batchModDelin
+//!#batchModDelin
 $('#batchModDelin').not('.disabled').click(function() {
     batchModDelin();
 });
-//!facialMetrics
+//! ***** FacialMetrics *****
 $('#fmButtons').on('click', 'li', function() {
     $('#fm_name').val($(this).text());
     $('#fm_equation').val($(this).attr('data-equation'));
@@ -2354,10 +2268,9 @@ $('#fm_new').click(function() {
     fmAddEquation();
 });
 $('#facialMetrics').not('.disabled').click(function() {
-
     batchFacialmetrics();
 });
-// !undo
+// !#undo
 $('#undo').not('.disabled').click(function() {
 
     if (WM.appWindow == 'delineate') {
@@ -2385,7 +2298,7 @@ $('#undo').not('.disabled').click(function() {
         }
     }
 });
-// !redo
+// !#redo
 $('#redo').not('.disabled').click(function() {
     if (WM.appWindow == 'delineate') {
         if (WM.delinfunc == 'move') {
@@ -2426,7 +2339,7 @@ $('#select').not('.disabled').click(function() {
         }
     }
 });
-// !createTransform
+// !#createTransform
 $('#createTransform').not('.disabled').click(function() {
     if (WM.appWindow == 'average') {
         getAverage();
@@ -2443,15 +2356,15 @@ $('#createTransform').not('.disabled').click(function() {
         }
     }
 });
-// !currentTem
+// !#currentTem
 $('#currentTem').on('click', 'li', function() {
     setCurrentTem($(this).attr('data-id'));
 });
-// !currentProject
+// !#currentProject
 $('#currentProject').on('click', 'li', function() {
     projectSet($(this).attr('data-id'));
 });
-// !isNewTem
+// !#isNewTem
 $('#isNewTem').click( function() {
     var $button = $('#addTemDialog').parent().find('.default_button .ui-button-text');
     if ($(this).prop('checked')) {
@@ -2460,15 +2373,16 @@ $('#isNewTem').click( function() {
         $button.text('Edit');
     }
 });
-// !editTemplate
+// !#editTemplate
 $('#editTemplate').not('.disabled').click(function() {
-
     editTemplate();
 });
+// !#setPointLabels
 $('#setPointLabels').not('.disabled').click(function() {
 
     if (WM.delin.tem.length != WM.current.tem.length) {
-        growl('The current template does not match the template <code>' + $('#currentTem_name').text() + '</code>');
+        growl('The current template does not match the template <code>' + 
+               $('#currentTem_name').text() + '</code>');
     } else {
         // check if the current user has access to edit this template
         $.ajax({
@@ -2501,19 +2415,19 @@ $('#labelDialog ol').on('focus', 'input', function() {
 
 });
 
-// !setSymPoints
+// !#setSymPoints
 $('#setSymPoints').not('.disabled').click(function() {
     setSymPoints();
 });
-// !whatsnew
+// !#whatsnew
 $('#whatsnew').click( function() {
     $('#whatsnewDialog').dialog({ height: 500 });
 });
-// !menuhelp
+// !#menuhelp
 $('#menuhelp').click(function() {
     $('#help').dialog({ height: 500 });
 });
-// !tinyhelp
+// !#tinyhelp
 $('.tinyhelp').click(function() {
     var topic = $(this).data('topic');
     var scrollTo = $('#help *[data-topic="' + topic + '"]');
@@ -2521,20 +2435,24 @@ $('.tinyhelp').click(function() {
         scrollTo.offset().top -  $('#help').offset().top + $('#help').scrollTop()
     );
 });
-// !emailLisa
+// !#emailLisa
 $('#emailLisa').click(function() {
     WM.noOnBeforeUnload = true;
     location.assign("mailto:lisa.debruine@glasgow.ac.uk?subject=Online PsychoMorph");
     WM.noOnBeforeUnload = false;
 });
-// !show_thumbs
+// !#show_thumbs
 $('#show_thumbs').change(function() {
     if ($(this).prop('checked')) {
         $finder.find('li.image').each (function(i) {
-            $(this).css('background-image', 'url(/scripts/fileAccess?thumb&file=' + $(this).attr('url') + ')');
+            $(this).css('background-image', 
+                        'url(/scripts/fileAccess?thumb&file=' + 
+                        $(this).attr('url') + ')');
         });
     } else {
-        $finder.find('li.image').css('background-image', 'url(/include/images/finder/imgicon.php)');
+        $finder.find('li.image')
+               .css('background-image', 
+                    'url(/include/images/finder/imgicon.php)');
     }
 });
 // !input[type=number]
@@ -2562,6 +2480,23 @@ $('#maskDialog ul input[type=checkbox]').change(function() {
     var checked = $(this).prop('checked');
     maskViewCheck(type, checked);
 });
+// !#masktest
+$('#masktest').click( function() {
+    //var m = drawMask("145,146,147,148,149,150,151,152,153,154,155,156,157;157,184,183,145"); // halo
+    var m = drawMask("111,186,110,185,109,134,135,136,137,138,139,140,141,142," +
+                     "143,144,112,187,113,188,114;114,133,132,131,130,129,128," +
+                     "127,126,125,111 : 112,120,121,122,123,124,114 ; 114,188," +
+                     "113,187,112 : 111,186,110,185,109 ; 109,115,116,117,118," +
+                     "119,111", 5); // face ears
+
+    var $maskDialog = $('<div title="Masked Image" />').append(m);
+    m.css({'width': '100%', 'max-width': WM.originalWidth + 'px', 'height': 'auto'});
+    $maskDialog.dialog({
+        position: { my: 'right top', at: 'right bottom', of: $('.menubar') },
+        width: 450
+    });
+});
+
 // !#transButton
 $('#transButton').button().click(function() {
     var list = filesGetSelected('.image.hasTem', WM.project.id);
@@ -2576,7 +2511,8 @@ $('#transButton').button().click(function() {
         var batchText = '';
         $.each(list, function(i, img) {
             var newimg = '/trans' + img;
-            batchText += img + "\t" + fromimage + "\t" + toimage + "\t" + shape + "\t" + color + "\t" + texture + "\t" + newimg + "\n";
+            batchText += img + "\t" + fromimage + "\t" + toimage + "\t" + 
+                         shape + "\t" + color + "\t" + texture + "\t" + newimg + "\n";
         });
 
         $('#batchTransform').click();
@@ -2617,7 +2553,7 @@ $('#toggle_recent').click(function() {
     }
 });
 
-// !***** delineation interface functions *****
+// ! ***** Delineation interface *****
 
 $delin.click(function(e) {
     if (e.shiftKey && (e.metaKey || e.altKey)) {
@@ -2627,8 +2563,8 @@ $delin.click(function(e) {
     }
 }).on('dblclick doubletap', function() {
     if (WM.delinfunc == 'move') {
-        $('.pt.selected').removeClass('selected'); // unselect all delineation points
-        $('#selectBox').hide(); // and reset the selectBox
+        $('.pt.selected').removeClass('selected');                              // unselect all delineation points
+        $('#selectBox').hide();                                                 // and reset the selectBox
         drawTem();
     }
 }).mousedown(function(e) {
@@ -2644,7 +2580,8 @@ $delin.click(function(e) {
         });
     }
 }).mousemove(function(e) {
-    if ($('#selectBox').prop('x') !== false && e.shiftKey && WM.pageEvents.mousebutton[1]) {
+    if ($('#selectBox').prop('x') !== false && 
+        e.shiftKey && WM.pageEvents.mousebutton[1]) {
         boxHover(e);
     } else {
         resetSelectBox();
@@ -2655,7 +2592,8 @@ $('#selectBox').mouseup(function(e) {
         boxSelect(e);
     }
 }).mousemove(function(e) {
-    if ($('#selectBox').prop('x') !== false && e.shiftKey && WM.pageEvents.mousebutton[1]) {
+    if ($('#selectBox').prop('x') !== false && 
+        e.shiftKey && WM.pageEvents.mousebutton[1]) {
         boxHover(e);
     } else {
         resetSelectBox();
@@ -2666,18 +2604,22 @@ $delin.on("click", ".pt", function(e) {
     if (e.shiftKey) {
         $(this).toggleClass("selected");
     } else if (e.metaKey || e.ctrlKey) {
-        var connectedPoints = $(this).data('connectedPoints');
-        if ($(this).hasClass("selected")) {
-            $.each(connectedPoints, function(j, pt) {
-                WM.pts[pt].removeClass('selected');
-            });
+        if (WM.delinfunc == 'sym') {
+            nextSymPt($(this).attr('n'));
         } else {
-            $.each(connectedPoints, function(j, pt) {
-                WM.pts[pt].addClass('selected');
-            });
+            var connectedPoints = $(this).data('connectedPoints');
+            if ($(this).hasClass("selected")) {
+                $.each(connectedPoints, function(j, pt) {
+                    WM.pts[pt].removeClass('selected');
+                });
+            } else {
+                $.each(connectedPoints, function(j, pt) {
+                    WM.pts[pt].addClass('selected');
+                });
+            }
         }
+        drawTem();
     }
-    drawTem();
 }).on("doubletap", ".pt", function(e) {
     e.stopPropagation();
     var connectedPoints = $(this).data('connectedPoints');
@@ -2691,9 +2633,7 @@ $delin.on("click", ".pt", function(e) {
         });
     }
     drawTem();
-});
-
-$delin.on("mouseenter", ".pt", function(e) {
+}).on("mouseenter", ".pt", function(e) {
     if (WM.delinfunc == 'lineadd') {
         cursor('lineadd');
     } else if (WM.delinfunc == 'label') {
@@ -2714,16 +2654,14 @@ $delin.on("mouseenter", ".pt", function(e) {
                      'y=<span class="y">' + thisy + '</span>';
     $('#footer-text').prop('data-persistent', $('#footer-text').html()).html(footertext);
 
-    if (e.metaKey || e.ctrlKey) {
+    if ((e.metaKey || e.ctrlKey) && WM.delinfunc != 'sym') {
         var conPts = $(this).data('connectedPoints');
         $.each(conPts, function(i,pt) {
             WM.pts[pt].addClass('couldselect');
         });
     }
     drawTem();
-});
-
-$delin.on("mouseup", ".pt", function(e) {
+}).on("mouseup", ".pt", function(e) {
     if (WM.delinfunc == 'label') { return false; }
 
     if (e.shiftKey && (e.metaKey || e.ctrlKey)) {
@@ -2741,6 +2679,14 @@ $delin.on("mouseup", ".pt", function(e) {
 }).on("mouseout", ".pt", function(e) {
     // remove point name and replace with whatever is in data-persistent
     $('#footer-text').html($('#footer-text').prop('data-persistent'));
+    
+    if (e.metaKey || e.ctrlKey) {
+        var conPts = $(this).data('connectedPoints');
+        $.each(conPts, function(i,pt) {
+            WM.pts[pt].removeClass('couldselect');
+        });
+        drawTem();
+    }
 });
 
 $delin.on("mousedown", ".pt", function(e) {
@@ -2756,8 +2702,10 @@ $delin.on("mousedown", ".pt", function(e) {
             var t = 'Added a point to the new line [' + WM.current.lines[line].join() + ']';
             $('#footer-text').html(t).prop('data-persistent', t);
         }
-    } else if (WM.delinfunc == 'sym') {
-        nextSymPt($(this).attr('n'));
+    /*} else if (WM.delinfunc == 'sym') {
+        if (e.metaKey || e.ctrlKey) {
+            nextSymPt($(this).attr('n'));
+        }*/
     } else if (WM.delinfunc == "mask") {
         if (e.metaKey || e.ctrlKey) {
             var conLines = $(this).data('connectedLines');
@@ -2892,7 +2840,7 @@ $("#showDelinHelp").button({
 });
 $('.buttonset').buttonset();
 
-// ! queue setup
+// ! ***** Queue *****
 $queue_n.hide();
 WM.queue = new queue();
 WM.queue.queueCountUpdate();
@@ -2921,23 +2869,11 @@ $queue.on('click', 'li.queueItem:not(.active)', function(e) {
     growl($(this).data('obj').errorText);
 });
 
-$('#masktest').click( function() {
-    //var m = drawMask("145,146,147,148,149,150,151,152,153,154,155,156,157;157,184,183,145"); // halo
-    var m = drawMask("111,186,110,185,109,134,135,136,137,138,139,140,141,142,143,144,112,187,113,188,114;114,133,132,131,130,129,128,127,126,125,111 : 112,120,121,122,123,124,114 ; 114,188,113,187,112 : 111,186,110,185,109 ; 109,115,116,117,118,119,111", 5); // face ears
-
-    var $maskDialog = $('<div title="Masked Image" />').append(m);
-    m.css({'width': '100%', 'max-width': WM.originalWidth + 'px', 'height': 'auto'});
-    $maskDialog.dialog({
-        position: { my: 'right top', at: 'right bottom', of: $('.menubar') },
-        width: 450
-    });
-});
-
-sizeToViewport();
-
-// !***** Done Loading *****
+// ! ***** Done Loading *****
 
 $("body").removeClass("loading");
+
+sizeToViewport();
 
 if (WM.user.id) {
     $('#menu_window li').removeClass('disabled');

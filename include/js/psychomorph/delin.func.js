@@ -1198,6 +1198,19 @@ function nextSymPt(i) {
     }
 }
 
+function showHoverPoints() {
+    var n,
+        conPts;
+    if (WM.delinfunc != 'sym') {
+        n = $('.pt:hover').attr('n');
+        conPts = WM.pts[n].data('connectedPoints');
+        $.each(conPts, function(i,pt) {
+            WM.pts[pt].addClass('couldselect');
+        });
+        drawTem();
+    }
+}
+
 function boxHover(e) {
     var $s = $('#selectBox');
     var x = $s.prop('x');
@@ -1235,24 +1248,6 @@ function boxHover(e) {
             }
         }
     });
-    /*
-    $.each(WM.current.tem, function(i, v) {
-        if (WM.stage.get('#d' + i).length) {
-            var pt = WM.stage.get('#d' + i)[0];
-            var pt = $('.pt[n='+i+']');
-            var ptX = pt.getX();
-            var ptY = pt.getY();
-            if (!pt.selected) {
-                if (ptX >= Math.min(mousedown.x, mouseup.x) && ptX <= Math.max(mousedown.x, mouseup.x) && ptY >= Math.min(mousedown.y, mouseup.y) && ptY <= Math.max(mousedown.y, mouseup.y)) {
-                    pt.setImage(WM.hover_cross);
-                } else {
-                    pt.setImage(WM.cross);
-                }
-            }
-        }
-    });
-    WM.temLayer.draw();
-    */
 }
 
 function boxSelect(e) {

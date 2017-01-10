@@ -2,9 +2,39 @@
 // !USER FUNCTIONS
 //====================================
 
+/* 
 function loginGoogle(authResult) {
     growl(JSON.stringify(authResult));
 }
+
+// Work on user object
+function user(id) {
+    this.id = id;
+    this.accountSize = 0;
+    
+    this.passwordReset = function() {
+        var email = $('#login_email').val();
+    
+        if (email == '') {
+            $('#login_error').html("<li>Please fill in your email address first.</li>");
+            return false;
+        }
+        $('#login_error').html("<li>Checking for your account...</li>");
+    
+        $.ajax({
+            url: 'scripts/userPasswordReset',
+            data: { email: email },
+            success: function(data) {
+                if (data.error) {
+                    $('#login_error').html('<li>' + data.errorText + '</li>');
+                } else {
+                    $('#login_error').html("<li>Check your email for the new password.</li>");
+                }
+            }
+        });
+    }
+}
+*/
 
 function userPasswordReset() {
     var email = $('#login_email').val();
@@ -109,7 +139,7 @@ function userRegister(e) {
     }
 }
 
-function userLogin() {
+function userLogin() { console.log('userLogin()');
     $('#footer-text').html('Checking Login Details...');
     if ($('#loginInterface .reg_item:visible').length) {
         $('#loginInterface .reg_item').hide();
@@ -169,10 +199,30 @@ function userLogin() {
 
 function userLoad() { console.log('userLoad()');
     var $spinner,
-        hash;
+        hash,
+        $file;
 
     $spinner = bodySpinner();
     hash = hashGet();
+    
+    // set up finder location if a hash file is set
+    if (hash.file) {
+        WM.hashfile = function() {
+            WM.finder.open(hash.project_id + hash.file);
+            /*
+            console.log(hash.project_id + hash.file + " selected from hash");
+            if (hash.file.substr(-1, 1) == "/") {
+                $finder.find('li.folder[path="' + hash.project_id + hash.file + '"] > span').click();
+            } else {
+                $finder.find('li.file[url="' + hash.project_id + hash.file + '"]').click();
+            }
+            */
+            
+            WM.hashfile = function() {}
+        }
+    } else {
+        WM.hashfile = function() {}
+    }
 
     msgGet();
     prefGet();
@@ -198,7 +248,7 @@ function userLoad() { console.log('userLoad()');
     }
 }
 
-function userLogout() {
+function userLogout() { console.log('userLogout()');
     $('<div />').html('Do you want to quit and logout?').dialog({
         title: "Logout",
         buttons: {
