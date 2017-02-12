@@ -16,6 +16,7 @@ include_once DOC_ROOT . '/include/classes/psychomorph.class.php';
 $img = new PsychoMorph_ImageTem($_POST['img']);
 
 $mask = explode(',', $_POST['mask']);
+$blur = $_POST['blur'];
 
 $custom = null;
 if (!empty($_POST['custom'])) {
@@ -28,14 +29,23 @@ if (!empty($_POST['custom'])) {
             $custom[$j][$i] = explode(',', $m2);
         }
     }
-} 
+    $desc = "mask: ({$_POST['custom']}), {$blur}";
+} else {
+    $desc = "mask: ({$_POST['mask']}), {$blur}";
+}
 
 
 $rgba = $_POST['rgb'];
 $a = $_POST['transparent'] == 'true' ? 0 : 1;
 array_push($rgba, $a);
 
-$blur = $_POST['blur'];
+if ($_POST['transparent'] == 'true') { 
+        $desc .= ", transparent";
+    } else {
+        $desc .= ", rgb({$_POST['rgb'][0]}, {$_POST['rgb'][1]}, {$_POST['rgb'][2]})";
+    }
+
+
 
 
 if (!$mask || !$rgba) {
@@ -48,6 +58,13 @@ if (!$return['error']) {
     
     $img->mask($mask, $rgba, $blur, $custom);
     
+    if ($custom) {
+        
+    } else {
+        
+    }
+    
+    $img->addHistory($desc);
     $newFileName = array(
         'subfolder' => $_POST['subfolder'],
         'prefix' => $_POST['prefix'],

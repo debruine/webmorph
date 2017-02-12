@@ -33,7 +33,16 @@ if (array_key_exists('img', $_POST)) {
     // read saved tem
     $temfile = IMAGEBASEDIR . preg_replace('@\.(jpg|png|gif)$@', '.tem', $imgname);
     if (file_exists($temfile)) {
-        $mytem = file($temfile);
+        $rawtem = file($temfile);
+        
+        $mytem = array();
+        // remove any comment lines
+        foreach ($rawtem as $line) {
+            if (preg_match('/^[0-9\.\s]+$/', $line)) {
+                $mytem[] = $line;
+            }
+        }
+        
         if (count($mytem) > 0) {
             $pointNumber = trim($mytem[0]);
             $temPoints = array_slice($mytem, 1, $pointNumber);

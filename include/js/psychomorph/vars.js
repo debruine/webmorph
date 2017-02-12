@@ -13,7 +13,6 @@
 //====================================
 
 var $finder = $('#finder');
-var $imagebox = $('#imagebox');
 var $queue = $('#queue');
 var $queue_n = $('#queue_n');
 var $delin = $('#delin');

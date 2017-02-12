@@ -183,6 +183,10 @@ table.sortable thead th:hover {
     color: <?= $text ?>;
 }
 
+#filepreview table td:nth-child(1) {
+    color: <?= $theme ?>;
+}
+
 /***** PSYCHOMORPH *****/
 
 .growl {
@@ -372,7 +376,7 @@ p.msg {
     background-color: <?= $highlight ?>;
 }
 
-/* IMAGEBOX */
+/* FILEPREVIEW */
 
 #selectedImage {
     background-image: url(<?= $bgpattern ?>);

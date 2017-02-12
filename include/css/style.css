@@ -158,6 +158,10 @@ p {
     box-shadow:0 0 4px rgba(0,0,0,0.5);
 }
 
+.feature input {
+    max-width: 100%;
+}
+
 .feature h2 {
     padding:0;
 }
@@ -176,9 +180,10 @@ strong {
 /***** TEXT LINKS *****/
 a {
     outline:none;
+    cursor: pointer;
 }
 
-a:link,a:visited,a:hover,a:active,#menu a:focus {
+a, a:link,a:visited,a:hover,a:active,#menu a:focus {
     text-decoration:none;
     border-bottom:.1em solid hsl(200,0%,20%);
 }
@@ -665,6 +670,9 @@ p.msg {
     background-position:center center;
     background-repeat:repeat;
 }
+.hue_chooser {
+    height: 1.5em;
+}
 
 .rgba_chooser {
     height: 2.67em;
@@ -709,12 +717,15 @@ p.msg {
 .hue_chooser .ui-slider-handle {
     border:2px solid #000;
     width:2.5em;
-    height:2.5em;
+    height:2em;
     padding:.3em 0 .5em 0;
 }
 
 .rgb_chooser .ui-slider-handle:hover,
-.rgba_chooser .ui-slider-handle:hover {
+.rgb_chooser .ui-slider-handle:focus,
+.rgba_chooser .ui-slider-handle:hover,
+.rgba_chooser .ui-slider-handle:focus {
+    outline: none;
     background-image: none !important;
 }
 
@@ -1418,6 +1429,7 @@ button.unsaved {
     width: 100%;
     margin-bottom:.5em;
 }
+
 #finder ul {
     margin:0;
     height:100%;
@@ -1735,15 +1747,24 @@ span.shiftopt:before {
     content:"\21E7\2325";
 }
 
-/* IMAGEBOX */
-#imagebox {
+/* FILEPREVIEW */
+#filepreview {
     width:310px;
-    overflow:auto;
+    overflow:visible;
     display:none;
     position:fixed;
 }
+#filepreview h1, #filepreview table {
+    padding: 0;
+    margin: 2px;
+}
 
-#imagebox #selectedImage,#imagebox textarea {
+#filepreview h1 {
+    width: 6em;
+    text-align: right;
+}
+
+#filepreview #selectedImage,#filepreview textarea {
     max-width:300px;
     max-height:400px;
     border:1px solid grey;
@@ -1755,15 +1776,34 @@ span.shiftopt:before {
     background:url(/include/images/bgpatterns/escheresque) 0 0 repeat;
 }
 
-#imagebox textarea {
+#filepreview textarea {
     height:400px;
     width:300px;
 }
 
-#imagebox #imagedesc {
+#filepreview #fileinfo, #filepreview #history {
     width:100%;
     margin-bottom:.5em;
     font-size:.85em;
+}
+#filepreview table {
+    font: size: 85%;
+    color: grey;
+    width: 100%;
+    max-width: 300px;
+}
+
+#filepreview table td {
+    padding: 1px 0;
+}
+#filepreview table td:nth-child(1) {
+    text-align:right;
+    padding-right: 0.5em;
+    font-variant:small-caps;
+    width: 7em;
+}
+#filepreview table tr.date td {
+    border-top: 1px solid #e0e0e0;
 }
 
 #individual_image_box {

@@ -21,7 +21,7 @@ function currentDir() {  //console.log('currentDir()');
 
 // access a private file
 function fileAccess(img, thumb) {
-    if (img.substr(-4, 1) != '.') { img += '.jpg'; }
+    if (img && img.substr(-4, 1) != '.') { img += '.jpg'; }
 
     if (thumb == null) {
         return "/scripts/fileAccess?file=" + img;
@@ -638,6 +638,7 @@ function fileListGet() {
     }
 }
 
+
 function finder(dir) { console.debug('finder(' + (dir == undefined ? '' : dir) + ')');
     this.currentDir = null;
     this.selectedFiles = {};
@@ -722,7 +723,7 @@ function finder(dir) { console.debug('finder(' + (dir == undefined ? '' : dir) +
         return $theFolder;
     };
 
-    this.addFile = function(url, addTem) { console.log('addFile(' + url + ', ' + addTem + ')');
+    this.addFile = function(url, addTem) { 
         var regexURL,
             $theDir,
             $theFile,
@@ -736,9 +737,21 @@ function finder(dir) { console.debug('finder(' + (dir == undefined ? '' : dir) +
             wasClosed,
             ext,
             w,
-            img = false;
+            img = false,
+            that = this;
+            
+        // handle array passed to url
+        if (Array.isArray(url)) {
+            console.log('addFile(array)');
+            $.each(url, function(i, thisurl) {
+                $theFile = that.addFile(thisurl, addTem);
+            });
+            return $theFile;
+        }
         
-        // 0 = valid, 1 = project_id, 2 = subfolders, 3 = shortname, 4 = ext    
+        console.log('addFile(' + url + ', ' + addTem + ')');
+        
+        // 0 = valid, 1 = project_id, 2 = subfolders, 3 = shortname, 4 = ext
         regexURL = url.match(/^(\d{1,10})((?:\/[^\/]*)*\/)([^\/]+)\.([a-z]{3})$/);
         if (regexURL == null || regexURL.length != 5) {
             console.debug('Problem with the file URL: ' + url);
@@ -775,7 +788,7 @@ function finder(dir) { console.debug('finder(' + (dir == undefined ? '' : dir) +
             $theUL.append($theFile);
         }
         
-        if (addTem === true) {
+        if (addTem === true && ext != 'tem') {
             $theFile.addClass('hasTem');
             this.addFile(project_id + subdir + shortName + '.tem');
         }
@@ -909,9 +922,9 @@ function finder(dir) { console.debug('finder(' + (dir == undefined ? '' : dir) +
         }
     
         if (s == 1 && !$finder.hasClass('image-view')) {
-            $('#imagebox').show();
+            $('#filepreview').show();
         } else {
-            $('#imagebox').hide();
+            $('#filepreview').hide();
         }
     }
 }
@@ -940,7 +953,7 @@ $("#finder").on('DOMNodeInserted', "li.file:not(.ui-draggable)", function() {
             }
 
             $(this).addClass('selected');
-            $('#imagebox').hide().insertAfter($finder);
+            $('#filepreview').hide().appendTo($finder);
             $finder.find('li.file.selected').filter(':visible').each( function(i, v) {
                 var $clone = $(this).clone().removeClass('selected');
                 ui.helper.append($clone);
@@ -1055,7 +1068,8 @@ $("#finder").on('DOMNodeInserted', "> ul li.folder > ul:not(.ui-droppable), li.f
     });
 });
 
-function loadFiles(selected_dir, subdir) { console.log('loadFiles(' + selected_dir + ', ' + subdir + ')');
+function loadFiles(selected_dir, subdir) { 
+    console.log('loadFiles(' + selected_dir + ', ' + subdir + ')');
     $('#footer-text').html('Loading Files...');
     var $spinner = bodySpinner();
 
@@ -1072,7 +1086,8 @@ function loadFiles(selected_dir, subdir) { console.log('loadFiles(' + selected_d
             if (data.error) {
                 $('<div title="Error Loading Files" />').html(data.errorText).dialog();
             } else {
-                $('#imagebox').hide().insertBefore($('#uploadbar')); // move imagebox out of finder first
+                // move filepreview out of finder first
+                $('#filepreview').hide().insertBefore($('#uploadbar'));
                 $finder.find('ul').css('width', 'auto');
                 console.time('folderize()');
                 if (subdir !== '') {

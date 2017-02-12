@@ -646,7 +646,6 @@ function batchScramble() {
                         theData.chosen = 'all';
                     } else {
                         theData.chosen = [];
-
                         $('#scrambleExample div.ui-selected').each( function() {
                             theData.chosen.push([
                                 $(this).data('x'),
@@ -1054,6 +1053,19 @@ function batchCrop() {
             }
         }
     });
+}
+
+function batchTemFromEmbedded() {
+    // create tem files for all jpegs with embedded tem
+    var files = filesGetSelected('.image.jpg');
+    if (files.length === 0) {
+        growl('No JPG files were selected (only JPG have embedded tems)', 1000);
+        return false;
+    }
+    
+    theData = {img: null};
+    
+    batchWatch(files, 'imgEmbeddedTem', theData);
 }
 
 
@@ -1738,18 +1750,26 @@ function batchTransform() {
         var rows = $batchDialog.find('textarea').val().replace(header,'').trim().split('\n');
         var errors = 0;
         var outnames = [];
+        var relativeDir = currentDir().replace(/^\d+/, '');
         
         $tbody.empty();
         
         $.each(rows, function(i, r) {
             var row = $('<tr />');
-            var cols = $.trim(r).split('\t');
-            
+            var cols = $.trim(r).split(',');
+            // check if tab-delimited
+            if (cols.length ==1) {
+                cols = $.trim(r).split('\t');
+            }
             if (cols.length != 6) {
                 row.css('background-color', '#fef1ec');
             }
+            // /darjal.jpg, _female_avg.jpg, /_male_avg.jpg, 100%, 0,0, trans6.jpg
             $.each(cols, function(j, c) {
-                cols[j] = $.trim(cols[j]);
+                cols[j] = $.trim(cols[j].replace('%',''));
+                if ([0,1,2,6].indexOf(j) != -1 && cols[j].substr(0, 1) != "/") {
+                    cols[j] = relativeDir + cols[j];
+                }
                 row.append('<td>' + cols[j] + '</td>');
             });
             batchData[i] = {

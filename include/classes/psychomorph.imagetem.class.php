@@ -44,10 +44,6 @@ class PsychoMorph_ImageTem {
     public function getWidth() { return $this->_img->getWidth(); }
     public function getHeight() { return $this->_img->getHeight(); }
     
-    public function setDescription($v) {
-        return $this->getImg()->setDescription($v);
-    }
-    
     public function setOverWrite($o) { 
         if ($o == true || $o == 'true' || $o == 1) {
             $this->_overWrite = true;
@@ -253,20 +249,12 @@ class PsychoMorph_ImageTem {
         }
         
         //$img->setImage($original_image);
-
-        $img->setDescription(array(
-            "mask" => array(
-                "mask" => $mask,
-                "color" => $rgba,
-                "blur" => $blur
-            )
-        ));
         
         return $this;
     }
 
     // defaults to facelab alignment
-    public function alignEyes(    $aWidth = 1350, $aHeight = 1800, 
+    public function alignEyes(  $aWidth = 1350, $aHeight = 1800, 
                                 $aLeftEye = array(496.98, 825.688), 
                                 $aRightEye = array(853.02,825.688),
                                 $pt1 = 0, $pt2 = 1, $rgb = null) {
@@ -280,24 +268,6 @@ class PsychoMorph_ImageTem {
             // (defaults to 1st entry if different)
             $aRightEye = $aLeftEye;
         }
-        
-        // add to image description
-        $this->_img->setDescription(array("aligned" => array(
-            "pt1" => array(
-                "pt" => $pt1,
-                "x" => $aLeftEye[0],
-                "y" => $aLeftEye[1]
-            ),
-            "pt2" => array(
-                "pt" => $pt2,
-                "x" => $aRightEye[0], 
-                "y" => $aRightEye[1]
-            ),
-            "size" => array(
-                "width" => $aWidth, 
-                "height" => $aHeight
-            )
-         )));
         
         // calculate rotation
         $rotate = ($oLeftEye[0] - $oRightEye[0] == 0) ? 1.57069633 : atan(($oLeftEye[1] - $oRightEye[1])/($oLeftEye[0] - $oRightEye[0]));
@@ -377,6 +347,10 @@ class PsychoMorph_ImageTem {
         } else {
             return false;
         }
+        
+        // get descriptions to replace into new sym files
+        $imgdesc = $this->getImg()->_description;
+        $temdesc = $this->getTem()->_description;
 
         // make a mirrored image
         $clone = clone $this;
@@ -441,18 +415,28 @@ class PsychoMorph_ImageTem {
         
         $symimg = $project_id . '/.tmp/' . $transdata[0]['img'];
         $symtem = $project_id . '/.tmp/' . $transdata[0]['tem'];
-        
-        $desc = $this->getImg()->_description;
 
         $this->_img = new PsychoMorph_Image($symimg); 
         $this->_tem = new PsychoMorph_Tem($symtem);
         
-        // describe image
-        $symtype = ($shape == 0) ? 
-            (($colortex == 0) ? 'Un-' : 'Color-only ') : 
-            (($colortex == 0) ? 'Shape-only ' : 'Shape & color ');
-        array_push($desc, array('sym' => $symtype));
-        $this->setDescription($desc);
+        // replace description with original file description
+        $this->_img->_description = $imgdesc;
+        $this->_tem->_description = $temdesc;
+        
+        return $this;
+    }
+    
+    public function addHistory($history) {
+        // add an entry to history on the json comments
+        $this->_img->addHistory($history);
+        $this->_tem->addHistory($history);
+        
+        return $this;
+    }
+    
+    public function setDescription($v, $v2 = null) {
+        $this->_img->setDescription($v, $v2);
+        $this->_tem->setDescription($v, $v2);
         
         return $this;
     }
@@ -486,10 +470,14 @@ class PsychoMorph_ImageTem {
             $temname = preg_replace('@\.(jpg|png|gif)$@', '.tem', $imgname);
         }
     
-        $this->_img->setEmbeddedTem($this->_tem->printTem());
+        $this->_img->setEmbeddedTem($this->_tem->printTem(false));
+        //$this->_img->setDescription('tem', $this->_tem->getURL(false));
         if (!$this->_img->save($imgname, $this->_overWrite)) {
             return false;
         }
+        
+        // add JSON description to tem
+        $this->_tem->setDescription('image', $this->_img->getURL(false));
 
         $this->_tem->save($temname, $this->_overWrite);
         

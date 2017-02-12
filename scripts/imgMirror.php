@@ -21,6 +21,7 @@ if (file_exists($tem)) {
 }
 
 $img->mirror();
+$img->addHistory("mirror");
     
 $newFileName = array(
     'subfolder' => $_POST['subfolder'],

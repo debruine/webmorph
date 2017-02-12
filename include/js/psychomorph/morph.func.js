@@ -4,19 +4,24 @@
 
 function addToRecents(data) {
     //console.log('addToRecents(' + JSON.stringify(data) + ')');
-    if (typeof data !== 'object' || typeof data.img !== 'string' || typeof data.tem !== 'string') {
+    if (typeof data !== 'object' || 
+        typeof data.img !== 'string' || 
+        typeof data.tem !== 'string') {
         console.log('Cannot add to Recently Created Images');
         return false;
     }
 
-    $.post('/scripts/log', data); // post info to the log
+    //$.post('/scripts/log', data); // post info to the log
 
     data.savefolder = WM.project.id + "/.tmp/";
 
     var theImg = "/scripts/fileAccess?file=" + data.savefolder + data.img;
     var theTem = "/scripts/fileAccess?file=" + data.savefolder + data.tem;
 
-    var $newimage = $('<img />').addClass('tcimage').attr('src', theImg).data(data).removeData('error errorText');
+    var $newimage = $('<img />').addClass('tcimage')
+                                .attr('src', theImg)
+                                .data(data)
+                                .removeData('error errorText');
     $newimage.insertAfter($("#recent_creations h2"));
     $newimage.click(); // click to load into main image window
 
@@ -346,29 +351,35 @@ function getAverage(tVars, addToQueue) {
                 }
             }
         });
+        
+        if (typeof tVars.outname === 'string') {
+            theData.outname = tVars.outname;
+        }
 
         $.ajax({
-            url: '/tomcat/psychomorph/avg',
+            //url: '/tomcat/psychomorph/avg',
+            url: 'scripts/tcAverage',
             async: tVars.async,
-            data: $.param(theData, true),
+            //data: $.param(theData, true),
+            data: { 'theData': theData },
             success: function(data) {
                 //alert(JSON.stringify(data));
-                if (data[0].error) {
+                if (data.error) {
                     $average.css('background-image', WM.blankBG);
-                    $('<div title="There was an error with your average" />').html(data[0].errorText).dialog();
+                    $('<div title="There was an error with your average" />').html(data.errorText).dialog();
                 } else {
-                    addToRecents(data[0]);
+                    addToRecents(data.data);
                     $('#average-list li').remove();
 
-                    if (typeof tVars.outname === 'string') {
+                    /*if (typeof tVars.outname === 'string') {
                         var saveData = {
-                            data: data[0],
+                            data: data,
                             outname: tVars.outname,
                             async: tVars.async,
                         };
                         if (typeof tVars.completeSave === 'function') { saveData.complete = tVars.completeSave; }
                         saveImage(saveData);
-                    }
+                    }*/
                 }
             },
             error: function(xmlReq, txtStatus, errThrown){
@@ -388,9 +399,9 @@ function getAverage(tVars, addToQueue) {
 
 function checkTransAbility() {
     var canDo = true;
-    canDo = canDo && ($('#transimg').attr('src') != WM.blankImg);
+    canDo = canDo && ( $('#transimg').attr('src') != WM.blankImg);
     canDo = canDo && ($('#fromimage').attr('src') != WM.blankImg);
-    canDo = canDo && ($('#toimage').attr('src') != WM.blankImg);
+    canDo = canDo && (  $('#toimage').attr('src') != WM.blankImg);
     //canDo = canDo && $("#shapePcnt0").val() !== '';
 
     $('#transButton').button({ disabled: !canDo });
@@ -574,38 +585,33 @@ function getTransform(tVars, addToQueue) {
                         }
                     }
                 });
+                
+                if (typeof tVars.outname === 'string') {
+                    theData.outname = tVars.outname;
+                }
 
                 $.ajax({
-                    url: '/tomcat/psychomorph/trans',
+                    url: 'scripts/tcTransform',
                     async: tVars.async,
-                    data: theData,
+                    data: {'theData' : theData },
                     success: function(data) {
-                        //alert(JSON.stringify(data));
-                        var d = data[0];
-
-                        if (d.error) {
+                        if (data.error || data.data.error) {
                             $transform.attr("src", WM.blankImg);
                             $("#transtem").val('');
-                            //$('<div title="There was an error with your transform" />').html(data.errorText).dialog();
                             errorReport.error = true;
-                            errorReport.errorText = d.errorText;
+                            if (data.error) {
+                                errorReport.errorText = data.errorText;
+                            } else {
+                                errorReport.errorText = data.data.errorText;
+                            }
                             return false;
                         }
 
-                        addToRecents(d);
+                        addToRecents(data.data);
 
                         if (steps > 0) {
                             imagelength++;
                             $('#footer-text').html(imagelength + ' of ' + (steps+1) + ' images made');
-                        }
-
-                        // if an outname is set, save the image
-                        if (typeof tVars.outname === 'string') {
-                            saveImage({
-                                data: d,
-                                outname: tVars.outname,
-                                async: tVars.async
-                            });
                         }
 
                         // success callback or error reporting
@@ -1053,13 +1059,10 @@ function createContinua() {
     var color = ($('#continua-color').val() == 'on') ? 1 : 0;
     var texture = ($('#continua-texture').val() == 'on') ? 1 : 0;
 
-
-
     var cData = [];
-    $.each(imgList, function(j) {
-
+    $.each(imgList.slice(0,-1), function(j) {
         var fromImg = imgList[j];
-        var toImg = imgList[(j+1)%nImgs];
+        var toImg = imgList[(j+1)];
 
         for (var i = 0; i < csteps; i++) {
             var pcnt = i * 100 / (csteps - 1);

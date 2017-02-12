@@ -50,7 +50,7 @@ if (!perm('pca')) {
             $weights[] = $w/100; 
         }
         
-        $img->setDescription(array(
+        $img->addHistory(array(
             'PCA model' => $visdata['pcafile'],
             'avg' => $visdata['avgfile'],
             'PC weights' => "[" . implode(",", $weights) . "]"

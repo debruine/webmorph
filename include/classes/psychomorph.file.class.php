@@ -19,17 +19,17 @@ auth();
  *************************************************************************/
 
 class PsychoMorph_File {
-    private $_path;
+    private $_path = '';
+    public  $_description = array();
     
-    public function __construct($path) {
-        $this->_setPath($path);
-        
+    public function __construct($path = '') {
+        if ($path) { $this->_setPath($path); }
         return $this;
     }
     
-    public function _setPath($path) { 
+    public function _setPath($path) {
         $this->_path = $this->_validateFilePath($path);
-        
+
         if ($this->_path) { 
             if (!$this->_loadFile()) {
                 return false;
@@ -45,8 +45,12 @@ class PsychoMorph_File {
         return pathinfo($this->_path, PATHINFO_DIRNAME);
     }
     
-    public function getURL() {
-        $pattern = '@^' . (IMAGEBASEDIR) . '@';
+    public function getURL($withProject = true) {
+        if ($withProject) {
+            $pattern = '@^' . (IMAGEBASEDIR) . '@';
+        } else {
+            $pattern = '@^' . (IMAGEBASEDIR) . '\d+@';
+        }
         return preg_replace($pattern, '', $this->_path);
     }
     
@@ -56,10 +60,19 @@ class PsychoMorph_File {
         return $output[1];
     }
     
-    public function getUserPath() {
-        // users shouldn't see the path structure below their user directory
-        $pattern = '@^' . (IMAGEBASEDIR) . '@';
-        return preg_replace($pattern, '', $this->_path);
+    public function getFileSize() {
+        $filesize = formatBytes(filesize($this->_path));
+        return($filesize);
+    }
+    
+    public function getFileType() {
+        $filetype = mime_content_type($this->_path);
+        return($filetype);
+    }
+    
+    public function getCreateDate() {
+        $created = date('Y-m-d H:i:s', filemtime($this->_path));
+        return($created);
     }
     
     private function _validateFilePath($name) {
@@ -117,6 +130,59 @@ class PsychoMorph_File {
         
         $newpath = $basedir . $prefix . $name . $suffix . '.' . $ext;
         return $this->_validateFilePath($newpath);
+    }
+    
+    public function getDescription($type = 'json') {
+        if ($type == 'htmlArray') {
+            // return in htmlArray format
+            return htmlArray($this->_description);
+        } else if ($type == 'array') {
+            // return in array format
+            return $this->_description;
+        } else {
+            // get description in JSON format
+            return json_encode($this->_description, 
+                JSON_UNESCAPED_UNICODE | 
+                JSON_UNESCAPED_SLASHES | 
+                JSON_NUMERIC_CHECK | 
+                JSON_PRETTY_PRINT
+            );
+        } 
+    }
+    
+    public function setDescription($v, $v2 = null) {
+        // sets description of image for exif
+        // or description of tem for comments
+        // formatted as an array to be saved as JSON
+    
+        if (empty($v)) {
+            return false;
+        } else if (is_array($v)) {
+            $this->_description = array_merge($this->_description, $v);
+        } else if (!is_null($v2)) {
+            $this->_description[$v] = $v2;
+        } else {
+            $this->_description['extras'][] = $v;
+        }
+        
+        return $this;
+    }
+    
+    public function deleteDescription($key) {
+        if (empty($key)) {
+            $this->_description = array();
+        } else {
+            unset($this->_description[$key]);
+        }
+        
+        return $this;
+    }
+    
+    public function addHistory($history) {
+        // add an entry to history on the json comments
+        $this->_description['history'][date('Y-m-d H:i:s')] = $history;
+        
+        return $this;
     }
     
     public function save($filepath = null, $overWrite = false) {

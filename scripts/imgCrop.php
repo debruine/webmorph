@@ -4,6 +4,7 @@
 
 require_once $_SERVER['DOCUMENT_ROOT'] . '/include/main_func.php';
 auth();
+session_write_close();
 checkAllocation();
 
 $return = array(
@@ -51,6 +52,10 @@ if (!$return['error']) {
     );
     
     $img->crop($x, $y, $w, $h, $rgb);
+    
+    $desc = "crop: {$t}, {$r}, {$b}, {$l}";
+    if ($rgb) { $desc .= ", rgb({$rgb[0]}, {$rgb[1]}, {$rgb[2]})"; }
+    $img->addHistory($desc);
     
     if ($img->save($newFileName)) {
         $return['error'] = false;

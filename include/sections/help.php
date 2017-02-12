@@ -1,6 +1,34 @@
 <!-- !- what's new Dialog -->
 <div id='whatsnewDialog' class='modal' title='What&apos;s New?'>
     <dl>
+        <dt>(2017-02-12) Keyboard Shortcuts</dt>
+        <dd>I had to remove several keyboard shortcuts because they were 
+        incompatible with some web browsers. I also removed most of the keyboard 
+        shortcuts for batch functions. Do let me know if you have an idea for a 
+        useful new keyboard shortcut.</dd>
+        
+        <dt>(2017-02-12) Batch Transforms</dt>
+        <dd>Batch transforms now handle comma-separated lists and relative file 
+        names. Percent symbols (%) are now optional in the shape, color, and 
+        texture columns.</dd>
+        
+        <dt>(2017-02-12) File history</dt>
+        <dd>File histories are now saved and displayed in a way that is easier 
+        to read and replicate.</dd>
+        
+        <dt>(2017-01-10) URL Hash</dt>
+        <dd>Added methods to keep selected files and folders in the Finder 
+        window between page reloads.</dd>
+        
+        <dt>(2017-01-06) Fixed Template Editing</dt>
+        <dd>Some of the template editing functions were broken because of other 
+        changes. These should be fixed now.</dd>
+        
+        <dt>(2016-09-06) Template Visualization</dt>
+        <dd>You can now visualize templates and save them as PNG files with the 
+        Visualize Template (<span class='shiftcmd'>D</span>) command under the 
+        Batch menu..</dd>
+        
         <dt>(2016-08-22) Project size listing</dt>
         <dd>I updated how the project sizes load so that initial loading of the 
         project list is faster.</dd>
@@ -14,7 +42,7 @@
         images dragged onto the Light Table. Double-click on images to remove 
         them.</dd>
         
-        <dt>(2016-06-11) Touch Compatability</dt>
+        <dt>(2016-06-11) Touch Compatibility</dt>
         <dd>WebMorph is now more compatible with touch devices. Let me know 
         if there is anything you can't do on a touch device.</dd>
         
@@ -23,9 +51,12 @@
         (<span class='shiftcmd'>E</span>). You can align, resize, rotate, crop, 
         mask, symmetrise and/or mirror images in a single step from a batch 
         script. I've also provided demo scripts for 
-        <a href='/include/examples/webmorph_template_batchAvg.txt'>Batch Average</a>, 
-        <a href='/include/examples/webmorph_template_batchTrans.txt'>Batch Transform</a> and 
-        <a href='/include/examples/webmorph_template_batchEdit.txt'>Batch Edit</a>. 
+        <a class='download_file' 
+        data-src='/include/examples/webmorph_template_batchEdit.txt'>batch edit</a>, 
+        <a class='download_file' 
+        data-src='/include/examples/webmorph_template_batchAvg.txt'>batch average</a>, and 
+        <a class='download_file' 
+        data-src='/include/examples/webmorph_template_batchTrans.txt'>batch transform</a>.
         Just download them and open them in Excel.</dd>
         
         <dt>(2016-06-11) Finder Loading</dt>

@@ -275,10 +275,45 @@ class PsychoMorph_Tem extends PsychoMorph_File {
     public function _loadFile() {
         $this->_points = array();
         $this->_lines = array();
+        $this->_description = array();
     
         // read the tem file
         $path = $this->getPath();
-        if (!file_exists($path) || !$tem = file($path)) { return false; }
+        if (file_exists($path) && $rawtem = file($path)) { 
+            $this->loadRawTem($rawtem);
+        }
+
+        return $this;
+    }
+    
+    public function loadRawTem($rawtem) {
+        $tem = array();
+        if (!is_array($rawtem)) {
+            $rawtem = explode("\n", $rawtem);
+        }
+        
+        // remove any comment lines
+        $comment = '';
+        foreach ($rawtem as $l) {
+            $line = trim($l);
+            if (preg_match('/^\s*$/', $line)) {
+                // empty, do nothing
+            } else if (preg_match('/^[\-0-9\.\s]+$/', $line)) {
+                $tem[] = $line;
+            } else  {
+                $comment .= $line;
+            }
+        }
+        
+        // check for json content in comments
+        $json = json_decode($comment, true);
+        if (is_null($json) && $comment !== '') {
+            // not json format, so add to extras
+            $this->_description['extras'][] = $comment;
+        } else if (is_array($json)) {
+            // add json as array to comments
+            $this->_description = array_merge($this->_description, $json);
+        }
         
         $pointNumber = trim($tem[0]);
         
@@ -299,7 +334,7 @@ class PsychoMorph_Tem extends PsychoMorph_File {
     public function getPoints($i = null) { 
         if (is_null($i)) {
             return $this->_points; 
-        } else if ($i < 0 || $i > count($this->_points)) {
+        } else if ($i < 0 || $i >= count($this->_points)) {
             return false;
         } else {
             return $this->_points[$i];
@@ -309,8 +344,8 @@ class PsychoMorph_Tem extends PsychoMorph_File {
     public function setLines($newLines) {
         // changes lines, can handle:
         //   blank entry (deletes all lines)
-        //   all tex: space-delimited points with return-delimited lines
-        //   1D array: array of space-deliminetd points
+        //   all text: space-delimited points with return-delimited lines
+        //   1D array: array of space-delimited points
         //   2D array: array of points in arrays
     
         $this->_lines = array();
@@ -465,7 +500,7 @@ class PsychoMorph_Tem extends PsychoMorph_File {
             $this->_points[$i][1] = $p[1] * $yResize;
         }
         
-        return true;
+        return $this;
     }
     
     public function rotate($degrees, $origW, $origH, $newW, $newH) {
@@ -487,12 +522,16 @@ class PsychoMorph_Tem extends PsychoMorph_File {
             
             $this->_points[$i] = array($xr, $yr);
         }
+        
+        return $this;
     }
     
     public function crop($xOffset, $yOffset) {
         foreach ($this->_points as $i => $pts) {
             $this->_points[$i] = array($pts[0] - $xOffset, $pts[1] - $yOffset);
         }
+        
+        return $this;
     }
     
     public function getID() {
@@ -549,12 +588,16 @@ class PsychoMorph_Tem extends PsychoMorph_File {
         return $this;
     }
     
-    public function printTem() {
+    public function printTem($addDesc = true) {
+        $return = '';
+        
         // return string in PsychoMorph .tem format
-        $return = $this->getPointNumber() . "\n";
+        $return .= $this->getPointNumber() . "\n";
         
         foreach ($this->_points as $p) {
-            $return .= "$p[0]\t$p[1]\n";
+            $x = round($p[0],2);
+            $y = round($p[1],2);
+            $return .= "$x\t$y\n";
         }
         
         $return .= count($this->_lines) . "\n";
@@ -566,6 +609,14 @@ class PsychoMorph_Tem extends PsychoMorph_File {
         }
         
         $return .= count($this->_lines)-1 . "\n";
+
+        // add description (must be at end)
+        if ($addDesc) {
+            // update last_saved comment
+            $this->setDescription('last_saved', date('Y-m-d H:i:s'));
+            $json = $this->getDescription();
+            $return .= "\n{$json}\n";
+        }
         
         return $return;
     }

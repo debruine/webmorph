@@ -19,6 +19,11 @@ $shape = ($_POST['shape'] == 'false') ? 0 : 0.5;
 $colortex = ($_POST['color'] == 'false') ? 0 : 0.5;
 $img->sym($shape, $colortex);
 
+// describe image
+$symtype = ($shape != 0) ? "shape" : "";
+$symtype .= ($colortex != 0) ? " color" : "";
+$img->addHistory("sym: {$symtype}");
+
 $newFileName = array(
     'subfolder' => $_POST['subfolder'],
     'prefix' => $_POST['prefix'],

@@ -377,7 +377,7 @@ function hashGet() {
     return data;
 }
 
-function hashSet() { console.log('hashSet()');
+function hashSet() { //console.log('hashSet()');
     var appWindow = '',
         file = '',
         proj = '',
@@ -410,7 +410,7 @@ function hashSet() { console.log('hashSet()');
     }
 }
 
-function hashChange() { console.log('hashchange: ' + location.hash);
+function hashChange() { //console.log('hashchange: ' + location.hash);
     var hash,
         appWin;
 
@@ -479,9 +479,12 @@ function interfaceChange(e) {
     $('.interface').not('#' + appWindow + 'Interface').hide();
     $('#' + appWindow + 'Interface').show();
     
+    $('#newFolder').html('New Folder <span class="shortcut shiftcmd">N</span>');
+    
     // interface-specific setup
     if (appWindow == 'project') {
         projectList();
+        $('#newFolder').html('New Project <span class="shortcut shiftcmd">N</span>');
     } else if (appWindow == 'finder') {
         $finder.insertAfter($('#uploadbar'));
         $('#recent_creations').hide();
@@ -543,8 +546,5 @@ function sizeToViewport() {
 
     $finder.height(finderHeight);
 
-    $('#imagebox').css({
-        'position': 'fixed',
-        'top': $finder.position().top + 1
-    }).height($finder.height()-1);
+    $('#filepreview').offset({'top': $finder.position().top + 1});
 }

@@ -22,14 +22,14 @@ if (array_key_exists('imgBase64', $_POST)) {
     $b64 = str_replace('data:image/jpeg;base64,', '', $_POST['imgBase64']);
     $b64 = str_replace(' ', '+', $b64);
     $img->setImageBase64($b64);
-    $img->setDescription('Webcam upload');
+    $img->addHistory('Webcam upload');
 } else if (strpos($_POST['img'], "/.tmp/") !== false) {
     $tempath = IMAGEBASEDIR . str_replace("/scripts/fileAccess?file=/", "", $_POST['tem']);
     $imgpath = IMAGEBASEDIR . str_replace("/scripts/fileAccess?file=/", "", $_POST['img']);
     $newFileName = safeFileName($_POST['name']);
 
     $img = new PsychoMorph_ImageTem($imgpath, $tempath);
-    $img->setDescription(json_decode($_POST['desc']));
+    //$img->setDescription(json_decode($_POST['desc'], true));
 } else if (count($_FILES) > 0) {
     foreach ($_FILES['upload']['tmp_name'] as $i => $tmp_name) {
         $files[$_FILES['upload']['name'][$i]] = $tmp_name;
@@ -68,7 +68,7 @@ if (array_key_exists('imgBase64', $_POST)) {
                     
                     $img = new PsychoMorph_Image($tmp_name);
                 }
-                $img->setDescription('Uploaded file');
+                $img->addHistory('Uploaded file');
                 //$img->save($newFileName);
             } else if ($ext == 'tem') {
                 if (!empty($files["{$name}.jpg"])) {

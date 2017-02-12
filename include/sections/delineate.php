@@ -11,14 +11,6 @@
     <img id='mouth' src='/include/images/delin/3delin.svg' />
     
     <div id="selectBox"></div>
-    
-    <p class="msg" data-msg_id="download_delineations2" style="margin-top:2em">
-        If you right-click on a delineated image below, you 
-        can now see a contextual menu to download SVG files of the delineation 
-        (all, lines only, points only, or numbered points). Open this file in a 
-        text editor to see how easily you can change the line and points colours 
-        and widths. Drag the file into a web browser to view it.</p>
-    
     <!-- toolbar -->
     <div id="delin_toolbar" class="toolbar">
         <span class='buttonset'>
@@ -46,7 +38,7 @@
             <button id="showDelinHelp">Show Delineation Help</button>
         </span>
         <div id='imgsize'></div>
-        <span id='size_value'></span>&nbsp;px 
+        <span id='size_value'></span>&nbsp;px
         <span id='quickhelp'></span>
     </div>
     

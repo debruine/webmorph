@@ -28,7 +28,7 @@
     // send to return_location if status is not high enough for this page
     function auth($error = 'You need to be logged in to do this.') {
         if (!LOGGEDIN) {
-            echo json_encode(array(
+            scriptReturn(array(
                 'error' => true,
                 'errorText' => $error
             ));
@@ -60,7 +60,7 @@
         global $initime;
         
         if ($buffer) {
-            // start and end user output so this can happen without the user waiting                
+            // start and end user output so this can happen without the user waiting
             ob_end_clean();
             header("Connection: close");
             ignore_user_abort(); // optional
@@ -73,7 +73,7 @@
             $return['script_run_time'] = round((microtime(true)-$initime)*1000);
             
             header('Content-Type: application/json');
-            echo json_encode($return, JSON_NUMERIC_CHECK);
+            echo json_encode($return, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_NUMERIC_CHECK);
         } else {
             header('Content-Type: text/html');
             echo htmlArray($return);
@@ -138,6 +138,22 @@
 /* !Text Functions */
 /***************************************************/
 
+    function serializeForTomcat($theData) {
+        $paramsJoined = array();
+        foreach($theData as $param => $value) {
+            if (is_array($value)) {
+                foreach($value as $subvalue) {
+                    $paramsJoined[] = "$param=$subvalue";
+                }
+            } else {
+                $paramsJoined[] = "$param=$value";
+            }
+        }
+        $query = implode('&', $paramsJoined);
+        
+        return($query);
+    }
+
     function safeFileName($filename) {
         //$filename = strtolower($filename);
         $filename = str_replace(array("#", " ", "__"),"_",$filename);
@@ -172,25 +188,59 @@
         }
     }
     
-    function htmlArray($array) {
-        echo '<dl>' . PHP_EOL;
+    function htmlArrayOld($array) {
+        $return = '<dl>' . PHP_EOL;
         if (is_array($array)) {
             foreach ($array as $k => $v) {
                 
                 if (is_numeric($k)) { $k = ''; }
-                echo '<dt>' . $k . '</dt><dd>';
+                $return .= '<dt>' . $k . '</dt><dd>';
                 if (is_array($v)) {
-                    echo "<br>";
-                    htmlArray($v);
+                    $return .= "<br>";
+                    $return .= htmlArray($v);
                 } else {
-                    echo $v;
+                    $return .= $v;
                 }
-                echo '</dd>'. PHP_EOL;
+                $return .= '</dd>'. PHP_EOL;
             }
         } else {
-            echo $array;
+            $return .= $array;
         }
-        echo '</dl>' . PHP_EOL;
+        $return .= '</dl>' . PHP_EOL;
+        
+        return($return);
+    }
+    
+    function htmlArray($array, $table = true) {
+        $return = '';
+        
+        if (is_array($array)) {
+            if ($table) {
+                $return .= '<table>' . PHP_EOL;
+            } else {
+                if (array_key_exists('label', $array)) {
+                    $return .= $array['label'];
+                    unset($array['label']);
+                }
+                $return .= '</td><tr>' . PHP_EOL;
+            }
+            foreach ($array as $k => $v) {
+                
+                //if (is_numeric($k)) { $k = ''; }
+                $return .= '<tr><td>' . $k . '</td><td>';
+                $return .= htmlArray($v, false);
+                $return .= '</td></tr>'. PHP_EOL;
+            }
+            if ($table) {
+                $return .= '</table>' . PHP_EOL;
+            } else {
+                $return .= '<tr><td></td><td>';
+            }
+        } else {
+            $return .= $array;
+        }
+        
+        return($return);
     }
     
     // parse paragraphs for html display

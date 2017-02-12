@@ -248,7 +248,6 @@ function rgb2rgbpoly($rgb, $number) {
  
 class PsychoMorph_Image extends PsychoMorph_File {
     private $_image = false;
-    public $_description = '';
     private $_embeddedTem = '';
     private $_id;
     
@@ -277,12 +276,13 @@ class PsychoMorph_Image extends PsychoMorph_File {
         $this->_image = $img;
         
         // set description
-        //$exif = $this->_readExif();
-        //if (empty($exif['ImageDescription'])) {
-            $this->setDescription(array('original' => $this->getUserPath()));
-        //} else {
-        //    $this->setDescription($exif['ImageDescription']));
-        //}
+        $exif = $this->_readExif();
+        if (empty($exif['ImageDescription'])) {
+            $this->setDescription('original', $this->getURL());
+        } else {
+            $desc = json_decode($exif['ImageDescription'], true);
+            $this->setDescription($desc);
+        }
         
         return $this;
     }
@@ -301,39 +301,21 @@ class PsychoMorph_Image extends PsychoMorph_File {
         
         return $this;
     }
-        
-    public function setDescription($v) {
-        // sets description of image for exif
-        // now formatted as an array to be saved in exif as JSON
-    
-        if (!is_array($v)) {
-            $v = array('desc' => $v);
-        }
-    
-        if (!is_array($this->_description)) {
-            $this->_description = array($this->_description);
-        }
-        
-        array_push($this->_description, $v);
-        
-        return $this;
-    }
-    
-    public function getDescription() { 
-        $d = $this->_description;
-        
-        if (!is_array($d)) {
-            $d = array('desc' => $d);
-        }
-    
-        return json_encode($d, true);
-    }
     
     public function setEmbeddedTem($v) { 
         $this->_embeddedTem = $v; 
         return $this;
     }
-    public function getEmbeddedTem() { return $this->_embeddedTem; }
+    
+    public function getEmbeddedTem() { 
+        if ($this->_embeddedTem == '') {
+            // not already set, get from exif
+            if ($exif = $this->_readExif()) {
+                $this->_embeddedTem = $exif['COMPUTED']['UserComment'];
+            }
+        }
+        return $this->_embeddedTem; 
+    }
     
     public function getImage() { return $this->_image; }
     
@@ -373,7 +355,7 @@ class PsychoMorph_Image extends PsychoMorph_File {
     }
     
     private function _nextImg() {
-        $exp_path = explode("/", $this->getUserPath());
+        $exp_path = explode("/", $this->getURL());
         $project_id = $exp_path[0];
         unset($exp_path[0]);
         $name = "/" . implode("/", $exp_path);
@@ -514,16 +496,24 @@ class PsychoMorph_Image extends PsychoMorph_File {
             $width, $height
         );
         $this->setImage($resized_image);
-        if ($xResize == $yResize) {
-            $this->setDescription(array('resize' => round($xResize*100,2) . '%'));
-        } else {
-            $this->setDescription(array('resize' => array(
-                    'x' => round($xResize*100,2) . '%',
-                    'y' => round($yResize*100,2) . '%'
-            )));
-        }
         
         return $this;
+    }
+    
+    private function colorAlloc(&$image, $rgb) {
+        // get background color from $rgb or upper left corner
+        if (!is_array($rgb) || !count($rgb) == 3) {
+            $cornercolor = imagecolorat($this->_image, 2, 2); 
+            $rgb = array(
+                ($cornercolor >> 16) & 0xFF,
+                ($cornercolor >> 8) & 0xFF,
+                $cornercolor & 0xFF
+            );
+        }
+        
+        $color = imagecolorallocate($image, $rgb[0], $rgb[1], $rgb[2]);
+        
+        return $color;
     }
     
     public function rotate($degrees, $rgb = null) {
@@ -532,16 +522,9 @@ class PsychoMorph_Image extends PsychoMorph_File {
         $deg = -1 * $degrees;  
         if (empty($deg) || !$this->_image) { return false; }
         
-        // get background color from $rgb or upper right corner
-        if (is_array($rgb) && count($rgb) == 3) {
-            $color = imagecolorallocate($this->_image, $rgb[0], $rgb[1], $rgb[2]);
-        } else {
-            $color = imagecolorat($this->_image, 1, 1); 
-        }
-        
+        $color = $this->colorAlloc($this->_image, $rgb);
         $rotated_image = imagerotate($this->_image, $deg, $color);
         $this->setImage($rotated_image);
-        $this->setDescription(array("rotate" => round($degrees,2) . "°"));
         
         return $this;
     }
@@ -549,13 +532,7 @@ class PsychoMorph_Image extends PsychoMorph_File {
     public function crop($xOffset, $yOffset, $width, $height, $rgb = null) {
         $newimg = imagecreatetruecolor($width, $height);
         
-        // get background color from $rgb or upper right corner
-        if (is_array($rgb) && count($rgb) == 3) {
-            $color = imagecolorallocate($newimg, $rgb[0], $rgb[1], $rgb[2]);
-        } else {
-            $color = imagecolorat($this->_image, 1, 1); 
-        }
-        
+        $color = $this->colorAlloc($newimg, $rgb);
         imagefill($newimg, 0, 0, $color);
         
         $w = $this->getWidth();
@@ -572,15 +549,6 @@ class PsychoMorph_Image extends PsychoMorph_File {
         
         $this->setImage($newimg);
         
-        $this->setDescription(array(
-            "crop" => array(
-                "x-offset" => round($xOffset,2),
-                "y-offset" => round($yOffset,2),
-                "width"    => round($width,2),
-                "height"   => round($height,2)
-            )
-        ));
-        
         return $this;
     }
     
@@ -594,16 +562,14 @@ class PsychoMorph_Image extends PsychoMorph_File {
         $newimg = imagecreatetruecolor($width, $height);
 
         imagecopyresampled(
-            $newimg,     $this->_image, 
-            0,             0, 
-            $width-1,     0, 
+            $newimg,    $this->_image, 
+            0,          0, 
+            $width-1,   0, 
             $width,     $height, 
-            -$width,     $height
+            -$width,    $height
         );
         
-        $this->setImage($newimg);    
-
-        $this->setDescription(array("mirror" => "mirror"));
+        $this->setImage($newimg);
         
         return $this;
     }
@@ -675,7 +641,7 @@ class PsychoMorph_Image extends PsychoMorph_File {
         $maxDeltaE = round(max($deltaEs), 4);
         
         $patch = ($expand * 2) + 1;
-        $this->setDescription(array("colour calibrate" => array(
+        $this->addHistory(array("colour calibrate" => array(
             "path dimension" => "$patch x $patch",
             "SD" => $SD,
             "deltaE" => array("M" => $meanDeltaE, "max" => $maxDelta),
@@ -727,7 +693,7 @@ class PsychoMorph_Image extends PsychoMorph_File {
         if (in_array($ext, $allowed_ext)) {
             $oldname = $this->getPath();
             $newname = preg_replace('@\.(jpg|png|gif)$@', '.' . $ext, $oldname);
-            $this->setDescription(array("convert" => $ext));
+            $this->addHistory("convert: {$ext}");
             return $this->save($newname);
         } else {
             return false;

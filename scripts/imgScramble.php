@@ -109,7 +109,7 @@ if (array_key_exists('line_color', $_POST)) {
     $desc['linecolor'] = $_POST['line_color'][0] . ',' . $_POST['line_color'][1] . ',' . $_POST['line_color'][2];
 }
 
-$img->setDescription($desc);
+$img->addHistory($desc);
 
 $newFileName = array(
     'subfolder' => $_POST['subfolder'],

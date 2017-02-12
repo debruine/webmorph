@@ -256,6 +256,9 @@ function projectSizeUpdate(proj_id, alloc) {
 }
 
 function projectNew() {
+    $('#new_project_name').val('');
+    $('#new_project_notes').val('');
+    
     $('#newProjectDialog').dialog({
         title: 'New Project',
         buttons: {
@@ -293,7 +296,8 @@ function projectNew() {
 }
 
 function projectDelete(proj_id) {
-    $('<div />').html('Are you sure you want to delete this project? This is permanent.').dialog({
+    $('<div />').html('Are you sure you want to delete this project? This is permanent.' + 
+    '<br><br>Type your password: <input type="password" >').dialog({
         title: 'Delete Project',
         buttons: {
             Cancel: function() {
@@ -301,16 +305,26 @@ function projectDelete(proj_id) {
             },
             'Delete': {
                 text: 'Delete',
+                class: 'ui-state-focus',
                 click: function() {
-                    $(this).dialog("close");
+                    var $this = $(this);
+                    var pw = $this.find('input').val();
+                    if (pw == '') { 
+                        $this.find('input').focus();
+                        return false; 
+                    }
 
                     $.ajax({
                         url: 'scripts/projDelete',
-                        data: { proj_id: proj_id},
+                        data: { 
+                            proj_id: proj_id,
+                            password: pw
+                        },
                         success: function(data) {
                             if (data.error) {
                                 $('<div title="Error Deleting Project" />').html(data.errorText).dialog();
                             } else {
+                                $this.dialog("close");
                                 projectList();
                             }
                         }

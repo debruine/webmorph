@@ -81,7 +81,7 @@ if (!file_exists($filename)) {
         include_once DOC_ROOT . '/include/classes/psychomorph.class.php';
     
         $img = new PsychoMorph_Image($newFileName);
-        $img->setDescription(array('concat' => array(
+        $img->addHistory(array('concat' => array(
             'top left' => $_POST['topL'],
             'top right' => $_POST['topR'],
             'bottom left' => $_POST['botL'],

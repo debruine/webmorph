@@ -50,7 +50,7 @@ if (count($_FILES) > 0) {
                     // there is no tem for this image
                     $img = new PsychoMorph_Image($tmp_name);
                 }
-                $img->setDescription('Uploaded file');
+                $img->addHistory('Uploaded file');
                 //$img->save($newFileName);
             } else if ($ext == 'tem') {
                 if (!empty($files["{$name}.jpg"])) {

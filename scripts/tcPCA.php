@@ -75,7 +75,7 @@ if (!perm('pca')) {
             
             $img = new PsychoMorph_ImageTem($avgimg, $avgtem);
             
-            $img->setDescription(array(
+            $img->addHistory(array(
                 'Desc' => 'Average image for PCA model ' . $theData['pcafile'] . '.pca',
                 'images' => $theData['images'],
                 'texture' => $theData['texture'],

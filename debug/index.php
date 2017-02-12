@@ -132,28 +132,6 @@ echo "{$data['id']}: {$data['email']}";
 echo '</td><td>1: lisa.debruine@glasgow.ac.uk</td></tr>';
 echo '</tbody></table>';
 
-
-
-
-//include_once DOC_ROOT . '/include/classes/psychomorph.class.php';
-
-/*
-$img = new PsychoMorph_ImageTem('/monkey_female');
-$img->getImg()->setDescription('My new image');
-echo 'desc: ' . $img->getImg()->getDescription();
-echo '<br />imgpath: ' . $img->getImg()->getUserPath();
-echo '<br />tempath: ' . $img->getTem()->getUserPath();
-echo '<br />n: ' . $img->getTem()->getPointNumber();
-$img->alignEyes();
-$img->setOverWrite(true);
-$img->save('/a_monkey.jpg');
-echo '<br />imgpath: ' . $img->getImg()->getPath();
-echo '<br />tempath: ' . $img->getTem()->getPath();
-echo '<br />width: ' . $img->getImg()->getWidth() . ' height: '. $img->getImg()->getHeight();
-echo '<pre>' .  $img->getTem()->printTem() . '</pre>';
-*/
-
-
 echo "<h3>Users</h3>";
 
 $q = new myQuery(array('CREATE TEMPORARY TABLE tmp_users SELECT user.id, 
@@ -168,79 +146,6 @@ $q = new myQuery(array('CREATE TEMPORARY TABLE tmp_users SELECT user.id,
 				GROUP BY tmp_users.id
 				ORDER BY last_login DESC;'));
 echo '<div id="usertabley">' . $q->get_result_as_table() . '</div>';
-
-
-/*
-echo "<h3>My Tmp Dir</h3>";
-
-$tmpdir = IMAGEBASEDIR . '/.tmp';
-if (is_dir($tmpdir)) {
-	//chmod($tmpdir, 0777);
-
-	$perms = fileperms($tmpdir);
-
-	if (($perms & 0xC000) == 0xC000) {
-	    // Socket
-	    $info = 's';
-	} elseif (($perms & 0xA000) == 0xA000) {
-	    // Symbolic Link
-	    $info = 'l';
-	} elseif (($perms & 0x8000) == 0x8000) {
-	    // Regular
-	    $info = '-';
-	} elseif (($perms & 0x6000) == 0x6000) {
-	    // Block special
-	    $info = 'b';
-	} elseif (($perms & 0x4000) == 0x4000) {
-	    // Directory
-	    $info = 'd';
-	} elseif (($perms & 0x2000) == 0x2000) {
-	    // Character special
-	    $info = 'c';
-	} elseif (($perms & 0x1000) == 0x1000) {
-	    // FIFO pipe
-	    $info = 'p';
-	} else {
-	    // Unknown
-	    $info = 'u';
-	}
-	
-	// Owner
-	$info .= (($perms & 0x0100) ? 'r' : '-');
-	$info .= (($perms & 0x0080) ? 'w' : '-');
-	$info .= (($perms & 0x0040) ?
-	            (($perms & 0x0800) ? 's' : 'x' ) :
-	            (($perms & 0x0800) ? 'S' : '-'));
-	
-	// Group
-	$info .= (($perms & 0x0020) ? 'r' : '-');
-	$info .= (($perms & 0x0010) ? 'w' : '-');
-	$info .= (($perms & 0x0008) ?
-	            (($perms & 0x0400) ? 's' : 'x' ) :
-	            (($perms & 0x0400) ? 'S' : '-'));
-	
-	// World
-	$info .= (($perms & 0x0004) ? 'r' : '-');
-	$info .= (($perms & 0x0002) ? 'w' : '-');
-	$info .= (($perms & 0x0001) ?
-	            (($perms & 0x0200) ? 't' : 'x' ) :
-	            (($perms & 0x0200) ? 'T' : '-'));
-
-
-	echo "$tmpdir exists and has permissions $info";
-	$handle = opendir($tmpdir);
-	echo "<ul>";
-	while (false !== ($entry = readdir($handle))) {
-	    if ($entry != "." && $entry != "..") {
-	    	echo "	<li>$entry</li>\n";
-	    }
-	}
-	echo "</ul>";
-	closedir($handle);
-} else {
-	echo "$tmpdir does not exist";
-}
-*/
 
 
 echo '<h3>Apache/PHP Limits</h3>';

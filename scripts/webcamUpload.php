@@ -28,7 +28,7 @@ if (!array_key_exists('imgBase64', $_POST)) {
     $b64 = str_replace('data:image/jpeg;base64,', '', $_POST['imgBase64']);
     $b64 = str_replace(' ', '+', $b64);
     $img->setImageBase64($b64);
-    $img->setDescription('Webcam upload');
+    $img->addHistory('Webcam upload');
     $img->save($newFileName);
 }
 

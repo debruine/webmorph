@@ -30,22 +30,28 @@ if ($newWidth > 0 && $newHeight > 0) {
     $h = $img->getHeight();
     $xResize = $newWidth/$w;
     $yResize = $newHeight/$h;
+    $desc = "resize: {$newWidth}px, {$newHeight}px";
 } else if ($newWidth > 0) {
     // calculate resize dimensions based on exact width and same % height
     $w = $img->getWidth();
     $xResize = $newWidth/$w;
     $yResize = $xResize;
+    $desc = "resize: {$newWidth}px, null";
 } else if ($newHeight > 0) {
     // calculate resize dimensions based on exact height and same % width
     $h = $img->getHeight();
     $yResize = $newHeight/$h;
     $xResize = $yResize;
+    $desc = "resize: null, {$newHeight}px";
 } else if ($_POST['x'] > 0) {
     $xResize = $_POST['x']/100;
     $yResize = $_POST['y'] ? $_POST['y']/100 : $xResize;
+    $desc = "resize: {$_POST['x']}%";
+    if ($_POST['y']) { $desc .= ", {$_POST['y']}%"; }
 } else if ($_POST['y'] > 0) {
     $yResize = $_POST['y']/100;
     $xResize = $_POST['x'] ? $_POST['x']/100 : $yResize;
+    $desc = "resize: {$_POST['x']}%";
 } else {
     $return['error'] = true;
     $return['errorText'] = 'There was not enough information to resize the images.';
@@ -53,6 +59,8 @@ if ($newWidth > 0 && $newHeight > 0) {
 
 if (!$return['error']) {
     $img->resize($xResize, $yResize);
+    $img->addHistory($desc);
+
     
     $newFileName = array(
         'subfolder' => $_POST['subfolder'],

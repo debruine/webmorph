@@ -356,14 +356,17 @@ $(document).mousedown(function(e) {                                             
                 }
             } else if (e.which == KEYCODE.a) {                                  // shift-cmd-A
                 $('#batchAverage').click();
+/*
             } else if (e.which == KEYCODE.b) {                                  // shift-cmd-B
                 $('#scramble').click();
             } else if (e.which == KEYCODE.c) {                                  // shift-cmd-C
                 $('#multiContinua').click();
             } else if (e.which == KEYCODE.d) {                                  // shift-cmd-D
                 $('#temVis').click();
+*/
             } else if (e.which == KEYCODE.e) {                                  // shift-cmd-E
                 $('#batchEdit').click();
+/*
             } else if (e.which == KEYCODE.f) {                                  // shift-cmd-F
                 $('#facialMetrics').click();
             } else if (e.which == KEYCODE.g) {                                  // shift-cmd-G
@@ -378,8 +381,11 @@ $(document).mousedown(function(e) {                                             
                 $('#rotate').click();
             } else if (e.which == KEYCODE.m) {                                  // shift-cmd-M
                 $('#mask').click();
+*/
             } else if (e.which == KEYCODE.n) {                                  // shift-cmd-N
-                $('#batchRename').click();
+                // $('#batchRename').click();
+                $('#newFolder').click();
+/*
             } else if (e.which == KEYCODE.o) {                                  // shift-cmd-O
                 $('#movingGif').click();
             } else if (e.which == KEYCODE.p) {                                  // shift-cmd-P
@@ -388,16 +394,21 @@ $(document).mousedown(function(e) {                                             
                 $('#resize').click();
             } else if (e.which == KEYCODE.s) {                                  // shift-cmd-S
                 $('#saveAs').click();
+*/
             } else if (e.which == KEYCODE.t) {                                  // shift-cmd-T
                 $('#batchTransform').click();
+            } else if (e.which == KEYCODE.u) {                                  // shift-cmd-U
+                $('#webcamPhoto').click();
+/*
             } else if (e.which == KEYCODE.v) {                                  // shift-cmd-V
                 $('#PCvis').click();
             } else if (e.which == KEYCODE.w) {                                  // shift-cmd-W
-                $('#webcamPhoto').click();
+                
             } else if (e.which == KEYCODE.x) {                                  // shift-cmd-X
                 $('#pixels').click();
             } else if (e.which == KEYCODE.y) {                                  // shift-cmd-Y
                 $('#symmetrise').click();
+*/
             } else if (e.which == KEYCODE.z) {                                  // shift-cmd-Z
                 $('#redo').click();
             } else if (WM.appWindow == 'delineate' && WM.delinfunc == 'move') {
@@ -438,17 +449,17 @@ $(document).mousedown(function(e) {                                             
             } else if (e.which == KEYCODE.d) {                                  // cmd-d
                 $('#download').click();       
             } else if (e.which == KEYCODE.f) {                                  // cmd-f
-                $('#find').click();           
-            } else if (e.which == KEYCODE.g) {                                  // cmd-g
-                $('#fileListGet').click();    
+                $('#find').click();
+            } else if (e.which == KEYCODE.l) {                                  // cmd-l
+                $('#fileListGet').click(); 
             } else if (e.which == KEYCODE.i) {                                  // cmd-i
                 $('#getInfo').click();        
             } else if (e.which == KEYCODE.m) {                                  // cmd-m
                 $('#fitsize').click();        
-            } else if (e.which == KEYCODE.n) {                                  // cmd-n
-                $('#newFolder').click();      
-            } else if (e.which == KEYCODE.p) {                                  // cmd-p
-                $('#newProject').click();     
+//          } else if (e.which == KEYCODE.n) {                                  // cmd-n
+//              $('#newFolder').click();      
+//          } else if (e.which == KEYCODE.p) {                                  // cmd-p
+//              $('#newProject').click();     
             } else if (e.which == KEYCODE.q) {                                  // cmd-q
                 $('#logout').click();         
             } else if (e.which == KEYCODE.r) {                                  // cmd-r
@@ -757,7 +768,7 @@ $('body').on('dblclick doubletap', '.growl', function() {
 
 $('.msg').append('<br><span style="float: right; font-size:60%;">[double-click this notice to permanently close it]</span>');
 
-$('#imagebox').click( function(e) {
+$('#filepreview').click( function(e) {
     e.stopPropagation();
 });
 
@@ -806,42 +817,50 @@ $finder.on('click', function() {
            .addClass('closed');
 
     WM.finder.updateSelectedFiles();
+    
+    // hide and move the filepreview
+    $('#filepreview img, #history, #fileinfo').hide();
+    $(this).append(
+        $('#filepreview').css('margin-left', $(this).width())
+    );
+    $finder.scrollLeft($finder.width());
+    
+    $('#filepreview').offset({'top': $finder.position().top + 1});
+    
 }).on('click', 'li.file.image', function(e) {                                   // show image in imgbox on click
     var theURL,
-        $theImg;
+        $theImg,
+        $this = $(this);
 
     if ($finder.hasClass('image-view')) { return false; }
 
-    theURL = $(this).attr('url');
-    $theImg = $imagebox.find('img');
+    theURL = $this.attr('url');
+    $theImg = $('#filepreview img');
     if ($theImg.filter(':visible').attr('src') != fileAccess(theURL)) {
-        var exif,
-            $this;
-
-        $this = $(this);
-        exif = $this.data('exif');
+        $('#fileinfo, #history, #selectedTem').hide().find('div').html('');
 
         $theImg.attr('src', WM.loadImg).attr('src', fileAccess(theURL)).show();
-        $('#selectedTem').hide();
 
-        if (exif === undefined) {
+        if ($this.data('info') === undefined) {
             $.ajax({
                 type: 'GET',
                 url: 'scripts/imgReadExif',
                 data: { img: theURL },
-                dataType: 'html',
                 success: function(data) {
-                    $this.data('exif', data);
-                    $('#imagedesc').html(data).show();
+                    if (data.error) {
+                        growl(data.errorText);
+                    } else {
+                        $this.data('info', data.info);
+                        $this.data('history', data.history);
+                        $('#history').show().find('div').html($this.data('history'));
+                        $('#fileinfo').show().find('div').html($this.data('info'));
+                    }
                 }
             });
         } else {
-            $('#imagedesc').html(exif).show();
+            $('#history').show().find('div').html($this.data('history'));
+            $('#fileinfo').show().find('div').html($this.data('info'));
         }
-
-        $this.append(
-            $imagebox.css('margin-left', $this.width())
-        );
     }
 }).on('click', 'li.pca, li.fimg', function(e) {                                 // handle files not human readable (pca/fimg)
     if ($finder.hasClass('image-view')) { return false; }
@@ -850,11 +869,6 @@ $finder.on('click', function() {
         + "This file format is what the desktop version of Psychomorph uses. "
         + "To see a human-readable version of this file, look at the "
         + $(this).text() + ".txt file.").show();
-
-    $('#imagebox img, #imagedesc').hide();
-    $(this).append(
-        $imagebox.css('margin-left', $(this).width())
-    );
 }).on('click', 'li.txt, li.csv, li.pci', function(e) {                          // display text files (txt/csv/pci)
     if ($finder.hasClass('image-view')) { return false; }
 
@@ -872,19 +886,15 @@ $finder.on('click', function() {
             }
         }
     });
-
-    $('#imagebox img, #imagedesc').hide();
-    $(this).append(
-        $imagebox.css('margin-left', $(this).width())
-    );
-}).on('click', 'li.tem', function(e) {                                          // show text of file in imgbox on click
+}).on('click', 'li.tem', function(e) {                                          // show text of tem file in imgbox on click
     if ($finder.hasClass('image-view')) { return false; }
 
     var $this = $(this);
     var theURL = $this.attr('url');
-    var theTem = $this.data('tem');
+    
+    $('#fileinfo, #history').hide().find('div').html('');
 
-    if (theTem === undefined) {
+    if ($this.data('tem') === undefined) {
         $.ajax({
             type: 'GET',
             url: 'scripts/temRead',
@@ -895,19 +905,22 @@ $finder.on('click', function() {
                         title: 'Error Reading Tem File <code>' + theURL + '</code>',
                     });
                 } else {
-                    $('#selectedTem').val(data.tem).show();
                     $this.data('tem', data.tem);
+                    $this.data('info', data.info);
+                    $this.data('history', data.history);
+                    $('#selectedTem').val($this.data('tem')).show();
+                    $('#history').show().find('div').html($this.data('history'));
+                    $('#fileinfo').show().find('div').html($this.data('info'));
+                    
                 }
             }
         });
     } else {
-        $('#selectedTem').val(theTem).show();
+        $('#selectedTem').val($this.data('tem')).show();
+        $('#history').show().find('div').html($this.data('history'));
+        $('#fileinfo').show().find('div').html($this.data('info'));
     }
-    $('#imagebox img, #imagedesc').hide();
-
-    $(this).append(
-        $imagebox.css('margin-left', $(this).width())
-    );
+    $('#filepreview img').hide();
 }).on('click', 'li.folder > span', function(e) {                                // click on a folder
     $finder.find('input').blur();                                               // blur any open inputs for folder name changes
 
@@ -973,7 +986,7 @@ $('#imageview').click( function() {
     } else {
         $(this).text('Icon View');
     }
-    $imagebox.hide();
+    $('#filepreview').hide();
     $('#refresh').click();
     $finder.find('ul').css('width', 'auto');
     $finder.find('ul').css('margin-left', (-1 * $finder.find('> ul').width()) - 1);
@@ -1169,12 +1182,15 @@ $('#getInfo').not('.disabled').click(function() {
         type: 'GET',
         url: 'scripts/imgReadExif',
         data: { img: WM.faceimg },
-        dataType: 'html',
         success: function(data) {
-            $('<div />').attr('title', WM.faceimg).html(data).dialog({
-                width: 500,
-                height: 400,
-            });
+            if (data.error) {
+                growl(data.errorText);
+            } else {
+                $('<div />').attr('title', WM.faceimg).html(data.desc).dialog({
+                    width: 500,
+                    height: 400,
+                });
+            }
         }
     });
 });
@@ -1235,6 +1251,12 @@ $('#download').not('.disabled').click(function() {
     } else {
         growl('You have not selected any files.', 1500);
     }
+});
+
+$('.download_file').click(function(e) {
+    postIt('scripts/fileZip', {
+        'files': $(this).data('src')
+    });
 });
 
 // !#toggle_delintoolbar
@@ -1582,12 +1604,16 @@ $('#admin').click(function() {
 });
 
 // !#newProject
-$('#newProject').not('.disabled').click(function() {
+/*$('#newProject').not('.disabled').click(function() {
     projectNew();
-});
+});*/
 // !#newFolder
 $('#newFolder').not('.disabled').click(function() {
-    folderNew();
+    if (WM.appWindow == 'project') {
+        projectNew();
+    } else {
+        folderNew();
+    }
 });
 // !#dbCleanup
 $('#dbCleanup').not('.disabled').click(function() {
@@ -1779,6 +1805,11 @@ $('#rotate').not('.disabled').click(function() {
 // !#alignEyes
 $('#alignEyes').not('.disabled').click(function() {
     batchAlign();
+});
+
+// !#temFromEmbedded
+$('#temFromEmbedded').not('.disabled').click(function() {
+    batchTemFromEmbedded();
 });
 
 //!.batch_name toggles
@@ -2326,7 +2357,6 @@ $('#select').not('.disabled').click(function() {
             $finder.find('li.file').removeClass('selected');
         } else {
             $allfiles.addClass('selected');
-            $imagebox.hide().appendTo($allfiles.eq(0));
         }
         WM.finder.updateSelectedFiles();
     } else if (WM.appWindow == 'delineate') {
@@ -2858,7 +2888,9 @@ $queue.on('click', 'li.queueItem:not(.active)', function(e) {
         $(this).data('obj').destroy();
     }
 }).on('click', 'li.queueItem.complete:not(.ui-state-error)', function() {
-    fileShow($(this).data('obj').returnData.newFileName);
+    var file = $(this).data('obj').returnData.newFileName;
+    console.log('fileShow(' + file + ')');
+    fileShow(file);
 }).on('click', 'li.queueItem.paused', function(){
     $(this).data('obj').wait();
 }).on('click', 'li.queueItem.waiting', function(){

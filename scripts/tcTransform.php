@@ -13,27 +13,29 @@ $return = array(
 
 $url = 'http://' . $_SERVER["SERVER_NAME"] . '/tomcat/psychomorph/trans?';
 
-// set up data
 $theData = $_POST['theData'];
-$paramsJoined = array();
-foreach($theData as $param => $value) {
-   $paramsJoined[] = "$param=$value";
-}
-$query = implode('&', $paramsJoined);
 
 $ch = curl_init();
-curl_setopt($ch, CURLOPT_URL, $url . $query);
+curl_setopt($ch, CURLOPT_URL, $url);
+curl_setopt($ch, CURLOPT_POST, true);
+curl_setopt($ch, CURLOPT_POSTFIELDS, serializeForTomcat($theData));
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 30);
 curl_setopt($ch, CURLOPT_TIMEOUT, 600);
-$data = curl_exec($ch);
+if ($data = curl_exec($ch)) {
+    $transdata = json_decode($data, true);
+    if (count($transdata) == 0) {
+        $return['errorText'] .= $data;
+    } else {
+        $return['data'] = $transdata[0]; 
+    } 
+} else {
+    $return['errorText'] .= curl_error($ch);  
+}
 curl_close($ch);
 
-$transdata = json_decode($data, true);
-if (count($transdata) == 0) {
-    $return['errorText'] .= 'The transform was not created';
-} else {
-    // log image transform
+if ($return['data']) {
+    // log image creation
     $norm = array(
         "none" => 1,
         "2point" => 2,
@@ -81,20 +83,28 @@ if (count($transdata) == 0) {
     $transtem = $theData['subfolder'] . '/.tmp/' . $transdata[0]['tem'];
     $img = new PsychoMorph_ImageTem($transimg, $transtem);
     
-    $img->setDescription(array(
+    $desc = array(
+        'label' => 'transform',
         'transimg' => $theData['transimage0'],
         'fromimg' => $theData['fromimage0'],
         'toimg' => $theData['toimage0'],
         'shape' => round($theData['shape0']*100,1) . '%',
         'color' => round($theData['color0']*100,1) . '%',
         'texture' => round($theData['texture0']*100,1) . '%',
-        'norm' => $theData['norm0'],
-        'normpoints' => $theData['normPoint0_0'] . ',' . $theData['normPoint1_0'],
         'warp' => $theData['warp0'],
         'contour' => $theData['sampleContours0'],
-    ));
+        'norm' => $theData['norm0'],
+    );
+    if ($theData['norm0'] != "none") {
+        $desc['normpoints'] = $theData['normPoint0_0'] . ',' . $theData['normPoint1_0'];
+    }
+    $img->addHistory($desc);
     
-    $newFileName = $theData['subfolder'] . $_POST['outname'];
+    if (empty($_POST['outname'])) {
+        $newFileName = null;
+    } else {
+        $newFileName = $theData['subfolder'] . $_POST['outname'];
+    }
     
     if ($img->save($newFileName)) {
         $return['error'] = false;
