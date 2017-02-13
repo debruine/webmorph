@@ -136,6 +136,11 @@
                 title="">
                 Icon View
             </li>
+            <li class='finder average transform' id='toggle_preview'
+                title="">
+                <span class="checkmark">&nbsp;</span>
+                File Preview
+            </li>
             <li class='finder average transform' id='toggle_lightTable'
                 title="Show or hide the Light Table">
                 <span class="checkmark">&nbsp;</span>

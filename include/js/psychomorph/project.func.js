@@ -164,6 +164,7 @@ function projectList() { console.time('projectList()');
 }
 
 function projectSet(id, appWindow) {
+    console.log('projectSet(' + id + ',' + appWindow + ')');
     $.ajax({
         url: 'scripts/projSet',
         data: {

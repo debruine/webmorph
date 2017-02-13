@@ -832,7 +832,7 @@ $finder.on('click', function() {
         $theImg,
         $this = $(this);
 
-    if ($finder.hasClass('image-view')) { return false; }
+    if (!WM.filepreview || $finder.hasClass('image-view')) { return false; }
 
     theURL = $this.attr('url');
     $theImg = $('#filepreview img');
@@ -887,7 +887,7 @@ $finder.on('click', function() {
         }
     });
 }).on('click', 'li.tem', function(e) {                                          // show text of tem file in imgbox on click
-    if ($finder.hasClass('image-view')) { return false; }
+    if (!WM.filepreview || $finder.hasClass('image-view')) { return false; }
 
     var $this = $(this);
     var theURL = $this.attr('url');
@@ -1126,11 +1126,17 @@ $('#grid_lines').change( function() {
     var line_color;
 
     if ($(this).prop('checked')) {
-        $('#grid_line_color').show().change();
+        $('#scrambleExample div').css({
+            'border-top-style': 'solid',
+            'border-left-style': 'solid'
+        });
+        $('#grid_line_color').show().slider('value', $('#grid_line_color').slider('value'));
     } else {
         $('#grid_line_color').hide();
         $('#scrambleExample div').css({
-            'border-color': 'rgba(0,0,0,0.75)'
+            'border-color': 'rgba(0,0,0,0.75)',
+            'border-top-style': 'dotted',
+            'border-left-style': 'dotted'
         });
     }
 });
@@ -1306,10 +1312,24 @@ $('#toggletrash').not('.disabled').click(function() {
         $('#trash').show();
     }
 });
+
+// !#toggle_preview
+$('#toggle_preview').not('.disabled').click(function() {
+    var $cm = $(this).find('span.checkmark');
+    if (WM.filepreview) {
+        $cm.hide();
+        WM.filepreview = false;
+        $('#filepreview').hide();
+    } else {
+        $cm.show();
+        WM.filepreview = true;
+    }
+});
+
 // !#toggle_lightTable
 $('#toggle_lightTable').not('.disabled').click(function() {
 
-    var $cm = $(this).find('span.checkmark')
+    var $cm = $(this).find('span.checkmark');
     if ($('#lightTable').filter(':visible').length) {
         $('#lightTable').dialog('close');
     } else {

@@ -1,3 +1,0 @@
-Initialising average servlet v.4
-    mydirectory = /Users/lisad/images/
-Completed initialising average servlet v.4

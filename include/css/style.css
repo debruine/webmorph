@@ -949,6 +949,10 @@ p.msg {
     border-bottom:2px solid hsl(200,0%,20%);
 }
 
+#scrambleDialog {
+    min-width: 650px;
+}
+
 #scrambleDialog input[type=integer] {
     width:3em;
 }
@@ -959,7 +963,7 @@ p.msg {
     background:transparent center no-repeat;
     background-size:contain;
     margin:1em auto;
-    border:none;
+    border: none;
 }
 
 #scrambleExample div {

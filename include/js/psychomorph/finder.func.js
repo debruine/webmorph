@@ -865,7 +865,8 @@ function finder(dir) { console.debug('finder(' + (dir == undefined ? '' : dir) +
         return $theFile;
     };
 
-    this.imagesWithTems = function() { console.time('imagesWithTems()');
+    this.imagesWithTems = function() { 
+        //console.time('imagesWithTems()');
         // mark all images and tems in the finder with a class if they have a corresponding img/tem
         var $files = $finder.find('li.file');
         var $tems = $files.filter('.tem');
@@ -892,7 +893,7 @@ function finder(dir) { console.debug('finder(' + (dir == undefined ? '' : dir) +
         if (WM.appWindow == 'average' || WM.appWindow == 'transform') {
             $files.hide().filter('.image.hasTem').show();
         }
-        console.timeEnd('imagesWithTems()');
+        //console.timeEnd('imagesWithTems()');
     };
     
     this.updateSelectedFiles = function() { //console.log('WM.finder.updateSelectedFiles()');
@@ -1089,7 +1090,7 @@ function loadFiles(selected_dir, subdir) {
                 // move filepreview out of finder first
                 $('#filepreview').hide().insertBefore($('#uploadbar'));
                 $finder.find('ul').css('width', 'auto');
-                console.time('folderize()');
+                //console.time('folderize()');
                 if (subdir !== '') {
                     var subdirfolder = $finder.find('li.folder[path="' + subdir + '"]');
                     if (subdirfolder.length) {
@@ -1100,7 +1101,7 @@ function loadFiles(selected_dir, subdir) {
                 } else {
                     folderize(data.dir, $finder);
                 }
-                console.timeEnd('folderize()');
+                //console.timeEnd('folderize()');
 
                 // fix first ul
                 var firstul = $finder.find('> ul');

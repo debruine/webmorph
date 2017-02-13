@@ -1,9 +1,11 @@
 <div id='loginInterface' class='interface'>
     
     <p>WebMorph is a web-based version of Psychomorph, 
-        with several additional functions. While WebMorph is optimized for averaging and transforming faces, 
-        you can delineate and average any type of image. WebMorph also has several batch functions for 
-        processing large numbers of images automatically and can even create moving gifs of your transforms.</p>
+        with several additional functions. While WebMorph is optimized for 
+        averaging and transforming faces, you can delineate and average any type 
+        of image. WebMorph also has several batch functions for processing large 
+        numbers of images automatically and can even create moving gifs of your 
+        transforms.</p>
     
     <table class='feature' id='loginBox'>
         <thead><tr><th colspan='2'>Log in to access WebMorph</th></tr></thead>
@@ -16,13 +18,15 @@
                 <td><label for='login_password'>password</label></td>
                 <td><input type='password' id='login_password' /></td>
             </tr>
-            <tr class='reg_item' title='Access to WebMorph is currently restricted. Ask Lisa for an invite code if you would like to be a beta tester.'>
+            <tr class='reg_item' title='Access to WebMorph is currently restricted. 
+                Ask Lisa for an invite code if you would like to be a beta tester.'>
                 <td><label for='login_auth'>invite code</label></td>
                 <td><input type='text' id='login_auth' /></td>
             </tr>
             <tr class='reg_item'>
                 <td></td>
-                <td class='smallnote'>The following information is optional, but helps us figure out who our users are.</td>
+                <td class='smallnote'>The following information is optional, 
+                    but helps us figure out who our users are.</td>
             </tr>
             <tr class='reg_item'>
                 <td><label for='reg_firstname'>first name</label></td>
@@ -50,7 +54,8 @@
             <tr class='reg_item'>
                 <td><label for='reg_use'>I plan to use WebMorph for</label></td>
                 <td><div id='reg_use'>
-                    <textarea id='reg_reason' placeholder='Explain why you want to use WebMorph. Accounts will be allocated based on this.'></textarea>
+                    <textarea id='reg_reason' placeholder='Explain why you want to use WebMorph. 
+                        Accounts will be allocated based on this.'></textarea>
                     <input type='checkbox' id='reg_use_research' name='reg_use_research' value='research' />
                     <label for='reg_use_research'>research</label><br>
                     <input type='checkbox' id='reg_use_school' name='reg_use_school' value='school' />
@@ -64,9 +69,11 @@
                 </div></td>
             </tr>
             <tr class='reg_item'>
-                <td colspan='2' class='smallnote' style='text-align:left;'>In order for this website to work properly, 
-                    we have to store small files (called cookies) on your computer. Almost all websites do this, 
-                    but a new EU law requires that we obtain your consent first. By registering, you agree to this.</td>
+                <td colspan='2' class='smallnote' style='text-align:left;'>
+                    In order for this website to work properly, we have to store 
+                    small files (called cookies) on your computer. Almost all 
+                    websites do this, but a new EU law requires that we obtain 
+                    your consent first. By registering, you agree to this.</td>
             </tr>
             <tr class='login_item'>
                 <td><input type='checkbox' id='login_keep' /></td>
@@ -106,7 +113,7 @@
     <div id="gif_demos">
         <img src="/include/images/gifs/id.gif">
         <img src="/include/images/gifs/happy.gif">
-        <img src="/include/images/gifs/celeb.gif">
+        <img src="/include/images/gifs/scramble.gif">
     </div>
     
     <p>WebMorph is made possible by the kind help of 

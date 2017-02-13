@@ -1,6 +1,10 @@
 <!-- !- what's new Dialog -->
 <div id='whatsnewDialog' class='modal' title='What&apos;s New?'>
     <dl>
+        <dt>(2017-02-13) Scrambling</dt>
+        <dd>I fixed some glitches in the scrambling interface. You can now make 
+        very fine grid scrambles and the offset works correctly.</dd>
+        
         <dt>(2017-02-12) Keyboard Shortcuts</dt>
         <dd>I had to remove several keyboard shortcuts because they were 
         incompatible with some web browsers. I also removed most of the keyboard 

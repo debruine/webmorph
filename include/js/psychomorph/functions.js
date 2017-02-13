@@ -105,6 +105,14 @@ function contains(a, obj) {
     return false;
 }
 
+function array_sum(a) {
+    return a.reduce(function (a, b) { return a + b; }, 0);
+}
+
+function array_mean(a) {
+    return array_sum(a) / a.length;
+}
+
 // pad a number with leading zeros (or other chararcter in 3rd argument
 function pad(original, width, padder) {
     var len;
@@ -402,6 +410,9 @@ function hashSet() { //console.log('hashSet()');
             file = urlToName(currentDir());
         }
     }
+    
+    // get rid of old project ID during projSet()
+    file = file.replace(/^\d+/, '');
 
     hash = appWindow + proj + file;
 
@@ -421,6 +432,7 @@ function hashChange() { //console.log('hashchange: ' + location.hash);
 
     if (hash.appWindow == appWin) {
         if (hash.project_id != WM.project.id) {
+            console.log("hash: " + hash.project_id + ", WM: " + WM.project.id);
             projectSet(hash.project_id);
         }
         if (WM.project.id + hash.file != WM.faceimg && hash.appWindow == 'D') {

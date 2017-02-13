@@ -55,8 +55,20 @@ if ($_POST['chosen'] == 'all') {
     }
 } else {
     // scramble only chosen squares
-    $grids = $_POST['chosen'];
+    //$grids = $_POST['chosen'];
+    
+    foreach ($_POST['chosen'] as $y => $xx) {
+        if ($xx !== '') {
+            $xx = explode(",", $xx);
+            $means[$y] = array_sum($xx)/count($xx);
+            
+            foreach ($xx as $x) {
+                $grids[] = array($x, $y);
+            }
+        }
+    }
 }
+$return['means'] = $means;
 
 // randomise grids
 if ($_POST['sym'] == 'true') {

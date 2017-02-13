@@ -495,28 +495,26 @@ function resetGrids() {
     yOffset = $('#scramble_y_offset').val();
     origW = $se.data('origW');
     origH = $se.data('origH');
+    ratio = $se.data('ratio');
+    gridSize = $('#grid_size').val();
 
     if (xOffset >= origW || xOffset < 0) {
         xOffset = 0;
-        $('#scramble_x_offset').val(xOffset);
-        $se.css('padding-left', xOffset + 'px');
     }
+    $('#scramble_x_offset').val(xOffset);
+    $se.css('padding-left', xOffset*ratio + 'px');
 
     if (yOffset >= origH || yOffset < 0) {
         yOffset = 0;
-        $('#scramble_y_offset').val(yOffset);
-        $se.css('padding-top', yOffset + 'px');
     }
-
-    gridSize = $('#grid_size').val();
-    ratio = $se.data('ratio');
+    $('#scramble_y_offset').val(yOffset);
+    $se.css('padding-top', yOffset*ratio + 'px');
 
     maxVal = Math.floor( Math.min(origW-xOffset, origH-yOffset) / 2 );
 
     if (gridSize > maxVal || gridSize < 1) {
         gridSize = maxVal;
         $('#grid_size').val(gridSize);
-
     }
 
     if (gridSize < 5) {
@@ -528,6 +526,9 @@ function resetGrids() {
 
     xgrids = Math.floor( (origW - xOffset) / gridSize );
     ygrids = Math.floor( (origH - yOffset) / gridSize );
+    
+    $se.data('xgrids', xgrids);
+    $se.data('ygrids', xgrids);
 
     $se.find('div').each( function() {
         var $this;
@@ -565,6 +566,8 @@ function resetGrids() {
         width: displayGridSize + 'px',
         height: displayGridSize + 'px'
     });
+    
+    $('#grid_lines').trigger('change');
 };
 
 function batchScramble() {
@@ -582,10 +585,10 @@ function batchScramble() {
         success: function(data) {
             var ratio;
 
-            if (data.h <= 800) {
+            if (data.w <= 6000) {
                 ratio = 1;
             } else {
-                ratio = 800 / data.h;
+                ratio = 6000 / data.w;
             }
 
             $('#scrambleExample').css({
@@ -609,7 +612,7 @@ function batchScramble() {
     batchNewName('#scrambleDialog', 'scramble');
 
     $('#scrambleDialog').dialog({
-        width: 'auto',
+        width: $finder.width(),
         height: 'auto',
         maxWidth: $finder.width(),
         maxHeight: $finder.height(),
@@ -633,7 +636,11 @@ function batchScramble() {
                 text: "Scramble",
                 class: 'ui-state-focus',
                 click: function() {
-                    var theData;
+                    var theData,
+                        rows,
+                        chosen = [],
+                        means = [],
+                        canSym = true;
 
                     $(this).dialog("close");
                     theData = batchNewNameGet('#scrambleDialog');
@@ -645,13 +652,31 @@ function batchScramble() {
                     if (theData.grid < 5) {
                         theData.chosen = 'all';
                     } else {
-                        theData.chosen = [];
+                        rows = $('#scrambleExample').data('ygrids');
+                        for (r = 0; r < rows; r++) {
+                            chosen[r] = [];
+                        }
+                        
                         $('#scrambleExample div.ui-selected').each( function() {
-                            theData.chosen.push([
-                                $(this).data('x'),
-                                $(this).data('y')
-                            ]);
+                            chosen[$(this).data('y')].push($(this).data('x'));
                         });
+                        
+                        theData.chosen = [];
+                        $.each(chosen, function(i) {
+                            if (chosen[i].length) {
+                                theData.chosen[i] = chosen[i].join();
+                                means.push(array_mean(chosen[i]));
+                            }
+                        });
+                        
+                        $.each(means, function(i,v) {
+                            if (v !== means[0]) {
+                                canSym = canSym && false;
+                            }
+                        });
+                        
+                        console.log("canSym: " + canSym);
+                        
                     }
 
                     if ($('#grid_lines').prop('checked')) {
