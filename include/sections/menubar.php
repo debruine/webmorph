@@ -26,7 +26,7 @@
             <li class='separator'></li>
             <li class='finder delineate average transform project' id='logout'>
                 Logout
-                <span class="shortcut cmd">Q</span>
+                <span class="shortcut shiftcmd">Q</span>
             </li>
         </ul>
     </li>

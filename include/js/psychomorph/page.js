@@ -356,59 +356,17 @@ $(document).mousedown(function(e) {                                             
                 }
             } else if (e.which == KEYCODE.a) {                                  // shift-cmd-A
                 $('#batchAverage').click();
-/*
-            } else if (e.which == KEYCODE.b) {                                  // shift-cmd-B
-                $('#scramble').click();
-            } else if (e.which == KEYCODE.c) {                                  // shift-cmd-C
-                $('#multiContinua').click();
-            } else if (e.which == KEYCODE.d) {                                  // shift-cmd-D
-                $('#temVis').click();
-*/
             } else if (e.which == KEYCODE.e) {                                  // shift-cmd-E
                 $('#batchEdit').click();
-/*
-            } else if (e.which == KEYCODE.f) {                                  // shift-cmd-F
-                $('#facialMetrics').click();
-            } else if (e.which == KEYCODE.g) {                                  // shift-cmd-G
-                $('#gridFaces').click();
-            } else if (e.which == KEYCODE.h) {                                  // shift-cmd-H
-                $('#alignEyes').click();
-            } else if (e.which == KEYCODE.i) {                                  // shift-cmd-I
-                $('#mirror').click();
-            } else if (e.which == KEYCODE.k) {                                  // shift-cmd-K
-                $('#crop').click();
-            } else if (e.which == KEYCODE.l) {                                  // shift-cmd-L
-                $('#rotate').click();
-            } else if (e.which == KEYCODE.m) {                                  // shift-cmd-M
-                $('#mask').click();
-*/
             } else if (e.which == KEYCODE.n) {                                  // shift-cmd-N
                 // $('#batchRename').click();
                 $('#newFolder').click();
-/*
-            } else if (e.which == KEYCODE.o) {                                  // shift-cmd-O
-                $('#movingGif').click();
-            } else if (e.which == KEYCODE.p) {                                  // shift-cmd-P
-                $('#singlePCA').click();
-            } else if (e.which == KEYCODE.r) {                                  // shift-cmd-R
-                $('#resize').click();
-            } else if (e.which == KEYCODE.s) {                                  // shift-cmd-S
-                $('#saveAs').click();
-*/
+            } else if (e.which == KEYCODE.q) {                                  // shift-cmd-Q
+                $('#logout').click();   
             } else if (e.which == KEYCODE.t) {                                  // shift-cmd-T
                 $('#batchTransform').click();
             } else if (e.which == KEYCODE.u) {                                  // shift-cmd-U
                 $('#webcamPhoto').click();
-/*
-            } else if (e.which == KEYCODE.v) {                                  // shift-cmd-V
-                $('#PCvis').click();
-            } else if (e.which == KEYCODE.w) {                                  // shift-cmd-W
-                
-            } else if (e.which == KEYCODE.x) {                                  // shift-cmd-X
-                $('#pixels').click();
-            } else if (e.which == KEYCODE.y) {                                  // shift-cmd-Y
-                $('#symmetrise').click();
-*/
             } else if (e.which == KEYCODE.z) {                                  // shift-cmd-Z
                 $('#redo').click();
             } else if (WM.appWindow == 'delineate' && WM.delinfunc == 'move') {
@@ -456,12 +414,6 @@ $(document).mousedown(function(e) {                                             
                 $('#getInfo').click();        
             } else if (e.which == KEYCODE.m) {                                  // cmd-m
                 $('#fitsize').click();        
-//          } else if (e.which == KEYCODE.n) {                                  // cmd-n
-//              $('#newFolder').click();      
-//          } else if (e.which == KEYCODE.p) {                                  // cmd-p
-//              $('#newProject').click();     
-            } else if (e.which == KEYCODE.q) {                                  // cmd-q
-                $('#logout').click();         
             } else if (e.which == KEYCODE.r) {                                  // cmd-r
                 $('#refresh').click();        
             } else if (e.which == KEYCODE.s) {                                  // cmd-s

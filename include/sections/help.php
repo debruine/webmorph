@@ -1,9 +1,15 @@
 <!-- !- what's new Dialog -->
 <div id='whatsnewDialog' class='modal' title='What&apos;s New?'>
     <dl>
+        <dt>(2017-02-13) Reverse Masking</dt>
+        <dd>There is now a checkbox in the batch masking interface to specify a 
+        reverse mask.</dd>
+        
         <dt>(2017-02-13) Scrambling</dt>
         <dd>I fixed some glitches in the scrambling interface. You can now make 
-        very fine grid scrambles and the offset works correctly.</dd>
+        very fine grid scrambles and the offset works correctly. You can also 
+        create symmetric scrambles, where the scramble order on the left side of 
+        the image mirrors the scramble order on the right side of the image.</dd>
         
         <dt>(2017-02-12) Keyboard Shortcuts</dt>
         <dd>I had to remove several keyboard shortcuts because they were 

@@ -17,6 +17,7 @@ $img = new PsychoMorph_ImageTem($_POST['img']);
 
 $mask = explode(',', $_POST['mask']);
 $blur = $_POST['blur'];
+$reverse = ($_POST['reverse'] == 'true');
 
 $custom = null;
 if (!empty($_POST['custom'])) {
@@ -56,7 +57,7 @@ if (!$mask || !$rgba) {
 if (!$return['error']) {
     ini_set('max_execution_time', 30*($blur+1));
     
-    $img->mask($mask, $rgba, $blur, $custom);
+    $img->mask($mask, $rgba, $blur, $reverse, $custom);
     
     if ($custom) {
         

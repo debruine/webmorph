@@ -528,7 +528,7 @@ function resetGrids() {
     ygrids = Math.floor( (origH - yOffset) / gridSize );
     
     $se.data('xgrids', xgrids);
-    $se.data('ygrids', xgrids);
+    $se.data('ygrids', ygrids);
 
     $se.find('div').each( function() {
         var $this;
@@ -642,18 +642,18 @@ function batchScramble() {
                         means = [],
                         canSym = true;
 
-                    $(this).dialog("close");
                     theData = batchNewNameGet('#scrambleDialog');
                     theData.img = null;
                     theData.grid = $('#grid_size').val();
                     theData.x = $('#scramble_x_offset').val();
                     theData.y = $('#scramble_y_offset').val();
+                    theData.sym = $('#scramble_sym').prop('checked');
 
                     if (theData.grid < 5) {
                         theData.chosen = 'all';
                     } else {
                         rows = $('#scrambleExample').data('ygrids');
-                        for (r = 0; r < rows; r++) {
+                        for (r = 0; r <= rows; r++) {
                             chosen[r] = [];
                         }
                         
@@ -669,19 +669,27 @@ function batchScramble() {
                             }
                         });
                         
-                        $.each(means, function(i,v) {
-                            if (v !== means[0]) {
-                                canSym = canSym && false;
+                        // check if all row means the same for symmetric scramble
+                        if ($('#scramble_sym').prop('checked')) {
+                            $.each(means, function(i,v) {
+                                if (v !== means[0]) {
+                                    canSym = canSym && false;
+                                }
+                            });
+                            console.log("canSym: " + canSym);
+
+                            if (!canSym) {
+                                growl('The selected squares are not vertically symmetric.');
+                                return false;
                             }
-                        });
-                        
-                        console.log("canSym: " + canSym);
-                        
+                        }
                     }
 
                     if ($('#grid_lines').prop('checked')) {
                         theData.line_color = $('#grid_line_color').slider('values');
                     }
+                    
+                    $(this).dialog("close");
 
                     batchWatch(files, 'imgScramble', theData);
                 }
@@ -1451,6 +1459,7 @@ function maskImages(masktype, custom) {  console.log('maskImages(' + masktype + 
     theData.rgb = $('#batch_mask_color').slider('values');
     theData.blur = $('#maskDialog input[name=blur]').val();
     theData.transparent = $('#mask_trans').prop('checked');
+    theData.reverse = $('#mask_reverse').prop('checked');
     theData.mask = masktype;
     theData.custom = custom;
 

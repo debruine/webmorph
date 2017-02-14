@@ -365,6 +365,8 @@
     X-offset: <input type='integer' step='1' min='1' value='0' id='scramble_x_offset' maxlength='4' />
     Y-offset: <input type='integer' step='1' min='1' value='0' id='scramble_y_offset' maxlength='4' />
     <br>
+    <input type='checkbox' id='scramble_sym' /> <label for='scramble_sym'>Symmetric Scramble</label>
+    <br>
     <input type='checkbox' id='grid_lines' checked='checked' /> <label for='grid_lines'>Grid Lines</label> 
     <div id='grid_line_color' class='rgb_chooser'></div>
     <p>Click on the squares you want to scramble. Drag for multiple select.</p>
@@ -417,7 +419,8 @@
         <img id='mask_demo_oval' src='/include/images/masks/oval' />
     </div>
     <div>
-        <br />Blur: <input type='number' step='any' min='0' max='30' value='0' name='blur' maxlength='2' />
+        <br>Blur: <input type='number' step='any' min='0' max='30' value='0' name='blur' maxlength='2' />
+        <br><label for='mask_reverse'>Reverse</label>: <input type='checkbox' id='mask_reverse' /> 
         <ul>
             <li><input type='checkbox' id='mask_trans' />   <label for='mask_trans'>Transparent</label></li>
             <li><input type='checkbox' id='mask_oval' />    <label for='mask_oval'>Oval</label></li>

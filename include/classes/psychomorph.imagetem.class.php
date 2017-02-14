@@ -101,7 +101,9 @@ class PsychoMorph_ImageTem {
         return $this;
     }
     
-    public function mask($mask = array("face", "neck", "left_ear", "right_ear"), $rgba = array(255,255,255,1), $blur = 0, $custom = null) {
+    public function mask($mask = array("face", "neck", "left_ear", "right_ear"), 
+                         $rgba = array(255,255,255,1), 
+                         $blur = 0, $reverse = false, $custom = null) {
         ini_set('memory_limit','1024M');
         
         $default_masks = array(
@@ -158,7 +160,7 @@ class PsychoMorph_ImageTem {
         if (!($this->_img) || !($this->_tem)) { 
             return false;
         }
-        
+
         $masks = array();
         foreach ($mask as $sm) {
             if ($sm == 'custom') { 
@@ -167,8 +169,6 @@ class PsychoMorph_ImageTem {
                 $masks[] = $default_masks[$sm];
             }
         }
-        
-        //print_r($masks);
 
         $blur = ($blur < 0) ? 0 : ($blur > 30) ? 30 : $blur;
         
@@ -183,17 +183,23 @@ class PsychoMorph_ImageTem {
         $lineVectors = $tem->getLines();
         $original_width = $img->getWidth();
         $original_height = $img->getHeight();
-        
-        
-        
+
         // create mask image and allocate bg and transparent colours
         $maskimg = imagecreate($original_width, $original_height); 
-        $bgcolor = imagecolorallocate($maskimg, $rgba[0], $rgba[1], $rgba[2]);
+        // make a colour very close to bgcolor
         $r = ($rgba[0] == 255) ? 254 : $rgba[0] + 1;
         $g = ($rgba[1] == 255) ? 254 : $rgba[1] + 1;
         $b = ($rgba[2] == 255) ? 254 : $rgba[2] + 1;
-        $trans = imagecolorallocate($maskimg, $r, $g, $b); // make transform colour very close to bgcolor
-        imagecolortransparent($maskimg, $trans);
+        
+        if ($reverse) {
+            $bgcolor = imagecolorallocate($maskimg, $r, $g, $b);
+            $fgcolor = imagecolorallocate($maskimg, $rgba[0], $rgba[1], $rgba[2]);
+            imagecolortransparent($maskimg, $bgcolor);
+        } else {
+            $bgcolor = imagecolorallocate($maskimg, $rgba[0], $rgba[1], $rgba[2]);
+            $fgcolor = imagecolorallocate($maskimg, $r, $g, $b);
+            imagecolortransparent($maskimg, $fgcolor);
+        }
         imageantialias($maskimg, true);
         
         // construct sets of Bezier curves
@@ -217,20 +223,25 @@ class PsychoMorph_ImageTem {
                 $polygon = array_merge($polygon, $subpolygon);
             }
             
-            imagefilledpolygon($maskimg,$polygon,count($polygon)/2,$trans);
+            imagefilledpolygon($maskimg,$polygon,count($polygon)/2,$fgcolor);
+            
             $polygons[] = $polygon;
         }
         imagefill($maskimg, 0, 0, $bgcolor); // fill with mask color
         
         imageantialias($maskimg, false);
-        $gaussian = array(array(1.0, 2.0, 1.0), array(2.0, 4.0, 2.0), array(1.0, 2.0, 1.0));
+        $gaussian = array(
+            array(1.0, 2.0, 1.0), 
+            array(2.0, 4.0, 2.0), 
+            array(1.0, 2.0, 1.0)
+        );
         
         for ($blurlevel = 0; $blurlevel <= $blur; $blurlevel++) {
             imagesetthickness($maskimg, $blurlevel);
         
             // construct sets of Bezier curves
             foreach ($polygons as $polygon) {                
-                imagepolygon($maskimg,$polygon,count($polygon)/2,$trans);
+                imagepolygon($maskimg,$polygon,count($polygon)/2,$fgcolor);
             }
 
             //imagefilter($maskimg, IMG_FILTER_GAUSSIAN_BLUR);
@@ -245,7 +256,11 @@ class PsychoMorph_ImageTem {
 
         // set transparent if alpha == 0
         if ($rgba[3] == 0) {
-            imagecolortransparent($original_image, $bgcolor);
+            if ($reverse) {
+                imagecolortransparent($original_image, $fgcolor);
+            } else {
+                imagecolortransparent($original_image, $bgcolor);
+            }
         }
         
         //$img->setImage($original_image);

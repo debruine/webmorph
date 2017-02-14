@@ -574,6 +574,154 @@ class PsychoMorph_Image extends PsychoMorph_File {
         return $this;
     }
     
+    public function scramble($scramble_data) {
+        ini_set('memory_limit','1024M');
+        
+        $gridsize = 25; // number of pixels between each grid
+        $x_offset = 0;  // x-coordinate at which to start the first vertical gridline
+        $y_offset = 0;  // y-coordinate at which to start the first horizontal gridline
+        
+        if (is_numeric($scramble_data['grid']) && $scramble_data['grid']>0) $gridsize = $scramble_data['grid'];
+        if (is_numeric($scramble_data['x'])) $x_offset = $scramble_data['x'];
+        if (is_numeric($scramble_data['y'])) $y_offset = $scramble_data['y'];
+        
+        $original_image = $this->getImage();
+        
+        $imgwidth = $this->getWidth();
+        $imgheight = $this->getHeight();
+        
+        // copy over the whole original image
+        $new_image = imagecreatetruecolor($imgwidth, $imgheight);
+        imagecopy($new_image, $original_image, 0, 0, 0, 0, $imgwidth, $imgheight);
+        
+        //set up grid structure
+        $means = array();
+        if ($scramble_data['chosen'] == 'all') {
+            // scramble all 
+            
+            // get number of rows and columns
+            $xx = floor(($imgwidth-$x_offset)/$gridsize);
+            $yy = floor(($imgheight-$y_offset)/$gridsize);
+            
+            for ($x = 0; $x < $xx; $x++) {
+                for ($y = 0; $y < $yy; $y++) {
+                    $grids[] = array($x, $y);
+                }
+            }
+            // set mean to middle column
+            $means = array(($xx-1)/2);
+        } else {
+            // scramble only chosen squares
+            //$grids = $_POST['chosen'];
+            foreach ($scramble_data['chosen'] as $y => $xx) {
+                if ($xx !== '') {
+                    $xx = explode(",", $xx);
+                    $means[] = array_sum($xx)/count($xx);
+                    
+                    foreach ($xx as $x) {
+                        $grids[] = array($x, $y);
+                    }
+                }
+            }
+        }
+
+        // symmetric shuffling   
+        if ($scramble_data['sym'] == true &&
+            $means == array_fill(0, count($means), $means[0])
+        ) {
+            $symgrid = $grids;
+            $grids = array();
+            $random_grids = array();
+            
+            // check if there is a centre column
+            $center = $means[0];
+            if ($center == floor($center)) {
+                foreach ($symgrid as $g) {
+                    if ($g[0] == $center) {
+                        $center_grid[] = $g;
+                    }
+                }
+                if (count($center_grid)) {
+                    $grids = array_merge($grids, $center_grid);
+                    shuffle($center_grid);
+                    $random_grids = array_merge($random_grids, $center_grid);
+                }
+            }
+            
+            // shuffle left side and mirror right shuffle order
+            foreach ($symgrid as $g) {
+                if ($g[0] < $center) {
+                    $left_grid[] = $g;
+                    $right_grid[] = array($g[0] + 2*($center - $g[0]), $g[1]);
+                }
+            }
+            if (count($left_grid)) {
+                $grids = array_merge($grids, $left_grid);
+                $grids = array_merge($grids, $right_grid);
+                
+                shuffle($left_grid);
+                $random_grids = array_merge($random_grids, $left_grid);
+                foreach($left_grid as $g) {
+                    $mirror_right_grid[] = array($g[0] + 2*($center - $g[0]), $g[1]);
+                }
+                $random_grids = array_merge($random_grids, $mirror_right_grid);
+            }
+        } else {
+            // randomise grids
+            $random_grids = $grids;
+            shuffle($random_grids);
+        }
+        
+        foreach($random_grids as $k => $grid) {
+            $dest_x = $grid[0] * $gridsize + $x_offset;
+            $dest_y = $grid[1] * $gridsize + $y_offset;
+            $source_x = $grids[$k][0] * $gridsize + $x_offset;
+            $source_y = $grids[$k][1] * $gridsize + $y_offset;
+            imagecopy($new_image, $original_image, $dest_x, $dest_y, $source_x, $source_y, $gridsize, $gridsize);
+        }
+        
+        //imagedestroy($original_image);
+        
+        // superimpose grid on image
+        if (array_key_exists('line_color', $scramble_data)) {
+            $linecolor = imagecolorallocate(
+                $new_image, 
+                $scramble_data['line_color'][0], 
+                $scramble_data['line_color'][1], 
+                $scramble_data['line_color'][2]
+            );
+            for ($x = $x_offset ; $x <= $imgwidth; $x += $gridsize) {
+                imageline($new_image, $x, 0, $x, $imgheight, $linecolor);
+            }
+        
+            for ($y = $y_offset; $y <= $imgheight; $y += $gridsize) {
+                imageline($new_image, 0, $y, $imgwidth, $y, $linecolor);
+            }
+        }
+        
+        $this->setImage($new_image);
+        
+        // add description
+        $desc = array(
+            "gridsize" => $gridsize,
+            "offset" => $x_offset . ", " . $y_offset,
+            "symmetric" => $scramble_data['sym']
+        );
+        
+        if (array_key_exists('line_color', $scramble_data)) {
+            $desc['linecolor'] = implode(",",$scramble_data['line_color']);
+        }
+        
+        foreach ($random_grids as $rg) {
+            $scram[] = "{$rg[0]},{$rg[1]}";
+        }
+        $desc['scramble'] = implode(" ",$scram);
+        
+        $this->addHistory($desc);
+        
+        return $this;
+    }
+    
     public function colourCalibrate($colours, $expand = 25, $SD = 2) {
         // $colours lists x-coordinate, y-coordinate, and L, a* and b* values for each colour on the checker chart
         // $expand = number of pixels plus or minus the reference x and y-corrdinates
