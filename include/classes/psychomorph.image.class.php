@@ -262,13 +262,15 @@ class PsychoMorph_Image extends PsychoMorph_File {
             return false; 
         }
         
-        // check all image types in order: jpg, png, gif
+        // check all image types in order: jpg, png, gif, bmp
         if (exif_imagetype($path) == IMAGETYPE_JPEG) {
             $img = @imagecreatefromjpeg($path);
         } else if (exif_imagetype($path) == IMAGETYPE_PNG) {
             $img = @imagecreatefrompng($path);
         } else if (exif_imagetype($path) == IMAGETYPE_GIF) {
             $img = @imagecreatefromgif($path);
+        } else if (exif_imagetype($path) == IMAGETYPE_BMP) {
+            //$img = @imagecreatefrombmp($path);
         } else {
             return false;
         }
@@ -380,7 +382,7 @@ class PsychoMorph_Image extends PsychoMorph_File {
     private function _readExif() {
         $filename = $this->getPath();
         if (file_exists($filename) && exif_imagetype($filename) == IMAGETYPE_JPEG) {
-            $exif = exif_read_data($filename);
+            $exif = @exif_read_data($filename);
             return $exif;
         }
         
@@ -487,6 +489,12 @@ class PsychoMorph_Image extends PsychoMorph_File {
         $new_width = $width * $xResize;
         $new_height = $height * $yResize;
         $resized_image = imagecreatetruecolor($new_width, $new_height);
+        
+        // make sure you don't loose transparency
+        imagealphablending($resized_image, false);
+        imagesavealpha($resized_image, true);
+        //$transparent = imagecolorallocatealpha($resized_image, 255, 255, 255, 127);
+        //imagefilledrectangle($resized_image, 0, 0, $new_width, $new_height, $transparent);
     
         imagecopyresampled(
             $resized_image, $this->_image, 
@@ -626,7 +634,7 @@ class PsychoMorph_Image extends PsychoMorph_File {
         }
 
         // symmetric shuffling   
-        if ($scramble_data['sym'] == true &&
+        if ($scramble_data['sym'] == 'true' &&
             $means == array_fill(0, count($means), $means[0])
         ) {
             $symgrid = $grids;
@@ -848,7 +856,7 @@ class PsychoMorph_Image extends PsychoMorph_File {
         }
     }
     
-    public function _saveFile($filepath) {
+    public function _saveFile($filepath = '', $overWrite = false) {
         $png_compression = 0;
         $jpg_compression = 100;
     
@@ -864,8 +872,7 @@ class PsychoMorph_Image extends PsychoMorph_File {
         $success = false;
         
         $ext = pathinfo($filepath, PATHINFO_EXTENSION);
-        
-        
+
         if ('png' == $ext) {
             $success = imagepng($this->_image, $filepath, $png_compression);
         } else if ('gif' == $ext) {
@@ -878,7 +885,7 @@ class PsychoMorph_Image extends PsychoMorph_File {
                 $this->_addExif($filepath);
                 $success = true;
             } else {
-                echo '{"error": "no jpeg"},';
+                //echo '{"error": "no jpeg"},';
             }
         }
         

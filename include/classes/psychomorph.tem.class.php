@@ -762,7 +762,7 @@ class PsychoMorph_Tem extends PsychoMorph_File {
         return implode(PHP_EOL, $svg);
     }
     
-    public function _saveFile($filepath) {
+    public function _saveFile($filepath = '', $overWrite = false) {
         if (empty($filepath)) {
             $filepath = $this->getPath();
         }

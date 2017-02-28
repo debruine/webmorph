@@ -781,13 +781,13 @@
 <!-- !- about Dialog -->
 <div id='aboutDialog' class='modal' title='About WebMorph'>
     <p>WebMorph is made possible by the kind help of 
-        <a href="http://users.aber.ac.uk/bpt/">Bernie Tiddeman</a>, who developed 
-        and maintains the desktop version of 
-        <a href="http://users.aber.ac.uk/bpt/jpsychomorph/">Psychomorph</a>. 
+        <a href="http://users.aber.ac.uk/bpt/" target="_blank">Bernie Tiddeman</a>, 
+        who developed and maintains the desktop version of 
+        <a href="http://users.aber.ac.uk/bpt/jpsychomorph/" target="_blank">Psychomorph</a>. 
         WebMorph uses the open-source Java library 
-        <a href="http://users.aber.ac.uk/bpt/jpsychomorph/version6/javadoc/">FaceMorphLib</a> 
+        <a href="http://users.aber.ac.uk/bpt/jpsychomorph/version6/javadoc/" target="_blank">FaceMorphLib</a> 
         and is developed and maintained by 
-        <a href="http://facelab.org/debruine/">Lisa DeBruine</a>.
+        <a href="http://facelab.org/debruine/" target="_blank">Lisa DeBruine</a>.
     </p>
     
     <p>WebMorph is currently in beta testing and is likely to remain so for some 
@@ -796,7 +796,7 @@
         problems as fast as possible, but she is the only person working on this 
         project, so please be patient. If you're curious about the code or want 
         to help with development, this project is open source at 
-        <a href="https://github.com/debruine/webmorph">github.com/debruine/webmorph</a>.
+        <a href="https://github.com/debruine/webmorph" target="_blank">github.com/debruine/webmorph</a>.
     </p>
     
     <h3>To cite WebMorph</h3>
@@ -805,9 +805,17 @@
         <i>WebMorph</i>. Retrieved from http://<?= $_SERVER['SERVER_NAME'] ?>
     </p>
     <p>Access the code at <a href="https://github.com/debruine/webmorph">GitHub</a>.</p>
-    <p>To cite the methods, see 
+    <p>To cite the morphing and transforming methods, see 
         <a href="http://users.aber.ac.uk/bpt/jpsychomorph/" 
             target="_blank">Bernie Tiddeman's webpage</a>.
+    </p>
+    <p><img src="/include/images/demos/symscram" 
+        style="float: left; margin-right: 5px;">
+        The image scrambling methods were first published in:<br>
+        CA Conway, BC Jones, LM DeBruine, AC Little & A Sahraie (2008). Transient 
+        pupil constrictions to faces are sensitive to orientation and species. 
+        <i>Journal of Vision</i>, 8(3): 17. 
+        <a href="http://dx.doi.org/10.1167/8.3.17" target="_blank">doi: 10.1167/8.3.17</a>
     </p>
     <h3>To cite (or download) provided images</h3>
     <p>

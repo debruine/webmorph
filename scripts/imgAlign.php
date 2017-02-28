@@ -2,6 +2,7 @@
 
 require_once $_SERVER['DOCUMENT_ROOT'] . '/include/main_func.php';
 auth();
+session_write_close();
 checkAllocation();
 
 $return = array(

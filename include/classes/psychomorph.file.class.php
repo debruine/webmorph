@@ -211,11 +211,14 @@ class PsychoMorph_File {
             
             if (!is_dir($basedir)) {
                 if (!mkdir($basedir, DIRPERMS, true)) {
-                    //$return['errorText'] .= "The new directory <code>$subfolder</code> could not be created. ";
                     echo "cannot make $basedir for $filepath";
                     return false;
                 }
             }
+        }
+        
+        if ($overWrite && is_file($filepath)) {
+            unlink($filepath);
         }
         
         if ($this->_saveFile($filepath)) {
@@ -226,7 +229,7 @@ class PsychoMorph_File {
         return false;
     }
     
-    public function _saveFile($filepath) {
+    public function _saveFile($filepath = '', $overWrite = false) {
         // placeholder function for descendant functions
         // to implement filetype-specific saving
         return false;

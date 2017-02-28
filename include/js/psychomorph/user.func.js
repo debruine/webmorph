@@ -198,26 +198,25 @@ function userLogin() { console.log('userLogin()');
 }
 
 function userLoad() { console.log('userLoad()');
-    var $spinner,
-        hash,
+    var hash = {},
         $file;
-
-    $spinner = bodySpinner();
+    
+    /*if (location.hash) { 
+        //hashChange();
+    } else {
+        var cookiehash = getCookie('hash');
+        if (cookiehash) { 
+            location.hash = '#' + cookiehash;
+            console.log('Set location hash to ' + cookiehash);
+        }
+    }*/
+    
     hash = hashGet();
     
     // set up finder location if a hash file is set
     if (hash.file) {
         WM.hashfile = function() {
             WM.finder.open(hash.project_id + hash.file);
-            /*
-            console.log(hash.project_id + hash.file + " selected from hash");
-            if (hash.file.substr(-1, 1) == "/") {
-                $finder.find('li.folder[path="' + hash.project_id + hash.file + '"] > span').click();
-            } else {
-                $finder.find('li.file[url="' + hash.project_id + hash.file + '"]').click();
-            }
-            */
-            
             WM.hashfile = function() {}
         }
     } else {
@@ -227,14 +226,17 @@ function userLoad() { console.log('userLoad()');
     msgGet();
     prefGet();
 
-    $spinner.remove();
     if (hash.appWindow == 'F') {
         projectList();
         projectSet(hash.project_id, 'F');
     } else if (hash.appWindow == 'D') {
         projectList();
         if (hash.file) {
-            delinImage(hash.project_id + hash.file);
+            if (hash.file.substr(-4) == ".obj") {
+                d3_load_image(hash.project_id + hash.file);
+            } else {
+               delinImage(hash.project_id + hash.file);
+            }
         }
         projectSet(hash.project_id, 'D');
     } else if (hash.appWindow == 'A') {
@@ -245,6 +247,15 @@ function userLoad() { console.log('userLoad()');
         projectSet(hash.project_id, 'T');
     } else {
         $('#showProjects').click();
+    }
+    
+    // get rid of 3D login demo if made
+    if ($('#d3_demo').data('d3')) {
+        $('#d3_demo').data('d3').remove();
+        $('#d3_demo').data('d3') = null;
+        
+        $('#d3_demo').addClass('feature').html('WebMorph now shows 3D faces!<br>(Double-click to demo)');
+        $('#d3_demo_extras').hide().find('div.ui-slider').remove();
     }
 }
 
@@ -419,8 +430,9 @@ function msgGet(msg_id) { console.log('msgGet('+msg_id+')');
                 $.each(data.read_msg_ids, function(i, id) {
                     $('.msg[data-msg_id="' + id + '"]').remove();
                 });
-                sizeToViewport();
             }
+            $('.msg').show();
+            sizeToViewport();
         }
     });
 }

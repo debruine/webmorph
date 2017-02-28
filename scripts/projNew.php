@@ -29,6 +29,7 @@ try {
         mkdir($mydir . '/.tmp', DIRPERMS);
         mkdir($mydir . '/.trash', DIRPERMS);
         mkdir($mydir . '/composites', DIRPERMS);
+        mkdir($mydir . '/3d', DIRPERMS);
         
         $faces = array(
             //"_female_avg",
@@ -49,6 +50,11 @@ try {
             copy(DOC_ROOT . "/include/examples/{$face}.jpg", "{$mydir}/composites/{$face}.jpg");
             copy(DOC_ROOT . "/include/examples/{$face}.tem", "{$mydir}/composites/{$face}.tem");
         }
+        
+        copy(DOC_ROOT . "/include/3d/female_avg.jpg", "{$mydir}/3d/female_avg.jpg");
+        copy(DOC_ROOT . "/include/3d/female_avg.obj", "{$mydir}/3d/female_avg.obj");
+        copy(DOC_ROOT . "/include/3d/male_avg.jpg", "{$mydir}/3d/male_avg.jpg");
+        copy(DOC_ROOT . "/include/3d/male_avg.obj", "{$mydir}/3d/male_avg.obj");
         
         copy(DOC_ROOT . '/include/examples/webmorph_template_batchAvg.txt', $mydir . '/_batchAvg_template.txt');
         copy(DOC_ROOT . '/include/examples/webmorph_template_batchTrans.txt', $mydir . '/_batchTrans_template.txt');

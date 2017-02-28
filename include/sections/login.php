@@ -1,27 +1,24 @@
 <div id='loginInterface' class='interface'>
     
-    <p>WebMorph is a web-based version of Psychomorph, 
-        with several additional functions. While WebMorph is optimized for 
-        averaging and transforming faces, you can delineate and average any type 
-        of image. WebMorph also has several batch functions for processing large 
-        numbers of images automatically and can even create moving gifs of your 
-        transforms.</p>
-    
     <table class='feature' id='loginBox'>
         <thead><tr><th colspan='2'>Log in to access WebMorph</th></tr></thead>
         <tbody>
             <tr>
                 <td><label for='login_email'>email</label></td>
-                <td><input type='email' id='login_email' value='<?= $_COOKIE['email'] ?>' /></td>
+                <td><input type='email' id='login_email' placeholder='email' value='<?= $_COOKIE['email'] ?>' /></td>
             </tr>
             <tr class='login_item'>
                 <td><label for='login_password'>password</label></td>
-                <td><input type='password' id='login_password' /></td>
+                <td><input type='password' placeholder='password' id='login_password' /></td>
             </tr>
             <tr class='reg_item' title='Access to WebMorph is currently restricted. 
                 Ask Lisa for an invite code if you would like to be a beta tester.'>
                 <td><label for='login_auth'>invite code</label></td>
-                <td><input type='text' id='login_auth' /></td>
+                <td><input type='text' id='login_auth' placeholder='invite code' /></td>
+            </tr>
+            <tr class='reg_item'>
+                <td><label for='reg_reason'>Why are you requesting a beta account?</label></td>
+                <td><textarea id='reg_reason' placeholder='Why do you want to use WebMorph? Beta accounts will be allocated based on this, so please do not leave it blank.'></textarea></td>
             </tr>
             <tr class='reg_item'>
                 <td></td>
@@ -30,15 +27,15 @@
             </tr>
             <tr class='reg_item'>
                 <td><label for='reg_firstname'>first name</label></td>
-                <td><input type='text' id='reg_firstname' /></td>
+                <td><input type='text' id='reg_firstname' placeholder='First Name' /></td>
             </tr>
             <tr class='reg_item'>
                 <td><label for='reg_lastname'>last name</label></td>
-                <td><input type='text' id='reg_lastname' /></td>
+                <td><input type='text' id='reg_lastname' placeholder='Last Name' /></td>
             </tr>
             <tr class='reg_item'>
                 <td><label for='reg_org'>organisation</label></td>
-                <td><input type='text' id='reg_org' /></td>
+                <td><input type='text' id='reg_org' placeholder='Organisation' /></td>
             </tr>
             <tr class='reg_item'>
                 <td><label for='reg_sex'>sex</label></td>
@@ -54,8 +51,6 @@
             <tr class='reg_item'>
                 <td><label for='reg_use'>I plan to use WebMorph for</label></td>
                 <td><div id='reg_use'>
-                    <textarea id='reg_reason' placeholder='Explain why you want to use WebMorph. 
-                        Accounts will be allocated based on this.'></textarea>
                     <input type='checkbox' id='reg_use_research' name='reg_use_research' value='research' />
                     <label for='reg_use_research'>research</label><br>
                     <input type='checkbox' id='reg_use_school' name='reg_use_school' value='school' />
@@ -76,12 +71,11 @@
                     your consent first. By registering, you agree to this.</td>
             </tr>
             <tr class='login_item'>
-                <td><input type='checkbox' id='login_keep' /></td>
-                <td><label for='login_keep'>Keep me logged in</label></td>
+                <td></td>
+                <td><input type='checkbox' id='login_keep' /> <label for='login_keep'>Keep me logged in</label></td>
             </tr>
             <tr>
-                <td></td>
-                <td>
+                <td colspan="2">
                     <input type='button' data-role="button" id='reset-password-button' value='Reset Password' />
                     <input type='button' data-role="button" id='register-button' value='Request Account' />
                     <input type='button' data-role="button" id='login-button' class='ui-button ui-state-focus' value='Login' />
@@ -110,11 +104,29 @@
         </tbody>
     </table>
     
+    <div class='feature' id="d3_demo_extras">
+        Things are still a little buggy, but you can rotate 3D faces, 
+        double-click to toggle the texture and even 
+        <a id="d3_demo_morph">live morph in 3D</a>
+    </div>
+    
+    <div class='feature' id="d3_demo">
+        WebMorph now shows 3D faces!<br>
+        (Double-click to demo)
+    </div>
+    
     <div id="gif_demos">
         <img src="/include/images/gifs/id.gif">
         <img src="/include/images/gifs/happy.gif">
         <img src="/include/images/gifs/scramble.gif">
     </div>
+    
+    <p>WebMorph is a web-based version of Psychomorph, 
+        with several additional functions. While WebMorph is optimized for 
+        averaging and transforming faces, you can delineate and average any type 
+        of image. WebMorph also has several batch functions for processing large 
+        numbers of images automatically and can even create moving gifs of your 
+        transforms.</p>
     
     <p>WebMorph is made possible by the kind help of 
         <a href="http://users.aber.ac.uk/bpt/">Bernie Tiddeman</a>, who developed and maintains the desktop 

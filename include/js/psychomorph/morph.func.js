@@ -357,29 +357,20 @@ function getAverage(tVars, addToQueue) {
         }
 
         $.ajax({
-            //url: '/tomcat/psychomorph/avg',
             url: 'scripts/tcAverage',
             async: tVars.async,
-            //data: $.param(theData, true),
             data: { 'theData': theData },
             success: function(data) {
-                //alert(JSON.stringify(data));
                 if (data.error) {
                     $average.css('background-image', WM.blankBG);
                     $('<div title="There was an error with your average" />').html(data.errorText).dialog();
+                    
+                    if (data.data && data.data.img) {
+                        addToRecents(data.data);
+                    }
                 } else {
                     addToRecents(data.data);
                     $('#average-list li').remove();
-
-                    /*if (typeof tVars.outname === 'string') {
-                        var saveData = {
-                            data: data,
-                            outname: tVars.outname,
-                            async: tVars.async,
-                        };
-                        if (typeof tVars.completeSave === 'function') { saveData.complete = tVars.completeSave; }
-                        saveImage(saveData);
-                    }*/
                 }
             },
             error: function(xmlReq, txtStatus, errThrown){
@@ -402,7 +393,6 @@ function checkTransAbility() {
     canDo = canDo && ( $('#transimg').attr('src') != WM.blankImg);
     canDo = canDo && ($('#fromimage').attr('src') != WM.blankImg);
     canDo = canDo && (  $('#toimage').attr('src') != WM.blankImg);
-    //canDo = canDo && $("#shapePcnt0").val() !== '';
 
     $('#transButton').button({ disabled: !canDo });
 }

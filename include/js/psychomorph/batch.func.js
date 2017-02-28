@@ -2062,8 +2062,8 @@ function queue(items) {
         var c = statusCount.complete.length;
 
         var n = a + w + p;
-        $queue_n.text(n).show();
-        if (n === 0) { $queue_n.hide(); }
+        $('#queue_n').text(n).show();
+        if (n === 0) { $('#queue_n').hide(); }
 
         if (a + w === 0 && typeof loadImg === 'string') {
             //growl('Batch processing has finished. <a class="loadFiles">Click here</a> to load new files in the Finder.');

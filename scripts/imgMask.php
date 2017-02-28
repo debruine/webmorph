@@ -4,6 +4,7 @@
 
 require_once $_SERVER['DOCUMENT_ROOT'] . '/include/main_func.php';
 auth();
+session_write_close();
 checkAllocation();
 
 $return = array(
@@ -37,17 +38,14 @@ if (!empty($_POST['custom'])) {
 
 
 $rgba = $_POST['rgb'];
-$a = $_POST['transparent'] == 'true' ? 0 : 1;
+$a = ($_POST['transparent']=='true') ? 0 : 1;
 array_push($rgba, $a);
 
-if ($_POST['transparent'] == 'true') { 
-        $desc .= ", transparent";
-    } else {
-        $desc .= ", rgb({$_POST['rgb'][0]}, {$_POST['rgb'][1]}, {$_POST['rgb'][2]})";
-    }
-
-
-
+if ($_POST['transparent']=='true') { 
+    $desc .= ", transparent";
+} else {
+    $desc .= ", rgb({$_POST['rgb'][0]}, {$_POST['rgb'][1]}, {$_POST['rgb'][2]})";
+}
 
 if (!$mask || !$rgba) {
     $return['error'] = true;
@@ -59,13 +57,8 @@ if (!$return['error']) {
     
     $img->mask($mask, $rgba, $blur, $reverse, $custom);
     
-    if ($custom) {
-        
-    } else {
-        
-    }
-    
     $img->addHistory($desc);
+    $return['desc'] = $desc;
     $newFileName = array(
         'subfolder' => $_POST['subfolder'],
         'prefix' => $_POST['prefix'],

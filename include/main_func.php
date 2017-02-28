@@ -156,9 +156,10 @@
 
     function safeFileName($filename) {
         //$filename = strtolower($filename);
+        $filename = preg_replace('@\.+@', ".",$filename);
         $filename = str_replace(array("#", " ", "__"),"_",$filename);
         $filename = str_replace(array("'", '"', "\\", "?"),"",$filename);
-        $filename = str_replace("//","/",$filename);
+        $filename = preg_replace('@/+@',"/",$filename);
         //$filename = str_replace("/","_",$filename);
         return $filename;
     }

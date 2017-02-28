@@ -160,6 +160,9 @@ class PsychoMorph_ImageTem {
         if (!($this->_img) || !($this->_tem)) { 
             return false;
         }
+        
+        // load original image
+        $img = $this->_img;
 
         $masks = array();
         foreach ($mask as $sm) {
@@ -172,21 +175,42 @@ class PsychoMorph_ImageTem {
 
         $blur = ($blur < 0) ? 0 : ($blur > 30) ? 30 : $blur;
         
-        $this->resize(2.0);
+        // imcrease image size for smoother masks
+        // resize removes alpha transparency
+        if ($rgba[3] != 0) {
+            $h = $img->getHeight();
+            $w = $img->getWidth();
+            
+            $resize = floor(4000/max($h,$w));
+            $resize = max($resize, 1);
+            $resize = min($resize, 10);
+            
+            $this->resize($resize);
+        }
         
-        // load original image
-        $img = $this->_img;
-        $original_image = $img->getImage();
+        
+        //$original_image = $img->getImage();
         $tem = $this->_tem;
-        $pointNumber = $tem->getPointNumber();
         $temPoints = $tem->getPoints();
         $lineVectors = $tem->getLines();
         $original_width = $img->getWidth();
         $original_height = $img->getHeight();
+        
+        
+        $original_image = imagecreatetruecolor($original_width, $original_height);
+        imagecopy($original_image, $img->getImage(), 0, 0, 0, 0, $original_width, $original_height);
+        
+        // set transparent if alpha == 0
+        if ($rgba[3] == 0) {
+            //imagesavealpha($original_image, true);
+            $otrans = imagecolorallocate($original_image, $rgba[0], $rgba[1], $rgba[2]);
+            imagecolortransparent($original_image, $otrans);
+        }
 
         // create mask image and allocate bg and transparent colours
         $maskimg = imagecreate($original_width, $original_height); 
-        // make a colour very close to bgcolor
+        
+        // make a color very close to mask color
         $r = ($rgba[0] == 255) ? 254 : $rgba[0] + 1;
         $g = ($rgba[1] == 255) ? 254 : $rgba[1] + 1;
         $b = ($rgba[2] == 255) ? 254 : $rgba[2] + 1;
@@ -200,8 +224,10 @@ class PsychoMorph_ImageTem {
             $fgcolor = imagecolorallocate($maskimg, $r, $g, $b);
             imagecolortransparent($maskimg, $fgcolor);
         }
-        imageantialias($maskimg, true);
         
+        imagefill($maskimg, 0, 0, $bgcolor); // fill with mask color
+        
+        imageantialias($maskimg, true);
         // construct sets of Bezier curves
         $polygons = array();
         foreach ($masks as $mask) {
@@ -227,43 +253,35 @@ class PsychoMorph_ImageTem {
             
             $polygons[] = $polygon;
         }
-        imagefill($maskimg, 0, 0, $bgcolor); // fill with mask color
-        
         imageantialias($maskimg, false);
-        $gaussian = array(
-            array(1.0, 2.0, 1.0), 
-            array(2.0, 4.0, 2.0), 
-            array(1.0, 2.0, 1.0)
-        );
         
-        for ($blurlevel = 0; $blurlevel <= $blur; $blurlevel++) {
-            imagesetthickness($maskimg, $blurlevel);
+        imagecopymerge($original_image, $maskimg, 0, 0, 0, 0, $original_width, $original_height, 100);
         
-            // construct sets of Bezier curves
-            foreach ($polygons as $polygon) {                
-                imagepolygon($maskimg,$polygon,count($polygon)/2,$fgcolor);
-            }
-
-            //imagefilter($maskimg, IMG_FILTER_GAUSSIAN_BLUR);
-            //imageconvolution($maskimg, $gaussian, 16, 0);
+        if ($blur) {
+            // make a sharp copy of the image to superimpose over the blurred copy
+            $sharp = imagecreatetruecolor($original_width, $original_height);
+            imagecopy($sharp, $img->getImage(), 0, 0, 0, 0, $original_width, $original_height);
+            $otrans = imagecolorallocate($sharp, $rgba[0], $rgba[1], $rgba[2]);
+            imagecolortransparent($sharp, $otrans);    
+            imagecopymerge($sharp, $maskimg, 0, 0, 0, 0, $original_width, $original_height, 100);
+            imagedestroy($maskimg);
             
-            $blurtrans = ($blur == $blurlevel || $blur == 0) ? 100 : 100/$blur;
-            imagecopymerge($original_image, $maskimg, 0, 0, 0, 0, $original_width, $original_height, $blurtrans);
-        }
-        imagedestroy($maskimg);    
-        
-        $this->resize(0.5);
-
-        // set transparent if alpha == 0
-        if ($rgba[3] == 0) {
-            if ($reverse) {
-                imagecolortransparent($original_image, $fgcolor);
-            } else {
-                imagecolortransparent($original_image, $bgcolor);
+            for ($i = 0; $i < $blur; $i++) {
+                imagefilter($original_image, IMG_FILTER_GAUSSIAN_BLUR);
             }
+            
+            imagecopymerge($original_image, $sharp, 0, 0, 0, 0, $original_width, $original_height, 100);
+            imagedestroy($sharp);
+        } else {
+            imagedestroy($maskimg);
         }
-        
-        //$img->setImage($original_image);
+
+        $img->setImage($original_image);
+        // double image size for smoother masks
+        // resize removes alpha transparency
+        if ($rgba[3] != 0) {
+            $this->resize(1/$resize);
+        }
         
         return $this;
     }

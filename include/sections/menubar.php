@@ -1,4 +1,4 @@
-<ul class='menubar' data-role="nav-bar">
+<ul id='menubar' data-role="nav-bar">
 
     <!--<li class='menucategory'><span style='background: center center no-repeat url(/include/images/favicon.gif); width: 22px;'>&nbsp;</span></li>-->
 
@@ -26,7 +26,6 @@
             <li class='separator'></li>
             <li class='finder delineate average transform project' id='logout'>
                 Logout
-                <span class="shortcut shiftcmd">Q</span>
             </li>
         </ul>
     </li>
@@ -171,15 +170,15 @@
             </li>
 
             <li class='separator'></li>
-            <li class='delineate average transform' id='zoomin'>
+            <li class='delineate average transform threeD' id='zoomin'>
                 Zoom In
                 <span class="shortcut cmd">+</span>
             </li>
-            <li class='delineate average transform' id='zoomoriginal'>
+            <li class='delineate average transform threeD' id='zoomoriginal'>
                 Original Size
                 <span class="shortcut cmd">0</span>
             </li>
-            <li class='delineate average transform' id='zoomout'>
+            <li class='delineate average transform threeD' id='zoomout'>
                 Zoom Out
                 <span class="shortcut cmd">-</span>
             </li>
@@ -389,6 +388,17 @@
 
         </ul>
     </li>
+    <!--
+    <li class='menucategory'>
+        <span>3D</span>
+        <ul>
+            <li class='delineate' id='changeCamera'
+                title="Toggle camera between perspective and orthographic mode">
+                Change Camera (<span>Perspective</span>)
+            </li>
+        </ul>
+    </li>
+    -->
     <li class='menucategory no-read-only' id='menu_queue'>
         <span>Queue<div id="queue_n">0</div></span>
         <ul id='queue' style='max-height: 400px; overflow:auto;'>
@@ -449,4 +459,4 @@
     <li class='menucategory' id='menu_username'>
         <span></span>
     </li>
-</ul> 
+</ul>

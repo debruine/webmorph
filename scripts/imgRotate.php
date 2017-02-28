@@ -3,8 +3,8 @@
 // rotate selected images and tems
 
 require_once $_SERVER['DOCUMENT_ROOT'] . '/include/main_func.php';
-session_write_close();
 auth();
+session_write_close();
 checkAllocation();
 
 $return = array(

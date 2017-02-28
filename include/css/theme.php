@@ -249,31 +249,97 @@ p.msg {
 /* MENUBAR STYLES */
 
 .menucategory:hover #currentTem_name,
-.menubar .menucategory:hover > span,
-.menubar .menucategory ul li:hover,
-.menubar .menucategory:hover > span.shortcut,
-.menubar .menucategory li:hover a,
-.menubar .menucategory a:hover,
-.menubar .menucategory a:active,
+#menubar .menucategory:hover > span,
+#menubar .menucategory ul li:hover,
+#menubar .menucategory:hover > span.shortcut,
+#menubar .menucategory li:hover a,
+#menubar .menucategory a:hover,
+#menubar .menucategory a:active,
 .context_menu li:hover {
     background-color: <?= $theme ?>;
     color: <?= $text_on_theme ?>;
 }
 
-.menubar .menucategory ul li.disabled:hover {
+#menubar .menucategory ul li.disabled:hover {
 	background-color:<?= $theme ?>!important;
 }
 
-.menubar .menucategory ul li:hover .submenu {
+#menubar .menucategory ul li:hover .submenu {
     color: <?= $text ?>;
 }
 
 #delin {
     background-image: url(<?= $bgpattern ?>);
 }
-
 .toolbar {
     border-color: <?= $theme ?>;
+}
+
+.toolbar #obj_switcher button {
+    background-color: hsl(<?= $theme_hue ?>, 100%, 20%);
+}
+
+.toolbar #obj_switcher button.selected {
+    background-color: hsl(<?= $theme_hue ?>, 100%, 90%);
+}
+.wm-bug-icon {
+	background-image: url(/include/images/icons/bug.php?h=<?= $theme_hue ?>) !important;
+}
+.wm-morph-icon {
+	background-image: url(/include/images/icons/morph.php?h=<?= $theme_hue ?>) !important;
+}
+.wm-up-down-icon {
+	background-image: url(/include/images/icons/up-down.php?h=<?= $theme_hue ?>) !important;
+}
+.wm-left-right-icon {
+	background-image: url(/include/images/icons/left-right.php?h=<?= $theme_hue ?>) !important;
+}
+.wm-lightbulb-icon {
+	background-image: url(/include/images/icons/lightbulb_on.php?h=<?= $theme_hue ?>) !important;
+}
+.off .wm-lightbulb-icon {
+    background-image: url(/include/images/icons/lightbulb_off.php?h=<?= $theme_hue ?>) !important;
+}
+.wm-video-icon {
+	background-image: url(/include/images/icons/video.php?h=<?= $theme_hue ?>) !important;
+}
+.wm-hologram-icon {
+	background-image: url(/include/images/icons/hologram.php?h=<?= $theme_hue ?>) !important;
+}
+.wm-origsize-icon {
+	background-image: url(/include/images/icons/origsize.php?h=<?= $theme_hue ?>) !important;
+}
+.wm-delete-icon {
+	background-image: url(/include/images/icons/delete.php?h=<?= $theme_hue ?>) !important;
+}
+.wm-wireframe-icon {
+	background-image: url(/include/images/icons/wireframe.php?h=<?= $theme_hue ?>) !important;
+}
+.wm-skin-icon {
+	background-image: url(/include/images/icons/skin.php?h=<?= $theme_hue ?>) !important;
+}
+.wm-center-icon {
+	background-image: url(/include/images/icons/center.php?h=<?= $theme_hue ?>) !important;
+}
+.wm-zoomin-icon {
+	background-image: url(/include/images/icons/zoomin.php?h=<?= $theme_hue ?>) !important;
+}
+.wm-zoomout-icon {
+	background-image: url(/include/images/icons/zoomout.php?h=<?= $theme_hue ?>) !important;
+}
+.wm-fitsize-icon {
+	background-image: url(/include/images/icons/fitsize.php?h=<?= $theme_hue ?>) !important;
+}
+.wm-menu-icon {
+	background-image: url(/include/images/icons/menu.php?h=<?= $theme_hue ?>) !important;
+}
+
+#toggleMenu {
+    background-image: url(/include/images/icons/menu.php?h=<?= $theme_hue ?>);
+}
+
+#d3_progress {
+    background-color: <?= $theme ?>;
 }
 
 /* FINDER STYLES */
@@ -326,6 +392,9 @@ p.msg {
 }
 #finder li.fimg {
     background-image: url("/include/images/finder/fimgicon.php?h=<?= $theme_hue ?>");
+}
+#finder li.obj {
+    background-image:url("/include/images/finder/objicon.php?h=<?= $theme_hue ?>");
 }
 #finder li.file.selected, #average-list li.selected {
     background-color: <?= $highlight ?>;

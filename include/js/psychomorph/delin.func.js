@@ -19,6 +19,23 @@ function newDelinPoint(e) {
     drawTem();
 }
 
+function delin_fitsize() {
+    var availableWidth,
+        availableHeight,
+        fitWidth,
+        resize = 1.0;
+        
+    availableWidth = $('#delineateInterface').innerWidth();
+    availableHeight = $(window).height() - $delin.offset().top - $('#footer').height() - 20;
+    fitWidth = availableWidth*WM.originalHeight/WM.originalWidth;
+
+    resize = (fitWidth >= availableHeight) ?
+                 availableHeight :  // fit to available height
+                 fitWidth;          // fit to available width
+
+    $('#imgsize').slider('value', resize);
+}
+
 function setSymPoints() {
     if (WM.delin.tem.length != WM.current.tem.length) {
         growl('The current template does not match the template <code>'
@@ -67,7 +84,7 @@ function setSymPoints() {
     });
 }
 
-function quickhelp(text, fadeout) {  console.log('quickhelp(' + text + ', ' + fadeout + ')');
+function quickhelp(text, fadeout) {
     if (text === undefined || text.trim() === '') {
         $('#quickhelp').fadeOut();
     } else {
@@ -199,6 +216,9 @@ function delinImage(name, async) { console.log('delinImage(' + name + ', ' + asy
         url: 'scripts/imgDelin',
         data: { img: name },
         success: function(data) {
+            $('.twoD').show();
+            $('.threeD').hide();
+            
             var h = $delin.height();
             WM.originalHeight = data.originalHeight;
             WM.originalWidth = data.originalWidth;
@@ -1330,6 +1350,26 @@ function clickPt(pt) {
 }
 
 function setPointLabels() {
+    if (WM.delin.tem.length != WM.current.tem.length) {
+        growl('The current template does not match the template <code>' + 
+               $('#currentTem_name').text() + '</code>');
+    } else {
+        // check if the current user has access to edit this template
+        $.ajax({
+            url: '/scripts/userCheckAccess',
+            data: { table: 'tem', id: WM.delin.temId },
+            success: function(data) {
+                if (data.error) {
+                    growl(data.errorText);
+                } else {
+                    createPointLabels();
+                }
+            }
+        });
+    }
+}
+
+function createPointLabels() {
     var ptLabels = [];
     WM.delinfunc = 'label';
 
@@ -1344,7 +1384,7 @@ function setPointLabels() {
         title: "Set Point Labels",
         modal: false,
         height: 500,
-        position: { my: 'right top', at: 'right bottom', of: $('.menubar') },
+        position: { my: 'right top', at: 'right bottom', of: $('#menubar') },
         buttons: {
             Cancel: function() { $(this).dialog('close'); },
             "Save": function() {

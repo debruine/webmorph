@@ -44,6 +44,8 @@ if (file_exists($file) && $userCanDownloadThisFile && underPath($file)) {
             header('Content-Type: image/svg+xml');
         } else if ($ext == 'tem') {
             header('Content-Type: text/plain');
+        } else if ($ext == 'obj') {
+            header('Content-Type: text/plain');
         }
         
         readfile($file); //echo file_get_contents($file);

@@ -193,7 +193,7 @@ function fileUpload() {
                                 if (!data.error) {
                                     uploadedSuccesses += files.length;
                                     $progressUpdate.html(uploadedSuccesses + ' of ' + totalFiles + ' files uploaded');
-                                    WM.finder.addFile(data.newFileName, (files.length == 2));
+                                    WM.finder.addFile(data.newFileName);
                                 } else {
                                     $errorList.append('<li>' + data.errorText + '</li>');
                                 }
@@ -470,7 +470,7 @@ function fileRename() {
     });
 
     $theSpan.hide().before($newnameinput);
-    fname = oldname.replace(/\.(jpg|gif|png|tem)$/,'').length;
+    fname = oldname.replace(/\.(jpg|gif|png|tem|obj|txt|csv|pci|pca|bmp)$/,'').length;
     $newnameinput.focus().selectRange(0,fname);
 }
 
@@ -842,6 +842,11 @@ function finder(dir) { console.debug('finder(' + (dir == undefined ? '' : dir) +
                 theClass += ' fimg';
             } else if (ext == '.pci') {
                 theClass += ' pci';
+            } else if (ext == '.obj') {
+                theClass += ' obj';
+            } else if (ext == '.bmp') {
+                theClass += ' bmp image';
+                img = true;
             } else if (ext == '.jpg') {
                 theClass += ' jpg image';
                 img = true;
@@ -908,8 +913,14 @@ function finder(dir) { console.debug('finder(' + (dir == undefined ? '' : dir) +
             var cdir = currentDir();
             var vFiles = $finder.find('li.folder[path="' + cdir + '"] > ul > li.file').length;
     
-            $('#imgname').html(urlToName(cdir));
+            
             $('#footer-text').html(s + ' of ' + vFiles + ' file' + (vFiles == 1 ? '' : 's') + ' selected');
+            
+            if (s == 1) {
+                $('#imgname').html(urlToName($finder.find('li.file.selected:visible').attr('url')));
+            } else {
+                $('#imgname').html(urlToName(cdir));
+            }
         }
     
         if (WM.appWindow == 'average') {
@@ -1072,7 +1083,7 @@ $("#finder").on('DOMNodeInserted', "> ul li.folder > ul:not(.ui-droppable), li.f
 function loadFiles(selected_dir, subdir) { 
     console.log('loadFiles(' + selected_dir + ', ' + subdir + ')');
     $('#footer-text').html('Loading Files...');
-    var $spinner = bodySpinner();
+    bodySpinner();
 
     if (subdir === true && selected_dir !== undefined) {
         subdir = selected_dir.replace(/\/$/, '').replace(/[^\/]+$/, '');
@@ -1128,7 +1139,7 @@ function loadFiles(selected_dir, subdir) {
             }
             WM.finder.imagesWithTems();
             $finder.css('background-image', 'none');
-            $spinner.remove();
+            $('.rainbow-loader').remove();
             sizeToViewport();
 
             // set WM.faceimg so clicks to the delineaton interface show something

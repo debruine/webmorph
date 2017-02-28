@@ -1,6 +1,19 @@
 <!-- !- what's new Dialog -->
 <div id='whatsnewDialog' class='modal' title='What&apos;s New?'>
     <dl>
+        <dt>(2017-02-27) 3D Images</dt>
+        <dd>WebMorph now has limited support for 3D faces. You can upload OBJ 
+        files and associated BMP or JPEG textures and view them in the delineator. 
+        You can also morph between two objects that have the same geometry. I 
+        will add further functions soon. New projects contain two example OBJs 
+        if you want to have a play.</dd>
+        
+        <dt>(2017-02-14) Masking Transparency and Blur</dt>
+        <dd>Transparency has been fixed in the masks and blur works better now. 
+        Transparency with blur still looks a bit odd, so I would keep blur to 0 
+        or 1 on images with transparency. As always, masks are smoother on bigger 
+        images, but take longer.</dd>
+        
         <dt>(2017-02-13) Reverse Masking</dt>
         <dd>There is now a checkbox in the batch masking interface to specify a 
         reverse mask.</dd>

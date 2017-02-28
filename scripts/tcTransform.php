@@ -102,6 +102,7 @@ if ($return['data']) {
     
     if (empty($_POST['outname'])) {
         $newFileName = null;
+        $img->setOverWrite(true);
     } else {
         $newFileName = $theData['subfolder'] . $_POST['outname'];
     }

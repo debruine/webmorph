@@ -77,11 +77,12 @@ function projectList() { console.time('projectList()');
 
                 if (tr.length == 0) {
                     tr = $('<tr data-id="' + p.id + '" data-perm="' + p.perm + '" data-owner="' + p.user_id + '" />');
-                    tr.html(   '<td><span class="go_to_project tinybutton">Go</span>'
-                             + '</td><td>' + p.name
-                             + '</td><td>' + p.notes
-                             + '</td><td><img src="/include/images/menu/queue_loading.svg" />'
-                             + '</td><td>' + owners + '</td>'
+                    tr.html(   '<td class="project_go"><span class="go_to_project tinybutton">Go</span>'
+                             + '</td><td class="project_del">' + ''
+                             + '</td><td class="project_name">' + p.name
+                             + '</td><td class="project_desc">' + p.notes
+                             + '</td><td class="project_info"><img src="/include/images/menu/queue_loading.svg" />'
+                             + '</td><td class="project_own">' + owners + '</td>'
                     );
                              
                     $('#project_list tbody').append(tr);
@@ -89,9 +90,9 @@ function projectList() { console.time('projectList()');
                     tr.attr('data-perm', p.perm);
                     tr.attr('data-owner', p.user_id);
                     td = tr.find('td');
-                    td.eq(1).html(p.name);
-                    td.eq(2).html(p.notes);
-                    td.eq(4).html(owners);
+                    tr.find("td.project_name").html(p.name);
+                    tr.find("td.project_desc").html(p.notes);
+                    tr.find("td.project_own").html(owners);
                     tr.removeClass('old');
                 }
                 
@@ -106,11 +107,16 @@ function projectList() { console.time('projectList()');
             
             $('#project_list tr.old').remove();
             $('#project_list').show().stripe();
+            $('#project_list head').show();
 
             WM.user.accountSize = 0;
             if (WM.appWindow == 'project') {
                 if (data.projects.length > 10) {
-                    $('#projectsearchbar').show().val('').focus().trigger('keyup');
+                    $('#projectsearchbar').show().val('');
+                    if ($(window).width() > 640) {
+                        // don't focus on small touchscreen devices
+                        $('#projectsearchbar').focus().trigger('keyup');
+                    }
                     sizeToViewport();
                 }
                 
@@ -140,7 +146,8 @@ function projectList() { console.time('projectList()');
             
             // add delete project button where user is the owner and has all permissions
             $('span.delete_project').remove();                            
-            $('tr[data-perm=all][data-owner='+WM.user.id+'] span.go_to_project').after('<span class="delete_project tinybutton" title="Delete Project">-</span>');
+            $('tr[data-perm=all][data-owner='+WM.user.id+'] td.project_del')
+                .append('<span class="delete_project tinybutton" title="Delete Project">—</span>');
 
             $('.projectOwnerAdd').autocomplete({
                 source: userlist,
@@ -238,7 +245,7 @@ function projectSizeGet(proj_id, alloc) {
 
 function projectSizeUpdate(proj_id, alloc) {
     var tr = $('tr[data-id=' + proj_id + ']');
-    var td =  tr.find('td').eq(3);
+    var td =  tr.find('td').eq(4);
 
     td.html((tr.data('files') - tr.data('tmp')) + '&nbsp;files<br>' + tr.data('size'));
     WM.user.accountSize += tr.data('mysize');
@@ -247,8 +254,7 @@ function projectSizeUpdate(proj_id, alloc) {
     var ts = "Projects you own are using " + round(WM.user.accountSize/1024/1024/1024,1)
            + " GB of your allocated " + round(alloc/1024,1) + " GB. ";
     if (WM.user.accountSize/1024/1024 > alloc) {
-        ts += "Please reduce your account by emptying the trash and/or removing files. "
-            + "After 15 January 2016, I will disable accounts that are over their space allocation.";
+        ts += "Please reduce your account by emptying the trash and/or removing files.";
         $('#total_space').addClass('warning');
     } else {
         $('#total_space').removeClass('warning');

@@ -93,10 +93,12 @@ if (empty($email)) {
                 setcookie('user_id', $id,      time()+60*60*24*365, '/', $_SERVER['SERVER_NAME']);
                 setcookie('id_hash', md5($id), time()+60*60*24*365, '/', $_SERVER['SERVER_NAME']);
                 setcookie('email',   $email,   time()+60*60*24*365, '/', $_SERVER['SERVER_NAME']);
+                setcookie('hash',    '',       time()+60*60*24*365, '/', $_SERVER['SERVER_NAME']);
             } else {
                 setcookie('user_id', $id,      false, '/', $_SERVER['SERVER_NAME']);
                 setcookie('id_hash', md5($id), false, '/', $_SERVER['SERVER_NAME']);
                 setcookie('email',   $email,   false, '/', $_SERVER['SERVER_NAME']);
+                setcookie('hash',    '',       false, '/', $_SERVER['SERVER_NAME']);
             }
         } else {
             $return['error'] = true;
