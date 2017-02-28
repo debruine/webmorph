@@ -45,7 +45,7 @@ body {
     font-size:1em;
     color:hsl(200,0%,10%);
     background:url(/include/images/bgpatterns/escheresque_trans) 0 0 repeat;
-    background-position:  0 0;
+    background-position: 0 0;
     background-repeat: repeat;
     background-color: hsl(200,0%,20%);
     min-height: 100vh;
@@ -2338,7 +2338,7 @@ span.shiftopt:before {
     color:#000;
     text-decoration:none;
     text-shadow:0 1px rgba(255,255,255,.2);
-    font:400 15px/29px "Helvetica Neue",Arial,sans-serif;
+    font:400 17px/29px "Helvetica Neue",Arial,sans-serif;
     -webkit-tap-highlight-color:transparent;
     padding:0 .923em;
     border:1px solid;
@@ -2373,7 +2373,7 @@ span.shiftopt:before {
     height:1em;
     left:0;
     margin:auto;
-    position:relative;
+    position:absolute;
     right:0;
     top:0;
     width:1em;

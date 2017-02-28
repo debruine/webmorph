@@ -819,7 +819,7 @@ button.unsaved, .ui-button.ui-state-error, .ui-button.ui-state-error:hover {
 }
 .ui-button .ui-button-text {
     display: block;
-    line-height: normal;
+    /*line-height: normal;*/
 }
 
 .ui-button.single{
@@ -831,121 +831,6 @@ button.unsaved, .ui-button.ui-state-error, .ui-button.ui-state-error:hover {
 }
 
 /**************************** END OS X BUTTON STYLE **********************************/
-
-/**** Loader ****/
-
-.spinner {
-    color: <?= $text_on_theme ?>;
-}
-
-<?php
-    $c1 = -0.35;
-    $c2 = -0.38;
-    $c3 = -0.41;
-    $c4 = -0.44;
-    $c5 = -0.47;
-?>
-
-@-webkit-keyframes load6 {
-    0% {
-        -webkit-transform: rotate(0deg);
-        transform: rotate(0deg);
-        box-shadow:         0 -0.83em 0 <?= $c1 ?>em <?= $theme ?>,
-                            0 -0.83em 0 <?= $c2 ?>em <?= $theme ?>,
-                            0 -0.83em 0 <?= $c3 ?>em <?= $theme ?>,
-                            0 -0.83em 0 <?= $c4 ?>em <?= $theme ?>,
-                            0 -0.83em 0 <?= $c5 ?>em <?= $theme ?>;
-    }
-    5%,
-    95% {
-        box-shadow:         0 -0.83em 0 <?= $c1 ?>em <?= $theme ?>,
-                            0 -0.83em 0 <?= $c2 ?>em <?= $theme ?>,
-                            0 -0.83em 0 <?= $c3 ?>em <?= $theme ?>,
-                            0 -0.83em 0 <?= $c4 ?>em <?= $theme ?>,
-                            0 -0.83em 0 <?= $c5 ?>em <?= $theme ?>;
-    }
-    10%,
-    59% {
-        box-shadow:        0 -0.830em 0 <?= $c1 ?>em <?= $theme ?>,
-                    -0.087em -0.825em 0 <?= $c2 ?>em <?= $theme ?>,
-                    -0.173em -0.812em 0 <?= $c3 ?>em <?= $theme ?>,
-                    -0.256em -0.789em 0 <?= $c4 ?>em <?= $theme ?>,
-                    -0.297em -0.775em 0 <?= $c5 ?>em <?= $theme ?>;
-    }
-    20% {
-        box-shadow:        0 -0.830em 0 <?= $c1 ?>em <?= $theme ?>,
-                    -0.338em -0.758em 0 <?= $c2 ?>em <?= $theme ?>,
-                    -0.555em -0.617em 0 <?= $c3 ?>em <?= $theme ?>,
-                    -0.671em -0.488em 0 <?= $c4 ?>em <?= $theme ?>,
-                    -0.749em -0.340em 0 <?= $c5 ?>em <?= $theme ?>;
-    }
-    38% {
-        box-shadow:        0 -0.830em 0 <?= $c1 ?>em <?= $theme ?>,
-                    -0.377em -0.740em 0 <?= $c2 ?>em <?= $theme ?>,
-                    -0.645em -0.522em 0 <?= $c3 ?>em <?= $theme ?>,
-                    -0.775em -0.297em 0 <?= $c4 ?>em <?= $theme ?>,
-                    -0.820em -0.090em 0 <?= $c5 ?>em <?= $theme ?>;
-    }
-    100% {
-        -webkit-transform: rotate(360deg);
-        transform: rotate(360deg);
-        box-shadow:         0 -0.83em 0 <?= $c1 ?>em <?= $theme ?>,
-                            0 -0.83em 0 <?= $c2 ?>em <?= $theme ?>,
-                            0 -0.83em 0 <?= $c3 ?>em <?= $theme ?>,
-                            0 -0.83em 0 <?= $c4 ?>em <?= $theme ?>,
-                            0 -0.83em 0 <?= $c5 ?>em <?= $theme ?>;
-    }
-}
-@keyframes load6 {
-    0% {
-        -webkit-transform: rotate(0deg);
-        transform: rotate(0deg);
-        box-shadow:         0 -0.83em 0 <?= $c1 ?>em <?= $theme ?>,
-                            0 -0.83em 0 <?= $c2 ?>em <?= $theme ?>,
-                            0 -0.83em 0 <?= $c3 ?>em <?= $theme ?>,
-                            0 -0.83em 0 <?= $c4 ?>em <?= $theme ?>,
-                            0 -0.83em 0 <?= $c5 ?>em <?= $theme ?>;
-    }
-    5%,
-    95% {
-        box-shadow:         0 -0.83em 0 <?= $c1 ?>em <?= $theme ?>,
-                            0 -0.83em 0 <?= $c2 ?>em <?= $theme ?>,
-                            0 -0.83em 0 <?= $c3 ?>em <?= $theme ?>,
-                            0 -0.83em 0 <?= $c4 ?>em <?= $theme ?>,
-                            0 -0.83em 0 <?= $c5 ?>em <?= $theme ?>;
-    }
-    10%,
-    59% {
-        box-shadow:        0 -0.830em 0 <?= $c1 ?>em <?= $theme ?>,
-                    -0.087em -0.825em 0 <?= $c2 ?>em <?= $theme ?>,
-                    -0.173em -0.812em 0 <?= $c3 ?>em <?= $theme ?>,
-                    -0.256em -0.789em 0 <?= $c4 ?>em <?= $theme ?>,
-                    -0.297em -0.775em 0 <?= $c5 ?>em <?= $theme ?>;
-    }
-    20% {
-        box-shadow:        0 -0.830em 0 <?= $c1 ?>em <?= $theme ?>,
-                    -0.338em -0.758em 0 <?= $c2 ?>em <?= $theme ?>,
-                    -0.555em -0.617em 0 <?= $c3 ?>em <?= $theme ?>,
-                    -0.671em -0.488em 0 <?= $c4 ?>em <?= $theme ?>,
-                    -0.749em -0.340em 0 <?= $c5 ?>em <?= $theme ?>;
-    }
-    38% {
-        box-shadow:        0 -0.830em 0 <?= $c1 ?>em <?= $theme ?>,
-                    -0.377em -0.740em 0 <?= $c2 ?>em <?= $theme ?>,
-                    -0.645em -0.522em 0 <?= $c3 ?>em <?= $theme ?>,
-                    -0.775em -0.297em 0 <?= $c4 ?>em <?= $theme ?>,
-                    -0.820em -0.090em 0 <?= $c5 ?>em <?= $theme ?>;
-    }
-    100% {
-        -webkit-transform: rotate(360deg);
-        transform: rotate(360deg);
-        box-shadow:         0 -0.83em 0 <?= $c1 ?>em <?= $theme ?>,
-                            0 -0.83em 0 <?= $c2 ?>em <?= $theme ?>,
-                            0 -0.83em 0 <?= $c3 ?>em <?= $theme ?>,
-                            0 -0.83em 0 <?= $c4 ?>em <?= $theme ?>,
-                            0 -0.83em 0 <?= $c5 ?>em <?= $theme ?>;
-    }
-}
 
 .ui-state-active a,
 .ui-state-active a:link,

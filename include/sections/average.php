@@ -4,7 +4,7 @@
         <li><img id='average'><ul id='average-list'></ul></li>
         <!-- buttons -->
         <li id='avg_buttons'>
-            <input type='button' id='view-average-button' value='Create Average' />
+            <input type='button' id='view-average-button' value='Average' />
             <input type='button' id='clear-average-button' value='Clear' />
             <input type='button' id='save-button' value='Save' />
         </li>

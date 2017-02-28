@@ -261,8 +261,13 @@ function urlToName(url) {
     return name;
 }
 
-function spinner(css) {
+function spinner(css, $appendTo) {
     var $spinner;
+    
+    if (css === false) {
+        $('.rainbow-loader').remove();
+        return true;
+    }
 
     $spinner = $('<div class="rainbow-loader">'
                + '<div><div></div></div>'
@@ -273,22 +278,20 @@ function spinner(css) {
                + '<div><div></div></div>'
                + '</div>');
 
-    if (css !== "undefined") { $spinner.css(css); }
 
-    return $spinner;
-}
+    if (typeof css == 'object') { 
+        $spinner.css(css);
+    }
 
-function bodySpinner() {
-    var $spinner;
-    
-    $('.rainbow-loader').remove();
-
-    $spinner = spinner({
-        'font-size': '250px',
-        'position': 'absolute'
-    });
-
-    $('body').append($spinner);
+    if ($appendTo !== false) {
+        if ($appendTo === undefined) {
+            // only one body loader animation at a time please
+            $('.rainbow-loader').remove();
+            $appendTo = $('body');
+        }
+        
+        $appendTo.append($spinner);
+    }
 
     return $spinner;
 }

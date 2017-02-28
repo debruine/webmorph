@@ -656,11 +656,11 @@ function d3($container) {
     }
     
     this.morph = function() {
-        bodySpinner();
+        spinner();
         $('#footer-text').html('Computing morph trajectory');
         
         var errorMsg = function(msg) {
-            $('.rainbow-loader').remove();
+            spinner(false);
             $('#footer-text').html('');
             if (msg) { growl(msg); }
             return false;
@@ -725,7 +725,7 @@ function d3($container) {
                 
                 that.add(o);
                 $('#footer-text').html('Morph created');
-                $('.rainbow-loader').remove();
+                spinner(false);
             }, 500);
         }, 0);
         
@@ -955,7 +955,7 @@ function d3Obj(filename, D3) {
     }
     
     this.loadObj = function(onLoadCallback, params) {
-        bodySpinner();
+        spinner();
         
         var loader = new THREE.OBJLoader( that.manager );
         loader.load( that.filename + '.obj',
@@ -977,7 +977,7 @@ function d3Obj(filename, D3) {
 
                 D3.add( that );
                 
-                $('.rainbow-loader').remove();
+                spinner(false);
                 $('#imgname').html(that.name);
                 $('#footer-text').html('');
                 
@@ -995,7 +995,7 @@ function d3Obj(filename, D3) {
             },
             // onError
             function ( xhr ) {
-                $('.rainbow-loader').remove();
+                spinner(false);
                 $('#footer-text').html('Error loading ' + that.name);
             } 
         );

@@ -307,11 +307,11 @@ function getAverage(tVars, addToQueue) {
 
     var min = Math.min($average.width(), $average.height());
     var max = Math.max($average.width(), $average.height());
-    var $spinner = spinner({
+    spinner({
         'font-size':  min * 0.85,
         'margin-top': ($average.height() - (min * 0.85) ) / 2
-    });
-    $average.hide().after($spinner);
+    }, $average.parent('li'));
+    $average.hide();
     $('#average-list').hide();
 
     // add to queue or create average now
@@ -381,7 +381,7 @@ function getAverage(tVars, addToQueue) {
                 clearInterval(WM.timer);
                 $('#footer-text').html("Average complete");
                 if (typeof tVars.completeAvg === 'function') { tVars.completeAvg(errorReport); }
-                $spinner.remove();
+                spinner(false);
                 $average.show();
             }
         });
@@ -539,12 +539,14 @@ function getTransform(tVars, addToQueue) {
                 var min = Math.min($transform.width(), $transform.height());
                 var max = Math.max($transform.width(), $transform.height());
                 var spinSize = min * 0.85;
+                
                 var $spinner = spinner({
+                    'position': 'relative',
                     'font-size':  spinSize,
                     'margin-left': ($transform.width() - spinSize ) / 2,
                     'margin-top': ($transform.height() - spinSize ) / 2,
                     'margin-bottom': ($transform.height() - spinSize ) / 2
-                });
+                }, false);
                 $transform.hide().after($spinner);
 
                 $.ajax({
@@ -619,7 +621,7 @@ function getTransform(tVars, addToQueue) {
                         clearInterval(WM.timer);
                         $('#footer-text').html("Transform complete");
                         $transform.show();
-                        $spinner.remove();
+                        spinner(false);
                         $('#transButton').button({ disabled: false });
                     }
                 });
@@ -1240,7 +1242,7 @@ function getDesc() {
 
 function movingGif() {
     var files,
-    incImage,
+        incImage,
         imgN = 0,
         $mbox;
 
@@ -1291,17 +1293,16 @@ function movingGif() {
                 $(this).dialog("close");
             },
             "Make Movie": function() {
-                var $spinner,
-                    newFileName;
+                var newFileName;
 
                 clearInterval(incImage);
                 $('#footer-text').html('Making movie...');
 
-                $spinner = spinner({
+                spinner({
                     'font-size':  $mbox.height(),
                     'margin': 'auto'
-                });
-                $mbox.hide().after($spinner);
+                }, $mbox.parent());
+                $mbox.hide();
 
                 // clean the filename
                 newFileName = $('#movieFileName').val();
@@ -1329,14 +1330,15 @@ function movingGif() {
                     },
                     success: function(data) {
                         $mbox.attr("src", fileAccess(data.gif)).show();
-                        $spinner.remove();
                         //loadFiles(data.gif);
                         WM.finder.addFile(data.gif, true);
                         $('#footer-text').html('Movie created');
                     },
                     error: function() {
-                        $spinner.remove();
                         $('#footer-text').html('Error creating movie');
+                    },
+                    complete: function() {
+                        spinner(false);
                     }
                 });
             },

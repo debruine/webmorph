@@ -232,6 +232,7 @@ function filePaste(toDir) { console.log('filePaste(' + (toDir == undefined ? '' 
     nImages = WM.pasteBoard.length;
 
     if (nImages) {
+        spinner();
         if (toDir == undefined) { toDir = currentDir(); }
         
         $fileList = $('<ul />').css('max-height', '200px');
@@ -241,6 +242,7 @@ function filePaste(toDir) { console.log('filePaste(' + (toDir == undefined ? '' 
             if ($('li.to_cut[url="' + v + '"]').length) cutlist++;
         });
         action = (nImages == cutlist) ? 'move' : 'copy';
+        
         $.ajax({
             url: 'scripts/fileCopy',
             data: {
@@ -263,6 +265,9 @@ function filePaste(toDir) { console.log('filePaste(' + (toDir == undefined ? '' 
                     loadFiles(toDir);
                     $('#footer-text').html(nImages + ' files pasted to <code>' + toDir + '</code>');
                 }
+            },
+            complete: function() {
+                spinner(false);
             }
         });
     }
@@ -1083,7 +1088,7 @@ $("#finder").on('DOMNodeInserted', "> ul li.folder > ul:not(.ui-droppable), li.f
 function loadFiles(selected_dir, subdir) { 
     console.log('loadFiles(' + selected_dir + ', ' + subdir + ')');
     $('#footer-text').html('Loading Files...');
-    bodySpinner();
+    spinner();
 
     if (subdir === true && selected_dir !== undefined) {
         subdir = selected_dir.replace(/\/$/, '').replace(/[^\/]+$/, '');
@@ -1139,7 +1144,7 @@ function loadFiles(selected_dir, subdir) {
             }
             WM.finder.imagesWithTems();
             $finder.css('background-image', 'none');
-            $('.rainbow-loader').remove();
+            spinner(false);
             sizeToViewport();
 
             // set WM.faceimg so clicks to the delineaton interface show something
