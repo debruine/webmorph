@@ -40,7 +40,7 @@ if ($_SESSION['user_id'] !== 1) {
 <!-- START BODY -->
 
 <body>
-    
+ 
     <div class="rainbow-loader">
 		<div><div></div></div>
 		<div><div></div></div>
@@ -49,10 +49,10 @@ if ($_SESSION['user_id'] !== 1) {
 		<div><div></div></div>
 		<div><div></div></div>
 	</div>
-	
+
 	
 	<!--<div class="spinner"></div>-->
-	
+<!--	
 	<div class="rainbow-spin">
 	  <div>
 	    <div>
@@ -69,7 +69,7 @@ if ($_SESSION['user_id'] !== 1) {
 	    </div>
 	  </div>
 	</div>
-	
+-->	
 	<!--<img src="test">-->
 
 <?php 
@@ -145,7 +145,7 @@ $q = new myQuery(array('CREATE TEMPORARY TABLE tmp_users SELECT user.id,
 				LEFT JOIN img ON tmp_users.id=img.user_id
 				GROUP BY tmp_users.id
 				ORDER BY last_login DESC;'));
-echo '<div id="usertabley">' . $q->get_result_as_table() . '</div>';
+echo '<div id="usertable">' . $q->get_result_as_table() . '</div>';
 
 
 echo '<h3>Apache/PHP Limits</h3>';
@@ -157,7 +157,7 @@ $vars = array(
 	'max_execution_time' => 'Max Execution Time',
 	'max_input_time' => 'Max Input Time',
 	'max_input_vars' => 'Max Input Variables',
-	'upload_max_filesize' => 'Upload Max Size',
+	'upload_max_filesize' => 'Upload Max Filesize',
 	'post_max_size' => 'Post Max Size',
 );
 

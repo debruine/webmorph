@@ -310,6 +310,8 @@ $('#average-list').on('click', 'li', function() {
     $(this).toggleClass('selected');
     $finder.find('li.file').removeClass('selected');
 });
+
+
 $('#avg_image_box').droppable({
     hoverClass: 'hoverdrag',
     tolerance: "pointer",
@@ -330,6 +332,24 @@ $('#avg_image_box').droppable({
 
         averageListCheck();
     }
+}).on("doubletap", function() {
+    // load selected images by double-clicking on average image box
+    var files = filesGetSelected('.image.hasTem', WM.project.id);
+    
+    $.each(files, function(i, filename) {
+        var url,
+            $li;
+            
+        url = WM.project.id + filename;
+
+        $li = $('<li />').text(filename)
+                        .attr('data-url', url)
+                        .css('background-image', 'url(' + fileAccess(url, true) + ')');
+        $('#average-list').append($li).show();
+        $('#average').hide();
+    });
+
+    averageListCheck();
 });
 
 $('#destimages img:not(.nodrop), #grid img').droppable({
@@ -628,7 +648,7 @@ $finder.on('click', function() {
         $finder.find('li.file.selected').removeClass('selected');               // unselect all files
 
         // add draggable functions to files
-        var $dragFiles = $selFolders.find('>ul>li.file:not(.ui-draggable)')
+        var $dragFiles = $selFolders.find('>ul>li.file:not(.ui-draggable)');
         $dragFiles.trigger('DOMNodeInserted');
 
         $selFolders.find('>ul').css('margin-left', $selFolders.width());
@@ -1294,6 +1314,18 @@ $('#deleteItems').not('.disabled').click(function() {
 // !#admin
 $('#admin').click(function() {
     window.open("/admin");
+});
+
+$('#reload_scripts').click(function() {
+    $.getScript('/include/js/psychomorph/functions.js');
+    $.getScript('/include/js/psychomorph/batch.func.js');
+    $.getScript('/include/js/psychomorph/finder.func.js');
+    $.getScript('/include/js/psychomorph/delin.func.js');
+    $.getScript('/include/js/psychomorph/morph.func.js');
+    $.getScript('/include/js/psychomorph/project.func.js');
+    $.getScript('/include/js/psychomorph/user.func.js');
+    $.getScript('/include/js/psychomorph/three.func.js');
+    $.getScript('/include/js/psychomorph/keyboard.js');
 });
 
 // !#newProject
@@ -2408,8 +2440,9 @@ $('#d3_morph').button({
         position: 'absolute',
         top: '1em',
         right: '1em',
-        width: '15em'
-    }).appendTo('#delin_toolbar'); 
+        width: '15em',
+        color: 'white'
+    }).appendTo('#threeD'); 
 });
 $('#d3_lock_x').button({
     text: false,
@@ -2518,7 +2551,7 @@ $("#delin_center").button({
     text: false,
     icons: { primary: "wm-center-icon" }
 }).click(function() {
-    WM.d3.center();
+    if (WM.d3) { WM.d3.center(); }
 });
 // !#delin_zoomoriginal
 $("#delin_zoomoriginal").button({

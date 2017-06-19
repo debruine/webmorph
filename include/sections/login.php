@@ -115,18 +115,72 @@
         (Double-click to demo)
     </div>
     
-    <div id="gif_demos">
-        <img src="/include/images/gifs/id.gif">
-        <img src="/include/images/gifs/happy.gif">
-        <img src="/include/images/gifs/scramble.gif">
-    </div>
-    
     <p>WebMorph is a web-based version of Psychomorph, 
         with several additional functions. While WebMorph is optimized for 
         averaging and transforming faces, you can delineate and average any type 
         of image. WebMorph also has several batch functions for processing large 
         numbers of images automatically and can even create moving gifs of your 
         transforms.</p>
+    
+    <div id="gif_demos">
+        <img src="/include/images/gifs/id.gif">
+        <img src="/include/images/gifs/happy.gif">
+        <img src="/include/images/gifs/scramble.gif">
+    </div>
+    
+    <h2>Citations</h2>
+    
+    <p class="cite">DeBruine, L. M. &amp; Tiddeman, B. P. 
+        (<?= date("Y, F j", filemtime(DOC_ROOT . $_SERVER['PHP_SELF'])) ?>). 
+        <i>WebMorph</i>. Retrieved from http://<?= $_SERVER['SERVER_NAME'] ?>
+    </p>
+    
+    <p class="cite">To cite the morphing and transforming methods, see 
+        <a href="http://users.aber.ac.uk/bpt/jpsychomorph/" 
+            target="_blank">Bernie Tiddeman's webpage</a>.
+    </p>
+    
+    <p class="cite" style="min-height: 140px;">
+        <img src="/include/images/demos/symscram" style="float: right; margin-left: 5px;">
+        The symmetric image scrambling methods were first published in:<br>
+        CA Conway, BC Jones, LM DeBruine, AC Little & A Sahraie (2008). Transient 
+        pupil constrictions to faces are sensitive to orientation and species. 
+        <i>Journal of Vision</i>, 8(3): 17. 
+        <a href="http://dx.doi.org/10.1167/8.3.17" target="_blank">doi: 10.1167/8.3.17</a>
+    </p>
+    
+    <p class="cite">
+        <img src="/include/examples/f_african">
+        <img src="/include/examples/f_easian">
+        <img src="/include/examples/f_wasian">
+        <img src="/include/examples/f_white">
+        <img src="/include/examples/f_multi"><br>
+        <img src="/include/examples/m_african">
+        <img src="/include/examples/m_easian">
+        <img src="/include/examples/m_wasian">
+        <img src="/include/examples/m_white">
+        <img src="/include/examples/m_multi"><br>
+        DeBruine, Lisa (2016). Young adult composite faces. <i>figshare</i>. 
+        <a href="https://dx.doi.org/10.6084/m9.figshare.4055130.v1" 
+            target="_blank">doi:10.6084/m9.figshare.4055130.v1</a>
+    </p>
+    
+    <p class="cite" style="min-height: 140px;">
+        <img src="/include/images/demos/canada2003.jpg" style="float: right; margin-left: 5px;">
+        DeBruine, Lisa &amp; Jones, Benedict (2017). Young Adult White Faces with Manipulated Versions. <i>figshare</i>.
+        <a href="https://doi.org/10.6084/m9.figshare.4220517.v1"
+            target="_blank">doi:10.6084/m9.figshare.4220517.v1</a>
+    </p>
+    
+    <p class="cite" style="min-height: 140px;">
+        <img src="/include/examples/_female_avg" style="float: right; margin-left: 5px;">
+        <img src="/include/examples/_male_avg" style="float: right; margin-left: 5px;">
+        DeBruine, L. M. &amp; Jones, B. C. (2015). Average Faces. 
+        <i>Open Science Framework</i>. 
+        <a href="http://osf.io/gzy7m " target="_blank">osf.io/gzy7m</a>
+    </p>
+    
+    <h2>Development</h2>
     
     <p>WebMorph is made possible by the kind help of 
         <a href="http://users.aber.ac.uk/bpt/">Bernie Tiddeman</a>, who developed and maintains the desktop 

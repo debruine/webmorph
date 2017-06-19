@@ -40,6 +40,9 @@ function d3($container) {
         z: false
     };
     this.onTouchDown = {x: 0, y:0}
+    this.x_vector = new THREE.Vector3(1,0,0);
+    this.y_vector = new THREE.Vector3(0,1,0);
+    this.z_vector = new THREE.Vector3(0,0,1);
     
     $container.data('d3', this);
 
@@ -67,7 +70,6 @@ function d3($container) {
         that.directionalLight = new THREE.DirectionalLight( 0xffffff, 0.5 );
         that.directionalLight.position.set( 0, 0.2, 1 );
         that.scene.add( that.directionalLight );
-
         
         // add crosshair for raycasting
         var sphereGeometry = new THREE.SphereGeometry( 4, 32, 32 );
@@ -150,6 +152,24 @@ function d3($container) {
                                 $('.context_menu').remove();
                                 that.objects[i].remove();
                             }
+                        },
+                        {
+                            name: 'Add Circle',
+                            func: function() {
+                                that.objects[i].grids(200,2,1);
+                            }
+                        },
+                        {
+                            name: 'Add Grid',
+                            func: function() {
+                                that.objects[i].grids(200);
+                            }
+                        },
+                        {
+                            name: 'Delete Grid',
+                            func: function() {
+                                that.objects[i].grids(0);
+                            }
                         }
                     ];
                 
@@ -160,6 +180,13 @@ function d3($container) {
         });
         
         $container.bind( 'mousedown', function( e ) {
+            /*console.log(e);
+            if (e.target !== e.currentTarget) {
+                that.onTouchDown.x = null;
+                that.onTouchDown.y = null;
+                return false;
+            }*/
+            
             if (e.metaKey) {
                 // move
                 cursor('move');
@@ -231,12 +258,19 @@ function d3($container) {
             that.onTouchDown.y = e.clientY;
         }).bind('dblclick', function(e) {
         	e.preventDefault();
-        
-        	var mousePosition = that.getMousePosition( $container.get(0), e.clientX, e.clientY );
-        	for (var i = 0; i < that.objects.length; i++) {
-        	    var intersects = that.getIntersects( mousePosition, that.objects[i].mesh );
-                if (intersects.length) { 
-                    that.objects[i].toggle_select();
+        	
+        	if ($('body').hasClass('hologram')) { 
+            	that.reset(); 
+            	return true;
+            }
+            
+            if (that.objects.length) {
+            	var mousePosition = that.getMousePosition( $container.get(0), e.clientX, e.clientY );
+            	for (var i = 0; i < that.objects.length; i++) {
+            	    var intersects = that.getIntersects( mousePosition, that.objects[i].mesh );
+                    if (intersects.length) { 
+                        that.objects[i].toggle_select();
+                    }
                 }
             }
         });
@@ -384,7 +418,7 @@ function d3($container) {
     }
     
     this.add = function(obj) {
-        that.scene.add(obj.mesh);
+        that.scene.add(obj.object);
         that.objects.push(obj);
         that.updateObjList(obj);
     }
@@ -582,25 +616,17 @@ function d3($container) {
     };
     
     this.hologram = function(e) {
-        var offset = 200;
-        var imgsize = 170;
+        var offset = 250;
+        var imgsize = 200;
         
         if (!that.objects.length) { 
             console.log('No selected objects');
             return false; 
         }
         
-        growl("Double-click the centre to quit hologram mode", 2000);
-        
         $('body').addClass('hologram');
         
-        $('<div id="holocancel" />').css({
-            top: that.height/2 - 25,
-            left: that.width/2 - 25
-        }).on('doubletap', function() {
-            $(this).remove();
-            that.reset();
-        }).appendTo($container);
+        growl("Double-click the page to quit hologram mode", 2000);
         
         // get rid of any extra objects
         $.each(that.objects, function(i,v) { v.select(i>0);});
@@ -615,6 +641,9 @@ function d3($container) {
         }
         
         that.zoom = imgsize / obj.originalSize.y;
+        
+        // toggles direction for upright or inverted display
+        that.holotoggle = !that.holotoggle;
     
         for (var i = 0; i < 4; i++) {
             obj = that.objects[i];
@@ -631,7 +660,7 @@ function d3($container) {
                 obj.position = [-offset, 0, 0];
             }
             
-            if (e.metaKey) {
+            if (e.metaKey || !that.holotoggle) {
                 if (i == 0) { // top
                     obj.rotation = [0,Math.PI,-Math.PI];
                 } else if (i == 1) { // bottom
@@ -670,12 +699,13 @@ function d3($container) {
             return errorMsg("You need to load exactly two objects to morph.");
         }
         
-        var $theSlider = $('<div />').slider({
+        var $theSlider = $('<div class="d3_morph_slider" />').slider({
             value: .5,
             min: -0.5,
             max: 1.5,
-            step: 0.01
-        }).prepend('<span class="percent">50%</span>');;
+            step: 0.1
+        }).prepend('<span class="percent_left">50%</span>')
+          .append('<span class="percent_right">50%</span>');
         
         setTimeout( function() {
             var geometry1, geometry2;
@@ -720,7 +750,8 @@ function d3($container) {
 
                 $theSlider.on('slide change', function(event, ui) {
                     o.mesh.morphTargetInfluences[0] = ui.value;
-                    $(this).find('.percent').text(Math.round(ui.value*100) + "%");
+                    $(this).find('.percent_right').text(Math.round(ui.value*100) + "%");
+                    $(this).find('.percent_left').text(100-Math.round(ui.value*100) + "%");
                 });
                 
                 that.add(o);
@@ -738,10 +769,6 @@ function d3($container) {
         that.stats.update(that.renderer);
     };
     
-    this.x_vector = new THREE.Vector3(1,0,0);
-    this.y_vector = new THREE.Vector3(0,1,0);
-    this.z_vector = new THREE.Vector3(0,0,1);
-    
     this.render = function() {
         var smooth = 0.25; // smooths out jumpy movements (1=most jumpy & precise, 0.05 = very smooth & laggy)
         if (that.spin) {
@@ -752,23 +779,23 @@ function d3($container) {
         for (var i=0; i < that.objects.length; i++) {
             // avoids jumpy movements to new views
             var obj = that.objects[i];
-            if (obj.mesh) {
+            if (obj.object) {
                 
-                obj.mesh.position.x += ( obj.position[0] - obj.mesh.position.x ) * smooth;
-                obj.mesh.position.y += ( - obj.position[1] - obj.mesh.position.y ) * smooth;
-                obj.mesh.position.z += ( obj.position[2] - obj.mesh.position.z ) * smooth;
+                obj.object.position.x += ( obj.position[0] - obj.object.position.x ) * smooth;
+                obj.object.position.y += ( - obj.position[1] - obj.object.position.y ) * smooth;
+                obj.object.position.z += ( obj.position[2] - obj.object.position.z ) * smooth;
                 if (that.spin) {
                     //obj.object.rotation.y = theSpin;
-                    obj.mesh.rotateOnAxis(that.y_vector, Math.PI/200);
-                    obj.mesh.rotation[0] = obj.mesh.rotation.x;
+                    obj.object.rotateOnAxis(that.y_vector, Math.PI/200);
+                    obj.object.rotation[0] = obj.object.rotation.x;
                     if (obj.material.map == null) {
                         obj.material.color.setHSL((obj.material.color.getHSL().h + 1/200)%1,.25,.50);
                     }
-                    $('#footer-text').html(Math.round(obj.mesh.rotation.x*100)/100);
+                    $('#footer-text').html(Math.round(obj.object.rotation.x*100)/100);
                 } else {
-                    obj.mesh.rotation.x += ( obj.rotation[0] - obj.mesh.rotation.x ) * smooth;
-                    obj.mesh.rotation.y += ( - obj.rotation[1] - obj.mesh.rotation.y ) * smooth;
-                    obj.mesh.rotation.z += ( obj.rotation[2] - obj.mesh.rotation.z ) * smooth;
+                    obj.object.rotation.x += ( obj.rotation[0] - obj.object.rotation.x ) * smooth;
+                    obj.object.rotation.y += ( - obj.rotation[1] - obj.object.rotation.y ) * smooth;
+                    obj.object.rotation.z += ( obj.rotation[2] - obj.object.rotation.z ) * smooth;
                 }
                 /*
                 if (Math.abs(obj.scale - obj.object.scale.x) > .001) {
@@ -800,6 +827,7 @@ function d3Obj(filename, D3) {
     
     this.name = urlToName(filename);
     this.parent = D3;
+    this.object = null;
     this.mesh = null;
     this.filename = filename;
     this.texturefile = null;
@@ -826,9 +854,37 @@ function d3Obj(filename, D3) {
         opacity: 1.0
     });
     
+    //grids
+    this.grids = function(radius, radials, circles, divisions) {
+        if (radius === undefined) { radius = 200; }
+        if (radials === undefined) { radials = 64; }
+        if (circles === undefined) { circles = 16; }
+        if (divisions === undefined) { divisions = 64; }
+        
+        this.object.remove(this.gridXZ);
+        this.object.remove(this.gridYZ);
+        this.object.remove(this.gridXY);
+        
+        if (radius == 0) { return this; }
+        
+        this.gridXZ = new THREE.PolarGridHelper(radius, radials, circles, divisions, 0x88ff88, 0x88ff88);
+        this.gridXZ.rotation.y = Math.PI/2;
+        this.gridXY = new THREE.PolarGridHelper(radius, radials, circles, divisions, 0x8888ff, 0x8888ff);
+        this.gridXY.rotation.x = Math.PI/2;
+        this.gridYZ = new THREE.PolarGridHelper(radius, radials, circles, divisions, 0x8ff8888, 0x8ff8888);
+        this.gridYZ.rotation.z = Math.PI/2;
+        
+        this.object.add(this.gridXZ);
+        this.object.add(this.gridYZ);
+        this.object.add(this.gridXY);
+        
+        return this;
+    }
+    
     this.clone = function(name) {
         var clone = new d3Obj('clone', D3);
-        clone.mesh = that.mesh.clone();
+        clone.object = that.object.clone();
+        clone.mesh = clone.object.children[0]; //that.mesh.clone();
         clone.texture = that.texture;
         clone.originalSize = that.originalSize;
         clone.material = clone.mesh.material;
@@ -930,7 +986,7 @@ function d3Obj(filename, D3) {
             }
         }
         
-        that.parent.scene.remove(that.mesh);
+        that.parent.scene.remove(that.object);
         that.mesh.geometry.dispose();
         that.material.dispose();
         that.texture.dispose();
@@ -963,6 +1019,8 @@ function d3Obj(filename, D3) {
             function ( object ) {
                 console.log('object loaded');
                 
+                that.object = object;
+                
                 if (object.children[0] instanceof THREE.Mesh) {
                     that.mesh = object.children[0];
                     that.mesh.material = that.material;
@@ -972,8 +1030,8 @@ function d3Obj(filename, D3) {
                 that.originalSize = box.getSize();
 
                 // this re-sets the mesh position
-                that.mesh.geometry.center();
-                that.mesh.geometry.verticesNeedUpdate = true;
+                //that.mesh.geometry.center();
+                //that.mesh.geometry.verticesNeedUpdate = true;
 
                 D3.add( that );
                 
@@ -1048,13 +1106,26 @@ $('#d3_demo').on('doubletap', function(e) {
             $('#d3_demo').width(), 
             $('#d3_demo').width()/1.618
         );
+        
+        var obj_pairs = [
+            ['/include/3d/average_easian_female',
+            '/include/3d/average_easian_male'],
+            ['/include/3d/average_white_female',
+            '/include/3d/average_white_male'],
+            ['/include/3d/average_easian_female',
+            '/include/3d/average_white_female'],
+            ['/include/3d/average_easian_male',
+            '/include/3d/average_white_male']
+        ];
+        
+        var pair = obj_pairs[Math.floor(Math.random()*obj_pairs.length)];
 
-        var obj = new d3Obj('/include/3d/female_avg', demo);
-        obj.texturefile = '/include/3d/female_avg.jpg';
+        var obj = new d3Obj(pair[0], demo);
+        obj.texturefile = pair[0] + '.jpg';
         obj.position = [-120,0,0];
 
-        var obj2 = new d3Obj('/include/3d/male_avg', demo);
-        obj2.texturefile = '/include/3d/male_avg.jpg';
+        var obj2 = new d3Obj(pair[1], demo);
+        obj2.texturefile = pair[1] + '.jpg';
         obj2.position = [120,0,0];
         
         obj.load(function(){
@@ -1096,7 +1167,8 @@ $('#d3_demo_morph').click( function() {
         right: '0',
         margin: '0.5em auto',
         width: '75%',
-    }).appendTo('#d3_demo_extras');
+    }).appendTo('#d3_demo_extras')
+    .find('span.percent').hide();
     
 });
 

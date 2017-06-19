@@ -51,10 +51,14 @@ try {
             copy(DOC_ROOT . "/include/examples/{$face}.tem", "{$mydir}/composites/{$face}.tem");
         }
         
-        copy(DOC_ROOT . "/include/3d/female_avg.jpg", "{$mydir}/3d/female_avg.jpg");
-        copy(DOC_ROOT . "/include/3d/female_avg.obj", "{$mydir}/3d/female_avg.obj");
-        copy(DOC_ROOT . "/include/3d/male_avg.jpg", "{$mydir}/3d/male_avg.jpg");
-        copy(DOC_ROOT . "/include/3d/male_avg.obj", "{$mydir}/3d/male_avg.obj");
+        copy(DOC_ROOT . "/include/3d/female_avg.jpg", "{$mydir}/3d/average_easian_female.jpg");
+        copy(DOC_ROOT . "/include/3d/female_avg.obj", "{$mydir}/3d/average_easian_female.obj");
+        copy(DOC_ROOT . "/include/3d/male_avg.jpg", "{$mydir}/3d/average_easian_male.jpg");
+        copy(DOC_ROOT . "/include/3d/male_avg.obj", "{$mydir}/3d/average_easian_male.obj");
+        copy(DOC_ROOT . "/include/3d/female_avg.jpg", "{$mydir}/3d/average_white_female.jpg");
+        copy(DOC_ROOT . "/include/3d/female_avg.obj", "{$mydir}/3d/average_white_female.obj");
+        copy(DOC_ROOT . "/include/3d/male_avg.jpg", "{$mydir}/3d/average_white_male.jpg");
+        copy(DOC_ROOT . "/include/3d/male_avg.obj", "{$mydir}/3d/average_white_male.obj");
         
         copy(DOC_ROOT . '/include/examples/webmorph_template_batchAvg.txt', $mydir . '/_batchAvg_template.txt');
         copy(DOC_ROOT . '/include/examples/webmorph_template_batchTrans.txt', $mydir . '/_batchTrans_template.txt');

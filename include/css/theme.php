@@ -338,7 +338,7 @@ p.msg {
     background-image: url(/include/images/icons/menu.php?h=<?= $theme_hue ?>);
 }
 
-#d3_progress {
+.d3_morph_slider.ui-slider {
     background-color: <?= $theme ?>;
 }
 

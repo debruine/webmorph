@@ -32,11 +32,11 @@
             <button id="delin_redo">Redo (&#8679;&#8984;Z</span>)</button>
         </span>
         <span class='buttonset twoD'>
-            <button id="delin_refresh">Refresh (&#8984;R)</button>
             <button id="delin_save">Save (&#8984;S)</button>
         </span>
         <span class='buttonset twoD'>
             <button id="delin_prev">Previous Image (&#8984;&#8592;)</button>
+            <button id="delin_refresh">Refresh (&#8984;R)</button>
             <button id="delin_next">Next Image (&#8984;&#8594;)</button>
         </span>
         <span class='buttonset twoD'>

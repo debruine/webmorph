@@ -179,6 +179,7 @@ function threePtDelin(e) {
                     WM.current.tem[i].y = newy;
                 });
                 makePoints(WM.current.tem);
+                updateUndoList();
             }
         });
         $('#template').show();
@@ -827,6 +828,17 @@ function drawTem() {
             left: v.x*WM.temRatio
         });
     });
+    
+    // move 3-point delin points if visible
+    $.each(WM.eyeClicks, function(i, ec) {
+        var imgoffset = $delin.offset();
+        var thePt = [$('#leftEye'), $('#rightEye'), $('#mouth')];
+        var x =  ec.x * WM.temRatio +  imgoffset.left;
+        var y =  ec.y * WM.temRatio + imgoffset.top;
+        
+        thePt[i].css('left', x - (thePt[i].width() / 2))
+                .css('top', y - (thePt[i].height() / 2));
+    });
 }
 
 function temSVG(lines, points, image, theType) {
@@ -1082,6 +1094,7 @@ function saveTem() {
                 var theTime = pad(now.getHours(), 2, '0') + ':' + pad(now.getMinutes(), 2, '0') + ':' + pad(now.getSeconds(), 2, '0');
                 $('#footer-text').html(urlToName(WM.faceimg) + ' saved (' + theTime + ')');
                 $('#delin_save').removeClass('unsaved');
+                WM.finder.addFile(WM.faceimg, true);
             } else {
                 growl(data.errorText);
             }

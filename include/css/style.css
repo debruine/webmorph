@@ -99,24 +99,10 @@ p {
     background:hsl(200,0%,90%);
     border:3px solid hsl(200,0%,90%);
     color:hsl(200,0%,10%);
-    border-top-left-radius:.5em;
-    border-top-right-radius:.5em;
+    border-radius:0.5em;
     max-width:60em;
-    margin:.5em auto 0!important;
-    padding:.5em .5em .1em;
-}
-
-p + p:not(.msg) {
-    border-radius:0;
-    margin:0 auto!important;
-    padding:.1em .5em;
-}
-
-p:last-of-type {
-    border-bottom-left-radius:.5em;
-    border-bottom-right-radius:.5em;
-    margin:0 auto .5em!important;
-    padding:.1em .5em .5em;
+    margin:.5em auto;
+    padding:.5em;
 }
 
 .warning {
@@ -331,7 +317,7 @@ dd pre {
     padding-top:1.5em;
 }
 
-#aboutDialog img {
+.cite img, #aboutDialog img {
     max-height: 100px;
 }
 
@@ -389,8 +375,10 @@ input[type="checkbox"], input[type="radio"]{
   width: 1em;
   height: 1em;
   cursor: pointer;
+  /* 
   -webkit-appearance: none;
   appearance: none;
+  */
 }
 
 input[type=number] {
@@ -1368,8 +1356,16 @@ li.disabled span.checkmark,li.disabled:hover > span.checkmark {
     position: relative;
     /*cursor: default;*/
 }
+.d3_morph_slider {
+    margin-left: 3em;
+    margin-right: 3em;   
+}
 
-div.ui-slider span.percent {
+.d3_morph_slider.ui-slider {
+    background-color: grey;
+}
+
+div.ui-slider span.percent_left {
     position: absolute;
     top: 0;
     left: -3em;
@@ -1378,6 +1374,17 @@ div.ui-slider span.percent {
     text-align: right;
     line-height: 0.5em;
     padding-right: 0.5em;
+}
+
+div.ui-slider span.percent_right {
+    position: absolute;
+    top: 0;
+    right: -3em;
+    width: 3em;
+    height: 100%;
+    text-align: left;
+    line-height: 0.5em;
+    padding-left: 0.5em;
 }
 
 #d3_lock_x.locked, #d3_lock_y.locked, #d3_lock_z.locked {
@@ -2730,7 +2737,7 @@ span.shiftopt:before {
     }
     
     #project_list {
-        font-size: 1.5em;
+        font-size: 1.0em;
     }
     
     #project_list td.project_desc,

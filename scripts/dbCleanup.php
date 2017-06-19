@@ -38,6 +38,14 @@ function imageFiles($dir) {
     return $result;
 }
 
+/*
+$q = new myQuery("SELECT id FROM user");
+$users = $q->get_col("id");
+
+foreach ($users as $user) {
+$_GET['project'] = 0;
+*/
+
 if ($_GET['project'] > 0) {
     // get one authorised project
     $q = new myQuery("SELECT project_id FROM project_user WHERE project_id='{$_GET['project']}' AND user_id='{$user}'");
@@ -92,6 +100,7 @@ foreach ($dircontents as $file) {
 }
 
 $return['added'] = $added_to_db;
+/*}*/
 
 require_once $_SERVER['DOCUMENT_ROOT'] . '/scripts/dirTmpEmpty.php';
 

@@ -66,21 +66,41 @@ if (empty($email)) {
                 } else {
                     mkdir($mydir . '/.tmp', DIRPERMS);
                     mkdir($mydir . '/.trash', DIRPERMS);
+                    mkdir($mydir . '/composites', DIRPERMS);
+                    mkdir($mydir . '/3d', DIRPERMS);
                     
-                    $example_images = array(
-                        "f_african", "f_easian", "f_multi", "f_wasian", "f_white", 
-                        "m_african", "m_easian", "m_multi", "m_wasian", "m_white.jpg"
+                    $faces = array(
+                        //"_female_avg",
+                        //"_male_avg",
+                        "f_african",
+                        "f_easian",
+                        "f_multi",
+                        "f_wasian",
+                        "f_white",
+                        "m_african",
+                        "m_easian",
+                        "m_multi",
+                        "m_wasian",
+                        "m_white",
                     );
                     
-                    foreach ($example_images as $img) {
-                        copy(DOC_ROOT . "/include/examples/{$img}.jpg", "{$mydir}/{$img}.jpg");
-                        copy(DOC_ROOT . "/include/examples/{$img}.tem", "{$mydir}/{$img}.tem");
+                    foreach ($faces as $face) {
+                        copy(DOC_ROOT . "/include/examples/{$face}.jpg", "{$mydir}/composites/{$face}.jpg");
+                        copy(DOC_ROOT . "/include/examples/{$face}.tem", "{$mydir}/composites/{$face}.tem");
                     }
-                        
-                    copy(DOC_ROOT . '/include/examples/_female_avg.jpg', $mydir . '/3dsk_female_avg.jpg');
-                    copy(DOC_ROOT . '/include/examples/_female_avg.tem', $mydir . '/3dsk_female_avg.tem');
-                    copy(DOC_ROOT . '/include/examples/_male_avg.jpg', $mydir . '/3dsk_male_avg.jpg');
-                    copy(DOC_ROOT . '/include/examples/_male_avg.tem', $mydir . '/3dsk_male_avg.tem');
+                    
+                    copy(DOC_ROOT . "/include/3d/female_avg.jpg", "{$mydir}/3d/average_easian_female.jpg");
+                    copy(DOC_ROOT . "/include/3d/female_avg.obj", "{$mydir}/3d/average_easian_female.obj");
+                    copy(DOC_ROOT . "/include/3d/male_avg.jpg", "{$mydir}/3d/average_easian_male.jpg");
+                    copy(DOC_ROOT . "/include/3d/male_avg.obj", "{$mydir}/3d/average_easian_male.obj");
+                    copy(DOC_ROOT . "/include/3d/female_avg.jpg", "{$mydir}/3d/average_white_female.jpg");
+                    copy(DOC_ROOT . "/include/3d/female_avg.obj", "{$mydir}/3d/average_white_female.obj");
+                    copy(DOC_ROOT . "/include/3d/male_avg.jpg", "{$mydir}/3d/average_white_male.jpg");
+                    copy(DOC_ROOT . "/include/3d/male_avg.obj", "{$mydir}/3d/average_white_male.obj");
+                    
+                    copy(DOC_ROOT . '/include/examples/webmorph_template_batchAvg.txt', $mydir . '/_batchAvg_template.txt');
+                    copy(DOC_ROOT . '/include/examples/webmorph_template_batchTrans.txt', $mydir . '/_batchTrans_template.txt');
+                    copy(DOC_ROOT . '/include/examples/webmorph_template_batchEdit.txt', $mydir . '/_batchEdit_template.txt');
 
                     $q = new myQuery("INSERT INTO project_user (project_id, user_id) VALUES ($new_proj_id, $id)");
                     $q = new myQuery("INSERT INTO (user_id, pref, prefval) VALUES ($id, 'default_project', $new_proj_id)");

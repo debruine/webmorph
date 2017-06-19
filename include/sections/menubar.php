@@ -12,6 +12,7 @@
             <?php
                 if ($_SESSION['user_id'] == 1) {
                     echo "            <li class='finder delineate average transform project' id='admin'>Admin</li>\n";
+                    echo "            <li class='finder delineate average transform project' id='reload_scripts'>Reload Scripts</li>\n";
                 }
             ?>
             <li class='finder delineate average transform project' id='prefs'

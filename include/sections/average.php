@@ -1,4 +1,9 @@
 <div id='averageInterface' class='interface'>
+    <p class="msg" data-msg_id="avg_drag">Average images by selecting them in 
+        the Finder and clicking the average button, or by double-clicking on the 
+        average face to add selected images to the list. (You can no longer drag 
+        images to the average face.)
+    </p>
     
     <ul id='avg_image_box' class='feature'>
         <li><img id='average'><ul id='average-list'></ul></li>

@@ -252,7 +252,7 @@ function userLoad() { console.log('userLoad()');
     // get rid of 3D login demo if made
     if ($('#d3_demo').data('d3')) {
         $('#d3_demo').data('d3').remove();
-        $('#d3_demo').data('d3') = null;
+        $('#d3_demo').data('d3', null);
         
         $('#d3_demo').addClass('feature').html('WebMorph now shows 3D faces!<br>(Double-click to demo)');
         $('#d3_demo_extras').hide().find('div.ui-slider').remove();

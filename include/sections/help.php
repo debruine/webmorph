@@ -1,11 +1,34 @@
 <!-- !- what's new Dialog -->
 <div id='whatsnewDialog' class='modal' title='What&apos;s New?'>
     <dl>
+        <dt>(19-06-2017) Dragging Finder Files</dt>
+        <dd>I've reinstated drag and drop, but will probably refine this in the 
+        future to get webmorph to work better with touch screens.</dd>
+        
+        <dt>(19-06-2017) Various Bug Fixes</dt>
+        <dd><ul>
+            <li>Fit points move with the image if you zoom during 3-point delineation.</li>
+            <li>Tem files are updated in the finder when you save a new delineation.</li>
+            <li>The refresh button has been moved away from the save button on the 
+            delineation page to prevent accidental refreshes.</li>
+            <li>Checkboxes were not showing as checked in Firefox on Windows. I think they're fixed now.</li>
+            <li>3-point delineation can now be undone/redone.</li>
+        </ul></dd>
+        
+        <dt>(10-03-2017) Dragging Finder Files</dt>
+        <dd>Dragging files in the finder to move 
+        them between folders was causing too many glitches, especially with touch 
+        screens, so I've removed this function. You can still move files between 
+        folders by selecting them, copying (<span class="cmd">C</span>) or cutting 
+        (<span class="cmd">X</span>) under the Edit menu, and pasting 
+        (<span class="cmd">V</span>) into the new folder. In the Average and 
+        Transform windows, double-click on the image boxes to load selected images.</dd>
+        
         <dt>(2017-02-27) 3D Images</dt>
         <dd>WebMorph now has limited support for 3D faces. You can upload OBJ 
         files and associated BMP or JPEG textures and view them in the delineator. 
         You can also morph between two objects that have the same geometry. I 
-        will add further functions soon. New projects contain two example OBJs 
+        will add further functions soon. New projects contain example OBJs 
         if you want to have a play.</dd>
         
         <dt>(2017-02-14) Masking Transparency and Blur</dt>

@@ -1,4 +1,9 @@
 <div id='transformInterface' class='interface'>
+    <p class="msg" data-msg_id="trans_drag">Transform images by selecting them in 
+        the Finder and double-clicking on the image to transform or transform 
+        dimension boxes. (You can no longer drag images to the boxes.)
+    </p>
+    
     <!-- DESTINATION IMAGES -->
     <ul id='destimages' class='feature'>
         <li>

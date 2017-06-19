@@ -947,7 +947,7 @@ function finder(dir) { console.debug('finder(' + (dir == undefined ? '' : dir) +
 }
 
 
-
+/* Finder draggable functions : maybe remove? */
 $("#finder").on('DOMNodeInserted', "li.file:not(.ui-draggable)", function() { 
     //console.debug('Draggable file: ' + $(this).attr('url'));
     var thisContainment = (WM.appWindow == 'finder') ? '#finder' : 'window';
@@ -981,19 +981,6 @@ $("#finder").on('DOMNodeInserted', "li.file:not(.ui-draggable)", function() {
             WM.pasteBoard = [];
             $finder.find('li.file').removeClass('to_cut'); // clear all to_cut files
         }
-/*    }).selectable({
-        selected: function(e,ui){
-            $(this).addClass('selected');
-        },
-        selecting: function(e,ui){
-            $(this).addClass('selected');
-        },
-        unselected: function(e,ui){
-            $(this).removeClass('selected');
-        },
-        unselecting: function(e,ui){
-            $(this).removeClass('selected');
-        }*/
     });
 });
 
@@ -1084,6 +1071,7 @@ $("#finder").on('DOMNodeInserted', "> ul li.folder > ul:not(.ui-droppable), li.f
         }
     });
 });
+/* End finder draggable functions */
 
 function loadFiles(selected_dir, subdir) { 
     console.log('loadFiles(' + selected_dir + ', ' + subdir + ')');

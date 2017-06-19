@@ -811,13 +811,19 @@
     </p>
     <p><img src="/include/images/demos/symscram" 
         style="float: left; margin-right: 5px;">
-        The image scrambling methods were first published in:<br>
+        The symmetric image scrambling methods were first published in:<br>
         CA Conway, BC Jones, LM DeBruine, AC Little & A Sahraie (2008). Transient 
         pupil constrictions to faces are sensitive to orientation and species. 
         <i>Journal of Vision</i>, 8(3): 17. 
         <a href="http://dx.doi.org/10.1167/8.3.17" target="_blank">doi: 10.1167/8.3.17</a>
     </p>
     <h3>To cite (or download) provided images</h3>
+    <p><img src="/include/images/demos/london2017.jpg"><br>
+        DeBruine, Lisa &amp; Jones, Benedict (2017). 
+        Face Research Lab London Set. <i>figshare</i>.
+        <a href="https://doi.org/10.6084/m9.figshare.5047666.v3"
+            target="_blank">doi: 10.6084/m9.figshare.5047666.v3</a>
+    </p>
     <p>
         <img src="/include/examples/f_african">
         <img src="/include/examples/f_easian">
@@ -829,13 +835,19 @@
         <img src="/include/examples/m_wasian">
         <img src="/include/examples/m_white">
         <img src="/include/examples/m_multi"><br>
-        DeBruine, Lisa (2016): Young adult composite faces. <i>figshare</i>. 
+        DeBruine, Lisa (2016). Young adult composite faces. <i>figshare</i>. 
         <a href="https://dx.doi.org/10.6084/m9.figshare.4055130.v1" 
-            target="_blank">dx.doi.org/10.6084/m9.figshare.4055130.v1</a>
+            target="_blank">doi: 10.6084/m9.figshare.4055130.v1</a>
+    </p>
+    <p><img src="/include/images/demos/canada2003.jpg"><br>
+        DeBruine, Lisa &amp; Jones, Benedict (2017). 
+        Young Adult White Faces with Manipulated Versions. <i>figshare</i>.
+        <a href="https://doi.org/10.6084/m9.figshare.4220517.v1"
+            target="_blank">doi: 10.6084/m9.figshare.4220517.v1</a>
     </p>
     <p><img src="/include/examples/_female_avg">
         <img src="/include/examples/_male_avg"><br>
-        DeBruine, L. M. &amp; Jones, B. C. (2015, October 13). Average Faces. 
+        DeBruine, L. M. &amp; Jones, B. C. (2015). Average Faces. 
         <i>Open Science Framework</i>. 
         <a href="http://osf.io/gzy7m " target="_blank">osf.io/gzy7m</a>
     </p>
