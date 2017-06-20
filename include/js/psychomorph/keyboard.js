@@ -247,11 +247,26 @@ $(document).mousedown(function(e) {                                             
             WM.current.lines.pop();
         } else {
             var t;
+            
+            $.each(WM.current.lines[line], function(idx, pt) {
+                var cp = WM.pts[pt].data('connectedPoints');
+                var cl = WM.pts[pt].data('connectedLines');
+                cl.push(line);
+                
+                WM.pts[pt].data({
+                    'connectedPoints': cp.concat(WM.current.lines[line]).distinct(),
+                    'connectedLines': cl.distinct()
+                });
+            });
 
             drawTem();
             t = 'New line finished [' + WM.current.lines[line].join() + ']';
             $('#footer-text').html(t).prop('data-persistent', t);
         }
+    } else if (e.which == KEYCODE.enter && WM.delinfunc == 'linesub') {         // !enter (end delete line)
+        WM.delinfunc = 'move';
+        cursor('auto');
+        quickhelp();
     } else if (e.which == KEYCODE.enter
                 && $finder.filter(':visible').length
                 && $finder.find('li.file.selected').length == 1) {              // !enter (finder visible & 1 file selected)

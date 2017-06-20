@@ -103,6 +103,84 @@ $.ajaxSetup({
     }
 });
 
+// check if an array a contains an item obj
+Array.prototype.contains = function(obj) {
+    for (var i = 0, n=this.length; i < n; i++) {
+        if (this === obj) {
+            return true;
+        }
+    }
+    return false;
+}
+
+// return an array of the distinct items in an array
+Array.prototype.distinct = function() {
+    var n = this.length;
+    var o = {};
+    
+    for (i = 0; i < n; i++) {
+        o[this[i]] = true;
+    }
+
+    return Object.keys(o);
+}
+
+Array.prototype.sum = function() {
+    return this.reduce(function (a, b) { return a + b; }, 0);
+}
+
+Array.prototype.mean = function() {
+    return this.sum() / this.length;
+}
+
+// pad a number with leading zeros (or other chararcter in 3rd argument
+String.prototype.pad = function(width, padder) {
+    var len;
+
+    padder = padder || '0';
+    len = this.length;
+    return (len >= width) ? this : new Array(width - len + 1).join(padder) + this;
+}
+Number.prototype.pad = function(width, padder) {
+    str = this + ''; // turn numbers into strings
+    return(str.pad(width, padder));
+}
+
+// round a number in apa style
+Number.prototype.round = function(decimals) {
+    var apa_decimals = 0,
+        v,
+        mult,
+        rounded;
+
+    v = Math.abs(this);
+    if (v < 0.0001) {
+        apa_decimals = 5;
+    } else if (v < 0.001) {
+        apa_decimals = 4;
+    } else if (v < 0.01) {
+        apa_decimals = 3;
+    } else if (v < 10) {
+        apa_decimals = 2;
+    } else if (v < 100) {
+        apa_decimals = 1;
+    }
+
+    decimals = decimals || apa_decimals;
+
+    mult = Math.pow(10, decimals);
+    rounded = Math.round(this * mult) / mult;
+    return rounded;
+}
+String.prototype.round = function(decimals) {
+    num = this*1; // turn strings into numbers
+    return(num.round(decimals));
+}
+
+// sort array of numbers (javascript defaults to sort as string)
+function sortNumber(a, b) {
+    return a - b;
+}
 
 // check if an array a contains an item obj
 function contains(a, obj) {
@@ -157,11 +235,6 @@ function round(original, decimals) {
     mult = Math.pow(10, decimals);
     rounded = Math.round(original * mult) / mult;
     return rounded;
-}
-
-// sort array of numbers (javascript defaults to sort as string)
-function sortNumber(a, b) {
-    return a - b;
 }
 
 // timed small notifications

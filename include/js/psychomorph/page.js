@@ -1468,7 +1468,7 @@ $('#newLine').click(function() {
 $('#deleteLine').click(function() {
     if (WM.delinfunc != 'linesub') {
         WM.delinfunc = 'linesub';
-        quickhelp('Click a line to delete it');
+        quickhelp('Click a point to delete the attached line (enter to stop)');
         cursor('linesub');
     }
 
@@ -2080,18 +2080,7 @@ $('#setPointLabels').not('.disabled').click(function() {
 $('#labelDialog ol').on('focus', 'input', function() {
     // point to and highlight the corresponding point when the label is in focus
     var n = parseInt($(this).attr('name'));
-
-    // unselect all points first
-    $('.pt').removeClass('selected');
-    var pt = WM.pts[n];
-    pt.addClass('selected');
-
-    var imgoffset = $delin.offset();
-    $('#pointer').css({
-        left: pt.position.left + imgoffset.left - 7 - $('#pointer').width(),
-        top: pt.position.top + imgoffset.top + 1 - $('#pointer').height()/2
-    }).show();
-
+    nextPointLabel(n)
 });
 
 // !#setSymPoints
@@ -2335,7 +2324,7 @@ $delin.on("click", ".pt", function(e) {
                      'y=<span class="y">' + thisy + '</span>';
     $('#footer-text').prop('data-persistent', $('#footer-text').html()).html(footertext);
 
-    if ((e.metaKey || e.ctrlKey) && WM.delinfunc != 'sym') {
+    if ((e.metaKey || e.ctrlKey || WM.delinfunc == 'linesub') && WM.delinfunc != 'sym') {
         var conPts = $(this).data('connectedPoints');
         $.each(conPts, function(i,pt) {
             WM.pts[pt].addClass('couldselect');
@@ -2361,7 +2350,7 @@ $delin.on("click", ".pt", function(e) {
     // remove point name and replace with whatever is in data-persistent
     $('#footer-text').html($('#footer-text').prop('data-persistent'));
     
-    if (e.metaKey || e.ctrlKey) {
+    if (e.metaKey || e.ctrlKey || WM.delinfunc == 'linesub') {
         var conPts = $(this).data('connectedPoints');
         $.each(conPts, function(i,pt) {
             WM.pts[pt].removeClass('couldselect');
@@ -2383,6 +2372,15 @@ $delin.on("mousedown", ".pt", function(e) {
             var t = 'Added a point to the new line [' + WM.current.lines[line].join() + ']';
             $('#footer-text').html(t).prop('data-persistent', t);
         }
+    } else if (WM.delinfunc == 'linesub') {
+        var conLines = $(this).data('connectedLines');
+        $.each(conLines, function(idx, line) {
+            //var nlines = WM.current.lines.length;
+            //WM.current.lines = WM.current.lines.splice(line, 1);
+            WM.current.lines[line] = [];
+        });
+        removeTemPoints([]);
+        
     /*} else if (WM.delinfunc == 'sym') {
         if (e.metaKey || e.ctrlKey) {
             nextSymPt($(this).attr('n'));

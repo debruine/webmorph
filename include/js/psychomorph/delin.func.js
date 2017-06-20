@@ -1175,7 +1175,7 @@ function removeTemPoints(ptArray) { console.log('removeTemPoints(' + ptArray.joi
             WM.current.lines.splice(i, 1);
             console.log("* Removed Line " + i);
         } else {
-            console.log("* Changed Line " + i + ": " + WM.current.lines[i].join());
+            console.log("* New Line " + i + ": " + WM.current.lines[i].join());
         }
     }
     updateUndoList();
@@ -1229,6 +1229,20 @@ function nextSymPt(i) {
             top: pt.offset().top - $('#pointer').height()/2 + pt.height()/2
         }).show();
     }
+}
+
+function nextPointLabel(n) {
+    // point to and highlight the corresponding point when the label is in focus
+    // unselect all points first
+    $('.pt').removeClass('selected').removeClass('highlighted');
+    var pt = WM.pts[n];
+    pt.addClass('highlighted');
+
+    var imgoffset = $delin.offset();
+    $('#pointer').css({
+        left: pt.offset().left - $('#pointer').width(),
+        top: pt.offset().top - $('#pointer').height()/2 + pt.height()/2
+    }).show();
 }
 
 function showHoverPoints() {
