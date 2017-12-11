@@ -40,7 +40,7 @@ if ($_SESSION['user_id'] !== 1) {
 <!-- START BODY -->
 
 <body>
- 
+<!-- 
     <div class="rainbow-loader">
 		<div><div></div></div>
 		<div><div></div></div>
@@ -49,7 +49,7 @@ if ($_SESSION['user_id'] !== 1) {
 		<div><div></div></div>
 		<div><div></div></div>
 	</div>
-
+-->
 	
 	<!--<div class="spinner"></div>-->
 <!--	
@@ -171,6 +171,7 @@ echo '<li>PHP Memory Allocated: ' .  formatBytes(memory_get_usage()) . ', peak: 
 echo '</ul>';
 
 // check Matrix functions service
+
 echo '<h3>Checking Matrix Functions</h3>';
 
 try {
@@ -228,11 +229,10 @@ try {
 
 	echo "</pre>";
 
-} catch (Exception $e) {
+} catch (Throwable $e) {
     // Handle exception
     echo $e;
 }
-
 
 if (isset($_GET['phpinfo'])) {
 	echo "<h3>PHP Info</h3>";

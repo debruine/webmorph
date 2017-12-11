@@ -56,18 +56,18 @@ function d3($container) {
             30, // fov
             that.width / that.height, // aspect
             0.1, // perspective near
-            2000 // perspective far
+            1000 // perspective far
         );
         
-        that.camera.position.z = 1500;
+        that.camera.position.z = 750;
         that.camera.zoom = that.zoom ;
         that.camera.updateProjectionMatrix();
         
         // add scene and lights
         that.scene = new THREE.Scene();
-        var ambient = new THREE.AmbientLight( 0xffffff, 1 );
+        var ambient = new THREE.AmbientLight( 0xffffff, 0.25 );
         that.scene.add( ambient );
-        that.directionalLight = new THREE.DirectionalLight( 0xffffff, 0.5 );
+        that.directionalLight = new THREE.DirectionalLight( 0xffffff, 0.75 );
         that.directionalLight.position.set( 0, 0.2, 1 );
         that.scene.add( that.directionalLight );
         
@@ -418,9 +418,11 @@ function d3($container) {
     }
     
     this.add = function(obj) {
-        that.scene.add(obj.object);
-        that.objects.push(obj);
-        that.updateObjList(obj);
+        if (obj.object !== null) {
+            that.scene.add(obj.object);
+            that.objects.push(obj);
+            that.updateObjList(obj);
+        }
     }
     
     this.remove = function(obj_i) {
@@ -571,6 +573,7 @@ function d3($container) {
         step = step / Math.sqrt(that.zoom);
         
         for (var i = 0; i < objects.length; i++) {
+            
             if (!that.lock.y && (direction == 'left' || direction == 'x')) {
                 objects[i].rotation[1] += step;
             } else if (!that.lock.y && direction == 'right') {
@@ -582,6 +585,7 @@ function d3($container) {
             } else if (!that.lock.z && direction == 'z') {
                 objects[i].rotation[2] += step;
             }
+            
             display += '<span class="obj-button">' + objects[i].button.text() + '</span> (' + 
                 + Math.round(objects[i].rotation[0]*100)/100 + ", "
                 + Math.round(objects[i].rotation[1]*100)/100 + ", "
@@ -999,12 +1003,9 @@ function d3Obj(filename, D3) {
     }
     
     this.loadGeometry = function(geometry) {
-        //that.object = new THREE.Object3D();
-        if (that.mesh == null) {
-            that.mesh = new THREE.Mesh(geometry, that.material);
-        } else {
-            that.mesh.geometry = geometry;
-        }
+        that.object = new THREE.Object3D();
+        that.object.children[0] = new THREE.Mesh(geometry, that.material);
+        that.mesh = that.object.children[0];
 
         var box = new THREE.Box3().setFromObject( that.mesh );
         that.originalSize = box.getSize();

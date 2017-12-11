@@ -130,17 +130,24 @@
     
     <h2>Citations</h2>
     
-    <p class="cite">DeBruine, L. M. &amp; Tiddeman, B. P. 
-        (<?= date("Y, F j", filemtime(DOC_ROOT . $_SERVER['PHP_SELF'])) ?>). 
-        <i>WebMorph</i>. Retrieved from http://<?= $_SERVER['SERVER_NAME'] ?>
-    </p>
+    <p class="cite">Lisa DeBruine. (2017, December 4). Webmorph (Version v0.0.0.9000). Zenodo. 
+        doi:<a href="https://doi.org/10.5281/zenodo.1073696">10.5281/zenodo.1073697</a> 
+        [access the code at <a href="https://github.com/debruine/webmorph">GitHub</a>]</p>
     
     <p class="cite">To cite the morphing and transforming methods, see 
         <a href="http://users.aber.ac.uk/bpt/jpsychomorph/" 
             target="_blank">Bernie Tiddeman's webpage</a>.
     </p>
     
-    <p class="cite" style="min-height: 140px;">
+    <p class="cite" style="min-height: 120px;">
+        <img src="/include/images/demos/london2017.jpg" style="float: left; margin-right: 5px; vertical-align:top;">
+        DeBruine, Lisa &amp; Jones, Benedict (2017). 
+        Face Research Lab London Set. <i>figshare</i>.
+        <a href="https://doi.org/10.6084/m9.figshare.5047666.v3"
+            target="_blank">doi: 10.6084/m9.figshare.5047666.v3</a>
+    </p>
+    
+    <p class="cite" style="min-height: 120px;">
         <img src="/include/images/demos/symscram" style="float: right; margin-left: 5px;">
         The symmetric image scrambling methods were first published in:<br>
         CA Conway, BC Jones, LM DeBruine, AC Little & A Sahraie (2008). Transient 

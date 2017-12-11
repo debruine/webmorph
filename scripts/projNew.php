@@ -73,7 +73,7 @@ try {
         
         $_SESSION['projects'][] = $new_proj_id;
     }
-} catch (Exception $e) {
+} catch (Throwable $e) {
     $return['error'] = true;
     $return['errorText'] .=  $e->getMessage();
 }

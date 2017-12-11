@@ -11,6 +11,7 @@
         <a onclick="$('#whatsnew').click();">What's New?</a> under 
         the Help menu.
     </p>
+        
     <p id="total_space">Your project list is loading. This will take 5-30 seconds, 
          depending on the size of your account.</p>
     

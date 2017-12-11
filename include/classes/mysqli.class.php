@@ -93,7 +93,7 @@ class myQuery {
                     throw new Exception($this->query . '<br />' . $db->error);
                 }
             }
-        } catch (Exception $e) {
+        } catch (Throwable $e) {
             if ($_SESSION['user_id'] == 1) { echo $e->getMessage(); }
             return false;
         }

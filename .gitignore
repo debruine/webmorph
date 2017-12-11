@@ -4,4 +4,6 @@ debug/avg4_debug.txt
 debug/trans4_init.txt
 debug/trans4_debug.txt
 include/config.php
+.DS_Store
 *.DS_Store
+demo/

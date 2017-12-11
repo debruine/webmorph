@@ -107,7 +107,7 @@ function addExif($filename, $exifdata) {
         $jpeg->saveFile($filename);
         
         return true;
-    } catch (Exception $e) {
+    } catch (Throwable $e) {
         // Handle exception
         echo $e;
     }

@@ -452,10 +452,15 @@
         <span>Help</span>
         <ul>
             <li class='finder delineate average transform login project' id='menuhelp'>Show Help Files</li>
-            <li class='finder delineate average transform login project' id='emailLisa'>Email Lisa</li>
+            <li class='finder delineate average transform login project emailLisa' subject='WebMorph'>Email Lisa</li>
             <li class='finder delineate average transform login project' id='whatsnew'>What's New?</li>
             <li class='finder delineate average transform login project' id='citation'>Citation</li>
         </ul>
+    </li>
+    <li class='menucategory'>
+        <span><a target="_blank" href="https://zenodo.org/badge/latestdoi/48229303">
+            <img style="vertical-align: text-bottom;" src="https://zenodo.org/badge/48229303.svg" alt="DOI: 10.5281/zenodo.1073697">
+        </a></span>
     </li>
     <li class='menucategory' id='menu_username'>
         <span></span>

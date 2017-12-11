@@ -780,6 +780,12 @@
 
 <!-- !- about Dialog -->
 <div id='aboutDialog' class='modal' title='About WebMorph'>
+    <h3>To cite WebMorph</h3>
+    
+    <p>Lisa DeBruine. (2017, December 4). Webmorph (Version v0.0.0.9000). Zenodo. doi:10.5281/zenodo.1073697 <a href="https://zenodo.org/badge/latestdoi/48229303"><img src="https://zenodo.org/badge/48229303.svg" alt="DOI"></a></p>
+    
+    <p>Access the code at <a href="https://github.com/debruine/webmorph">GitHub</a>.</p>
+
     <p>WebMorph is made possible by the kind help of 
         <a href="http://users.aber.ac.uk/bpt/" target="_blank">Bernie Tiddeman</a>, 
         who developed and maintains the desktop version of 
@@ -799,16 +805,13 @@
         <a href="https://github.com/debruine/webmorph" target="_blank">github.com/debruine/webmorph</a>.
     </p>
     
-    <h3>To cite WebMorph</h3>
-    <p>DeBruine, L. M. &amp; Tiddeman, B. P. 
-        (<?= date("Y, F j", filemtime(DOC_ROOT . $_SERVER['PHP_SELF'])) ?>). 
-        <i>WebMorph</i>. Retrieved from http://<?= $_SERVER['SERVER_NAME'] ?>
-    </p>
-    <p>Access the code at <a href="https://github.com/debruine/webmorph">GitHub</a>.</p>
+    <h3>Other citations</h3>
+    
     <p>To cite the morphing and transforming methods, see 
         <a href="http://users.aber.ac.uk/bpt/jpsychomorph/" 
             target="_blank">Bernie Tiddeman's webpage</a>.
     </p>
+    
     <p><img src="/include/images/demos/symscram" 
         style="float: left; margin-right: 5px;">
         The symmetric image scrambling methods were first published in:<br>

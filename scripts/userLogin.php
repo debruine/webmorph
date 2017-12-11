@@ -14,9 +14,9 @@ $password = my_clean($_POST['password']);
 if (empty($email)) {
     $return['error'] = true;
     $return['errorText'] .= '<li>' .$email . ' is an invalid email address</li>';
-} else if (empty($password)) {
-    $return['error'] = true;
-    $return['errorText'] .=  '<li>Your password is not valid</li>';
+//} else if (empty($password)) {
+//    $return['error'] = true;
+//    $return['errorText'] .=  '<li>Your password is not valid</li>';
 } else {
     $q = new myQuery("SELECT id, firstname, lastname, email, password, status FROM user WHERE LCASE(email)=LCASE('$email')");
     
@@ -34,11 +34,20 @@ if (empty($email)) {
             
             $return['error'] = true;
             $return['errorText'] .=  "<li>Your account has not been authorized yet. 
-                                        Because WebMorph is in alpha testing, we are limiting the number of users. 
-                                        You are number {$wait_list['me']} of {$wait_list['c']} on the wait list.</li>";
+                Because WebMorph is in alpha testing, we are limiting the number of users. 
+                <a class='emailLisa' subject='WebMorph Authorization'>Contact Lisa</a> 
+                if you have an urgent reason to access WebMorph (preference is given to academic users).
+                You are number {$wait_list['me']} of {$wait_list['c']} on the wait list.</li>";
         } else if ($res['status'] == 'disabled') {
             $return['error'] = true;
             $return['errorText'] .=  "<li>Your account has been disabled.</li>";
+        } else if ($res['status'] == 'rejected') {
+            $return['error'] = true;
+            $return['errorText'] .=  "<li>Your account has been rejected. This 
+                usually happens when your email is uncontactable or your account 
+                info seems like spam. 
+                <a class='emailLisa' subject='WebMorph Rejection'>Contact Lisa</a> 
+                if you think this was an error.</li>";
         } else if ($hash == $hash_check) {
             $return['user'] = $id;
             

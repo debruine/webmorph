@@ -174,7 +174,7 @@ class PsychoMorph_ImageTem {
         }
 
         $blur = ($blur < 0) ? 0 : ($blur > 30) ? 30 : $blur;
-        
+
         // imcrease image size for smoother masks
         // resize removes alpha transparency
         if ($rgba[3] != 0) {
@@ -187,7 +187,6 @@ class PsychoMorph_ImageTem {
             
             $this->resize($resize);
         }
-        
         
         //$original_image = $img->getImage();
         $tem = $this->_tem;
@@ -227,7 +226,8 @@ class PsychoMorph_ImageTem {
         
         imagefill($maskimg, 0, 0, $bgcolor); // fill with mask color
         
-        imageantialias($maskimg, true);
+        //imageantialias($maskimg, true);
+
         // construct sets of Bezier curves
         $polygons = array();
         foreach ($masks as $mask) {
@@ -253,7 +253,7 @@ class PsychoMorph_ImageTem {
             
             $polygons[] = $polygon;
         }
-        imageantialias($maskimg, false);
+        //imageantialias($maskimg, false);
         
         imagecopymerge($original_image, $maskimg, 0, 0, 0, 0, $original_width, $original_height, 100);
         

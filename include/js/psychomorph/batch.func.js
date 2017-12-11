@@ -1542,7 +1542,7 @@ function batchEdit() {
         $.each(rows, function(i, r) {
             var row = $('<tr />');
             var cols = r.replace(/ /g,'').split('\t');
-            
+
             if (cols.length != 10) {
                 row.css('background-color', '#fef1ec');
             }
@@ -1550,6 +1550,7 @@ function batchEdit() {
                 cols[j] = $.trim(cols[j]);
                 row.append('<td>' + cols[j] + '</td>');
             });
+
             batchData[i] = {
                 'image': WM.project.id + cols[0],
                 'align': cols[1],

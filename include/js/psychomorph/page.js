@@ -1450,6 +1450,19 @@ $('#fitTemplate').not('.disabled').click(function() {
     }
 });
 
+// use scroll wheel to resize in delineation window; this annoys Iris
+/*
+$('#template').get(0).addEventListener('wheel', function(e) {
+    e.preventDefault();
+    
+    var resize = $('#imgsize').slider('value') - e.deltaY;
+    if (resize > $('#imgsize').slider('option', 'max')) {
+        resize = $('#imgsize').slider('option', 'max');
+    }
+    $('#imgsize').slider('value', resize);
+}, false);
+*/
+
 // !#newLine
 $('#newLine').click(function() {
     if (WM.delinfunc != 'lineadd') {

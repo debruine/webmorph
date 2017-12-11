@@ -198,8 +198,8 @@ strong {
 }
 
 #usertable {
-    max-height: 300px;
-    scroll: auto;
+    max-height: auto;
+    overflow-y: scroll;
 }
 
 /***** TEXT LINKS *****/

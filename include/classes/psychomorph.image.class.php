@@ -469,7 +469,7 @@ class PsychoMorph_Image extends PsychoMorph_File {
             $jpeg->saveFile($filename);
             
             return true;
-        } catch (Exception $e) {
+        } catch (Throwable $e) {
             // Handle exception
             echo $e;
         }

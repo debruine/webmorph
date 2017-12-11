@@ -10,8 +10,16 @@
         and TEM files store their history. You can see the history in the Finder 
         under the preview image or template (only for new files; your old files 
         will not show a history). Let me know if there is other information that 
-        you would like about your files.  Information cannot be stored in GIF or 
+        you would like about your files. Information cannot be stored in GIF or 
         PNG images.
+    </p>
+    <p class="msg" data-msg_id="php7">We just upgraded from php5 to php7 and there 
+        have been a few uncaught bugs. The file upload problem is fixed now. Please 
+        let me know if you notice any further errors.
+    </p>
+    <p class="msg" data-msg_id="email_bug">I had some problems with registration 
+        and password reset emails not sending. I think that's been fixed, but let 
+        me know if you continue to have problems.
     </p>
         
     <input type="search" id="searchbar" name="searchbar" placeholder="Search for a file">
@@ -43,5 +51,6 @@
 
     <div id='finder' path='finder'></div>
     
-    <div id='lightTable'><div>Drag images here to view or compare them.<br>Drag images to reorder and double-click to remove them.</div></div>
+    <div id='lightTable'><div>Drag images here to view or compare them.<br>
+        Drag images to reorder and double-click to remove them.</div></div>
 </div>
