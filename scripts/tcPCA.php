@@ -33,7 +33,7 @@ $return = array(
 if (!perm('pca')) {
     $return['errorText'] .= 'You do not have permission to create a PCA';
 } else {
-    $url = 'http://' . $_SERVER["SERVER_NAME"] . '/tomcat/psychomorph/pca?';
+    $url = 'https://' . $_SERVER["SERVER_NAME"] . '/tomcat/psychomorph/pca?';
     
     // set up data
     $theData = $_POST['theData'];

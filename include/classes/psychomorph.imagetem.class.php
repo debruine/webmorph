@@ -403,7 +403,7 @@ class PsychoMorph_ImageTem {
             return false;
         }
         
-        $url = 'http://' . $_SERVER["SERVER_NAME"] . '/tomcat/psychomorph/trans?';
+        $url = 'https://' . $_SERVER["SERVER_NAME"] . '/tomcat/psychomorph/trans?';
         // get this user's default prefs from database
         $q = new myQuery("SELECT pref, prefval FROM pref WHERE user_id='{$_SESSION['user_id']}'");
         $myprefs = $q->get_assoc(false, 'pref', 'prefval');

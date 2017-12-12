@@ -15,7 +15,7 @@ $return = array(
 if (!perm('pca')) {
     $return['errorText'] .= 'You do not have permission to create a PC visualisation';
 } else {
-    $url = 'http://' . $_SERVER["SERVER_NAME"] . '/tomcat/psychomorph/pcvis?';
+    $url = 'https://' . $_SERVER["SERVER_NAME"] . '/tomcat/psychomorph/pcvis?';
     
     // set up data
     $theData = $_POST['theData'];

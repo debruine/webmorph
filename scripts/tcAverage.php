@@ -11,7 +11,7 @@ $return = array(
     'newFileName' => ''
 );
 
-$url = 'http://' . $_SERVER["SERVER_NAME"] . '/tomcat/psychomorph/avg?';
+$url = 'https://' . $_SERVER["SERVER_NAME"] . '/tomcat/psychomorph/avg?';
 
 $theData = $_POST['theData'];
 
