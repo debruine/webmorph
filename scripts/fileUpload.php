@@ -28,6 +28,16 @@ if (array_key_exists('basedir', $_POST)) {
 }
 $return['mydir'] = $mydir;
 
+$file_errors = array(
+    1 => "The uploaded file exceeds the maximum allowed of " . ini_get("upload_max_filesize"),
+    2 => "The uploaded file exceeds the MAX_FILE_SIZE directive that was specified in the HTML form.",
+    3 => "The uploaded file was only partially uploaded.",
+    4 => "No file was uploaded.",
+    6 => "Missing a temporary folder (this is an error with WebMorph).",
+    7 => "Failed to write file to disk (this is an error with WebMorph).",
+    8 => "A PHP extension stopped the file upload (this is an error with WebMorph)."
+);
+
 // reformat into sensible structure for iteration
 foreach ($_FILES['upload']['tmp_name'] as $i => $tmp_name) {
     $name = safeFileName($_FILES['upload']['name'][$i]);
@@ -43,10 +53,16 @@ foreach ($_FILES['upload']['tmp_name'] as $i => $tmp_name) {
             'type' => explode('/', $_FILES['upload']['type'][$i]),
             'size' => $size
         );
+    } else {
+        $return['errorText'] .= "$name had error " . $file_errors[$error];
     }
 }
 
 $return['files'] = $files;
+
+if (is_null($files) || count($files) == 0) {
+    $return['error'] = true;
+}
 
 foreach ($files as $file) {
     $newFileName = "{$mydir}{$file['name']}.{$file['ext']}";

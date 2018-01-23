@@ -272,7 +272,7 @@ function userLogout() { console.log('userLogout()');
                     url: 'scripts/userLogout',
                     success: function(data) {
                         WM.noOnBeforeUnload = true;
-                        location.href = location.pathname;
+                        location.href = location.pathname.replace("//", "/");
                     }
                 });
             }

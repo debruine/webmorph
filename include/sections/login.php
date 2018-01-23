@@ -3,6 +3,9 @@
     <table class='feature' id='loginBox'>
         <thead><tr><th colspan='2'>Log in to access WebMorph</th></tr></thead>
         <tbody>
+            <tr class='reg_item'>
+                <td></td>
+                <td class='smallnote'>Academic emails get priority authorization.</td>
             <tr>
                 <td><label for='login_email'>email</label></td>
                 <td><input type='email' id='login_email' placeholder='email' value='<?= $_COOKIE['email'] ?>' /></td>
@@ -15,10 +18,6 @@
                 Ask Lisa for an invite code if you would like to be a beta tester.'>
                 <td><label for='login_auth'>invite code</label></td>
                 <td><input type='text' id='login_auth' placeholder='invite code' /></td>
-            </tr>
-            <tr class='reg_item'>
-                <td><label for='reg_reason'>Why are you requesting a beta account?</label></td>
-                <td><textarea id='reg_reason' placeholder='Why do you want to use WebMorph? Beta accounts will be allocated based on this, so please do not leave it blank.'></textarea></td>
             </tr>
             <tr class='reg_item'>
                 <td></td>
@@ -62,6 +61,10 @@
                     <input type='checkbox' id='reg_use_personal' name='reg_use_personal' value='personal' />
                     <label for='reg_use_personal'>personal</label>
                 </div></td>
+            </tr>
+            <tr class='reg_item'>
+                <td><label for='reg_reason'>Why are you requesting a beta account?</label></td>
+                <td><textarea id='reg_reason' placeholder='Why do you want to use WebMorph? This helps us prioritize new features.'></textarea></td>
             </tr>
             <tr class='reg_item'>
                 <td colspan='2' class='smallnote' style='text-align:left;'>
