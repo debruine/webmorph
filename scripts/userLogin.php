@@ -68,7 +68,7 @@ if (empty($email)) {
                 $new_proj_id = $q->get_insert_id();
                 $mydir = IMAGEBASEDIR . $new_proj_id;
                 
-                if ($new_proj_id > 1 && !mkdir($mydir, DIRPERMS)) {
+                if ($new_proj_id > 0 && !mkdir($mydir, DIRPERMS)) {
                     $return['error'] = true;
                     $return['errorText'] .=  '<li>Your default image directory could not be created</li>';
                     $q->set_query("DELETE FROM project WHERE id={$new_proj_id}");
@@ -98,14 +98,16 @@ if (empty($email)) {
                         copy(DOC_ROOT . "/include/examples/{$face}.tem", "{$mydir}/composites/{$face}.tem");
                     }
                     
-                    copy(DOC_ROOT . "/include/3d/female_avg.jpg", "{$mydir}/3d/average_easian_female.jpg");
-                    copy(DOC_ROOT . "/include/3d/female_avg.obj", "{$mydir}/3d/average_easian_female.obj");
-                    copy(DOC_ROOT . "/include/3d/male_avg.jpg", "{$mydir}/3d/average_easian_male.jpg");
-                    copy(DOC_ROOT . "/include/3d/male_avg.obj", "{$mydir}/3d/average_easian_male.obj");
-                    copy(DOC_ROOT . "/include/3d/female_avg.jpg", "{$mydir}/3d/average_white_female.jpg");
-                    copy(DOC_ROOT . "/include/3d/female_avg.obj", "{$mydir}/3d/average_white_female.obj");
-                    copy(DOC_ROOT . "/include/3d/male_avg.jpg", "{$mydir}/3d/average_white_male.jpg");
-                    copy(DOC_ROOT . "/include/3d/male_avg.obj", "{$mydir}/3d/average_white_male.obj");
+                    copy(DOC_ROOT . "/include/3d/average_easian_female.jpg", "{$mydir}/3d/average_easian_female.jpg");
+                    copy(DOC_ROOT . "/include/3d/average_easian_female.obj", "{$mydir}/3d/average_easian_female.obj");
+                    copy(DOC_ROOT . "/include/3d/average_easian_male.jpg", "{$mydir}/3d/average_easian_male.jpg");
+                    copy(DOC_ROOT . "/include/3d/average_easian_male.obj", "{$mydir}/3d/average_easian_male.obj");
+                    copy(DOC_ROOT . "/include/3d/average_white_female.jpg", "{$mydir}/3d/average_white_female.jpg");
+                    copy(DOC_ROOT . "/include/3d/average_white_female.obj", "{$mydir}/3d/average_white_female.obj");
+                    copy(DOC_ROOT . "/include/3d/average_white_male.jpg", "{$mydir}/3d/average_white_male.jpg");
+                    copy(DOC_ROOT . "/include/3d/average_white_male.obj", "{$mydir}/3d/average_white_male.obj");
+                    
+                    
                     
                     copy(DOC_ROOT . '/include/examples/webmorph_template_batchAvg.txt', $mydir . '/_batchAvg_template.txt');
                     copy(DOC_ROOT . '/include/examples/webmorph_template_batchTrans.txt', $mydir . '/_batchTrans_template.txt');

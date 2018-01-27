@@ -66,7 +66,8 @@ if ($_SESSION['user_id'] != 1) {
                              DATE(regdate) as "Date Registered",
                              ROUND(SUM(size)/1024/1024/1024/1024, 2) as "Size (GB)",
                              COUNT(img.id) as Images,
-                             IF(status+0<3, "<span class=\"tinybutton\">AUTH</span>", "<span class=\"tinybutton\">DE-AUTH</span>") as Authorise
+                             IF(status+0<3, "<span class=\"tinybutton\">AUTH</span>", "<span class=\"tinybutton\">DE-AUTH</span>") as Authorise,
+                             "<input type=\"checkbox\">" as Batch
                       FROM user
                       LEFT JOIN project ON user.id=project.user_id
                       LEFT JOIN img ON img.project_id = project.id
