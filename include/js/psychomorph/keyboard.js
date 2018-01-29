@@ -179,7 +179,7 @@ $(document).mousedown(function(e) {                                             
         } else if (e.which == KEYCODE.s) {                                      // !cmd-s
             $('#save').click();
         } else if (e.shiftKey && e.which == KEYCODE.t) {                        // !shift-cmd-T
-            $('#batchTransform').click();
+            $('#batchTrans').click();
         } else if (e.which == KEYCODE.t) {                                      // !cmd-t
             $('#toggletem').click();
         } else if (e.shiftKey && e.which == KEYCODE.u) {                        // !shift-cmd-U

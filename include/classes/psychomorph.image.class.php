@@ -11,7 +11,7 @@
  
  require_once 'psychomorph.file.class.php';
  include_once 'png_reader.class.php';
- include_once('PEL/src/PelJpeg.php');
+ include_once('PEL/PelJpeg.php');
  
 function mean($values) {
     // return the mean of an array of values
@@ -821,7 +821,8 @@ class PsychoMorph_Image extends PsychoMorph_File {
         meanDeltaE = mean(sqrt(sum(squaredDifference')))
         maxDeltaE = max(sqrt(sum(squaredDifference')))
         **************************************************/
-        include_once "Math/Matrix.php";
+        //include_once "Math/Matrix.php";
+        include_once $_SERVER['DOCUMENT_ROOT'] . "/include/classes/Math/Matrix.php";
         
         foreach ($colours as $v) {
             $spectrod65[] = array($v[2], $v[3], $v[4]);

@@ -16,6 +16,10 @@ $url = 'https://' . $_SERVER["SERVER_NAME"] . '/tomcat/psychomorph/avg?';
 $theData = $_POST['theData'];
 
 $ch = curl_init();
+if ($_SERVER['SERVER_NAME'] == 'webmorph.test') {
+    // workaround for local server problem with self-signed certificates
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+}
 curl_setopt($ch, CURLOPT_URL, $url);
 curl_setopt($ch, CURLOPT_POST, true);
 curl_setopt($ch, CURLOPT_POSTFIELDS, serializeForTomcat($theData));

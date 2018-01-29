@@ -201,7 +201,7 @@
                 Batch Average
                 <span class="shortcut shiftcmd">A</span>
             </li>
-            <li class='delineate finder average transform no-read-only' id='batchTransform'
+            <li class='delineate finder average transform no-read-only' id='batchTrans'
                 title="Make several transforms using a text file to specify images and settings">
                 Batch Transform
                 <span class="shortcut shiftcmd">T</span>

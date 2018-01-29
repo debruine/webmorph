@@ -8,6 +8,21 @@ if (navigator.userAgent.indexOf('Mac OS X') != -1) {                            
 
 $.Finger.pressDuration == 1000;
 
+$(document).on('dblclick', '.ui-dialog-titlebar', function() { 
+    console.log('dblclicky');
+    var $mydialog = $(this).next('.ui-dialog-content');
+    var $buttons = $(this).closest('.ui-dialog').find('.ui-dialog-buttonpane');
+    var myheight = $mydialog.dialog("option", "height"); 
+    if (myheight == 0) {
+        $mydialog.dialog("option", "height", $mydialog.data("myheight"));
+        $buttons.show();
+    } else {
+        $mydialog.dialog("option", "height", 0);
+        $mydialog.data("myheight", myheight);
+        $buttons.hide();
+    }
+});
+
 // ! ****** Contextmenu ******
 $(document).on('contextmenu', '#finder *, #delin, #threeD', function(e) {
     e.preventDefault();
@@ -955,8 +970,8 @@ $('#download').not('.disabled').click(function() {
 });
 
 $('.download_file').click(function(e) {
-    postIt('scripts/fileZip', {
-        'files': $(this).data('src')
+    postIt('scripts/fileDownload', {
+        'file': $(this).data('src')
     });
 });
 
@@ -1834,9 +1849,9 @@ $('#batchAverage').not('.disabled').click(function() {
     batchAverage();
 });
 
-// !#batchTransform
-$('#batchTransform').not('.disabled').click(function() {
-    batchTransform();
+// !#batchTrans
+$('#batchTrans').not('.disabled').click(function() {
+    batchTrans();
 });
 
 // !#temVis
@@ -1874,9 +1889,115 @@ $('#tem_point_style').change(function() {
     }
 });
 
+
 $('#tem_point_style').trigger('change');
 // !#batch*Dialog
-$('#batchTransDialog, #batchEditDialog, #batchAvgDialog').delegate('textarea', 'keydown', function(e) {
+$('.batchDialog table thead th, .batchDialog table thead th').resizable({
+    handles: "e",
+    minHeight: 30,
+    maxHeight: 30,
+    minWidth: 20
+});
+
+$('.batchDialog table').on('keydown', 'textarea', function(e) {
+    if (e.which == KEYCODE.enter) {
+        e.preventDefault();
+        $(this).blur();
+        
+        var start_col   = $(this).closest('td').index();
+        console.log(start_col);
+        
+        $(this).closest('tr').next('tr').find('td').eq(start_col).find('textarea').focus();
+        
+    }
+});
+
+$('#batchEditDialog table').on('blur', 'textarea', function() {
+    var v = this.value;
+    if (~v.indexOf("\t") || ~v.indexOf("\n")) {
+        var $be = $('#batchEditDialog table tbody');
+        var start_col   = $(this).closest('td').index();
+        var start_row   = $(this).closest('tr').index();
+        
+        var header = "image	align	resize	rotate	crop	mask	sym	mirror	order	outname";
+        var rows = v.replace(header,'').trim().split('\n');
+        
+        $.each(rows, function(i, r) {
+            var row_n = start_row + i;
+            
+            if (row_n + 1 > $be.find('tr').length) {
+                $be.append('<tr>' +
+                    '<td><textarea></textarea></td>' +
+                    '<td><textarea></textarea></td>' +
+                    '<td><textarea></textarea></td>' +
+                    '<td><textarea></textarea></td>' +
+                    '<td><textarea></textarea></td>' +
+                    '<td><textarea></textarea></td>' +
+                    '<td><textarea></textarea></td>' +
+                    '<td><textarea></textarea></td>' +
+                    '<td><textarea></textarea></td>' +
+                    '<td><textarea></textarea></td>' +
+                    '</tr>');
+            }
+            
+            var cols = r.replace(/ /g,'').split('\t');
+            $.each(cols, function(j, c) {
+                var col_n = start_col + j;
+                
+                $be.find('tr').eq(row_n).find('td').eq(col_n).find('textarea').val(c);
+            });
+            
+        });
+    }
+    
+    batchEditCheck();
+});
+
+$('#batchTransDialog table').on('blur', 'textarea', function() {
+    var v = this.value;
+    if (~v.indexOf("\t") || ~v.indexOf("\n")) {
+        var $be = $('#batchTransDialog table tbody');
+        var start_col   = $(this).closest('td').index();
+        var start_row   = $(this).closest('tr').index();
+        
+        var header = "trans-img\tfrom-img\tto-img\tshape\tcolor\ttexture\toutname";
+        var rows = v.replace(header,'').trim().split('\n');
+        
+        $.each(rows, function(i, r) {
+            var row_n = start_row + i;
+            
+            if (row_n + 1 > $be.find('tr').length) {
+                $be.append('<tr>' +
+                    '<td><textarea></textarea></td>' +
+                    '<td><textarea></textarea></td>' +
+                    '<td><textarea></textarea></td>' +
+                    '<td><textarea></textarea></td>' +
+                    '<td><textarea></textarea></td>' +
+                    '<td><textarea></textarea></td>' +
+                    '<td><textarea></textarea></td>' +
+                    '</tr>');
+            }
+            
+            var cols = r.replace(/ /g,'').split(',');
+            //var cols = $.trim(r).split(',');
+            // check if tab-delimited
+            if (cols.length == 1) {
+                //cols = $.trim(r).split('\t');
+                cols = r.replace(/ /g,'').split('\t');
+            }
+            $.each(cols, function(j, c) {
+                var col_n = start_col + j;
+                
+                $be.find('tr').eq(row_n).find('td').eq(col_n).find('textarea').val(c);
+            });
+            
+        });
+    }
+    
+    batchTransCheck();
+});
+
+$('#batchAvgDialog').delegate('textarea', 'keydown', function(e) {
     if (e.which == KEYCODE.tab || e.which == KEYCODE.enter) {
         e.preventDefault();
         var start = $(this).get(0).selectionStart;
@@ -2196,7 +2317,7 @@ $('#transButton').button().click(function() {
                          shape + "\t" + color + "\t" + texture + "\t" + newimg + "\n";
         });
 
-        $('#batchTransform').click();
+        $('#batchTrans').click();
         $('#batchTransDialog textarea').val(batchText.trim()).show();
     } else {
         getTransform({async: true});
@@ -2602,8 +2723,19 @@ $("#showDelinHelp").button({
     icons: { primary: "ui-icon-help" }
 }).click(function() {
     $('#delinHelp').dialog({
-        position: { my: 'right top', at: 'right bottom', of: $('#menubar') },
-        width: 450
+        position: { my: 'right top', at: 'right bottom', of: $('#delin_toolbar') },
+        width: 450,
+        modal: false
+    });
+});
+$("#showDelinExample").button({
+    text: false,
+    icons: { primary: "ui-icon-help" }
+}).click(function() {
+    $('#delinExample').dialog({
+        position: { my: 'right top', at: 'right bottom', of: $('#delin_toolbar') },
+        width: 330,
+        modal: false
     });
 });
 $('.buttonset').buttonset();

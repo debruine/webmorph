@@ -41,6 +41,7 @@
         </span>
         <span class='buttonset twoD'>
             <button id="showDelinHelp">Show Delineation Help</button>
+            <button id="showDelinExample">Show Delineation Example</button>
         </span>
         <span class="twoD">
             <div id='imgsize'></div>

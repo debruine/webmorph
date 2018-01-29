@@ -866,6 +866,13 @@ body .ui-tooltip {
 .ui-widget-header .ui-state-highlight a {
 	color: #363636;
 }
+.ui-state-ok, 
+.ui-widget-content .ui-state-ok, 
+.ui-widget-header .ui-state-ok {
+	border: 1px solid #339933; 
+	background: #eeffee url("images/ui-bg_glass_75_e3e6e8_1x400.png") 50% 50% repeat-x;
+	color: #339933; 
+}
 .ui-state-error,
 .ui-widget-content .ui-state-error,
 .ui-widget-header .ui-state-error {

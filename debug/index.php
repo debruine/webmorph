@@ -174,9 +174,11 @@ echo '</ul>';
 
 echo '<h3>Checking Matrix Functions</h3>';
 
+
+
 try {
-	include_once "Math/Matrix.php";
-	
+    include_once $_SERVER['DOCUMENT_ROOT'] . "/include/classes/Math/Matrix.php";
+    
 	$xorig = array(0 => 165.659, 1 => 284.339, 96 => 225.359);
 	$yorig = array(0 => 275.234, 1 => 275.231, 96 => 407.61);
 	
@@ -189,6 +191,7 @@ try {
 	
 	$xnew = array(170.0, 280.0, 222.0);
 	$ynew = array(270.0, 270.0, 402.0);
+	
 	
 	// identical to original, test to make sure
 	// a = 1, b = 0, c = 0, d = 0, e = 1, f = 0
@@ -212,7 +215,7 @@ try {
 	$m1 = $m->cloneMatrix();
 	$x = Math_Matrix::solve($m1, $xvector);
 	$a = round($x->get(0), 3);
-	$b = round($x->get(1), 3);
+ 	$b = round($x->get(1), 3);
 	$c = round($x->get(2), 3);
 	
 	$m2 = $m->cloneMatrix();
@@ -220,6 +223,7 @@ try {
 	$d = round($y->get(0), 3);
 	$e = round($y->get(1), 3);
 	$f = round($y->get(2), 3);
+
 	
 	echo "Calculated Solution (correct answers in parentheses)\na =  $a ( 0.927)\nb = $b (-0.025)\nc = $c (23.388)\nd =  $d     ( 0.000)\ne =  $e ( 0.997)\nf = $f (-4.453)\n\n";
 	

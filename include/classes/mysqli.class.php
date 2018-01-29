@@ -202,7 +202,9 @@ class myQuery {
     
     function get_one($row=0, $col=0) {
         $a = $this->get_row($row);
-        if (array_key_exists($col, $a)) {
+        if (!is_array($a)) {
+            return "Row <code>$row</code> does not exist";
+        } elseif (array_key_exists($col, $a)) {
             return $a[$col];
         } else {
             $keys = array_keys($a);

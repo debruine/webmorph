@@ -472,7 +472,7 @@
 </div>
 
 <!-- !- batchEditDialog -->
-<div id='batchEditDialog' class='modal'>
+<div id='batchEditDialog' class='modal batchDialog'>
     <p>Paste your batch file into the box below (<a class='download_file' 
         data-src='/include/examples/webmorph_template_batchEdit.txt'>download template</a>). 
         Color is optional and in the form of <code>rgb(R,G,B)</code> or <code>transparent</code>.</p>
@@ -507,11 +507,10 @@
             <tbody></tbody>
         </table>
     </div>
-    <textarea></textarea>
 </div>
 
 <!-- !- batchTransDialog -->
-<div id='batchTransDialog' class='modal'>
+<div id='batchTransDialog' class='modal batchDialog'>
     <p>Paste your batch file into the box below (<a class='download_file' 
         data-src='/include/examples/webmorph_template_batchTrans.txt'>download template</a>). 
         Your text can be tab-delimited (paste from excel) or comma-delimited (CSV). 
@@ -523,11 +522,10 @@
             <tbody></tbody>
         </table>
     </div>
-    <textarea></textarea>
 </div>
 
 <!-- !- batchAvgDialog -->
-<div id='batchAvgDialog' class='modal'>
+<div id='batchAvgDialog' class='modal batchDialog'>
     <p>Paste your batch file into the box below (<a class='download_file' 
         data-src='/include/examples/webmorph_template_batchAvg.txt'>download template</a>). 
         Put the name of each average on the first row and the images in the 
@@ -769,6 +767,11 @@
         <li><span class="cmd">L</span> to start drawing a new line. Click 'enter' to end the line.</li>
         <li><span class="shiftcmd">L</span> to delete a line.</li>
     </ul>    
+</div>
+
+<!-- !- delinExample Dialog -->
+<div id='delinExample' class='modal' title='Delineation Example'>
+    <div id='delin_example' class='twoD'><canvas id='template_example' width="300" height="400"></canvas></div>
 </div>
 
 <!-- !- webcam Dialog -->

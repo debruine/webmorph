@@ -432,6 +432,10 @@ class PsychoMorph_ImageTem {
         }
         $query = implode('&', $paramsJoined);
         $ch = curl_init();
+        if ($_SERVER['SERVER_NAME'] == 'webmorph.test') {
+            // workaround for local server problem with self-signed certificates
+            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        }
         curl_setopt($ch, CURLOPT_URL, $url . $query);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 60);
