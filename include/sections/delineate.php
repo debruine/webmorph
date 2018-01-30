@@ -11,43 +11,64 @@
     <img id='mouth' src='/include/images/delin/3delin.svg' />
     
     <div id="selectBox"></div>
-    
-    <p class="msg" data-msg_id="download_delineations2" style="margin-top:2em">
-        If you right-click on a delineated image below, you 
-        can now see a contextual menu to download SVG files of the delineation 
-        (all, lines only, points only, or numbered points). Open this file in a 
-        text editor to see how easily you can change the line and points colours 
-        and widths. Drag the file into a web browser to view it.</p>
-    
     <!-- toolbar -->
+    <div id="toolbar_switcher"></div>
     <div id="delin_toolbar" class="toolbar">
         <span class='buttonset'>
             <button id='delin_close' class='ui-dialog-titlebar-close'>Close Toolbar</button>
         </span>
         <span class='buttonset'>
-            <button id="delin_zoomout">Zoom Out  (&#8984;-)</button>
-            <button id="delin_zoomoriginal">Original Size (&#8984;0)</button>
-            <button id="delin_zoomin">Zoom In (&#8984;+)</button>
-            <button id="delin_fitsize">Fit to Window (&#8984;M)</button>
+            <button class="wm" id="delin_zoomout">Zoom Out  (&#8984;-)</button>
+            <button class="wm" id="delin_zoomin">Zoom In (&#8984;+)</button>
+            <button class="wm" id="delin_zoomoriginal">Original Size (&#8984;0)</button>
+            <button class="wm" id="delin_center" class="threeD">Center</button>
+            <button class="wm" id="delin_fitsize">Fit to Window (&#8984;M)</button>
         </span>
         <span class='buttonset'>
+            <button class="wm" id="delin_delete">Delete (&#8984;&#x232b;)</button>
+        </span>
+        <span class='buttonset twoD'>
             <button id="delin_undo">Undo (&#8984;Z)</button>
             <button id="delin_redo">Redo (&#8679;&#8984;Z</span>)</button>
         </span>
-        <span class='buttonset'>
-            <button id="delin_refresh">Refresh (&#8984;R)</button>
+        <span class='buttonset twoD'>
             <button id="delin_save">Save (&#8984;S)</button>
         </span>
-        <span class='buttonset'>
+        <span class='buttonset twoD'>
             <button id="delin_prev">Previous Image (&#8984;&#8592;)</button>
+            <button id="delin_refresh">Refresh (&#8984;R)</button>
             <button id="delin_next">Next Image (&#8984;&#8594;)</button>
         </span>
-        <span class='buttonset'>
+        <span class='buttonset twoD'>
             <button id="showDelinHelp">Show Delineation Help</button>
+            <button id="showDelinExample">Show Delineation Example</button>
         </span>
-        <div id='imgsize'></div>
-        <span id='size_value'></span>&nbsp;px 
-        <span id='quickhelp'></span>
+        <span class="twoD">
+            <div id='imgsize'></div>
+            <span id='size_value'></span>&nbsp;px
+            <span id='quickhelp'></span>
+        </span>
+        <span class="buttonset threeD">
+            <!--<button class="wm" id="d3_sethue">Face Color</button>-->
+            <button class="wm" id="d3_wireframe">Wireframe</button>
+            <button class="wm" id="d3_texture">Texture</button>
+            <button class="wm" id="d3_light">Shading</button>
+        </span>
+        
+        <span class="buttonset threeD">
+            <button class="wm" id="d3_lock_x">X</button>
+            <button class="wm" id="d3_lock_y">Y</button>
+            <!--<button class="wm" id="d3_lock_z">Z</button>-->
+        </span>
+        
+        <span class="buttonset threeD">
+            <button class="wm" id="d3_morph">Morph</span>
+            <button class="wm" id="d3_spin">Disco</button>
+            <button class="wm" id="d3_hologram">Hologram</button>
+            <button class="wm" id="d3_debug">Debug</button>
+        </span>
+        <span class="threeD" id="obj_switcher">
+        </span>
     </div>
     
     <div id="mask_builder_box">
@@ -57,5 +78,6 @@
     </div>
 
     <!-- image -->
-    <div id='delin'><canvas id='template' width="300" height="400"></canvas></div>
+    <div id='delin' class='twoD'><canvas id='template' width="300" height="400"></canvas></div>
+    <div id="threeD" class='threeD'></div>
 </div>

@@ -14,7 +14,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . '/include/main_func.php';
     <!--<meta name='verify-v1' content='oCEvWF1olBQ+/+nyyAZfRnSeVVGeEVlD0Qw8aHTRvAU=' />-->
     <meta property='og:site_name' content='WebMorph'/>
     <meta property='og:image' content='/include/images/logo.png'/>
-    <meta name="viewport" id="vp" content="initial-scale=1.0,user-scalable=no,maximum-scale=1" />
+    <meta name="viewport" id="vp" content="user-scalable=no, width=device-width, initial-scale=1, maximum-scale=1">
     <meta name='apple-mobile-web-app-capable' content='yes' />
     <link rel='apple-touch-startup-image' href='/include/images/logo.png' />
     <link rel='apple-touch-startup-image' sizes='640x920' href='/include/images/logo@2x.png' />
@@ -71,6 +71,16 @@ require_once $_SERVER['DOCUMENT_ROOT'] . '/include/main_func.php';
 
 <div data-role='footer'>
     <footer id='footer'><span id='footer-text' data-persistent=''></span><span id='imgname'></span></footer>
+    <div id="toggleMenu" title="Toggle navigation">
+        <ul id="quickSwitch">
+            <li data-window="menu" title="Full Menu"></li>
+            <li data-window="finder" title="Finder">Fi</li>
+            <li data-window="delineate" title="Delineate">De</li>
+            <li data-window="average" title="Average">Av</li>
+            <li data-window="transform" title="Transform">Tr</li>
+            <li data-window="project" title="Projects">Pr</li>
+        </ul>
+    </div>
 </div>
 
 </div><!-- /page -->
@@ -81,6 +91,9 @@ require_once $_SERVER['DOCUMENT_ROOT'] . '/include/main_func.php';
 <script src='<?= JQUERYUI ?>'></script>
 <script src='/include/js/jquery/jquery-finger-0.1.2.js'></script>
 <script src='/include/js/jquery/jquery.ui.touch-punch.min.js'></script>
+<script src='/include/js/three/three.min.js'></script>
+<script src='/include/js/three/loaders/OBJLoader.js'></script>
+<script src='/include/js/three/threex/stats.js'></script>
 <script src='/include/js/psychomorph/vars.js'></script>
 <?php if (LOGGEDIN) echo "<script>WM.user.id = {$_SESSION['user_id']};</script>\n"; ?>
 
@@ -93,8 +106,9 @@ require_once $_SERVER['DOCUMENT_ROOT'] . '/include/main_func.php';
 <script src='/include/js/psychomorph/morph.func.js'></script>
 <script src='/include/js/psychomorph/project.func.js'></script>
 <script src='/include/js/psychomorph/user.func.js'></script>
+<script src='/include/js/psychomorph/three.func.js'></script>
+<script src='/include/js/psychomorph/keyboard.js'></script>
 <script src='/include/js/psychomorph/page.js'></script>
-
 
 <?php if (!DEBUG) {
 /*

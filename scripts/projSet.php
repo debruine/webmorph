@@ -16,8 +16,8 @@ $q = new myQuery("SELECT perm
                   FROM project_user
                   WHERE user_id='{$_SESSION['user_id']}'
                     AND project_id='{$proj_id}'");
-
-if ($q->get_num_rows() == 1) {
+$return['query'] = $q->get_query();
+if ($q->get_num_rows() > 0) {
     $return['perm'] = $q->get_one();                   
     $_SESSION['project_id'] = $proj_id;
 } else {

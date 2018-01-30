@@ -2,6 +2,7 @@
 
 require_once $_SERVER['DOCUMENT_ROOT'] . '/include/main_func.php';
 auth();
+session_write_close();
 checkAllocation();
 
 function imgEdit($edit, $data, $img) {
@@ -166,8 +167,9 @@ function imgEdit($edit, $data, $img) {
                 }
                 
                 $blur = $mask[2];
-
+                $reverse = false;
                 $custom = null;
+                
                 if (preg_match('/^(?:[a-z_]+,)*[a-z_]+$/i', $mask[1])) {
                     $masks = explode(',', $mask[1]);
                     $possible_masks = array("oval", "face", "neck", 
@@ -175,10 +177,13 @@ function imgEdit($edit, $data, $img) {
                                             "left_ear", "right_ear", 
                                             "left_eye", "right_eye", 
                                             "left_brow", "right_brow", 
-                                            "mouth", "teeth", "nose");
+                                            "mouth", "teeth", "nose",
+                                            "reverse");
                     foreach($masks as $i => $m) {
                         if (!in_array($m, $possible_masks)) {
                             return false;
+                        } else if ($m == 'reverse') {
+                            $reverse = true;
                         } else if ($m == 'ears') {
                             $masks[$i] = 'left_ear';
                             $masks[] = 'right_ear';
@@ -204,7 +209,7 @@ function imgEdit($edit, $data, $img) {
                 }
 
                 ini_set('max_execution_time', 30*($blur+1));
-                $img->mask($masks, $rgba, $blur, $custom);
+                $img->mask($masks, $rgba, $blur, $reverse, $custom);
                 return true;
             }
             
@@ -281,7 +286,7 @@ if ($image) {
     $img->setOverWrite(false);
     if ($img->save($newFileName)) {
         $return['error'] = false;
-        $return['newFileName'] = $img->getImg()->getURL();
+        $return['newFileName'] = $img->getURL();
     } else {
         $return['errorText'] .= 'The image was not saved. ';
     }

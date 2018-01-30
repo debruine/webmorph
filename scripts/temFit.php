@@ -5,7 +5,8 @@
 require_once $_SERVER['DOCUMENT_ROOT'] . '/include/main_func.php';
 auth();
 
-include_once "Math/Matrix.php";
+//include_once "Math/Matrix.php";
+include_once $_SERVER['DOCUMENT_ROOT'] . "/include/classes/Math/Matrix.php";
 
 $temPoints = $_POST['temPoints'];
 $eyeclicks = $_POST['eyeclicks'];
@@ -25,13 +26,13 @@ $xvector = new Math_Vector($xnew);
 $yvector = new Math_Vector($ynew);
 
 $m1 = $m->cloneMatrix();
-$x = @Math_Matrix::solve($m1, $xvector);
+$x = Math_Matrix::solve($m1, $xvector);
 $a = round($x->get(0), 3);
 $b = round($x->get(1), 3);
 $c = round($x->get(2), 3);
 
 $m2 = $m->cloneMatrix();
-$y = @Math_Matrix::solve($m2, $yvector);
+$y = Math_Matrix::solve($m2, $yvector);
 $d = round($y->get(0), 3);
 $e = round($y->get(1), 3);
 $f = round($y->get(2), 3);

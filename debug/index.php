@@ -40,7 +40,7 @@ if ($_SESSION['user_id'] !== 1) {
 <!-- START BODY -->
 
 <body>
-    
+<!-- 
     <div class="rainbow-loader">
 		<div><div></div></div>
 		<div><div></div></div>
@@ -49,10 +49,10 @@ if ($_SESSION['user_id'] !== 1) {
 		<div><div></div></div>
 		<div><div></div></div>
 	</div>
-	
+-->
 	
 	<!--<div class="spinner"></div>-->
-	
+<!--	
 	<div class="rainbow-spin">
 	  <div>
 	    <div>
@@ -69,7 +69,7 @@ if ($_SESSION['user_id'] !== 1) {
 	    </div>
 	  </div>
 	</div>
-	
+-->	
 	<!--<img src="test">-->
 
 <?php 
@@ -132,32 +132,9 @@ echo "{$data['id']}: {$data['email']}";
 echo '</td><td>1: lisa.debruine@glasgow.ac.uk</td></tr>';
 echo '</tbody></table>';
 
-
-
-
-//include_once DOC_ROOT . '/include/classes/psychomorph.class.php';
-
-/*
-$img = new PsychoMorph_ImageTem('/monkey_female');
-$img->getImg()->setDescription('My new image');
-echo 'desc: ' . $img->getImg()->getDescription();
-echo '<br />imgpath: ' . $img->getImg()->getUserPath();
-echo '<br />tempath: ' . $img->getTem()->getUserPath();
-echo '<br />n: ' . $img->getTem()->getPointNumber();
-$img->alignEyes();
-$img->setOverWrite(true);
-$img->save('/a_monkey.jpg');
-echo '<br />imgpath: ' . $img->getImg()->getPath();
-echo '<br />tempath: ' . $img->getTem()->getPath();
-echo '<br />width: ' . $img->getImg()->getWidth() . ' height: '. $img->getImg()->getHeight();
-echo '<pre>' .  $img->getTem()->printTem() . '</pre>';
-*/
-
-
 echo "<h3>Users</h3>";
 
-$q = new myQuery(array('CREATE TEMPORARY TABLE tmp_users 
-				SELECT user.id, 
+$q = new myQuery(array('CREATE TEMPORARY TABLE tmp_users SELECT user.id, 
 				    IF((lastname = "" OR lastname IS NULL), email, CONCAT(lastname, ", ", firstname)) as user, 
 					MAX(logintime) as last_login,
 					COUNT(*) as logins
@@ -170,124 +147,6 @@ $q = new myQuery(array('CREATE TEMPORARY TABLE tmp_users
 				ORDER BY last_login DESC;'));
 echo '<div id="usertable">' . $q->get_result_as_table() . '</div>';
 
-echo "<h3>My Image Base Dir</h3>";
-
-class VisibleOnlyFilter extends RecursiveFilterIterator
-{
-    public function accept()
-    {
-        $fileName = $this->getInnerIterator()->current()->getFileName();
-        $firstChar = $fileName[0];
-        return $firstChar !== '.';
-    }
-}
-
-class FilesOnlyFilter extends RecursiveFilterIterator
-{
-    public function accept()
-    {
-        $iterator = $this->getInnerIterator();
-
-        // allow traversal
-        if ($iterator->hasChildren()) {
-            return true;
-        }
-
-        // filter entries, only allow true files
-        return $iterator->current()->isFile();
-    }
-}
-
-$fileinfos = new RecursiveIteratorIterator(
-    new FilesOnlyFilter(
-        new VisibleOnlyFilter(
-            new RecursiveDirectoryIterator(
-                IMAGEBASEDIR,
-                FilesystemIterator::SKIP_DOTS
-                    | FilesystemIterator::UNIX_PATHS
-            )
-        )
-    ),
-    RecursiveIteratorIterator::LEAVES_ONLY,
-    RecursiveIteratorIterator::CATCH_GET_CHILD
-);
-
-foreach ($fileinfos as $pathname => $fileinfo) {
-    //echo $fileinfos->getSubPathname(), "<br>";
-}
-
-/*
-echo "<h3>My Tmp Dir</h3>";
-
-$tmpdir = IMAGEBASEDIR . '/.tmp';
-if (is_dir($tmpdir)) {
-	//chmod($tmpdir, 0777);
-
-	$perms = fileperms($tmpdir);
-
-	if (($perms & 0xC000) == 0xC000) {
-	    // Socket
-	    $info = 's';
-	} elseif (($perms & 0xA000) == 0xA000) {
-	    // Symbolic Link
-	    $info = 'l';
-	} elseif (($perms & 0x8000) == 0x8000) {
-	    // Regular
-	    $info = '-';
-	} elseif (($perms & 0x6000) == 0x6000) {
-	    // Block special
-	    $info = 'b';
-	} elseif (($perms & 0x4000) == 0x4000) {
-	    // Directory
-	    $info = 'd';
-	} elseif (($perms & 0x2000) == 0x2000) {
-	    // Character special
-	    $info = 'c';
-	} elseif (($perms & 0x1000) == 0x1000) {
-	    // FIFO pipe
-	    $info = 'p';
-	} else {
-	    // Unknown
-	    $info = 'u';
-	}
-	
-	// Owner
-	$info .= (($perms & 0x0100) ? 'r' : '-');
-	$info .= (($perms & 0x0080) ? 'w' : '-');
-	$info .= (($perms & 0x0040) ?
-	            (($perms & 0x0800) ? 's' : 'x' ) :
-	            (($perms & 0x0800) ? 'S' : '-'));
-	
-	// Group
-	$info .= (($perms & 0x0020) ? 'r' : '-');
-	$info .= (($perms & 0x0010) ? 'w' : '-');
-	$info .= (($perms & 0x0008) ?
-	            (($perms & 0x0400) ? 's' : 'x' ) :
-	            (($perms & 0x0400) ? 'S' : '-'));
-	
-	// World
-	$info .= (($perms & 0x0004) ? 'r' : '-');
-	$info .= (($perms & 0x0002) ? 'w' : '-');
-	$info .= (($perms & 0x0001) ?
-	            (($perms & 0x0200) ? 't' : 'x' ) :
-	            (($perms & 0x0200) ? 'T' : '-'));
-
-
-	echo "$tmpdir exists and has permissions $info";
-	$handle = opendir($tmpdir);
-	echo "<ul>";
-	while (false !== ($entry = readdir($handle))) {
-	    if ($entry != "." && $entry != "..") {
-	    	echo "	<li>$entry</li>\n";
-	    }
-	}
-	echo "</ul>";
-	closedir($handle);
-} else {
-	echo "$tmpdir does not exist";
-}
-*/
-
 
 echo '<h3>Apache/PHP Limits</h3>';
 
@@ -298,7 +157,7 @@ $vars = array(
 	'max_execution_time' => 'Max Execution Time',
 	'max_input_time' => 'Max Input Time',
 	'max_input_vars' => 'Max Input Variables',
-	'upload_max_filesize' => 'Upload Max Size',
+	'upload_max_filesize' => 'Upload Max Filesize',
 	'post_max_size' => 'Post Max Size',
 );
 
@@ -312,11 +171,14 @@ echo '<li>PHP Memory Allocated: ' .  formatBytes(memory_get_usage()) . ', peak: 
 echo '</ul>';
 
 // check Matrix functions service
+
 echo '<h3>Checking Matrix Functions</h3>';
 
+
+
 try {
-	include_once "Math/Matrix.php";
-	
+    include_once $_SERVER['DOCUMENT_ROOT'] . "/include/classes/Math/Matrix.php";
+    
 	$xorig = array(0 => 165.659, 1 => 284.339, 96 => 225.359);
 	$yorig = array(0 => 275.234, 1 => 275.231, 96 => 407.61);
 	
@@ -329,6 +191,7 @@ try {
 	
 	$xnew = array(170.0, 280.0, 222.0);
 	$ynew = array(270.0, 270.0, 402.0);
+	
 	
 	// identical to original, test to make sure
 	// a = 1, b = 0, c = 0, d = 0, e = 1, f = 0
@@ -352,7 +215,7 @@ try {
 	$m1 = $m->cloneMatrix();
 	$x = Math_Matrix::solve($m1, $xvector);
 	$a = round($x->get(0), 3);
-	$b = round($x->get(1), 3);
+ 	$b = round($x->get(1), 3);
 	$c = round($x->get(2), 3);
 	
 	$m2 = $m->cloneMatrix();
@@ -360,6 +223,7 @@ try {
 	$d = round($y->get(0), 3);
 	$e = round($y->get(1), 3);
 	$f = round($y->get(2), 3);
+
 	
 	echo "Calculated Solution (correct answers in parentheses)\na =  $a ( 0.927)\nb = $b (-0.025)\nc = $c (23.388)\nd =  $d     ( 0.000)\ne =  $e ( 0.997)\nf = $f (-4.453)\n\n";
 	
@@ -369,11 +233,10 @@ try {
 
 	echo "</pre>";
 
-} catch (Exception $e) {
+} catch (Throwable $e) {
     // Handle exception
     echo $e;
 }
-
 
 if (isset($_GET['phpinfo'])) {
 	echo "<h3>PHP Info</h3>";

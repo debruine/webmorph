@@ -16,26 +16,36 @@ $colors = array("mask_color", "cross_color", "selcross_color", "line_color");
 
 foreach($colors as $c) {
     $rgb = $_POST[$c];
-    $_POST[$c] = 'rgb(' . $rgb[0] . ',' . $rgb[1] . ',' . $rgb[2] . ')';
+    if (count($rgb) == 3) {
+        $_POST[$c] = 'rgb(' . $rgb[0] . ',' . $rgb[1] . ',' . $rgb[2] . ')';
+    } else if (count($rgb) == 4) {
+        $_POST[$c] = 'rgba(' . $rgb[0] . ',' . $rgb[1] . ',' . $rgb[2] . ',' . round($rgb[3]/255, 2) . ')';
+    }
 }
 
+$rgba = '/^(rgb\(\s*\d{1,3}\s*,\s*\d{1,3}\s*,\s*\d{1,3}\s*\)|rgba\(\s*\d{1,3}\s*,\s*\d{1,3}\s*,\s*\d{1,3}\s*,\s*(0|1|)(\.\d+)?\s*\))$/';
+$bool = '/^(true|false)$/';
+$dbl = '/^\d{1,5}(\.\d{1,5})?$/';
+$int5 = '/^\d{1,5}$/';
+
+
 $validPrefvals = array(
-    'mask_color' => '/^rgb\(\d{1,3},\s*\d{1,3},\s*\d{1,3}\)$/',
-    'cross_color' => '/^rgb\(\d{1,3},\s*\d{1,3},\s*\d{1,3}\)$/',
-    'selcross_color' => '/^rgb\(\d{1,3},\s*\d{1,3},\s*\d{1,3}\)$/',
-    'line_color' => '/^rgb\(\d{1,3},\s*\d{1,3},\s*\d{1,3}\)$/',
+    'mask_color' => $rgba,
+    'cross_color' => $rgba,
+    'selcross_color' => $rgba,
+    'line_color' => $rgba,
     'defaultLineWidth' => '/^\d{1,2}$/',
-    'texture' => '/^(true|false)$/',
-    'sample_contours' => '/^(true|false)$/',
-    'show_thumbs' => '/^(true|false)$/',
-    'align_pt1' => '/^\d{1,5}$/',
-    'align_pt2' => '/^\d{1,5}$/',
-    'align_x1' => '/^\d{1,5}(\.\d{1,5})?$/',
-    'align_y1' => '/^\d{1,5}(\.\d{1,5})?$/',
-    'align_x2' => '/^\d{1,5}(\.\d{1,5})?$/',
-    'align_y2' => '/^\d{1,5}(\.\d{1,5})?$/',
-    'align_w' => '/^\d{1,5}(\.\d{1,5})?$/',
-    'align_h' => '/^\d{1,5}(\.\d{1,5})?$/',
+    'texture' => $bool,
+    'sample_contours' => $bool,
+    'show_thumbs' => $bool,
+    'align_pt1' => $int5,
+    'align_pt2' => $int5,
+    'align_x1' => $dbl,
+    'align_y1' => $dbl,
+    'align_x2' => $dbl,
+    'align_y2' => $dbl,
+    'align_w' => $int5,
+    'align_h' => $int5,
     'defaultTem' => '/^\d{1,11}$/',
     'normalisation' => '/^(none|twopoint|threepoint|rigid)$/',
     'warp' => '/^(multiscale|linear|tps|multiscalerb)$/',

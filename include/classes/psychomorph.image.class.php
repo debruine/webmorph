@@ -11,7 +11,7 @@
  
  require_once 'psychomorph.file.class.php';
  include_once 'png_reader.class.php';
- include_once('PEL/src/PelJpeg.php');
+ include_once('PEL/PelJpeg.php');
  
 function mean($values) {
     // return the mean of an array of values
@@ -248,7 +248,6 @@ function rgb2rgbpoly($rgb, $number) {
  
 class PsychoMorph_Image extends PsychoMorph_File {
     private $_image = false;
-    public $_description = '';
     private $_embeddedTem = '';
     private $_id;
     
@@ -263,13 +262,15 @@ class PsychoMorph_Image extends PsychoMorph_File {
             return false; 
         }
         
-        // check all image types in order: jpg, png, gif
+        // check all image types in order: jpg, png, gif, bmp
         if (exif_imagetype($path) == IMAGETYPE_JPEG) {
             $img = @imagecreatefromjpeg($path);
         } else if (exif_imagetype($path) == IMAGETYPE_PNG) {
             $img = @imagecreatefrompng($path);
         } else if (exif_imagetype($path) == IMAGETYPE_GIF) {
             $img = @imagecreatefromgif($path);
+        } else if (exif_imagetype($path) == IMAGETYPE_BMP) {
+            //$img = @imagecreatefrombmp($path);
         } else {
             return false;
         }
@@ -277,12 +278,13 @@ class PsychoMorph_Image extends PsychoMorph_File {
         $this->_image = $img;
         
         // set description
-        //$exif = $this->_readExif();
-        //if (empty($exif['ImageDescription'])) {
-            $this->setDescription(array('original' => $this->getUserPath()));
-        //} else {
-        //    $this->setDescription($exif['ImageDescription']));
-        //}
+        $exif = $this->_readExif();
+        if (empty($exif['ImageDescription'])) {
+            $this->setDescription('original', $this->getURL());
+        } else {
+            $desc = json_decode($exif['ImageDescription'], true);
+            $this->setDescription($desc);
+        }
         
         return $this;
     }
@@ -301,39 +303,21 @@ class PsychoMorph_Image extends PsychoMorph_File {
         
         return $this;
     }
-        
-    public function setDescription($v) {
-        // sets description of image for exif
-        // now formatted as an array to be saved in exif as JSON
-    
-        if (!is_array($v)) {
-            $v = array('desc' => $v);
-        }
-    
-        if (!is_array($this->_description)) {
-            $this->_description = array($this->_description);
-        }
-        
-        array_push($this->_description, $v);
-        
-        return $this;
-    }
-    
-    public function getDescription() { 
-        $d = $this->_description;
-        
-        if (!is_array($d)) {
-            $d = array('desc' => $d);
-        }
-    
-        return json_encode($d, true);
-    }
     
     public function setEmbeddedTem($v) { 
         $this->_embeddedTem = $v; 
         return $this;
     }
-    public function getEmbeddedTem() { return $this->_embeddedTem; }
+    
+    public function getEmbeddedTem() { 
+        if ($this->_embeddedTem == '') {
+            // not already set, get from exif
+            if ($exif = $this->_readExif()) {
+                $this->_embeddedTem = $exif['COMPUTED']['UserComment'];
+            }
+        }
+        return $this->_embeddedTem; 
+    }
     
     public function getImage() { return $this->_image; }
     
@@ -373,7 +357,7 @@ class PsychoMorph_Image extends PsychoMorph_File {
     }
     
     private function _nextImg() {
-        $exp_path = explode("/", $this->getUserPath());
+        $exp_path = explode("/", $this->getURL());
         $project_id = $exp_path[0];
         unset($exp_path[0]);
         $name = "/" . implode("/", $exp_path);
@@ -398,7 +382,7 @@ class PsychoMorph_Image extends PsychoMorph_File {
     private function _readExif() {
         $filename = $this->getPath();
         if (file_exists($filename) && exif_imagetype($filename) == IMAGETYPE_JPEG) {
-            $exif = exif_read_data($filename);
+            $exif = @exif_read_data($filename);
             return $exif;
         }
         
@@ -485,7 +469,7 @@ class PsychoMorph_Image extends PsychoMorph_File {
             $jpeg->saveFile($filename);
             
             return true;
-        } catch (Exception $e) {
+        } catch (Throwable $e) {
             // Handle exception
             echo $e;
         }
@@ -505,6 +489,12 @@ class PsychoMorph_Image extends PsychoMorph_File {
         $new_width = $width * $xResize;
         $new_height = $height * $yResize;
         $resized_image = imagecreatetruecolor($new_width, $new_height);
+        
+        // make sure you don't loose transparency
+        imagealphablending($resized_image, false);
+        imagesavealpha($resized_image, true);
+        //$transparent = imagecolorallocatealpha($resized_image, 255, 255, 255, 127);
+        //imagefilledrectangle($resized_image, 0, 0, $new_width, $new_height, $transparent);
     
         imagecopyresampled(
             $resized_image, $this->_image, 
@@ -514,16 +504,24 @@ class PsychoMorph_Image extends PsychoMorph_File {
             $width, $height
         );
         $this->setImage($resized_image);
-        if ($xResize == $yResize) {
-            $this->setDescription(array('resize' => round($xResize*100,2) . '%'));
-        } else {
-            $this->setDescription(array('resize' => array(
-                    'x' => round($xResize*100,2) . '%',
-                    'y' => round($yResize*100,2) . '%'
-            )));
-        }
         
         return $this;
+    }
+    
+    private function colorAlloc(&$image, $rgb) {
+        // get background color from $rgb or upper left corner
+        if (!is_array($rgb) || !count($rgb) == 3) {
+            $cornercolor = imagecolorat($this->_image, 2, 2); 
+            $rgb = array(
+                ($cornercolor >> 16) & 0xFF,
+                ($cornercolor >> 8) & 0xFF,
+                $cornercolor & 0xFF
+            );
+        }
+        
+        $color = imagecolorallocate($image, $rgb[0], $rgb[1], $rgb[2]);
+        
+        return $color;
     }
     
     public function rotate($degrees, $rgb = null) {
@@ -532,16 +530,9 @@ class PsychoMorph_Image extends PsychoMorph_File {
         $deg = -1 * $degrees;  
         if (empty($deg) || !$this->_image) { return false; }
         
-        // get background color from $rgb or upper right corner
-        if (is_array($rgb) && count($rgb) == 3) {
-            $color = imagecolorallocate($this->_image, $rgb[0], $rgb[1], $rgb[2]);
-        } else {
-            $color = imagecolorat($this->_image, 1, 1); 
-        }
-        
+        $color = $this->colorAlloc($this->_image, $rgb);
         $rotated_image = imagerotate($this->_image, $deg, $color);
         $this->setImage($rotated_image);
-        $this->setDescription(array("rotate" => round($degrees,2) . "°"));
         
         return $this;
     }
@@ -549,13 +540,7 @@ class PsychoMorph_Image extends PsychoMorph_File {
     public function crop($xOffset, $yOffset, $width, $height, $rgb = null) {
         $newimg = imagecreatetruecolor($width, $height);
         
-        // get background color from $rgb or upper right corner
-        if (is_array($rgb) && count($rgb) == 3) {
-            $color = imagecolorallocate($newimg, $rgb[0], $rgb[1], $rgb[2]);
-        } else {
-            $color = imagecolorat($this->_image, 1, 1); 
-        }
-        
+        $color = $this->colorAlloc($newimg, $rgb);
         imagefill($newimg, 0, 0, $color);
         
         $w = $this->getWidth();
@@ -572,15 +557,6 @@ class PsychoMorph_Image extends PsychoMorph_File {
         
         $this->setImage($newimg);
         
-        $this->setDescription(array(
-            "crop" => array(
-                "x-offset" => round($xOffset,2),
-                "y-offset" => round($yOffset,2),
-                "width"    => round($width,2),
-                "height"   => round($height,2)
-            )
-        ));
-        
         return $this;
     }
     
@@ -594,16 +570,162 @@ class PsychoMorph_Image extends PsychoMorph_File {
         $newimg = imagecreatetruecolor($width, $height);
 
         imagecopyresampled(
-            $newimg,     $this->_image, 
-            0,             0, 
-            $width-1,     0, 
+            $newimg,    $this->_image, 
+            0,          0, 
+            $width-1,   0, 
             $width,     $height, 
-            -$width,     $height
+            -$width,    $height
         );
         
-        $this->setImage($newimg);    
+        $this->setImage($newimg);
+        
+        return $this;
+    }
+    
+    public function scramble($scramble_data) {
+        ini_set('memory_limit','1024M');
+        
+        $gridsize = 25; // number of pixels between each grid
+        $x_offset = 0;  // x-coordinate at which to start the first vertical gridline
+        $y_offset = 0;  // y-coordinate at which to start the first horizontal gridline
+        
+        if (is_numeric($scramble_data['grid']) && $scramble_data['grid']>0) $gridsize = $scramble_data['grid'];
+        if (is_numeric($scramble_data['x'])) $x_offset = $scramble_data['x'];
+        if (is_numeric($scramble_data['y'])) $y_offset = $scramble_data['y'];
+        
+        $original_image = $this->getImage();
+        
+        $imgwidth = $this->getWidth();
+        $imgheight = $this->getHeight();
+        
+        // copy over the whole original image
+        $new_image = imagecreatetruecolor($imgwidth, $imgheight);
+        imagecopy($new_image, $original_image, 0, 0, 0, 0, $imgwidth, $imgheight);
+        
+        //set up grid structure
+        $means = array();
+        if ($scramble_data['chosen'] == 'all') {
+            // scramble all 
+            
+            // get number of rows and columns
+            $xx = floor(($imgwidth-$x_offset)/$gridsize);
+            $yy = floor(($imgheight-$y_offset)/$gridsize);
+            
+            for ($x = 0; $x < $xx; $x++) {
+                for ($y = 0; $y < $yy; $y++) {
+                    $grids[] = array($x, $y);
+                }
+            }
+            // set mean to middle column
+            $means = array(($xx-1)/2);
+        } else {
+            // scramble only chosen squares
+            //$grids = $_POST['chosen'];
+            foreach ($scramble_data['chosen'] as $y => $xx) {
+                if ($xx !== '') {
+                    $xx = explode(",", $xx);
+                    $means[] = array_sum($xx)/count($xx);
+                    
+                    foreach ($xx as $x) {
+                        $grids[] = array($x, $y);
+                    }
+                }
+            }
+        }
 
-        $this->setDescription(array("mirror" => "mirror"));
+        // symmetric shuffling   
+        if ($scramble_data['sym'] == 'true' &&
+            $means == array_fill(0, count($means), $means[0])
+        ) {
+            $symgrid = $grids;
+            $grids = array();
+            $random_grids = array();
+            
+            // check if there is a centre column
+            $center = $means[0];
+            if ($center == floor($center)) {
+                foreach ($symgrid as $g) {
+                    if ($g[0] == $center) {
+                        $center_grid[] = $g;
+                    }
+                }
+                if (count($center_grid)) {
+                    $grids = array_merge($grids, $center_grid);
+                    shuffle($center_grid);
+                    $random_grids = array_merge($random_grids, $center_grid);
+                }
+            }
+            
+            // shuffle left side and mirror right shuffle order
+            foreach ($symgrid as $g) {
+                if ($g[0] < $center) {
+                    $left_grid[] = $g;
+                    $right_grid[] = array($g[0] + 2*($center - $g[0]), $g[1]);
+                }
+            }
+            if (count($left_grid)) {
+                $grids = array_merge($grids, $left_grid);
+                $grids = array_merge($grids, $right_grid);
+                
+                shuffle($left_grid);
+                $random_grids = array_merge($random_grids, $left_grid);
+                foreach($left_grid as $g) {
+                    $mirror_right_grid[] = array($g[0] + 2*($center - $g[0]), $g[1]);
+                }
+                $random_grids = array_merge($random_grids, $mirror_right_grid);
+            }
+        } else {
+            // randomise grids
+            $random_grids = $grids;
+            shuffle($random_grids);
+        }
+        
+        foreach($random_grids as $k => $grid) {
+            $dest_x = $grid[0] * $gridsize + $x_offset;
+            $dest_y = $grid[1] * $gridsize + $y_offset;
+            $source_x = $grids[$k][0] * $gridsize + $x_offset;
+            $source_y = $grids[$k][1] * $gridsize + $y_offset;
+            imagecopy($new_image, $original_image, $dest_x, $dest_y, $source_x, $source_y, $gridsize, $gridsize);
+        }
+        
+        //imagedestroy($original_image);
+        
+        // superimpose grid on image
+        if (array_key_exists('line_color', $scramble_data)) {
+            $linecolor = imagecolorallocate(
+                $new_image, 
+                $scramble_data['line_color'][0], 
+                $scramble_data['line_color'][1], 
+                $scramble_data['line_color'][2]
+            );
+            for ($x = $x_offset ; $x <= $imgwidth; $x += $gridsize) {
+                imageline($new_image, $x, 0, $x, $imgheight, $linecolor);
+            }
+        
+            for ($y = $y_offset; $y <= $imgheight; $y += $gridsize) {
+                imageline($new_image, 0, $y, $imgwidth, $y, $linecolor);
+            }
+        }
+        
+        $this->setImage($new_image);
+        
+        // add description
+        $desc = array(
+            "gridsize" => $gridsize,
+            "offset" => $x_offset . ", " . $y_offset,
+            "symmetric" => $scramble_data['sym']
+        );
+        
+        if (array_key_exists('line_color', $scramble_data)) {
+            $desc['linecolor'] = implode(",",$scramble_data['line_color']);
+        }
+        
+        foreach ($random_grids as $rg) {
+            $scram[] = "{$rg[0]},{$rg[1]}";
+        }
+        $desc['scramble'] = implode(" ",$scram);
+        
+        $this->addHistory($desc);
         
         return $this;
     }
@@ -675,7 +797,7 @@ class PsychoMorph_Image extends PsychoMorph_File {
         $maxDeltaE = round(max($deltaEs), 4);
         
         $patch = ($expand * 2) + 1;
-        $this->setDescription(array("colour calibrate" => array(
+        $this->addHistory(array("colour calibrate" => array(
             "path dimension" => "$patch x $patch",
             "SD" => $SD,
             "deltaE" => array("M" => $meanDeltaE, "max" => $maxDelta),
@@ -699,7 +821,8 @@ class PsychoMorph_Image extends PsychoMorph_File {
         meanDeltaE = mean(sqrt(sum(squaredDifference')))
         maxDeltaE = max(sqrt(sum(squaredDifference')))
         **************************************************/
-        include_once "Math/Matrix.php";
+        //include_once "Math/Matrix.php";
+        include_once $_SERVER['DOCUMENT_ROOT'] . "/include/classes/Math/Matrix.php";
         
         foreach ($colours as $v) {
             $spectrod65[] = array($v[2], $v[3], $v[4]);
@@ -727,14 +850,14 @@ class PsychoMorph_Image extends PsychoMorph_File {
         if (in_array($ext, $allowed_ext)) {
             $oldname = $this->getPath();
             $newname = preg_replace('@\.(jpg|png|gif)$@', '.' . $ext, $oldname);
-            $this->setDescription(array("convert" => $ext));
+            $this->addHistory("convert: {$ext}");
             return $this->save($newname);
         } else {
             return false;
         }
     }
     
-    public function _saveFile($filepath) {
+    public function _saveFile($filepath = '', $overWrite = false) {
         $png_compression = 0;
         $jpg_compression = 100;
     
@@ -750,8 +873,7 @@ class PsychoMorph_Image extends PsychoMorph_File {
         $success = false;
         
         $ext = pathinfo($filepath, PATHINFO_EXTENSION);
-        
-        
+
         if ('png' == $ext) {
             $success = imagepng($this->_image, $filepath, $png_compression);
         } else if ('gif' == $ext) {
@@ -764,12 +886,13 @@ class PsychoMorph_Image extends PsychoMorph_File {
                 $this->_addExif($filepath);
                 $success = true;
             } else {
-                echo '{"error": "no jpeg"},';
+                //echo '{"error": "no jpeg"},';
             }
         }
         
         if ($success) {
-            chmod($filepath, IMGPERMS);            // make sure the file is nly readable by the web user
+            chmod($filepath, IMGPERMS);            // make sure the file is only readable by the web user
+            touch(IMAGEBASEDIR . $this->getProject()); // update filemtime for the project directory
             $this->_setPath($filepath);
             $this->_nextImg();                // add to or update img table
             

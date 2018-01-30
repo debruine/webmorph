@@ -13,10 +13,9 @@
 //====================================
 
 var $finder = $('#finder');
-var $imagebox = $('#imagebox');
 var $queue = $('#queue');
-var $queue_n = $('#queue_n');
 var $delin = $('#delin');
+var $d3 = $('#threeD');
 
 var WM = {
     user: {
@@ -35,13 +34,14 @@ var WM = {
     blankBG : "url(/include/images/blankface.php)",
     blankImg : "/include/images/blankface.php",
     loadImg: "/include/images/loaders/circle.svg",
-
     delinContext: $('#template').get(0).getContext('2d'),
     originalHeight : 400,
     originalWidth : 300,
+    hashfile: function(){},
     faceimg: "",
-
+    timer: null,
     showTem: true,
+    filepreview: true,
     delinfunc: 'move',
     symPts: [],
     fitPoints: [0, 1, 96],
@@ -52,6 +52,8 @@ var WM = {
         lineColors: [],
         lineWidths: []
     },
+    onTouchDown: {x:0,y:0,z:0},
+    d3: null,
     temRatio: 1,
     pts: [],
     eyeClicks : [],

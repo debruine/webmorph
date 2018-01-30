@@ -183,6 +183,10 @@ table.sortable thead th:hover {
     color: <?= $text ?>;
 }
 
+#filepreview table td:nth-child(1) {
+    color: <?= $theme ?>;
+}
+
 /***** PSYCHOMORPH *****/
 
 .growl {
@@ -245,31 +249,97 @@ p.msg {
 /* MENUBAR STYLES */
 
 .menucategory:hover #currentTem_name,
-.menubar .menucategory:hover > span,
-.menubar .menucategory ul li:hover,
-.menubar .menucategory:hover > span.shortcut,
-.menubar .menucategory li:hover a,
-.menubar .menucategory a:hover,
-.menubar .menucategory a:active,
+#menubar .menucategory:hover > span,
+#menubar .menucategory ul li:hover,
+#menubar .menucategory:hover > span.shortcut,
+#menubar .menucategory li:hover a,
+#menubar .menucategory a:hover,
+#menubar .menucategory a:active,
 .context_menu li:hover {
     background-color: <?= $theme ?>;
     color: <?= $text_on_theme ?>;
 }
 
-.menubar .menucategory ul li.disabled:hover {
+#menubar .menucategory ul li.disabled:hover {
 	background-color:<?= $theme ?>!important;
 }
 
-.menubar .menucategory ul li:hover .submenu {
+#menubar .menucategory ul li:hover .submenu {
     color: <?= $text ?>;
 }
 
 #delin {
     background-image: url(<?= $bgpattern ?>);
 }
-
 .toolbar {
     border-color: <?= $theme ?>;
+}
+
+.toolbar #obj_switcher button {
+    background-color: hsl(<?= $theme_hue ?>, 100%, 20%);
+}
+
+.toolbar #obj_switcher button.selected {
+    background-color: hsl(<?= $theme_hue ?>, 100%, 90%);
+}
+.wm-bug-icon {
+	background-image: url(/include/images/icons/bug.php?h=<?= $theme_hue ?>) !important;
+}
+.wm-morph-icon {
+	background-image: url(/include/images/icons/morph.php?h=<?= $theme_hue ?>) !important;
+}
+.wm-up-down-icon {
+	background-image: url(/include/images/icons/up-down.php?h=<?= $theme_hue ?>) !important;
+}
+.wm-left-right-icon {
+	background-image: url(/include/images/icons/left-right.php?h=<?= $theme_hue ?>) !important;
+}
+.wm-lightbulb-icon {
+	background-image: url(/include/images/icons/lightbulb_on.php?h=<?= $theme_hue ?>) !important;
+}
+.off .wm-lightbulb-icon {
+    background-image: url(/include/images/icons/lightbulb_off.php?h=<?= $theme_hue ?>) !important;
+}
+.wm-video-icon {
+	background-image: url(/include/images/icons/video.php?h=<?= $theme_hue ?>) !important;
+}
+.wm-hologram-icon {
+	background-image: url(/include/images/icons/hologram.php?h=<?= $theme_hue ?>) !important;
+}
+.wm-origsize-icon {
+	background-image: url(/include/images/icons/origsize.php?h=<?= $theme_hue ?>) !important;
+}
+.wm-delete-icon {
+	background-image: url(/include/images/icons/delete.php?h=<?= $theme_hue ?>) !important;
+}
+.wm-wireframe-icon {
+	background-image: url(/include/images/icons/wireframe.php?h=<?= $theme_hue ?>) !important;
+}
+.wm-skin-icon {
+	background-image: url(/include/images/icons/skin.php?h=<?= $theme_hue ?>) !important;
+}
+.wm-center-icon {
+	background-image: url(/include/images/icons/center.php?h=<?= $theme_hue ?>) !important;
+}
+.wm-zoomin-icon {
+	background-image: url(/include/images/icons/zoomin.php?h=<?= $theme_hue ?>) !important;
+}
+.wm-zoomout-icon {
+	background-image: url(/include/images/icons/zoomout.php?h=<?= $theme_hue ?>) !important;
+}
+.wm-fitsize-icon {
+	background-image: url(/include/images/icons/fitsize.php?h=<?= $theme_hue ?>) !important;
+}
+.wm-menu-icon {
+	background-image: url(/include/images/icons/menu.php?h=<?= $theme_hue ?>) !important;
+}
+
+#toggleMenu {
+    background-image: url(/include/images/icons/menu.php?h=<?= $theme_hue ?>);
+}
+
+.d3_morph_slider.ui-slider {
+    background-color: <?= $theme ?>;
 }
 
 /* FINDER STYLES */
@@ -323,6 +393,9 @@ p.msg {
 #finder li.fimg {
     background-image: url("/include/images/finder/fimgicon.php?h=<?= $theme_hue ?>");
 }
+#finder li.obj {
+    background-image:url("/include/images/finder/objicon.php?h=<?= $theme_hue ?>");
+}
 #finder li.file.selected, #average-list li.selected {
     background-color: <?= $highlight ?>;
     color: <?= $text_on_theme ?>;
@@ -372,7 +445,7 @@ p.msg {
     background-color: <?= $highlight ?>;
 }
 
-/* IMAGEBOX */
+/* FILEPREVIEW */
 
 #selectedImage {
     background-image: url(<?= $bgpattern ?>);
@@ -746,7 +819,7 @@ button.unsaved, .ui-button.ui-state-error, .ui-button.ui-state-error:hover {
 }
 .ui-button .ui-button-text {
     display: block;
-    line-height: normal;
+    /*line-height: normal;*/
 }
 
 .ui-button.single{
@@ -758,121 +831,6 @@ button.unsaved, .ui-button.ui-state-error, .ui-button.ui-state-error:hover {
 }
 
 /**************************** END OS X BUTTON STYLE **********************************/
-
-/**** Loader ****/
-
-.spinner {
-    color: <?= $text_on_theme ?>;
-}
-
-<?php
-    $c1 = -0.35;
-    $c2 = -0.38;
-    $c3 = -0.41;
-    $c4 = -0.44;
-    $c5 = -0.47;
-?>
-
-@-webkit-keyframes load6 {
-    0% {
-        -webkit-transform: rotate(0deg);
-        transform: rotate(0deg);
-        box-shadow:         0 -0.83em 0 <?= $c1 ?>em <?= $theme ?>,
-                            0 -0.83em 0 <?= $c2 ?>em <?= $theme ?>,
-                            0 -0.83em 0 <?= $c3 ?>em <?= $theme ?>,
-                            0 -0.83em 0 <?= $c4 ?>em <?= $theme ?>,
-                            0 -0.83em 0 <?= $c5 ?>em <?= $theme ?>;
-    }
-    5%,
-    95% {
-        box-shadow:         0 -0.83em 0 <?= $c1 ?>em <?= $theme ?>,
-                            0 -0.83em 0 <?= $c2 ?>em <?= $theme ?>,
-                            0 -0.83em 0 <?= $c3 ?>em <?= $theme ?>,
-                            0 -0.83em 0 <?= $c4 ?>em <?= $theme ?>,
-                            0 -0.83em 0 <?= $c5 ?>em <?= $theme ?>;
-    }
-    10%,
-    59% {
-        box-shadow:        0 -0.830em 0 <?= $c1 ?>em <?= $theme ?>,
-                    -0.087em -0.825em 0 <?= $c2 ?>em <?= $theme ?>,
-                    -0.173em -0.812em 0 <?= $c3 ?>em <?= $theme ?>,
-                    -0.256em -0.789em 0 <?= $c4 ?>em <?= $theme ?>,
-                    -0.297em -0.775em 0 <?= $c5 ?>em <?= $theme ?>;
-    }
-    20% {
-        box-shadow:        0 -0.830em 0 <?= $c1 ?>em <?= $theme ?>,
-                    -0.338em -0.758em 0 <?= $c2 ?>em <?= $theme ?>,
-                    -0.555em -0.617em 0 <?= $c3 ?>em <?= $theme ?>,
-                    -0.671em -0.488em 0 <?= $c4 ?>em <?= $theme ?>,
-                    -0.749em -0.340em 0 <?= $c5 ?>em <?= $theme ?>;
-    }
-    38% {
-        box-shadow:        0 -0.830em 0 <?= $c1 ?>em <?= $theme ?>,
-                    -0.377em -0.740em 0 <?= $c2 ?>em <?= $theme ?>,
-                    -0.645em -0.522em 0 <?= $c3 ?>em <?= $theme ?>,
-                    -0.775em -0.297em 0 <?= $c4 ?>em <?= $theme ?>,
-                    -0.820em -0.090em 0 <?= $c5 ?>em <?= $theme ?>;
-    }
-    100% {
-        -webkit-transform: rotate(360deg);
-        transform: rotate(360deg);
-        box-shadow:         0 -0.83em 0 <?= $c1 ?>em <?= $theme ?>,
-                            0 -0.83em 0 <?= $c2 ?>em <?= $theme ?>,
-                            0 -0.83em 0 <?= $c3 ?>em <?= $theme ?>,
-                            0 -0.83em 0 <?= $c4 ?>em <?= $theme ?>,
-                            0 -0.83em 0 <?= $c5 ?>em <?= $theme ?>;
-    }
-}
-@keyframes load6 {
-    0% {
-        -webkit-transform: rotate(0deg);
-        transform: rotate(0deg);
-        box-shadow:         0 -0.83em 0 <?= $c1 ?>em <?= $theme ?>,
-                            0 -0.83em 0 <?= $c2 ?>em <?= $theme ?>,
-                            0 -0.83em 0 <?= $c3 ?>em <?= $theme ?>,
-                            0 -0.83em 0 <?= $c4 ?>em <?= $theme ?>,
-                            0 -0.83em 0 <?= $c5 ?>em <?= $theme ?>;
-    }
-    5%,
-    95% {
-        box-shadow:         0 -0.83em 0 <?= $c1 ?>em <?= $theme ?>,
-                            0 -0.83em 0 <?= $c2 ?>em <?= $theme ?>,
-                            0 -0.83em 0 <?= $c3 ?>em <?= $theme ?>,
-                            0 -0.83em 0 <?= $c4 ?>em <?= $theme ?>,
-                            0 -0.83em 0 <?= $c5 ?>em <?= $theme ?>;
-    }
-    10%,
-    59% {
-        box-shadow:        0 -0.830em 0 <?= $c1 ?>em <?= $theme ?>,
-                    -0.087em -0.825em 0 <?= $c2 ?>em <?= $theme ?>,
-                    -0.173em -0.812em 0 <?= $c3 ?>em <?= $theme ?>,
-                    -0.256em -0.789em 0 <?= $c4 ?>em <?= $theme ?>,
-                    -0.297em -0.775em 0 <?= $c5 ?>em <?= $theme ?>;
-    }
-    20% {
-        box-shadow:        0 -0.830em 0 <?= $c1 ?>em <?= $theme ?>,
-                    -0.338em -0.758em 0 <?= $c2 ?>em <?= $theme ?>,
-                    -0.555em -0.617em 0 <?= $c3 ?>em <?= $theme ?>,
-                    -0.671em -0.488em 0 <?= $c4 ?>em <?= $theme ?>,
-                    -0.749em -0.340em 0 <?= $c5 ?>em <?= $theme ?>;
-    }
-    38% {
-        box-shadow:        0 -0.830em 0 <?= $c1 ?>em <?= $theme ?>,
-                    -0.377em -0.740em 0 <?= $c2 ?>em <?= $theme ?>,
-                    -0.645em -0.522em 0 <?= $c3 ?>em <?= $theme ?>,
-                    -0.775em -0.297em 0 <?= $c4 ?>em <?= $theme ?>,
-                    -0.820em -0.090em 0 <?= $c5 ?>em <?= $theme ?>;
-    }
-    100% {
-        -webkit-transform: rotate(360deg);
-        transform: rotate(360deg);
-        box-shadow:         0 -0.83em 0 <?= $c1 ?>em <?= $theme ?>,
-                            0 -0.83em 0 <?= $c2 ?>em <?= $theme ?>,
-                            0 -0.83em 0 <?= $c3 ?>em <?= $theme ?>,
-                            0 -0.83em 0 <?= $c4 ?>em <?= $theme ?>,
-                            0 -0.83em 0 <?= $c5 ?>em <?= $theme ?>;
-    }
-}
 
 .ui-state-active a,
 .ui-state-active a:link,

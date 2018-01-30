@@ -11,51 +11,41 @@ $return = array(
     'newFileName' => ''
 );
 
-$url = 'http://' . $_SERVER["SERVER_NAME"] . '/tomcat/psychomorph/avg?';
+$url = 'https://' . $_SERVER["SERVER_NAME"] . '/tomcat/psychomorph/avg?';
 
-// set up data
 $theData = $_POST['theData'];
-$paramsJoined = array();
-foreach($theData as $param => $value) {
-    if (is_array($value)) {
-        foreach($value as $subvalue) {
-            $paramsJoined[] = "$param=$subvalue";
-        }
-    } else {
-        $paramsJoined[] = "$param=$value";
-    }
-}
-$query = implode('&', $paramsJoined);
-$return['q'] = $query;
 
 $ch = curl_init();
-//curl_setopt($ch, CURLOPT_URL, $url . $query);
+if ($_SERVER['SERVER_NAME'] == 'webmorph.test') {
+    // workaround for local server problem with self-signed certificates
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+}
 curl_setopt($ch, CURLOPT_URL, $url);
 curl_setopt($ch, CURLOPT_POST, true);
-curl_setopt($ch, CURLOPT_POSTFIELDS, $query);
+curl_setopt($ch, CURLOPT_POSTFIELDS, serializeForTomcat($theData));
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 30);
 curl_setopt($ch, CURLOPT_TIMEOUT, 6000);
-$data = curl_exec($ch);
+if ($data = curl_exec($ch)) {
+    $transdata = json_decode($data, true);
+    if (count($transdata) == 0) {
+        $return['errorText'] .= $data;
+    } else {
+        $return['data'] = $transdata[0]; 
+    } 
+} else {
+    $return['errorText'] .= curl_error($ch);  
+}
 curl_close($ch);
 
-$transdata = json_decode($data, true);
-if (count($transdata) == 0) {
-    $return['errorText'] .= 'The average was not created';
-} else {
+if ($return['data']) {
     // log image creation
     $norm = array(
         "none" => 1,
         "2point" => 2,
         "rigid" => 3
     );
-    
-    $warp = array(
-        'multiscale' => 1, 
-        'linear' => 2, 
-        'tps' => 3, 
-        'multiscalerb' => 4
-    );
+
     $format = array(
         "jpg" => 1,
         "gif" => 2,
@@ -79,30 +69,36 @@ if (count($transdata) == 0) {
         intval($transdata[0]['load-image-time']),
         intval($transdata[0]['average-time'])
     );
-    $return['query'] = $query;
     $q = new myQuery($query);
     
     // save image and associated tem
-    $return['data'] = $transdata[0];
-    
     include_once DOC_ROOT . '/include/classes/psychomorph.class.php';
     $transimg = $theData['subfolder'] . '/.tmp/' . $transdata[0]['img'];
     $transtem = $theData['subfolder'] . '/.tmp/' . $transdata[0]['tem'];
     
     $img = new PsychoMorph_ImageTem($transimg, $transtem);
-    
-    $img->setDescription(array(
+
+    $desc = array(
+        'label' => 'average',
         'images' => $theData['images0'],
         'texture' => $theData['texture0'],
-        'norm' => $theData['norm0'],
-        'normpoints' => $theData['normPoint0_0'] . ',' . $theData['normPoint1_0'],
-    ));
+        'norm' => $theData['norm0']
+    );
+    if ($theData['norm0'] != "none") {
+        $desc['normpoints'] = $theData['normPoint0_0'] . ',' . $theData['normPoint1_0'];
+    }
+    $img->addHistory($desc);
     
-    $newFileName = $theData['subfolder'] . $_POST['outname'];
+    if (empty($_POST['outname'])) {
+        $newFileName = null;
+        $img->setOverWrite(true);
+    } else {
+        $newFileName = $theData['subfolder'] . $_POST['outname'];
+    }
     
     if ($img->save($newFileName)) {
         $return['error'] = false;
-        $return['newFileName'] = $img->getImg()->getURL();
+        $return['newFileName'] = $img->getURL();
     } else {
         $return['errorText'] .= 'The image was not saved. ';
         $return['newFileName'] = $newFileName;

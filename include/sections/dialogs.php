@@ -169,7 +169,7 @@
         </tr>
         <tr>
             <td><label for="line_color">Delineation Line</label></td>
-            <td><div id='line_color' class='rgb_chooser'></div></td>
+            <td><div id='line_color' class='rgba_chooser'></div></td>
         </tr>
         <tr>
             <td><label for="defaultLineWidth">Default Line Width</label></td>
@@ -365,9 +365,42 @@
     X-offset: <input type='integer' step='1' min='1' value='0' id='scramble_x_offset' maxlength='4' />
     Y-offset: <input type='integer' step='1' min='1' value='0' id='scramble_y_offset' maxlength='4' />
     <br>
-    <input type='checkbox' id='grid_lines' checked='checked' /> <label for='grid_lines'>Grid Lines</label> <div id='grid_line_color' class='rgb_chooser'></div>
+    <input type='checkbox' id='scramble_sym' /> <label for='scramble_sym'>Symmetric Scramble</label>
+    <br>
+    <input type='checkbox' id='grid_lines' checked='checked' /> <label for='grid_lines'>Grid Lines</label> 
+    <div id='grid_line_color' class='rgb_chooser'></div>
     <p>Click on the squares you want to scramble. Drag for multiple select.</p>
     <div id='scrambleExample'></div>
+</div>
+
+<!-- !- temVisDialog -->
+<div id='temVisDialog' class='modal'>
+    <div class='batch_name' default='tem'>Template image name:</div>
+    <ul>
+        <li>Point Style: <select id='tem_point_style'>
+            <option value='none'>None</option>
+            <option value='cross'>Cross</option>
+            <option value='circle'>Circle</option>
+            <option value='star'>Star</option>
+            <option value='numbers'>Numbers</option>
+        </select></li>
+        <li><label for="tem_point_color">Point Outline Color:</label> 
+            <div id='tem_point_color' class='rgba_chooser'></div></li>
+        <li><label for="tem_point_fill">Point Fill Color:</label>
+            <div id='tem_point_fill' class='rgba_chooser'></div></li>
+        <li><label for="tem_point_strokewidth">Outline Width:</label>
+            <input type='integer' step='1' min='1' value='2' 
+                   id='tem_point_strokewidth' maxlength='2' /></li>
+        <li><label for="tem_point_radius">Radius:</label>
+            <input type='integer' step='1' min='1' value='5' 
+                   id='tem_point_radius' maxlength='2' /></li>
+        <li><label for="tem_line_color">Line Color:</label>
+            <div id='tem_line_color' class='rgba_chooser'></div></li>
+        <li><label for="tem_line_strokewidth">Line Width:</label>
+            <input type='integer' step='1' min='1' value='2' 
+                   id='tem_line_strokewidth' maxlength='2' /></li>
+        <!--<li><input type='checkbox' id='tem_image' /> <label for='tem_image'>Image</label></li>-->
+    </ul>
 </div>
 
 <!-- !- maskDialog -->
@@ -386,7 +419,8 @@
         <img id='mask_demo_oval' src='/include/images/masks/oval' />
     </div>
     <div>
-        <br />Blur: <input type='number' step='any' min='0' max='30' value='0' name='blur' maxlength='2' />
+        <br>Blur: <input type='number' step='any' min='0' max='30' value='0' name='blur' maxlength='2' />
+        <br><label for='mask_reverse'>Reverse</label>: <input type='checkbox' id='mask_reverse' /> 
         <ul>
             <li><input type='checkbox' id='mask_trans' />   <label for='mask_trans'>Transparent</label></li>
             <li><input type='checkbox' id='mask_oval' />    <label for='mask_oval'>Oval</label></li>
@@ -409,15 +443,25 @@
 <!-- !- addTemDialog -->
 <div id='addTemDialog' class='modal' title='Add/Edit a Template'>
     <p class="warning"></p>
-    <p>You can set the current template as a default template so you can label the points and set up custom symmetry files. You can have as many default templates as you like. Select the current default template under Preferences (<span class="cmd">,</span>).</p>
+    <p>You can set the current template as a default template so you can label 
+        the points and set up custom symmetry files. You can have as many default 
+        templates as you like. Select the current default template under 
+        Preferences (<span class="cmd">,</span>).</p>
     <ul>
-        <li><input type='checkbox' id='isNewTem' />    <label for='isNewTem'>Register this as a New Template</label></li>
-        <li><label for="defaultTemName">Template Name:</label> <input id="defaultTemName" type="text" /></li>
-        <li><label for="defaultTemNotes">Notes:</label> <textarea id="defaultTemNotes"></textarea></li>
-        <!--<li><input type='checkbox' id='defaultTemPublic' />    <label for='defaultTemPublic'>Make Public</label></li>-->
-        <li><label for="defaultTem3Pt1">1st 3-Point Delineation Point (e.g., left eye):</label> <select id="defaultTem3Pt1" class="tempoints"></select></li>
-        <li><label for="defaultTem3Pt2">2nd 3-Point Delineation Point (e.g., right eye):</label> <select id="defaultTem3Pt2" class="tempoints"></select></li>
-        <li><label for="defaultTem3Pt3">3rd 3-Point Delineation Point (e.g., mouth):</label> <select id="defaultTem3Pt3" class="tempoints"></select></li>
+        <li><input type='checkbox' id='isNewTem' />
+            <label for='isNewTem'>Register this as a New Template</label></li>
+        <li><label for="defaultTemName">Template Name:</label>
+            <input id="defaultTemName" type="text" /></li>
+        <li><label for="defaultTemNotes">Notes:</label>
+            <textarea id="defaultTemNotes"></textarea></li>
+        <!--<li><input type='checkbox' id='defaultTemPublic' />
+            <label for='defaultTemPublic'>Make Public</label></li>-->
+        <li><label for="defaultTem3Pt1">1st 3-Point Delineation Point (e.g., left eye):</label> 
+            <select id="defaultTem3Pt1" class="tempoints"></select></li>
+        <li><label for="defaultTem3Pt2">2nd 3-Point Delineation Point (e.g., right eye):</label> 
+            <select id="defaultTem3Pt2" class="tempoints"></select></li>
+        <li><label for="defaultTem3Pt3">3rd 3-Point Delineation Point (e.g., mouth):</label> 
+            <select id="defaultTem3Pt3" class="tempoints"></select></li>
     </ul>
 </div>
 
@@ -428,8 +472,10 @@
 </div>
 
 <!-- !- batchEditDialog -->
-<div id='batchEditDialog' class='modal'>
-    <p>Paste your batch file into the box below (<a href='/include/examples/webmorph_template_batchEdit.txt'>download template</a>). Color is optional and in the form of <code>rgb(R,G,B)</code> or <code>transparent</code>.</p>
+<div id='batchEditDialog' class='modal batchDialog'>
+    <p>Paste your batch file into the box below (<a class='download_file' 
+        data-src='/include/examples/webmorph_template_batchEdit.txt'>download template</a>). 
+        Color is optional and in the form of <code>rgb(R,G,B)</code> or <code>transparent</code>.</p>
     <dl>
         <dt>image</dt><dd>The path to the image file: e.g., <code>/male/avg.jpg</code></dd>
         <dt>align</dt><dd>pt1, pt2, x1, y1, x2, y2, width, height, [color]<br>e.g., <code>0,1,497,825,853,825,1350,1800,rgb(0,0,0)</code> or <code>DEFAULT</code></dd>
@@ -446,16 +492,29 @@
     <p class='warning'></p>
     <div class='batchTableScroll'>
         <table>
-            <thead><tr><th>image</th><th>align</th><th>resize</th><th>rotate</th><th>crop</th><th>mask</th><th>sym</th><th>mirror</th><th>order</th><th>outname</th></tr></thead>
+            <thead><tr>
+                <th>image</th>
+                <th>align</th>
+                <th>resize</th>
+                <th>rotate</th>
+                <th>crop</th>
+                <th>mask</th>
+                <th>sym</th>
+                <th>mirror</th>
+                <th>order</th>
+                <th>outname</th>
+            </tr></thead>
             <tbody></tbody>
         </table>
     </div>
-    <textarea></textarea>
 </div>
 
 <!-- !- batchTransDialog -->
-<div id='batchTransDialog' class='modal'>
-    <p>Paste your batch file into the box below (<a javascript='postIt("/include/examples/webmorph_template_batchTrans.txt");'>download template</a>).</p>
+<div id='batchTransDialog' class='modal batchDialog'>
+    <p>Paste your batch file into the box below (<a class='download_file' 
+        data-src='/include/examples/webmorph_template_batchTrans.txt'>download template</a>). 
+        Your text can be tab-delimited (paste from excel) or comma-delimited (CSV). 
+        Shape, color and texture are in percent values (e.g., 50 or 50%).</p>
     <p class='warning'></p>
     <div class='batchTableScroll'>
         <table>
@@ -463,12 +522,14 @@
             <tbody></tbody>
         </table>
     </div>
-    <textarea></textarea>
 </div>
 
 <!-- !- batchAvgDialog -->
-<div id='batchAvgDialog' class='modal'>
-    <p>Paste your batch file into the box below (<a javascript='postIt("/include/examples/webmorph_template_batchAvg.txt");'>download template</a>). Put the name of each average on the first row and the images in the average in the rows below. Put each average in a new column.</p>
+<div id='batchAvgDialog' class='modal batchDialog'>
+    <p>Paste your batch file into the box below (<a class='download_file' 
+        data-src='/include/examples/webmorph_template_batchAvg.txt'>download template</a>). 
+        Put the name of each average on the first row and the images in the 
+        average in the rows below. Put each average in a new column.</p>
     <p class='warning'></p>
     <div class="imageList"><div></div></div>
     
@@ -586,7 +647,8 @@
 
 <!-- !- pcaDialog -->
 <div id='pcaDialog' class='modal'>
-    <p>Create a PCA model for a set of templates (and optionally analyse them) or analyse a set of templates using an existing PCA model.</p>
+    <p>Create a PCA model for a set of templates (and optionally analyse them) 
+        or analyse a set of templates using an existing PCA model.</p>
     <table class='pca' id='pca_analysis'>
         
         <tr id='use_existing_pca'>
@@ -656,21 +718,36 @@
     
     <p>This will create the following files:
         <ul id='pca_files'>
-            <li id='pca_csv' class='pcaopts'><span>_analysis</span>.shape.csv = the shape analysis of the selected templates</li>
-            <li id='pci_csv' class='pciopts'><span>_analysis</span>.color.csv = the colour analysis of the selected images</li>
-            <li id='pca_pca' class='pcaopts'><span>_model</span>.pca = your PCA model (shape analysis)</li>
-            <li id='pca_txt' class='pcaopts'><span>_model</span>.pca.txt = a human-readable version of the PCA model</li>
-            <li id='pca_var' class='pcaopts'><span>_model</span>.pca.var.csv = the variance information for each component in the PCA model.</li>
-            <li id='pci_pci' class='pciopts'><span>_model</span>.pci = a directory of your PCI model (colour analysis)</li>
-            <li id='pca_tem' class='pcaopts'><span>_model</span>.tem = the procrustes normalised template for the set</li>
-            <li id='pca_jpg' class='pcaopts'><span>_model</span>.jpg = the average image for the set</li>
+            <li id='pca_csv' class='pcaopts'><span>_analysis</span>.shape.csv = 
+                the shape analysis of the selected templates</li>
+            <li id='pci_csv' class='pciopts'><span>_analysis</span>.color.csv = 
+                the colour analysis of the selected images</li>
+            <li id='pca_pca' class='pcaopts'><span>_model</span>.pca = 
+                your PCA model (shape analysis)</li>
+            <li id='pca_txt' class='pcaopts'><span>_model</span>.pca.txt = 
+                a human-readable version of the PCA model</li>
+            <li id='pca_var' class='pcaopts'><span>_model</span>.pca.var.csv = 
+                the variance information for each component in the PCA model.</li>
+            <li id='pci_pci' class='pciopts'><span>_model</span>.pci = 
+                a directory of your PCI model (colour analysis)</li>
+            <li id='pca_tem' class='pcaopts'><span>_model</span>.tem = 
+                the procrustes normalised template for the set</li>
+            <li id='pca_jpg' class='pcaopts'><span>_model</span>.jpg = 
+                the average image for the set</li>
         </ul>
     </p>
 </div>
 
 <!-- !- pcVisDialog -->
 <div id='pcVisDialog' class='modal'>
-    <p>Reconstruct or create visualisations from an existing PCA model and average. Paste in a tab, space or commma-delimited set of visualisations to create. The first column should be the save path, the second column the PCA model path, the third column the image to transform, and the following columns are the weights for each PC. Use proportions (e.g., 0.5 instead of 50 or 50%). For example, to create an image that is +1SD on the first PC different from the average: <code>/newimagename.jpg, /_model.pca, /_average.jpg, 1.0</code></p>
+    <p>Reconstruct or create visualisations from an existing PCA model and 
+        average. Paste in a tab, space or commma-delimited set of visualisations 
+        to create. The first column should be the save path, the second column 
+        the PCA model path, the third column the image to transform, and the 
+        following columns are the weights for each PC. Use proportions (e.g., 
+        0.5 instead of 50 or 50%). For example, to create an image that is +1SD 
+        on the first PC different from the average: <code>/newimagename.jpg, 
+        /_model.pca, /_average.jpg, 1.0</code></p>
     <textarea></textarea>
 </div>
 
@@ -692,6 +769,11 @@
     </ul>    
 </div>
 
+<!-- !- delinExample Dialog -->
+<div id='delinExample' class='modal' title='Delineation Example'>
+    <div id='delin_example' class='twoD'><canvas id='template_example' width="300" height="400"></canvas></div>
+</div>
+
 <!-- !- webcam Dialog -->
 <div id='webcamDialog' class='modal' title='Take Photo from Webcam'>
     <video id="webcam"></video>
@@ -701,24 +783,79 @@
 
 <!-- !- about Dialog -->
 <div id='aboutDialog' class='modal' title='About WebMorph'>
-    <p>WebMorph is made possible by the kind help of 
-        <a href="http://users.aber.ac.uk/bpt/">Bernie Tiddeman</a>, who developed and maintains the desktop 
-        version of <a href="http://users.aber.ac.uk/bpt/jpsychomorph/">Psychomorph</a>. WebMorph uses the 
-        open-source Java library <a href="http://users.aber.ac.uk/bpt/jpsychomorph/version6/javadoc/">FaceMorphLib</a> 
-        and is developed and maintained by <a href="http://facelab.org/debruine/">Lisa DeBruine</a>.</p>
-    
-    <p>WebMorph is currently in alpha testing and is likely to remain so for some time. 
-        This means that there will be bugs and you cannot rely on the website being functional 
-        100% of the time. Lisa will try to fix any problems as fast as possible, but she is the 
-        only person working on this project, so please be patient. If you're curious about the 
-        code or want to help with development, this project is open source at 
-        <a href="https://github.com/debruine/webmorph">https://github.com/debruine/webmorph</a>.</p>
-    
     <h3>To cite WebMorph</h3>
-    <p>DeBruine, L. M. &amp; Tiddeman, B. P. (<?= date("Y, F j", filemtime(DOC_ROOT . $_SERVER['PHP_SELF'])) ?>). <i>WebMorph</i>. Retrieved from http://<?= $_SERVER['SERVER_NAME'] ?></p>
+    
+    <p>Lisa DeBruine. (2017, December 4). Webmorph (Version v0.0.0.9000). Zenodo. doi:10.5281/zenodo.1073697 <a href="https://zenodo.org/badge/latestdoi/48229303"><img src="https://zenodo.org/badge/48229303.svg" alt="DOI"></a></p>
+    
     <p>Access the code at <a href="https://github.com/debruine/webmorph">GitHub</a>.</p>
-    <p>To cite the methods, see <a href="http://users.aber.ac.uk/bpt/jpsychomorph/" target="_blank">Bernie Tiddeman's webpage</a>.</p>
-    <h3>To cite provided images</h3>
-    <p>DeBruine, L. M. &amp; Jones, B. C. (2015, October 13). Average Faces. <i>Open Science Framework</i>. <a href="http://osf.io/gzy7m " target="_blank">osf.io/gzy7m</a></p>
+
+    <p>WebMorph is made possible by the kind help of 
+        <a href="http://users.aber.ac.uk/bpt/" target="_blank">Bernie Tiddeman</a>, 
+        who developed and maintains the desktop version of 
+        <a href="http://users.aber.ac.uk/bpt/jpsychomorph/" target="_blank">Psychomorph</a>. 
+        WebMorph uses the open-source Java library 
+        <a href="http://users.aber.ac.uk/bpt/jpsychomorph/version6/javadoc/" target="_blank">FaceMorphLib</a> 
+        and is developed and maintained by 
+        <a href="http://facelab.org/debruine/" target="_blank">Lisa DeBruine</a>.
+    </p>
+    
+    <p>WebMorph is currently in beta testing and is likely to remain so for some 
+        time. This means that there will be bugs and you cannot rely on the 
+        website being functional 100% of the time. Lisa will try to fix any 
+        problems as fast as possible, but she is the only person working on this 
+        project, so please be patient. If you're curious about the code or want 
+        to help with development, this project is open source at 
+        <a href="https://github.com/debruine/webmorph" target="_blank">github.com/debruine/webmorph</a>.
+    </p>
+    
+    <h3>Other citations</h3>
+    
+    <p>To cite the morphing and transforming methods, see 
+        <a href="http://users.aber.ac.uk/bpt/jpsychomorph/" 
+            target="_blank">Bernie Tiddeman's webpage</a>.
+    </p>
+    
+    <p><img src="/include/images/demos/symscram" 
+        style="float: left; margin-right: 5px;">
+        The symmetric image scrambling methods were first published in:<br>
+        CA Conway, BC Jones, LM DeBruine, AC Little & A Sahraie (2008). Transient 
+        pupil constrictions to faces are sensitive to orientation and species. 
+        <i>Journal of Vision</i>, 8(3): 17. 
+        <a href="http://dx.doi.org/10.1167/8.3.17" target="_blank">doi: 10.1167/8.3.17</a>
+    </p>
+    <h3>To cite (or download) provided images</h3>
+    <p><img src="/include/images/demos/london2017.jpg"><br>
+        DeBruine, Lisa &amp; Jones, Benedict (2017). 
+        Face Research Lab London Set. <i>figshare</i>.
+        <a href="https://doi.org/10.6084/m9.figshare.5047666.v3"
+            target="_blank">doi: 10.6084/m9.figshare.5047666.v3</a>
+    </p>
+    <p>
+        <img src="/include/examples/f_african">
+        <img src="/include/examples/f_easian">
+        <img src="/include/examples/f_wasian">
+        <img src="/include/examples/f_white">
+        <img src="/include/examples/f_multi"><br>
+        <img src="/include/examples/m_african">
+        <img src="/include/examples/m_easian">
+        <img src="/include/examples/m_wasian">
+        <img src="/include/examples/m_white">
+        <img src="/include/examples/m_multi"><br>
+        DeBruine, Lisa (2016). Young adult composite faces. <i>figshare</i>. 
+        <a href="https://dx.doi.org/10.6084/m9.figshare.4055130.v1" 
+            target="_blank">doi: 10.6084/m9.figshare.4055130.v1</a>
+    </p>
+    <p><img src="/include/images/demos/canada2003.jpg"><br>
+        DeBruine, Lisa &amp; Jones, Benedict (2017). 
+        Young Adult White Faces with Manipulated Versions. <i>figshare</i>.
+        <a href="https://doi.org/10.6084/m9.figshare.4220517.v1"
+            target="_blank">doi: 10.6084/m9.figshare.4220517.v1</a>
+    </p>
+    <p><img src="/include/examples/_female_avg">
+        <img src="/include/examples/_male_avg"><br>
+        DeBruine, L. M. &amp; Jones, B. C. (2015). Average Faces. 
+        <i>Open Science Framework</i>. 
+        <a href="http://osf.io/gzy7m " target="_blank">osf.io/gzy7m</a>
+    </p>
     
 </div>

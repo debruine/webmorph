@@ -34,7 +34,7 @@ $q = new myQuery("SELECT project.user_id as owner
 
 if ($q->get_num_rows() > 0) {
     $return['filemtime'] = filemtime(IMAGEBASEDIR . $proj_id);
-    if ($return['filemtime'] != $_POST['filemtime']) {
+    //if ($return['filemtime'] != $_POST['filemtime']) {
         $res = countFilesProc(IMAGEBASEDIR . $proj_id);
         if ($res) {
             $return['mysize'] = ($q->get_one() == $user) ? $res['size'] : 0;
@@ -42,8 +42,11 @@ if ($q->get_num_rows() > 0) {
             $return['trash'] = $res['trash'] | 0;
             $return['tmp'] = $res['tmp'] | 0;
             $return['size'] = formatBytes($res['size']);
+            
+            $q = new myQuery("UPDATE project SET filemtime='{$return['filemtime']}', files='{$return['files']}', size='{$res['size']}' WHERE id='{$proj_id}'");
+            
         }
-    }
+    //}
 }
 
 scriptReturn($return);

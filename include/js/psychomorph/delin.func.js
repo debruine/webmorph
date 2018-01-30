@@ -19,6 +19,23 @@ function newDelinPoint(e) {
     drawTem();
 }
 
+function delin_fitsize() {
+    var availableWidth,
+        availableHeight,
+        fitWidth,
+        resize = 1.0;
+        
+    availableWidth = $('#delineateInterface').innerWidth();
+    availableHeight = $(window).height() - $delin.offset().top - $('#footer').height() - 20;
+    fitWidth = availableWidth*WM.originalHeight/WM.originalWidth;
+
+    resize = (fitWidth >= availableHeight) ?
+                 availableHeight :  // fit to available height
+                 fitWidth;          // fit to available width
+
+    $('#imgsize').slider('value', resize);
+}
+
 function setSymPoints() {
     if (WM.delin.tem.length != WM.current.tem.length) {
         growl('The current template does not match the template <code>'
@@ -34,10 +51,12 @@ function setSymPoints() {
                 growl(data.errorText);
             } else {
                 var theText = '<p>To set symmetry points, look for the '
-                            + 'highlighted point and click on its corresponding '
-                            + 'point on the other side. If a point is on the '
-                            + 'midline, its corresponding point is itself. If you '
-                            + 'make a mistake, click cmd-Z to go back a point.</p>';
+                            + 'highlighted point and cmd-click on its corresponding '
+                            + 'point on the other side. You can move points out '
+                            + 'of the way to check if they are overlapping. If a '
+                            + 'point is on the midline, its corresponding point '
+                            + 'is itself. If you make a mistake, click cmd-Z to '
+                            + 'go back a point.</p>';
                 $('<div />').html(theText).dialog({
                     title: 'Set Symmetry Points for '
                             + $('#currentTem_name').text(),
@@ -65,7 +84,7 @@ function setSymPoints() {
     });
 }
 
-function quickhelp(text, fadeout) {  console.log('quickhelp(' + text + ', ' + fadeout + ')');
+function quickhelp(text, fadeout) {
     if (text === undefined || text.trim() === '') {
         $('#quickhelp').fadeOut();
     } else {
@@ -160,6 +179,7 @@ function threePtDelin(e) {
                     WM.current.tem[i].y = newy;
                 });
                 makePoints(WM.current.tem);
+                updateUndoList();
             }
         });
         $('#template').show();
@@ -197,6 +217,9 @@ function delinImage(name, async) { console.log('delinImage(' + name + ', ' + asy
         url: 'scripts/imgDelin',
         data: { img: name },
         success: function(data) {
+            $('.twoD').show();
+            $('.threeD').hide();
+            
             var h = $delin.height();
             WM.originalHeight = data.originalHeight;
             WM.originalWidth = data.originalWidth;
@@ -450,8 +473,9 @@ function drawBezier(ctx, v, begin) {
             cp = cp.concat(getControlPoints(pts[j], pts[j + 1], pts[j + 2], pts[j + 3], pts[j + 4], pts[j + 5]));
         }
         cp = cp.concat(cp[0], cp[1]);
+        ctx.moveTo(pts[2], pts[3]);
         for (j = 2; j < n + 2; j += 2) {
-            ctx.moveTo(pts[j], pts[j + 1]);
+            //ctx.moveTo(pts[j], pts[j + 1]);
             ctx.bezierCurveTo(cp[2 * j - 2], cp[2 * j - 1], cp[2 * j], cp[2 * j + 1], pts[j + 2], pts[j + 3]);
         }
     } else {
@@ -469,37 +493,55 @@ function drawBezier(ctx, v, begin) {
     ctx.stroke();
 }
 
-function svgBezier(v, lineWidth, stkColor) {
+function svgBezier(v, lineWidth, stkColor, lineName) {
     var pts = [],
         cp = [], // array of control points, as x0,y0,x1,y1,...
         n,
         j,
         ctx = {},
-        path = '    <path d="';
+        path = '';
+        
+    if (typeof lineName === 'undefined') { lineName = 'line'; }
+    
+    path = '    <path name="' + lineName + '"\n          d="';
 
     ctx = {
         moveTo: function(x, y) {
-            path += 'M' + x + ' ' + y;
+            x = round(x, 2);
+            y = round(y, 2);
+            path += 'M ' + x + ' ' + y;
         },
         lineTo: function(x, y) {
-            path += ' L ' + x + ' ' + y;
+            x = round(x, 2);
+            y = round(y, 2);
+            path += '\n             L ' + x + ' ' + y;
         },
         stroke: function() {
             if (typeof stkColor === 'undefined' && typeof lineWidth === 'undefined') {
-                path += '"/>';
+                path += '"\n    />';
             } else if (typeof lineWidth === 'undefined') {
-                path += '" stroke="' + stkColor + '"/>';
+                path += '"\n             stroke="' + stkColor + '"\n    />';
             } else if (typeof stkColor === 'undefined') {
-                path += '" stroke-width="' + lineWidth + '"/>';
+                path += '"\n             stroke-width="' + lineWidth + '"\n    />';
             } else {
-                path += '" stroke="' + stkColor + ' stroke-width="' + lineWidth + '"/>';
+                path += '"\n             stroke="' + stkColor + '\n             stroke-width="' + lineWidth + '"\n    />';
             }
         },
         quadraticCurveTo: function(x1, y1, x, y) {
-            path += ' Q ' + x1 + ' ' + y1 + ', ' + x + ' ' + y;
+            x1 = round(x1, 2);
+            y1 = round(y1, 2);
+            x = round(x, 2);
+            y = round(y, 2);
+            path += '\n             Q ' + x1 + ' ' + y1 + ', ' + x + ' ' + y;
         },
         bezierCurveTo: function(x1, y1, x2, y2, x, y) {
-            path += ' C ' + x1 + ' ' + y1 + ', ' + x2 + ' ' + y2 + ', ' + x + ' ' + y;
+            x1 = round(x1, 2);
+            y1 = round(y1, 2);
+            x2 = round(x2, 2);
+            y2 = round(y2, 2);
+            x = round(x, 2);
+            y = round(y, 2);
+            path += '\n             C ' + x1 + ' ' + y1 + ', ' + x2 + ' ' + y2 + ', ' + x + ' ' + y;
         }
     };
 
@@ -532,8 +574,9 @@ function svgBezier(v, lineWidth, stkColor) {
             cp = cp.concat(getControlPoints(pts[j], pts[j + 1], pts[j + 2], pts[j + 3], pts[j + 4], pts[j + 5]));
         }
         cp = cp.concat(cp[0], cp[1]);
+        ctx.moveTo(pts[2], pts[3]);
         for (j = 2; j < n + 2; j += 2) {
-            ctx.moveTo(pts[j], pts[j + 1]);
+            
             ctx.bezierCurveTo(cp[2 * j - 2], cp[2 * j - 1], cp[2 * j], cp[2 * j + 1], pts[j + 2], pts[j + 3]);
         }
     } else {
@@ -785,12 +828,25 @@ function drawTem() {
             left: v.x*WM.temRatio
         });
     });
+    
+    // move 3-point delin points if visible
+    $.each(WM.eyeClicks, function(i, ec) {
+        var imgoffset = $delin.offset();
+        var thePt = [$('#leftEye'), $('#rightEye'), $('#mouth')];
+        var x =  ec.x * WM.temRatio +  imgoffset.left;
+        var y =  ec.y * WM.temRatio + imgoffset.top;
+        
+        thePt[i].css('left', x - (thePt[i].width() / 2))
+                .css('top', y - (thePt[i].height() / 2));
+    });
 }
 
-function temSVG(lines, points, image) {
+function temSVG(lines, points, image, theType) {
     var nlines, i, j, x, y,
         defaultLineWidth,
         bez = [],
+        theLine,
+        lineName,
         npoints,
         lineWidth,
         stkColor,
@@ -815,14 +871,16 @@ function temSVG(lines, points, image) {
 
         nlines = WM.current.lines.length;
         for (i = 0; i < nlines; i++) {
+            theLine = WM.current.lines[i],
             bez = [],
             sel = 0,
             csel=0,
-            npoints = WM.current.lines[i].length;
+            npoints = theLine.length,
+            lineName = WM.delin.tem[theLine[0]].name + ' to ' + WM.delin.tem[theLine[npoints-1]].name;
 
             for (j = 0; j < npoints; j++) {
-                x = WM.current.tem[WM.current.lines[i][j]].x;
-                y = WM.current.tem[WM.current.lines[i][j]].y;
+                x = WM.current.tem[theLine[j]].x;
+                y = WM.current.tem[theLine[j]].y;
 
                 bez.push([x, y]);
             }
@@ -833,7 +891,7 @@ function temSVG(lines, points, image) {
             lineWidth = (typeof WM.delin.lineWidths[i]=='undefined' || WM.delin.lineWidths[i] == 'default') ?
                             undefined : WM.delin.lineWidths[i];
 
-            paths.push(svgBezier(bez, lineWidth, stkColor));
+            paths.push(svgBezier(bez, lineWidth, stkColor, lineName));
         }
 
         paths.push('</g>');
@@ -847,17 +905,17 @@ function temSVG(lines, points, image) {
         npoints = WM.current.tem.length;
 
         for (i = 0; i < npoints; i++) {
-            x = WM.current.tem[i].x;
-            y = WM.current.tem[i].y;
+            x = round(WM.current.tem[i].x, 2);
+            y = round(WM.current.tem[i].y, 2);
 
             if (points == 'circle') {
-                paths.push('    <circle id="pt' + i + '" name="' + WM.delin.tem[i].name + '" cx="' + x + '" cy="' + y + '" r="' + pointSize + '" />');
+                paths.push('    <circle id="pt' + i + '" name="' + WM.delin.tem[i].name + '"\n          cx="' + x + '" cy="' + y + '" r="' + pointSize + '" />');
             } else if (points == 'numbers') {
-                paths.push('    <circle id="pt' + i + '" name="' + WM.delin.tem[i].name + '" cx="' + x + '" cy="' + y + '" r="' + 1 + '" />');
+                paths.push('    <circle id="pt' + i + '" name="' + WM.delin.tem[i].name + '"\n          cx="' + x + '" cy="' + y + '" r="' + 1 + '" />');
 
             } else {
-                paths.push('    <line name="' + WM.delin.tem[i].name + '" x1="' + x + '" y1="' + (y-pointSize) + '" x2="' + x + '" y2="' + (y+pointSize) + '" />');
-                paths.push('    <line name="' + WM.delin.tem[i].name + '" x1="' + (x-pointSize) + '" y1="' + y + '" x2="' + (x+pointSize) + '" y2="' + y + '" />');
+                paths.push('    <line name="' + WM.delin.tem[i].name + '"\n          x1="' + x + '" y1="' + (y-pointSize) + '" x2="' + x + '" y2="' + (y+pointSize) + '" />');
+                paths.push('    <line name="' + WM.delin.tem[i].name + '"\n          x1="' + (x-pointSize) + '" y1="' + y + '" x2="' + (x+pointSize) + '" y2="' + y + '" />');
             }
         }
 
@@ -868,7 +926,7 @@ function temSVG(lines, points, image) {
             for (i = 0; i < npoints; i++) {
                 x = WM.current.tem[i].x;
                 y = WM.current.tem[i].y;
-                paths.push('    <text  id="n' + i + '" name="' + WM.delin.tem[i].name + '" x="' + x + '" y="' + y + '">' + i + '</text>');
+                paths.push('    <text  id="n' + i + '" name="' + WM.delin.tem[i].name + '"\n          x="' + x + '" y="' + y + '">' + i + '</text>');
             }
             paths.push('</g>');
         }
@@ -880,7 +938,8 @@ function temSVG(lines, points, image) {
     url = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(paths.join("\r\n"));
     postIt('scripts/temDownload', {
         img: WM.faceimg,
-        svg: paths.join("\r\n")
+        svg: paths.join("\r\n"),
+        type: theType
     });
 }
 
@@ -1035,6 +1094,7 @@ function saveTem() {
                 var theTime = pad(now.getHours(), 2, '0') + ':' + pad(now.getMinutes(), 2, '0') + ':' + pad(now.getSeconds(), 2, '0');
                 $('#footer-text').html(urlToName(WM.faceimg) + ' saved (' + theTime + ')');
                 $('#delin_save').removeClass('unsaved');
+                WM.finder.addFile(WM.faceimg, true);
             } else {
                 growl(data.errorText);
             }
@@ -1076,18 +1136,25 @@ function removeTemPoints(ptArray) { console.log('removeTemPoints(' + ptArray.joi
     var tem_map = [];
     var newi = 0;
     $.each(WM.current.tem, function(i, v) {
-        if ($.inArray(i, ptArray) > -1) {
+        if ($.inArray(i+'', ptArray) > -1) {
             tem_map[i] = 'removed';
         } else {
             tem_map[i] = newi;
             newi++;
         }
     });
+    
+    $.each(WM.current.tem, function(i, v) {
+        WM.current.tem[i].oldi = i;
+        WM.current.tem[i].name = WM.delin.tem[i].name;
+    });
     // remove all tem points so they are re-generated at the end
     $('.pt').remove();
+    // remove deleted points
     $.each(ptArray, function(i, v) {
         WM.current.tem.splice(v, 1);
     });
+    // log new index
     $.each(WM.current.tem, function(i, v) {
         WM.current.tem[i].i = i;
     });
@@ -1095,6 +1162,7 @@ function removeTemPoints(ptArray) { console.log('removeTemPoints(' + ptArray.joi
     var ln = WM.current.lines.length;
     for (var i = ln - 1; i >= 0; i--) {
         var line = WM.current.lines[i];
+        console.log("Line " + i + ": " + line.join());
         var n = line.length;
         for (var j = n - 1; j >= 0; j--) {
             if (tem_map[line[j]] == 'removed') {
@@ -1105,6 +1173,9 @@ function removeTemPoints(ptArray) { console.log('removeTemPoints(' + ptArray.joi
         }
         if (WM.current.lines[i].length < 2) {
             WM.current.lines.splice(i, 1);
+            console.log("* Removed Line " + i);
+        } else {
+            console.log("* New Line " + i + ": " + WM.current.lines[i].join());
         }
     }
     updateUndoList();
@@ -1125,6 +1196,7 @@ function nextSymPt(i) {
     }
     if (n >= WM.current.tem.length) {
         WM.delinfunc = 'move';
+        $('.pt').removeClass('selected').removeClass('highlighted');
         $('#pointer').fadeOut().css({left: '-100px', top: '-100px'});
 
         $.ajax({
@@ -1141,29 +1213,49 @@ function nextSymPt(i) {
                 }
             }
         });
-    }
-    // unselect all points first
-    $.each(WM.selectedPts, function(idx, val) {
-        if (val) {
-            var pt = WM.stage.get('#d' + idx)[0];
-            pt.selected = false;
-            pt.setImage(WM.cross);
-        }
-    });
-    WM.selectedPts = [];
-    var pt = WM.stage.get('#d' + n)[0];
-    if (pt !== undefined) {
-        WM.selectedPts[n] = true;
-        pt.selected = true;
-        pt.setImage(WM.hover_cross);
-
-        var imgoffset = $delin.offset();
+    } else {
+        // unselect and unhighlight all points first
+        $('.pt').removeClass('selected').removeClass('highlighted');
+        var pt = WM.pts[n];
+        pt.addClass('highlighted');
+        $('#footer-text').prop('data-persistent', 
+                               'Cmd-click the sym point for [' + n + '] ' 
+                               + WM.delin.tem[n].name);
+        $('#footer-text').html($('#footer-text').prop('data-persistent'));
+        
+        // move pointer to left of point
         $('#pointer').css({
-            left: pt.getX() + imgoffset.left - 7 - $('#pointer').width(),
-            top: pt.getY() + imgoffset.top + 1 - $('#pointer').height()/2
+            left: pt.offset().left - $('#pointer').width(),
+            top: pt.offset().top - $('#pointer').height()/2 + pt.height()/2
         }).show();
     }
-    WM.temLayer.draw();
+}
+
+function nextPointLabel(n) {
+    // point to and highlight the corresponding point when the label is in focus
+    // unselect all points first
+    $('.pt').removeClass('selected').removeClass('highlighted');
+    var pt = WM.pts[n];
+    pt.addClass('highlighted');
+
+    var imgoffset = $delin.offset();
+    $('#pointer').css({
+        left: pt.offset().left - $('#pointer').width(),
+        top: pt.offset().top - $('#pointer').height()/2 + pt.height()/2
+    }).show();
+}
+
+function showHoverPoints() {
+    var n,
+        conPts;
+    if (WM.delinfunc != 'sym') {
+        n = $('.pt:hover').attr('n');
+        conPts = WM.pts[n].data('connectedPoints');
+        $.each(conPts, function(i,pt) {
+            WM.pts[pt].addClass('couldselect');
+        });
+        drawTem();
+    }
 }
 
 function boxHover(e) {
@@ -1189,21 +1281,20 @@ function boxHover(e) {
         x: (e.pageX - imgoffset.left),
         y: (e.pageY - imgoffset.top)
     };
+    
     $.each(WM.current.tem, function(i, v) {
-        if (WM.stage.get('#d' + i).length) {
-            var pt = WM.stage.get('#d' + i)[0];
-            var ptX = pt.getX();
-            var ptY = pt.getY();
-            if (!pt.selected) {
-                if (ptX >= Math.min(mousedown.x, mouseup.x) && ptX <= Math.max(mousedown.x, mouseup.x) && ptY >= Math.min(mousedown.y, mouseup.y) && ptY <= Math.max(mousedown.y, mouseup.y)) {
-                    pt.setImage(WM.hover_cross);
-                } else {
-                    pt.setImage(WM.cross);
+        var ptX = v.x * WM.temRatio;
+        var ptY = v.y * WM.temRatio;
+        if (ptX >= Math.min(mousedown.x, mouseup.x)) {
+            if (ptX <= Math.max(mousedown.x, mouseup.x)) {
+                if (ptY >= Math.min(mousedown.y, mouseup.y)) {
+                    if (ptY <= Math.max(mousedown.y, mouseup.y)) {
+                        WM.pts[i].addClass('selected');
+                    }
                 }
             }
         }
     });
-    WM.temLayer.draw();
 }
 
 function boxSelect(e) {
@@ -1286,6 +1377,26 @@ function clickPt(pt) {
 }
 
 function setPointLabels() {
+    if (WM.delin.tem.length != WM.current.tem.length) {
+        growl('The current template does not match the template <code>' + 
+               $('#currentTem_name').text() + '</code>');
+    } else {
+        // check if the current user has access to edit this template
+        $.ajax({
+            url: '/scripts/userCheckAccess',
+            data: { table: 'tem', id: WM.delin.temId },
+            success: function(data) {
+                if (data.error) {
+                    growl(data.errorText);
+                } else {
+                    createPointLabels();
+                }
+            }
+        });
+    }
+}
+
+function createPointLabels() {
     var ptLabels = [];
     WM.delinfunc = 'label';
 
@@ -1300,7 +1411,7 @@ function setPointLabels() {
         title: "Set Point Labels",
         modal: false,
         height: 500,
-        position: { my: 'right top', at: 'right bottom', of: $('.menubar') },
+        position: { my: 'right top', at: 'right bottom', of: $('#menubar') },
         buttons: {
             Cancel: function() { $(this).dialog('close'); },
             "Save": function() {

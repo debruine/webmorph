@@ -1,7 +1,7 @@
 <?php
 
 require_once $_SERVER['DOCUMENT_ROOT'] . '/include/main_func.php';
-
+auth();
 date_default_timezone_set('Europe/London');
 include DOC_ROOT . '/include/classes/PHPMailer/PHPMailerAutoload.php';
 
@@ -11,7 +11,7 @@ $return = array(
 );
 
 $id = my_clean($_POST['id']);
-$auth = cleanData($_POST, 'auth', array("user","disabled"), $default = 'disabled');
+$auth = cleanData($_POST, 'auth', array("user","disabled","rejected"), $default = 'disabled');
 
 $q = new myQuery("UPDATE user SET status='{$auth}' WHERE id={$id}");
 

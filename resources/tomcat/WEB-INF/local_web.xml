@@ -30,7 +30,7 @@
 		</init-param>
 		<init-param>
 			<param-name>outputURL</param-name>
-			<param-value>http://test.faceresearch.org/psychomorph/uploads/</param-value>
+			<param-value>http://faceresearch.test/psychomorph/uploads/</param-value>
 		</init-param>
 		<init-param>
 			<param-name>deleteTime</param-name>

@@ -28,10 +28,37 @@ try {
     } else {
         mkdir($mydir . '/.tmp', DIRPERMS);
         mkdir($mydir . '/.trash', DIRPERMS);
-        copy(DOC_ROOT . '/include/examples/_female_avg.jpg', $mydir . '/_female_avg.jpg');
-        copy(DOC_ROOT . '/include/examples/_female_avg.tem', $mydir . '/_female_avg.tem');
-        copy(DOC_ROOT . '/include/examples/_male_avg.jpg', $mydir . '/_male_avg.jpg');
-        copy(DOC_ROOT . '/include/examples/_male_avg.tem', $mydir . '/_male_avg.tem');
+        mkdir($mydir . '/composites', DIRPERMS);
+        mkdir($mydir . '/3d', DIRPERMS);
+        
+        $faces = array(
+            //"_female_avg",
+            //"_male_avg",
+            "f_african",
+            "f_easian",
+            "f_multi",
+            "f_wasian",
+            "f_white",
+            "m_african",
+            "m_easian",
+            "m_multi",
+            "m_wasian",
+            "m_white",
+        );
+
+        foreach ($faces as $face) {
+            copy(DOC_ROOT . "/include/examples/{$face}.jpg", "{$mydir}/composites/{$face}.jpg");
+            copy(DOC_ROOT . "/include/examples/{$face}.tem", "{$mydir}/composites/{$face}.tem");
+        }
+        
+        copy(DOC_ROOT . "/include/3d/average_easian_female.jpg", "{$mydir}/3d/average_easian_female.jpg");
+        copy(DOC_ROOT . "/include/3d/average_easian_female.obj", "{$mydir}/3d/average_easian_female.obj");
+        copy(DOC_ROOT . "/include/3d/average_easian_male.jpg", "{$mydir}/3d/average_easian_male.jpg");
+        copy(DOC_ROOT . "/include/3d/average_easian_male.obj", "{$mydir}/3d/average_easian_male.obj");
+        copy(DOC_ROOT . "/include/3d/average_white_female.jpg", "{$mydir}/3d/average_white_female.jpg");
+        copy(DOC_ROOT . "/include/3d/average_white_female.obj", "{$mydir}/3d/average_white_female.obj");
+        copy(DOC_ROOT . "/include/3d/average_white_male.jpg", "{$mydir}/3d/average_white_male.jpg");
+        copy(DOC_ROOT . "/include/3d/average_white_male.obj", "{$mydir}/3d/average_white_male.obj");
         
         copy(DOC_ROOT . '/include/examples/webmorph_template_batchAvg.txt', $mydir . '/_batchAvg_template.txt');
         copy(DOC_ROOT . '/include/examples/webmorph_template_batchTrans.txt', $mydir . '/_batchTrans_template.txt');
@@ -46,7 +73,7 @@ try {
         
         $_SESSION['projects'][] = $new_proj_id;
     }
-} catch (Exception $e) {
+} catch (Throwable $e) {
     $return['error'] = true;
     $return['errorText'] .=  $e->getMessage();
 }
@@ -64,6 +91,9 @@ CREATE TABLE project (
     name VARCHAR(32) NOT NULL,
     notes TEXT,
     dt DATETIME,
+    filemtime INT(10),
+    files INT(8),
+    size BIGINT,
     PRIMARY KEY (id)
 );
 
@@ -89,12 +119,20 @@ DELETE FROM project_user;
 
 INSERT INTO project_user SELECT id, id FROM user;
 
+// update pref and img tables for projects
+
 REPLACE INTO pref SELECT id, 'default_project', id FROM user;
 
 ALTER TABLE img ADD COLUMN project_id INT(11) AFTER dt;
 UPDATE img SET project_id = user_id;
 DROP index name ON img;
 CREATE UNIQUE INDEX project_name ON img(project_id, name);
+
+// added project size variables 2016-09-22
+
+ALTER TABLE project ADD filemtime INT(10);
+ALTER TABLE project ADD files INT(8);
+ALTER TABLE project ADD size BIGINT;
 
 */
 

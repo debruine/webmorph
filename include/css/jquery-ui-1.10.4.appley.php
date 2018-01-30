@@ -756,13 +756,13 @@ body .ui-tooltip {
 	color: #000; 
 	text-decoration: none; 
 	text-shadow: 0 1px rgba(255,255,255,.2);
-	font:  400 13px/19px "Helvetica Neue", Arial, sans-serif;
+	font:  400 17px/29px "Helvetica Neue", Arial, sans-serif;
 }
 .ui-widget .ui-widget {
 	color: #000; 
 	text-decoration: none; 
 	text-shadow: 0 1px rgba(255,255,255,.2);
-	font:  400 13px/19px "Helvetica Neue", Arial, sans-serif;
+	font:  400 17px/29px "Helvetica Neue", Arial, sans-serif;
 }
 .ui-widget input,
 .ui-widget select,
@@ -771,7 +771,7 @@ body .ui-tooltip {
 	color: #000; 
 	text-decoration: none; 
 	text-shadow: 0 1px rgba(255,255,255,.2);
-	font:  400 13px/19px "Helvetica Neue", Arial, sans-serif;
+	font: 400 17px/29px "Helvetica Neue", Arial, sans-serif;
 }
 .ui-widget-content {
 	background: rgb(237,237,237);
@@ -789,8 +789,8 @@ body .ui-tooltip {
 	margin: 0; 
 	padding: 0 1.5em; 
 	text-shadow: 0px 1px 0px rgba(255,255,255,0.3);
-	font-size: 14px;
-	height: 22px;
+	font-size: 17px;
+	height: 29px;
 	background: -webkit-linear-gradient(top, rgba(250,250,250,0.8) 0%, rgba(206,206,206,0.8) 100%);
 	background: -moz-linear-gradient(top, rgba(250,250,250,0.8) 0%, rgba(206,206,206,0.8) 100%);
 	border-top: 1px solid rgba(255,255,255,0.5);
@@ -865,6 +865,13 @@ body .ui-tooltip {
 .ui-widget-content .ui-state-highlight a,
 .ui-widget-header .ui-state-highlight a {
 	color: #363636;
+}
+.ui-state-ok, 
+.ui-widget-content .ui-state-ok, 
+.ui-widget-header .ui-state-ok {
+	border: 1px solid #339933; 
+	background: #eeffee url("images/ui-bg_glass_75_e3e6e8_1x400.png") 50% 50% repeat-x;
+	color: #339933; 
 }
 .ui-state-error,
 .ui-widget-content .ui-state-error,

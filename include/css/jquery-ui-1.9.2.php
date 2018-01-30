@@ -156,6 +156,12 @@ jQuery UI
 	color: #363636; 
 }
 .ui-state-highlight a, .ui-widget-content .ui-state-highlight a,.ui-widget-header .ui-state-highlight a { color: #363636; }
+.ui-state-ok, .ui-widget-content .ui-state-ok, .ui-widget-header .ui-state-ok {
+	border: 1px solid #fca1ef; 
+	/* background: #fef1ec url(images/ui-bg_inset-soft_95_fef1ec_1x100.png) 50% bottom repeat-x; */
+	background: #feecf1;
+	color: #993399; 
+}
 .ui-state-error, .ui-widget-content .ui-state-error, .ui-widget-header .ui-state-error {
 	border: 1px solid #cd0a0a; 
 	/* background: #fef1ec url(images/ui-bg_inset-soft_95_fef1ec_1x100.png) 50% bottom repeat-x; */

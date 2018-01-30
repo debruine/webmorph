@@ -40,7 +40,11 @@ if (file_exists($file) && $userCanDownloadThisFile && underPath($file)) {
             header('Content-Type: image/png');
         } else if ($ext == 'gif') {
             header('Content-Type: image/gif');
+        } else if ($ext == 'svg') {
+            header('Content-Type: image/svg+xml');
         } else if ($ext == 'tem') {
+            header('Content-Type: text/plain');
+        } else if ($ext == 'obj') {
             header('Content-Type: text/plain');
         }
         

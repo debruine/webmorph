@@ -1,3 +1,0 @@
-Initialising transform servlet v.4
-    mydirectory = /Users/lisad/images/
-Completed initialising transform servlet v.4

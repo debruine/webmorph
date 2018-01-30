@@ -1,6 +1,6 @@
 <?php
 
-// modify the selected tem files by deleting points and chnaging lines
+// modify the selected tem files by deleting points and changing lines
 // need to add adding points
 
 require_once $_SERVER['DOCUMENT_ROOT'] . '/include/main_func.php';

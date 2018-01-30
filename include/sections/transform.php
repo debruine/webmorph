@@ -1,15 +1,23 @@
 <div id='transformInterface' class='interface'>
+    <p class="msg" data-msg_id="trans_drag">Transform images by selecting them in 
+        the Finder and double-clicking on the image to transform or transform 
+        dimension boxes. (You can no longer drag images to the boxes.)
+    </p>
+    
     <!-- DESTINATION IMAGES -->
     <ul id='destimages' class='feature'>
         <li>
-            <div><img src='/include/images/blankface.php' alt='image to transform' id='transimage' /><br />image to transform</div>
-            <div><img id='transform' class='nodrop' src='/include/images/blank' alt='transform' /><br />transformed image</div>
+            <div><img src='/include/images/blankface.php' alt='image to transform' id='transimage' />
+                <br />image to transform</div>
+            <div><img id='transform' class='nodrop' src='/include/images/blank' alt='transform' />
+                <br />transformed image</div>
         </li>
         <li>
-            <div><img src='/include/images/blankface.php' alt='image type to transform from' id='fromimage' /></div>
-            <div><img src='/include/images/blankface.php' alt='image type to transform to' id='toimage' /></div>
+            <div id="trans_minus"><img src='/include/images/blankface.php' alt='image type to transform from' id='fromimage' />
+                <br>- transform</div>
+            <div id="trans_plus"><img src='/include/images/blankface.php' alt='image type to transform to' id='toimage' />
+                <br>dimension +</div>
         </li>
-        <li>- transform dimension +</li>
         
         <!-- transform controller -->
         <li id='trans_settings'>

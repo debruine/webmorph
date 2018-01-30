@@ -33,7 +33,7 @@ $return = array(
 if (!perm('pca')) {
     $return['errorText'] .= 'You do not have permission to create a PCA';
 } else {
-    $url = 'http://' . $_SERVER["SERVER_NAME"] . '/tomcat/psychomorph/pca?';
+    $url = 'https://' . $_SERVER["SERVER_NAME"] . '/tomcat/psychomorph/pca?';
     
     // set up data
     $theData = $_POST['theData'];
@@ -52,6 +52,10 @@ if (!perm('pca')) {
     
     $ch = curl_init();
     //curl_setopt($ch, CURLOPT_URL, $url . $query);
+    if ($_SERVER['SERVER_NAME'] == 'webmorph.test') {
+        // workaround for local server problem with self-signed certificates
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+    }
     curl_setopt($ch, CURLOPT_URL, $url);
     curl_setopt($ch, CURLOPT_POST, true);
     curl_setopt($ch, CURLOPT_POSTFIELDS, $query);
@@ -75,7 +79,7 @@ if (!perm('pca')) {
             
             $img = new PsychoMorph_ImageTem($avgimg, $avgtem);
             
-            $img->setDescription(array(
+            $img->addHistory(array(
                 'Desc' => 'Average image for PCA model ' . $theData['pcafile'] . '.pca',
                 'images' => $theData['images'],
                 'texture' => $theData['texture'],
@@ -86,7 +90,7 @@ if (!perm('pca')) {
             
             if ($img !== null && $img->save($newFileName)) {
                 $return['error'] = false;
-                $return['newFileName'] = $img->getImg()->getURL();
+                $return['newFileName'] = $img->getURL();
             } else {
                 $return['errorText'] .= 'The image was not saved. ';
                 $return['newFileName'] = $newFileName;

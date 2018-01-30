@@ -1,17 +1,18 @@
-<ul class='menubar' data-role="nav-bar">
+<ul id='menubar' data-role="nav-bar">
 
     <!--<li class='menucategory'><span style='background: center center no-repeat url(/include/images/favicon.gif); width: 22px;'>&nbsp;</span></li>-->
 
     <li class='menucategory'>
         <span>WebMorph</span>
         <ul>
-            <li class='finder delineate average transform login project' id='aboutPsychomorph'>
+            <li class='finder delineate average transform login project' id='aboutWebmorph'>
                 About WebMorph
             </li>
             <li class='separator'></li>
             <?php
                 if ($_SESSION['user_id'] == 1) {
-                    echo "            <li class='finder delineate average transform project' id='debug'>Debug</li>\n";
+                    echo "            <li class='finder delineate average transform project' id='admin'>Admin</li>\n";
+                    echo "            <li class='finder delineate average transform project' id='reload_scripts'>Reload Scripts</li>\n";
                 }
             ?>
             <li class='finder delineate average transform project' id='prefs'
@@ -26,7 +27,6 @@
             <li class='separator'></li>
             <li class='finder delineate average transform project' id='logout'>
                 Logout
-                <span class="shortcut cmd">Q</span>
             </li>
         </ul>
     </li>
@@ -39,14 +39,9 @@
                 <ul class='submenu' id="currentProject">
                 </ul>
             </li>
-            <li class='finder project' id='newProject'>
-                New Project
-                <span class="shortcut cmd">P</span>
-            </li>
-
-            <li class='finder average transform no-read-only' id='newFolder'>
+            <li class='finder average transform project no-read-only' id='newFolder'>
                 New Folder
-                <span class="shortcut cmd">N</span>
+                <span class="shortcut shiftcmd">N</span>
             </li>
             <li class='finder average transform no-read-only' id='uploadFiles'
                 title="Upload image and tem files from your computer">
@@ -56,7 +51,7 @@
             <li class='finder delineate no-read-only' id='webcamPhoto'
                 title="Upload an image using your webcam">
                 Webcam Upload
-                <span class="shortcut shiftcmd">W</span>
+                <span class="shortcut shiftcmd">U</span>
             </li>
             <li class='finder average transform' id='download'
                 title="Download selected files or folders to your computer">
@@ -65,8 +60,8 @@
             </li>
             <li class='finder average transform' id='fileListGet'
                 title="Get a copy-able list of the images in this folder for use in batch files">
-                Get File List
-                <span class="shortcut cmd">G</span>
+                List Selected Images
+                <span class="shortcut cmd">L</span>
             </li>
             <li class='separator'></li>
             <li class='delineate average transform no-read-only' id='save'
@@ -141,6 +136,16 @@
                 title="">
                 Icon View
             </li>
+            <li class='finder average transform' id='toggle_preview'
+                title="">
+                <span class="checkmark">&nbsp;</span>
+                File Preview
+            </li>
+            <li class='finder average transform' id='toggle_lightTable'
+                title="Show or hide the Light Table">
+                <span class="checkmark">&nbsp;</span>
+                Light Table
+            </li>
             <li class='finder average transform' id='toggletrash'
                 title="Show or hide the Trash folder">
                 <span class="checkmark">&nbsp;</span>
@@ -158,7 +163,6 @@
                 title="Show or hide the delineation">
                 <span class="checkmark">&nbsp;</span>
                 Delineation
-                <span class="shortcut cmd">T</span>
             </li>
             <li class='delineate' id='toggle_delintoolbar'
                 title="Show or hide the delineation toolbar">
@@ -167,15 +171,15 @@
             </li>
 
             <li class='separator'></li>
-            <li class='delineate average transform' id='zoomin'>
+            <li class='delineate average transform threeD' id='zoomin'>
                 Zoom In
                 <span class="shortcut cmd">+</span>
             </li>
-            <li class='delineate average transform' id='zoomoriginal'>
+            <li class='delineate average transform threeD' id='zoomoriginal'>
                 Original Size
                 <span class="shortcut cmd">0</span>
             </li>
-            <li class='delineate average transform' id='zoomout'>
+            <li class='delineate average transform threeD' id='zoomout'>
                 Zoom Out
                 <span class="shortcut cmd">-</span>
             </li>
@@ -187,13 +191,6 @@
         <li class='menucategory'>
         <span>Batch</span>
         <ul>
-            <!--
-            <li class='finder average transform' id='createTransform'>
-                Create Average/Transform
-                <span class="shortcut opt">A</span>
-            </li>
-            <li class='separator'>
-            -->
             <li class='delineate finder average transform no-read-only' id='batchEdit'
                 title="Align, resize, rotate, crop, mask, symmetrize and/or mirror selected images">
                 Batch Edit
@@ -204,71 +201,88 @@
                 Batch Average
                 <span class="shortcut shiftcmd">A</span>
             </li>
-            <li class='delineate finder average transform no-read-only' id='batchTransform'
+            <li class='delineate finder average transform no-read-only' id='batchTrans'
                 title="Make several transforms using a text file to specify images and settings">
                 Batch Transform
                 <span class="shortcut shiftcmd">T</span>
             </li>
+            <!---------------------------------------------------------------->
             <li class='separator'>
+            <li class='finder average transform no-read-only' id='batchRename'
+                title="Rename a group of files">
+                Rename
+            </li>
             <li class='finder average transform no-read-only' id='convert'
                 title="Convert to a different file type">
                 Convert File Type
             </li>
-            <li class='finder average transform no-read-only' id='batchRename'
-                title="Rename a group of files">
-                Rename
-                <span class="shortcut shiftcmd">N</span>
-            </li>
+            
+            <!---------------------------------------------------------------->
+            <li class='separator'>
             <li class='finder average transform no-read-only' id='alignEyes'
                 title="Align selected images to a standard or custom setting">
                 Align
-                <span class="shortcut shiftcmd">H</span>
-            </li>
-            <li class='finder average transform no-read-only' id='resize'
-                title="Resize selected images">
-                Resize
-                <span class="shortcut shiftcmd">R</span>
-            </li>
-            <li class='finder average transform no-read-only' id='rotate'
-                title="Rotate selected images">
-                Rotate
-                <span class="shortcut shiftcmd">L</span>
             </li>
             <li class='finder average transform no-read-only' id='crop'
                 title="Crop selected images">
                 Crop
-                <span class="shortcut shiftcmd">K</span>
             </li>
             <li class='finder average transform no-read-only' id='mask'
                 title="Mask off areas of selected images with a color">
                 Mask
-                <span class="shortcut shiftcmd">M</span>
-            </li>
-            <li class='finder average transform no-read-only' id='symmetrise'
-                title="Create versions of selected images with symmetrical shape and/or color">
-                Symmetrize
-                <span class="shortcut shiftcmd">Y</span>
             </li>
             <li class='finder average transform no-read-only' id='mirror'
                 title="Create versions of selected images that are mirrored horizontally">
                 Mirror
-                <span class="shortcut shiftcmd">I</span>
+            </li>
+            <li class='finder average transform no-read-only' id='resize'
+                title="Resize selected images">
+                Resize
+            </li>
+            <li class='finder average transform no-read-only' id='rotate'
+                title="Rotate selected images">
+                Rotate
             </li>
             <li class='finder average transform no-read-only' id='scramble'
                 title="Create scrambled versions of selected images">
                 Scramble
-                <span class="shortcut shiftcmd">B</span>
             </li>
-            <li class='finder average transform no-read-only' id='batchModDelin'
-                title="Delete selected template points from selected images">
-                Modify Delineation
-                <span class="shortcut shiftcmd">D</span>
+            <li class='finder average transform no-read-only' id='symmetrise'
+                title="Create versions of selected images with symmetrical shape and/or color">
+                Symmetrize
             </li>
+        </ul>
+    </li>
+    <li class='menucategory'>
+        <span>Tools</span>
+        <ul>
+            <li class='finder average transform' id='facialMetrics'
+                title="Compute metrics for selected faces using delineation coordinates">
+                Calculate FacialMetrics
+            </li>
+            <li class='finder' id='pixels'
+                title="Create CSV files with Lab* pixel values">
+                Lab* Pixels
+            </li>
+            <li class='finder average transform no-read-only' id='movingGif'
+                title="Create a moving gif of the selected images">
+                Moving Gif
+            </li>
+            <!---------------------------------------------------------------->
+            <li class='separator'>
+            <li class='delineate finder average transform no-read-only' id='gridFaces'
+                title="Create a 1D or 2D array of faces in a continuum">
+                Grid
+            </li>
+            <li class='delineate finder average transform no-read-only' id='multiContinua'
+                title="Morph along a series of images in 2-20 continua">
+                Multiple Continua
+            </li>
+            <!---------------------------------------------------------------->
             <li class='separator'>
             <li class='finder no-read-only' id='singlePCA' style='display: none;'
                 title="PCA">
                 PCA
-                <span class="shortcut shiftcmd">P</span>
             </li>
             <li class='finder no-read-only' id='batchPCA' style='display: none;'
                 title="Batch PCA">
@@ -277,33 +291,8 @@
             <li class='finder no-read-only' id='PCvis' style='display: none;'
                 title="Visualise the PCs of a model">
                 Visualise PCs
-                <span class="shortcut shiftcmd">V</span>
             </li>
-            <li class='finder' id='pixels'
-                title="Create CSV files with Lab* pixel values">
-                Lab* Pixels
-                <span class="shortcut shiftcmd">X</span>
-            </li>
-            <li class='finder average transform' id='facialMetrics'
-                title="Compute metrics for selected faces using delineation coordinates">
-                Calculate FacialMetrics
-                <span class="shortcut shiftcmd">F</span>
-            </li>
-            <li class='delineate finder average transform no-read-only' id='multiContinua'
-                title="Morph along a series of images in 2-20 continua">
-                Multiple Continua
-                <span class="shortcut shiftcmd">C</span>
-            </li>
-            <li class='delineate finder average transform no-read-only' id='gridFaces'
-                title="Create a 1D or 2D array of faces in a continuum">
-                Grid
-                <span class="shortcut shiftcmd">G</span>
-            </li>
-            <li class='finder average transform no-read-only' id='movingGif'
-                title="Create a moving gif of the selected images">
-                Moving Gif
-                <span class="shortcut shiftcmd">O</span>
-            </li>
+
             <!--
             <li class='finder average transform' id='colorCalibrate'
                 title="Create versions of selected images with calibrated color (requires a color checker chart in the image)">
@@ -313,7 +302,6 @@
             <li class='finder average transform' id='batchTag'
                 title="Add or delete tags from selected images">
                 Batch Tag
-                <span class="shortcut shiftcmd">T</span>
             </li>
             -->
         </ul>
@@ -326,21 +314,8 @@
                 <ul class='submenu' id="currentTem">
                 </ul>
             </li>
+            <!---------------------------------------------------------------->
             <li class='separator'>
-            <li class='delineate finder' id='fitTemplate'
-                title="Mark 3 points (eyes and mouth or any 3 selected points) to size the default template to the image">
-                Fit Template
-                <span class="shortcut opt">F</span>
-            </li>
-            <li class='delineate no-read-only' id='autoDelineate'
-                title="Automatically delineate using the sky biometry template">
-                Auto-Delineate (SkyBiometry)
-                <span class="shortcut opt">D</span>
-            </li>
-            <li class='delineate no-read-only' id='maskBuilder'
-                title="Create a custom mask">
-                Custom Mask Builder
-            </li>
             <li class='finder no-read-only'>Convert Templates
                 <span class="shortcut">&#9654;</span>
                 <ul class='submenu' id='convert_template_menu'>
@@ -354,6 +329,34 @@
                     <li class='finder' data-from='18' data-to='18'>Nubility_body_new to NBM for GMM</li>
                     <li class='finder' data-from='1' data-to='36'>FRL (189) to Footballers (255)</li>
                 </ul>
+            </li>
+            <li class='finder average transform no-read-only' id='temFromEmbedded'
+                title="Create tem files from embedded tems">
+                Tem from Embedded
+            </li>
+            <li class='finder average transform no-read-only' id='temVis'
+                title="Visualize selected templates as SVGs or PNGs">
+                Visualize Template
+            </li>
+            <!---------------------------------------------------------------->
+            <li class='separator'>
+            <li class='delineate finder' id='fitTemplate'
+                title="Mark 3 points (eyes and mouth or any 3 selected points) to size the default template to the image">
+                Fit Template
+                <span class="shortcut opt">F</span>
+            </li>
+            <li class='delineate no-read-only' id='autoDelineate'
+                title="Automatically delineate using the skybiometry template">
+                Auto-Delineate
+                <span class="shortcut opt">D</span>
+            </li>
+            <li class='delineate no-read-only' id='maskBuilder'
+                title="Create a custom mask">
+                Custom Mask Builder
+            </li>
+            <li class='finder average transform no-read-only' id='batchModDelin'
+                title="Delete selected template points from selected images">
+                Modify Delineation
             </li>
             <li class='delineate' id='closeMouth'
                 title="Set internal lip points on the red line to the position of the internal lip points on the blue line (only works for the FRL-189 template)">
@@ -386,6 +389,17 @@
 
         </ul>
     </li>
+    <!--
+    <li class='menucategory'>
+        <span>3D</span>
+        <ul>
+            <li class='delineate' id='changeCamera'
+                title="Toggle camera between perspective and orthographic mode">
+                Change Camera (<span>Perspective</span>)
+            </li>
+        </ul>
+    </li>
+    -->
     <li class='menucategory no-read-only' id='menu_queue'>
         <span>Queue<div id="queue_n">0</div></span>
         <ul id='queue' style='max-height: 400px; overflow:auto;'>
@@ -438,12 +452,17 @@
         <span>Help</span>
         <ul>
             <li class='finder delineate average transform login project' id='menuhelp'>Show Help Files</li>
-            <li class='finder delineate average transform login project' id='emailLisa'>Email Lisa</li>
+            <li class='finder delineate average transform login project emailLisa' subject='WebMorph'>Email Lisa</li>
             <li class='finder delineate average transform login project' id='whatsnew'>What's New?</li>
             <li class='finder delineate average transform login project' id='citation'>Citation</li>
         </ul>
     </li>
+    <li class='menucategory'>
+        <span><a target="_blank" href="https://zenodo.org/badge/latestdoi/48229303">
+            <img style="vertical-align: text-bottom;" src="https://zenodo.org/badge/48229303.svg" alt="DOI: 10.5281/zenodo.1073697">
+        </a></span>
+    </li>
     <li class='menucategory' id='menu_username'>
         <span></span>
     </li>
-</ul> 
+</ul>

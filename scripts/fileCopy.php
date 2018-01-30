@@ -83,6 +83,7 @@ if (!file_exists($toDir)) {
         }
         
     }
+    updateDirMod();
     $return['errorText'] .= '</ol>';
 }
 

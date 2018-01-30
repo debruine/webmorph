@@ -2,9 +2,39 @@
 // !USER FUNCTIONS
 //====================================
 
+/* 
 function loginGoogle(authResult) {
     growl(JSON.stringify(authResult));
 }
+
+// Work on user object
+function user(id) {
+    this.id = id;
+    this.accountSize = 0;
+    
+    this.passwordReset = function() {
+        var email = $('#login_email').val();
+    
+        if (email == '') {
+            $('#login_error').html("<li>Please fill in your email address first.</li>");
+            return false;
+        }
+        $('#login_error').html("<li>Checking for your account...</li>");
+    
+        $.ajax({
+            url: 'scripts/userPasswordReset',
+            data: { email: email },
+            success: function(data) {
+                if (data.error) {
+                    $('#login_error').html('<li>' + data.errorText + '</li>');
+                } else {
+                    $('#login_error').html("<li>Check your email for the new password.</li>");
+                }
+            }
+        });
+    }
+}
+*/
 
 function userPasswordReset() {
     var email = $('#login_email').val();
@@ -62,6 +92,7 @@ function userRegister(e) {
                 email: $('#login_email').val(),
                 //password: $('#login_password').val(),
                 invite: $('#login_auth').val(),
+                reason: $('#reg_reason').val(),
                 //login_keep: $('#login_keep').prop('checked'),
                 firstname: $('#reg_firstname').val(),
                 lastname: $('#reg_lastname').val(),
@@ -95,10 +126,12 @@ function userRegister(e) {
         var $la = $('#login_auth').closest('tr');
         if (e.ctrlKey || e.metaKey) {
             $la.show();
+            $('#reg_reason').hide().val('');
             $('#loginBox thead th').html('Register for an Account');
             $('#register-button').button('option', 'label', 'Register');
         } else {
             $la.hide();
+            $('#reg_reason').show();
             $('#loginBox thead th').html('Request an Account');
             $('#register-button').button('option', 'label', 'Request Account');
         }
@@ -106,7 +139,7 @@ function userRegister(e) {
     }
 }
 
-function userLogin() {
+function userLogin() { console.log('userLogin()');
     $('#footer-text').html('Checking Login Details...');
     if ($('#loginInterface .reg_item:visible').length) {
         $('#loginInterface .reg_item').hide();
@@ -165,23 +198,45 @@ function userLogin() {
 }
 
 function userLoad() { console.log('userLoad()');
-    var $spinner,
-        hash;
-
-    $spinner = bodySpinner();
+    var hash = {},
+        $file;
+    
+    /*if (location.hash) { 
+        //hashChange();
+    } else {
+        var cookiehash = getCookie('hash');
+        if (cookiehash) { 
+            location.hash = '#' + cookiehash;
+            console.log('Set location hash to ' + cookiehash);
+        }
+    }*/
+    
     hash = hashGet();
+    
+    // set up finder location if a hash file is set
+    if (hash.file) {
+        WM.hashfile = function() {
+            WM.finder.open(hash.project_id + hash.file);
+            WM.hashfile = function() {}
+        }
+    } else {
+        WM.hashfile = function() {}
+    }
 
     msgGet();
     prefGet();
 
-    $spinner.remove();
     if (hash.appWindow == 'F') {
         projectList();
         projectSet(hash.project_id, 'F');
     } else if (hash.appWindow == 'D') {
         projectList();
         if (hash.file) {
-            delinImage(hash.project_id + hash.file);
+            if (hash.file.substr(-4) == ".obj") {
+                d3_load_image(hash.project_id + hash.file);
+            } else {
+               delinImage(hash.project_id + hash.file);
+            }
         }
         projectSet(hash.project_id, 'D');
     } else if (hash.appWindow == 'A') {
@@ -193,9 +248,18 @@ function userLoad() { console.log('userLoad()');
     } else {
         $('#showProjects').click();
     }
+    
+    // get rid of 3D login demo if made
+    if ($('#d3_demo').data('d3')) {
+        $('#d3_demo').data('d3').remove();
+        $('#d3_demo').data('d3', null);
+        
+        $('#d3_demo').addClass('feature').html('WebMorph now shows 3D faces!<br>(Double-click to demo)');
+        $('#d3_demo_extras').hide().find('div.ui-slider').remove();
+    }
 }
 
-function userLogout() {
+function userLogout() { console.log('userLogout()');
     $('<div />').html('Do you want to quit and logout?').dialog({
         title: "Logout",
         buttons: {
@@ -208,7 +272,7 @@ function userLogout() {
                     url: 'scripts/userLogout',
                     success: function(data) {
                         WM.noOnBeforeUnload = true;
-                        location.href = location.pathname;
+                        location.href = location.pathname.replace("//", "/");
                     }
                 });
             }
@@ -258,10 +322,20 @@ function prefGet(callback) {  console.time('prefGet()');
             if (WM.project.id == null) { WM.project.id = data.prefs.default_project; }
 
             WM.delin.lineColor = data.prefs.line_color;
-            $('#line_color').slider('values', rgbToArray(data.prefs.line_color));
-            $('#cross_color').slider('values', rgbToArray(data.prefs.cross_color));
-            $('#selcross_color').slider('values', rgbToArray(data.prefs.selcross_color));
-            $('.mask_color').slider('values', rgbToArray(data.prefs.mask_color));
+            
+            var pc = rgbToArray(data.prefs.cross_color);
+            var sc = rgbToArray(data.prefs.selcross_color);
+            var lc = rgbToArray(data.prefs.line_color);
+            var mc = rgbToArray(data.prefs.mask_color);
+
+            $('#line_color').slider('values', lc);
+            $('#cross_color').slider('values', pc);
+            $('#selcross_color').slider('values', sc);
+            $('.mask_color').slider('values', mc);
+            
+            $('#tem_point_color').slider('values', pc);
+            $('#tem_point_fill').slider('values', pc);
+            $('#tem_line_color').slider('values', lc);
 
             $('#pref_theme').slider('value', data.prefs.theme);
             if (data.prefs.theme == 361) {
@@ -293,18 +367,13 @@ function prefGet(callback) {  console.time('prefGet()');
             + '</style>').appendTo('head');
 
             // fm equations
-            $('#fmButtons li').not('#fm_new, #fm_eyes, #fm_FWH').remove();    // clear all user equations
+            $('#fmButtons li').not('#fm_eyes, #fm_FWH').remove();    // clear all user equations
             $.each(data.fm, function(i, f) {
                 var $newEQ = $('<li/>').attr({
                     'title': f.description,
                     'data-equation': f.equation,
                 }).text(f.name);
-                $('#fm_new').before($newEQ);
-            });
-            $('#fmButtons').sortable({
-                items: 'li:not(#fm_new)',
-                scope: 'fm',
-                containment: '#facialmetricEQ'
+                $('#fmButtons').append($newEQ);
             });
 
             if (data.prefs.pca == 1) {
@@ -361,8 +430,9 @@ function msgGet(msg_id) { console.log('msgGet('+msg_id+')');
                 $.each(data.read_msg_ids, function(i, id) {
                     $('.msg[data-msg_id="' + id + '"]').remove();
                 });
-                sizeToViewport();
             }
+            $('.msg').show();
+            sizeToViewport();
         }
     });
 }

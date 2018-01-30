@@ -15,7 +15,7 @@ $return = array(
 if (!perm('pca')) {
     $return['errorText'] .= 'You do not have permission to create a PC visualisation';
 } else {
-    $url = 'http://' . $_SERVER["SERVER_NAME"] . '/tomcat/psychomorph/pcvis?';
+    $url = 'https://' . $_SERVER["SERVER_NAME"] . '/tomcat/psychomorph/pcvis?';
     
     // set up data
     $theData = $_POST['theData'];
@@ -26,6 +26,10 @@ if (!perm('pca')) {
     $query = implode('&', $paramsJoined);
     
     $ch = curl_init();
+    if ($_SERVER['SERVER_NAME'] == 'webmorph.test') {
+        // workaround for local server problem with self-signed certificates
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+    }
     curl_setopt($ch, CURLOPT_URL, $url . $query);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
     curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 30);
@@ -50,7 +54,7 @@ if (!perm('pca')) {
             $weights[] = $w/100; 
         }
         
-        $img->setDescription(array(
+        $img->addHistory(array(
             'PCA model' => $visdata['pcafile'],
             'avg' => $visdata['avgfile'],
             'PC weights' => "[" . implode(",", $weights) . "]"
@@ -60,7 +64,7 @@ if (!perm('pca')) {
         
         if ($img->save($newFileName)) {
             $return['error'] = false;
-            $return['newFileName'] = $img->getImg()->getURL();
+            $return['newFileName'] = $img->getURL();
         } else {
             $return['errorText'] .= 'The image was not saved. ';
         }

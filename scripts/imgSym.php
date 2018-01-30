@@ -4,6 +4,7 @@
 
 require_once $_SERVER['DOCUMENT_ROOT'] . '/include/main_func.php';
 auth();
+session_write_close();
 checkAllocation();
 
 $return = array(
@@ -19,6 +20,11 @@ $shape = ($_POST['shape'] == 'false') ? 0 : 0.5;
 $colortex = ($_POST['color'] == 'false') ? 0 : 0.5;
 $img->sym($shape, $colortex);
 
+// describe image
+$symtype = ($shape != 0) ? "shape" : "";
+$symtype .= ($colortex != 0) ? " color" : "";
+$img->addHistory("sym: {$symtype}");
+
 $newFileName = array(
     'subfolder' => $_POST['subfolder'],
     'prefix' => $_POST['prefix'],
@@ -29,7 +35,7 @@ $newFileName = array(
 
 if ($img->save($newFileName)) {
     $return['error'] = false;
-    $return['newFileName'] = $img->getImg()->getURL();
+    $return['newFileName'] = $img->getURL();
 } else {
     $return['errorText'] .= 'The image was not saved. ';
     $return['newFileName'] = '';

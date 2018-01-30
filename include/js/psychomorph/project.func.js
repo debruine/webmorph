@@ -13,12 +13,16 @@ function projectList() { console.time('projectList()');
             // add projects
             $('#default_project').html('');
             $('#currentProject').html('');
+            
+            $('#project_list tr').addClass('old');
+            
             $.each(data.projects, function(i, p) {
                 var $opt,
                     $menuopt,
                     owners,
                     tr,
-                    td;
+                    td
+                    delProj = '';
 
                 $opt = $('<option />').val(p.id)
                                       .html(p.name)
@@ -35,7 +39,12 @@ function projectList() { console.time('projectList()');
                 $('#currentProject').append($menuopt);
                 $menuopt.find('span.checkmark').hide();
 
-                owners = '<ul class="project_owners">';
+                owners = '<div class="project_owners_toggle">';
+                owners += p.owners.length;
+                owners += ' user';
+                if (p.owners.length > 1) { owners += 's'; }
+                owners += '<span></span></div>';
+                owners += '<ul class="project_owners">';
                 $.each(p.owners, function() {
                     var permAbbrev;
 
@@ -67,26 +76,53 @@ function projectList() { console.time('projectList()');
                 tr = $('tr[data-id=' + p.id + ']');
 
                 if (tr.length == 0) {
-                    tr = '<tr data-id="' + p.id + '" data-perm="' + p.perm + '"><td><span class="go_to_project tinybutton">Go</span>'
-                             + '</td><td>' + p.name
-                             + '</td><td>' + p.notes
-                             + '</td><td><img src="/include/images/menu/queue_loading.svg" />'
-                             + '</td><td>' + owners + '</td></tr>';
+                    tr = $('<tr data-id="' + p.id + '" data-perm="' + p.perm + '" data-owner="' + p.user_id + '" />');
+                    tr.html(   '<td class="project_go"><span class="go_to_project tinybutton">Go</span>'
+                             + '</td><td class="project_del">' + ''
+                             + '</td><td class="project_name">' + p.name
+                             + '</td><td class="project_desc">' + p.notes
+                             + '</td><td class="project_info"><img src="/include/images/menu/queue_loading.svg" />'
+                             + '</td><td class="project_own">' + owners + '</td>'
+                    );
+                             
                     $('#project_list tbody').append(tr);
                 } else {
                     tr.attr('data-perm', p.perm);
+                    tr.attr('data-owner', p.user_id);
                     td = tr.find('td');
-                    td.eq(1).html(p.name);
-                    td.eq(2).html(p.notes);
-                    td.eq(4).html(owners);
+                    tr.find("td.project_name").html(p.name);
+                    tr.find("td.project_desc").html(p.notes);
+                    tr.find("td.project_own").html(owners);
+                    tr.removeClass('old');
+                }
+                
+                if (p.hasOwnProperty('size')) {
+                    tr.data('filemtime', p.filemtime);
+                    tr.data('files', p.files);
+                    tr.data('tmp', p.tmp);
+                    tr.data('size', p.size);
+                    tr.data('mysize', p.mysize);
                 }
             });
+            
+            $('#project_list tr.old').remove();
             $('#project_list').show().stripe();
+            $('#project_list head').show();
 
             WM.user.accountSize = 0;
             if (WM.appWindow == 'project') {
+                if (data.projects.length > 10) {
+                    $('#projectsearchbar').show().val('');
+                    if ($(window).width() > 640) {
+                        // don't focus on small touchscreen devices
+                        $('#projectsearchbar').focus().trigger('keyup');
+                    }
+                    sizeToViewport();
+                }
+                
                 $.each(data.projects, function(i, p) {
-                    if (p.filemtime == $('tr[data-id=' + p.id + ']').data('filemtime')) {
+                    //if (p.filemtime == $('tr[data-id=' + p.id + ']').data('filemtime')) {
+                    if (p.hasOwnProperty('size')) {
                         projectSizeUpdate(p.id, data.userAllocation.allocation);
                     } else {
                         projectSizeGet(p.id, data.userAllocation.allocation);
@@ -107,6 +143,11 @@ function projectList() { console.time('projectList()');
             $('input.projectOwnerAdd').closest('li').remove();
             $('tr[data-perm=all] ul.project_owners').append('<li><input class="projectOwnerAdd" '
                                         + 'placeholder="Type Name to Add" /></li>');
+            
+            // add delete project button where user is the owner and has all permissions
+            $('span.delete_project').remove();                            
+            $('tr[data-perm=all][data-owner='+WM.user.id+'] td.project_del')
+                .append('<span class="delete_project tinybutton" title="Delete Project">—</span>');
 
             $('.projectOwnerAdd').autocomplete({
                 source: userlist,
@@ -130,6 +171,7 @@ function projectList() { console.time('projectList()');
 }
 
 function projectSet(id, appWindow) {
+    console.log('projectSet(' + id + ',' + appWindow + ')');
     $.ajax({
         url: 'scripts/projSet',
         data: {
@@ -183,7 +225,7 @@ function projectSet(id, appWindow) {
 
 function projectSizeGet(proj_id, alloc) {
     $.ajax({
-        url: '    scripts/projSizeGet',
+        url: 'scripts/projSizeGet',
         type: 'POST',
         data: {
             proj_id: proj_id
@@ -203,17 +245,16 @@ function projectSizeGet(proj_id, alloc) {
 
 function projectSizeUpdate(proj_id, alloc) {
     var tr = $('tr[data-id=' + proj_id + ']');
-    var td =  tr.find('td').eq(3);
+    var td =  tr.find('td').eq(4);
 
-    td.html((tr.data('files') - tr.data('tmp')) + ' files<br>' + tr.data('size'));
+    td.html((tr.data('files') - tr.data('tmp')) + '&nbsp;files<br>' + tr.data('size'));
     WM.user.accountSize += tr.data('mysize');
 
     // set warning about total space allocation
     var ts = "Projects you own are using " + round(WM.user.accountSize/1024/1024/1024,1)
            + " GB of your allocated " + round(alloc/1024,1) + " GB. ";
     if (WM.user.accountSize/1024/1024 > alloc) {
-        ts += "Please reduce your account by emptying the trash and/or removing files. "
-            + "After 15 January 2016, I will disable accounts that are over their space allocation.";
+        ts += "Please reduce your account by emptying the trash and/or removing files.";
         $('#total_space').addClass('warning');
     } else {
         $('#total_space').removeClass('warning');
@@ -222,6 +263,9 @@ function projectSizeUpdate(proj_id, alloc) {
 }
 
 function projectNew() {
+    $('#new_project_name').val('');
+    $('#new_project_notes').val('');
+    
     $('#newProjectDialog').dialog({
         title: 'New Project',
         buttons: {
@@ -258,6 +302,45 @@ function projectNew() {
     });
 }
 
+function projectDelete(proj_id) {
+    $('<div />').html('Are you sure you want to delete this project? This is permanent.' + 
+    '<br><br>Type your password: <input type="password" >').dialog({
+        title: 'Delete Project',
+        buttons: {
+            Cancel: function() {
+                $(this).dialog("close");
+            },
+            'Delete': {
+                text: 'Delete',
+                class: 'ui-state-focus',
+                click: function() {
+                    var $this = $(this);
+                    var pw = $this.find('input').val();
+                    if (pw == '') { 
+                        $this.find('input').focus();
+                        return false; 
+                    }
+
+                    $.ajax({
+                        url: 'scripts/projDelete',
+                        data: { 
+                            proj_id: proj_id,
+                            password: pw
+                        },
+                        success: function(data) {
+                            if (data.error) {
+                                $('<div title="Error Deleting Project" />').html(data.errorText).dialog();
+                            } else {
+                                $this.dialog("close");
+                                projectList();
+                            }
+                        }
+                    });
+                }
+            }
+        }
+    });
+}
 
 
 function projectEdit(td, category) {

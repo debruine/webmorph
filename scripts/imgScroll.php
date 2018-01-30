@@ -4,6 +4,7 @@
 // need to add failsafes if the database is out of date (or r-write to look in directories rather than the db)
 
 require_once $_SERVER['DOCUMENT_ROOT'] . '/include/main_func.php';
+session_write_close();
 auth();
 
 $return = array(

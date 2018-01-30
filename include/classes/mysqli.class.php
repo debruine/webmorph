@@ -8,7 +8,7 @@ function myerror($msg='MySQL Error') {
 // connect to mysql database
 function my_connect($host = MYSQL_HOST, $user = MYSQL_USER, $pswd = MYSQL_PSWD, $mydb = MYSQL_DB) {
     $db = new mysqli($host, $user, $pswd, $mydb);
-    if ($db->connect_errno > 0){
+    if ($db->connect_errno) {
         return 'Unable to connect to database [' . $db->connect_error . ']';
     } else {
         return $db;
@@ -93,7 +93,7 @@ class myQuery {
                     throw new Exception($this->query . '<br />' . $db->error);
                 }
             }
-        } catch (Exception $e) {
+        } catch (Throwable $e) {
             if ($_SESSION['user_id'] == 1) { echo $e->getMessage(); }
             return false;
         }
@@ -115,7 +115,7 @@ class myQuery {
         return true;
     }
     
-    function prepare($query, $params, $return) {
+    function prepare($query, $params, $return = array()) {
         global $db;
         
         foreach ($params as $key => $value) {
@@ -124,28 +124,24 @@ class myQuery {
         
         if ($stmt = $db->prepare($query)) {
             call_user_func_array(array(&$stmt, 'bind_param'), $p);
-            
-            /* Execute it */
             $stmt -> execute();
             
-            foreach ($return as $key => $value) {
-                $r[$value] = &$return[$value]; 
+            if ($return) {
+                foreach ($return as $key => $value) {
+                    $r[$value] = &$return[$value]; 
+                }
+
+                call_user_func_array(array(&$stmt, 'bind_result'), $r); 
+
+                $stmt -> fetch();
+
+                $this->data = $r;
             }
-            
-            /* Bind results */
-            call_user_func_array(array(&$stmt, 'bind_result'), $r); 
-            
-            /* Fetch the value */
-            $stmt -> fetch();
-            
-            return $r;
-            
-            /* Close statement */
             $stmt -> close();
         }
-       }
+    }
     
-    // main function to resturn results
+    // main function to return results
     
     function get_assoc($row = false, $key = false, $col = false) {
         $results_array = array();
@@ -180,6 +176,10 @@ class myQuery {
         return $this->get_assoc(false, $id);
     }
     
+    function get_key_val($key, $val) {
+        return $this->get_assoc(false, $key, $val);
+    }
+    
     function get_row($row = 0) {
         return $this->get_assoc($row, false, false);
     }
@@ -202,7 +202,9 @@ class myQuery {
     
     function get_one($row=0, $col=0) {
         $a = $this->get_row($row);
-        if (array_key_exists($col, $a)) {
+        if (!is_array($a)) {
+            return "Row <code>$row</code> does not exist";
+        } elseif (array_key_exists($col, $a)) {
             return $a[$col];
         } else {
             $keys = array_keys($a);

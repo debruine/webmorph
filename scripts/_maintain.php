@@ -60,12 +60,12 @@ function recursive_delete($deletedir) {
 }
 
 // copy a dir
-//$source = IMAGEBASEDIR . '.032125120';
+//$source = IMAGEBASEDIR . 'align';
 //$dest = IMAGEBASEDIR . '171';
 //recursive_copy($source, $dest);
 
 // delete a specific directory
-$deletedir = IMAGEBASEDIR . '0/test';
+$deletedir = IMAGEBASEDIR . 'UVA';
 //recursive_delete($deletedir);
 
 // remake .tmp directories

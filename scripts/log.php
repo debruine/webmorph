@@ -46,7 +46,6 @@ if (array_key_exists('average-time', $_POST)) {
         intval($_POST['load-image-time']),
         intval($_POST['average-time'])
     );
-    $return['query'] = $query;
     $q = new myQuery($query);
     
 } else if (array_key_exists('transform-time', $_POST)) {
