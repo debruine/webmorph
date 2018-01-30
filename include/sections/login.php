@@ -133,8 +133,8 @@
     
     <h2>Citations</h2>
     
-    <p class="cite">Lisa DeBruine. (2017, December 4). Webmorph (Version v0.0.0.9000). Zenodo. 
-        doi:<a href="https://doi.org/10.5281/zenodo.1073696">10.5281/zenodo.1073697</a> 
+    <p class="cite">Lisa DeBruine. (2017, December 4). Webmorph (Version v0.0.0.9001). Zenodo. 
+        doi:<a href="https://doi.org/10.5281/zenodo.1073696">10.5281/zenodo.1073696</a> 
         [access the code at <a href="https://github.com/debruine/webmorph">GitHub</a>]</p>
     
     <p class="cite">To cite the morphing and transforming methods, see 

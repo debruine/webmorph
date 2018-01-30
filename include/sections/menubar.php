@@ -459,7 +459,7 @@
     </li>
     <li class='menucategory'>
         <span><a target="_blank" href="https://zenodo.org/badge/latestdoi/48229303">
-            <img style="vertical-align: text-bottom;" src="https://zenodo.org/badge/48229303.svg" alt="DOI: 10.5281/zenodo.1073697">
+            <img style="vertical-align: text-bottom;" src="https://zenodo.org/badge/48229303.svg" alt="DOI: 10.5281/zenodo.1073696">
         </a></span>
     </li>
     <li class='menucategory' id='menu_username'>

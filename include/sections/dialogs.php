@@ -785,7 +785,7 @@
 <div id='aboutDialog' class='modal' title='About WebMorph'>
     <h3>To cite WebMorph</h3>
     
-    <p>Lisa DeBruine. (2017, December 4). Webmorph (Version v0.0.0.9000). Zenodo. doi:10.5281/zenodo.1073697 <a href="https://zenodo.org/badge/latestdoi/48229303"><img src="https://zenodo.org/badge/48229303.svg" alt="DOI"></a></p>
+    <p>Lisa DeBruine. (2017, December 4). Webmorph (Version v0.0.0.9001). Zenodo. doi:10.5281/zenodo.1073696 <a href="https://zenodo.org/badge/latestdoi/48229303"><img src="https://zenodo.org/badge/48229303.svg" alt="DOI"></a></p>
     
     <p>Access the code at <a href="https://github.com/debruine/webmorph">GitHub</a>.</p>
 
