@@ -38,13 +38,22 @@ if (!empty($_POST['custom'])) {
 
 
 $rgba = $_POST['rgb'];
+if ($_POST['patch']) {
+    $rgba = $img->getImg()->patch(
+        $_POST['patch'][0], 
+        $_POST['patch'][1], 
+        $_POST['patch'][2], 
+        $_POST['patch'][3]
+    );
+}
+
 $a = ($_POST['transparent']=='true') ? 0 : 1;
 array_push($rgba, $a);
 
 if ($_POST['transparent']=='true') { 
     $desc .= ", transparent";
 } else {
-    $desc .= ", rgb({$_POST['rgb'][0]}, {$_POST['rgb'][1]}, {$_POST['rgb'][2]})";
+    $desc .= ", rgb({$rgba[0]}, {$rgba[1]}, {$rgba[2]})";
 }
 
 if (!$mask || !$rgba) {

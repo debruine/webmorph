@@ -13,7 +13,6 @@ $return = array(
 );
 
 $degrees = intval($_POST['degrees']) % 360;
-$rgb = $_POST['rgb'];
 
 include_once DOC_ROOT . '/include/classes/psychomorph.class.php';
 
@@ -27,6 +26,16 @@ if (file_exists($tem)) {
 if ($degrees == 0) {
     $return['error'] = true;
     $return['errorText'] = 'No need to rotate 0 degrees.';
+}
+
+$rgb = $_POST['rgb'];
+if ($_POST['patch']) {
+    $rgb = $img->getImg()->patch(
+        $_POST['patch'][0], 
+        $_POST['patch'][1], 
+        $_POST['patch'][2], 
+        $_POST['patch'][3]
+    );
 }
 
 if (!$return['error']) {

@@ -403,7 +403,6 @@ function projectOwnerAdd(button) {
     $('#footer-text').html('Adding Project Owner...');
     var $input = $(button);
     var project = $input.closest('tr').data('id');
-
     var owner = $input.data('id');
 
     if (!(project > 0 && owner > 0)) {

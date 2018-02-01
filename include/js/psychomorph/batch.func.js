@@ -1080,6 +1080,14 @@ function batchCrop() {
                     theData.w = $('#cropDialog input[name=width]').val();
                     theData.h = $('#cropDialog input[name=height]').val();
                     theData.rgb = $('#crop_color').slider('values');
+                    if ($('#cropDialog input.patchcolor').is(':checked')) {
+                        theData.patch = [
+                            $('#cropDialog div.patchcolor input[name=startx]').val(),
+                            $('#cropDialog div.patchcolor input[name=endx]').val(),
+                            $('#cropDialog div.patchcolor input[name=starty]').val(),
+                            $('#cropDialog div.patchcolor input[name=endy]').val()
+                        ];
+                    }
 
                     batchWatch(files, 'imgCrop', theData);
                 }
@@ -1142,6 +1150,14 @@ function batchAlign() {
                     theData.y2 = $('#custom_align input[name="y2"]').val();
                     theData.width = $('#custom_align input[name="width"]').val();
                     theData.height = $('#custom_align input[name="height"]').val();
+                    if ($('#alignDialog input.patchcolor').is(':checked')) {
+                        theData.patch = [
+                            $('#alignDialog div.patchcolor input[name=startx]').val(),
+                            $('#alignDialog div.patchcolor input[name=endx]').val(),
+                            $('#alignDialog div.patchcolor input[name=starty]').val(),
+                            $('#alignDialog div.patchcolor input[name=endy]').val()
+                        ];
+                    }
 
                     batchWatch(files, 'imgAlign', theData);
                 }
@@ -1326,6 +1342,14 @@ function batchRotate() {
                     var theData = batchNewNameGet('#rotateDialog');
                     theData.img = null;
                     theData.rgb = $('#rotate_color').slider('values');
+                    if ($('#rotateDialog input.patchcolor').is(':checked')) {
+                        theData.patch = [
+                            $('#rotateDialog div.patchcolor input[name=startx]').val(),
+                            $('#rotateDialog div.patchcolor input[name=endx]').val(),
+                            $('#rotateDialog div.patchcolor input[name=starty]').val(),
+                            $('#rotateDialog div.patchcolor input[name=endy]').val()
+                        ];
+                    }
                     theData.degrees = $rsd.find('input[name=degrees]').val();
                     batchWatch(files, 'imgRotate', theData);
                 }
@@ -1462,6 +1486,14 @@ function maskImages(masktype, custom) {  console.log('maskImages(' + masktype + 
     theData.reverse = $('#mask_reverse').prop('checked');
     theData.mask = masktype;
     theData.custom = custom;
+    if ($('#maskDialog input.patchcolor').is(':checked')) {
+        theData.patch = [
+            $('#maskDialog div.patchcolor input[name=startx]').val(),
+            $('#maskDialog div.patchcolor input[name=endx]').val(),
+            $('#maskDialog div.patchcolor input[name=starty]').val(),
+            $('#maskDialog div.patchcolor input[name=endy]').val()
+        ];
+    }
 
     files = filesGetSelected('.image');
     batchWatch(files, 'imgMask', theData);
@@ -1503,20 +1535,67 @@ function maskViewCheck(type, checked) {
     }
 }
 
+function batchTableText(the_textarea, batch_type) {
+    var v = the_textarea.value;
+    the_textarea.value = '';
+    if (~v.indexOf("\t") || ~v.indexOf("\n")) {
+        var $be = $('#batch'+batch_type+'Dialog table tbody');
+        var start_col   = $(this).closest('td').index();
+        var start_row   = $(this).closest('tr').index();
+        
+        var header_canon = [];
+        
+        if (batch_type == "Edit") {
+            header_canon = ['image','align','resize','rotate','crop','mask','sym','mirror','order','outname'];
+        } else if (batch_type == "Trans") {
+            header_canon = ['trans-img','from-img','to-img','shape','color','texture','outname'];
+        }
+        
+        var header_regex = new RegExp('^(?:(' + header_canon.join('|') + ')\\t?){1,' + header_canon.length + '}');
+        console.log(header_regex);
+        var rows = v.replace(header_regex,'').trim().split(/\s*[\r\n]+\s*/g);
+        
+        // get header order
+        var header = v.match(header_regex);
+        var header_order = false;
+        if (header != null) {
+            header_order = header[0].split('\t');
+            console.log(header_order);
+        }
+        
+        $.each(rows, function(i, r) {
+            var row_n = start_row + i;
+            
+            if (row_n + 1 > $be.find('tr').length) {
+                var textcell = '<td><textarea></textarea></td>';
+                $be.append('<tr>' + textcell.repeat(header_canon.length) + '</tr>');
+            }
+            
+            var cols = r.replace(/ /g,'').split('\t');
+            $.each(cols, function(j, c) {
+                var col_n = start_col + j;
+                
+                if (header_order) {
+                    col_n = header_canon.indexOf(header_order[j]);
+                }
+                
+                $be.find('tr').eq(row_n).find('td').eq(col_n).find('textarea').val(c);
+            });
+            
+        });
+    }
+    
+    if (batch_type == "Edit") {
+        batchEditCheck();
+    } else if (batch_type == "Trans") {
+        batchTransCheck();
+    }
+}
+
 function batchEdit() {
     var $batchDialog = $('#batchEditDialog');
-    var $tbody = $batchDialog.find('table tbody').empty().html('<tr>' +
-        '<td><textarea></textarea></td>' +
-        '<td><textarea></textarea></td>' +
-        '<td><textarea></textarea></td>' +
-        '<td><textarea></textarea></td>' +
-        '<td><textarea></textarea></td>' +
-        '<td><textarea></textarea></td>' +
-        '<td><textarea></textarea></td>' +
-        '<td><textarea></textarea></td>' +
-        '<td><textarea></textarea></td>' +
-        '<td><textarea></textarea></td>' +
-        '</tr>');
+    var $tbody = $batchDialog.find('table tbody');
+    $tbody.html('<tr>' + '<td><textarea></textarea></td>'.repeat(10) + '</tr>');
         
     var batchData = [];
 
@@ -1527,7 +1606,7 @@ function batchEdit() {
         title: 'Batch Edit',
         modal: false,
         width: $('#finder').width(),
-        height: $('#finder').height()*.9,
+        height: $('#finder').height(),
         resizable: true,
         buttons: {
             Cancel: function() {
@@ -1535,18 +1614,7 @@ function batchEdit() {
             },
             "Reset": function() {
                 //$('#tagnone').click();
-                $tbody.html('<tr>' +
-                    '<td><textarea></textarea></td>' +
-                    '<td><textarea></textarea></td>' +
-                    '<td><textarea></textarea></td>' +
-                    '<td><textarea></textarea></td>' +
-                    '<td><textarea></textarea></td>' +
-                    '<td><textarea></textarea></td>' +
-                    '<td><textarea></textarea></td>' +
-                    '<td><textarea></textarea></td>' +
-                    '<td><textarea></textarea></td>' +
-                    '<td><textarea></textarea></td>' +
-                    '</tr>');
+                $tbody.html('<tr>' + '<td><textarea></textarea></td>'.repeat(10) + '</tr>');
                 $batchDialog.find('p.warning').hide();
                 batchData = [];
             },
@@ -1792,7 +1860,7 @@ function batchEditCheck() { console.log("batchEditCheck()");
     });
     //$batchDialog.find('textarea').hide();
     if (errors > 0) {
-        var etext = (errors == 1) ? 'error was' : 'errors were';
+        var etext = (errors == 1) ? ' error was' : ' errors were';
         $batchDialog.find('p.warning').html(errors + etext + 
         ' found. Hover over the highlighted boxes for more information.').show();
         $batchDialog.closest('.ui-dialog').find("button:contains('Edit')").button("disable");
@@ -1826,25 +1894,17 @@ function getEdit(tVars) {
 
 function batchTrans() {
     var $batchDialog = $('#batchTransDialog');
-    var $tbody = $batchDialog.find('table tbody').empty().html('<tr>' +
-        '<td><textarea></textarea></td>' +
-        '<td><textarea></textarea></td>' +
-        '<td><textarea></textarea></td>' +
-        '<td><textarea></textarea></td>' +
-        '<td><textarea></textarea></td>' +
-        '<td><textarea></textarea></td>' +
-        '<td><textarea></textarea></td>' +
-        '</tr>');
+    var $tbody = $batchDialog.find('table tbody');
+    $tbody.html('<tr>' + '<td><textarea></textarea></td>'.repeat(7) + '</tr>');
     var batchData = [];
 
-    //$batchDialog.find('textarea').val('').show().focus();
     $batchDialog.find('p.warning').hide();
 
     $batchDialog.dialog({
         title: 'Batch Transform',
         modal: false,
         width: $('#finder').width(),
-        height: $('#finder').height()*.9,
+        height: $('#finder').height(),
         resizable: true,
         buttons: {
             Cancel: function() {
@@ -1853,15 +1913,7 @@ function batchTrans() {
             "Reset": function() {
                 //$('#tagnone').click();
                 $batchDialog.find('textarea').val('').show().focus();
-                $tbody.html('<tr>' +
-                    '<td><textarea></textarea></td>' +
-                    '<td><textarea></textarea></td>' +
-                    '<td><textarea></textarea></td>' +
-                    '<td><textarea></textarea></td>' +
-                    '<td><textarea></textarea></td>' +
-                    '<td><textarea></textarea></td>' +
-                    '<td><textarea></textarea></td>' +
-                    '</tr>');
+                $tbody.html('<tr>' + '<td><textarea></textarea></td>'.repeat(7) + '</tr>');
                 $batchDialog.find('p.warning').hide();
                 batchData = [];
             },
@@ -1993,7 +2045,7 @@ function batchTransCheck() {
     });
     //$('#batchTransDialog textarea').hide();
     if (errors > 0) {
-        var etext = (errors == 1) ? 'error was' : 'errors were';
+        var etext = (errors == 1) ? ' error was' : ' errors were';
         $batchDialog.find('p.warning').html(errors + etext + 
         ' found. Hover over the highlighted boxes for more information.').show();
         $batchDialog.closest('.ui-dialog').find("button:contains('Transform')").button("disable");
@@ -2108,7 +2160,7 @@ function batchAverage() {
 
         // notify and stop if error are found
         if (errors > 0) {
-            var etext = (errors == 1) ? 'error was' : 'errors were';
+            var etext = (errors == 1) ? ' error was' : ' errors were';
             $batchDialog.find('p.warning').html(errors + etext + 
             ' found. Hover over the highlighted boxes for more information.').show();
             return false;

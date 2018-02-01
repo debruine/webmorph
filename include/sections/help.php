@@ -1,6 +1,19 @@
 <!-- !- what's new Dialog -->
 <div id='whatsnewDialog' class='modal' title='What&apos;s New?'>
     <dl>
+        <dt>(01-02-2018) Masking Colour from Image Patch</dt>
+        <dd>In the batch align, rotate, crop and mask functions, you can now 
+        specify the masking colour from an image path by defining the coordinates 
+        of the top left and bottom right corners of the path. For example, if 
+        you want to match the median colour of the top 10 rows of pixels, set the 
+        patch coordinates to 0, 0 and 2000, 10 (if you set the coordinates outside 
+        the range of the image size, it will default to the width of the image).</dd>
+        
+        <dt>(29-01-2018) Batch Functions</dt>
+        <dd>I've made several updates to batch functions so they are easier to 
+        use. You can now also upload your batch files as tab-delimited .txt files 
+        and load them by double-clicking them in the finder.</dd>
+        
         <dt>(19-06-2017) Dragging Finder Files</dt>
         <dd>I've reinstated drag and drop, but will probably refine this in the 
         future to get webmorph to work better with touch screens.</dd>

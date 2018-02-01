@@ -20,14 +20,25 @@ if ($_POST['img']) {
         $img = new PsychoMorph_ImageTem($_POST['img']);
     }
     
+    $rgb = $_POST['rgb'];
+    
+    if ($_POST['patch']) {
+        $rgb = $img->getImg()->patch(
+            $_POST['patch'][0], 
+            $_POST['patch'][1], 
+            $_POST['patch'][2], 
+            $_POST['patch'][3]
+        );
+    }
+    
     $img->alignEyes($_POST['width'], $_POST['height'],
                     array($_POST['x1'], $_POST['y1']),
                     array($_POST['x2'], $_POST['y2']),
-                    $_POST['pt1'], $_POST['pt2'], $_POST['rgb']);
+                    $_POST['pt1'], $_POST['pt2'], $rgb);
                     
     // add to image description
     $desc = "align: {$_POST['pt1']}, {$_POST['pt2']}, {$_POST['x1']}, {$_POST['y1']}, {$_POST['x2']}, {$_POST['y2']}, {$_POST['width']}, {$_POST['height']}";
-    if ($rgb) { $desc .= ", rgb({$_POST['rgb'][0]}, {$_POST['rgb'][0]}, {$_POST['rgb'][0]})"; }
+    if ($rgb) { $desc .= ", rgb({$rgb[0]}, {$rgb[1]}, {$rgb[2]})"; }
     $img->addHistory($desc);
     
     if (array_key_exists('newFileName', $_POST)) {

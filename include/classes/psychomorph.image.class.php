@@ -22,6 +22,18 @@ function mean($values) {
     return $mean;    
 }
 
+function median($values){
+    // return the median of an array of values
+    if ($values) {
+        $n = count($values);
+        sort($values);
+        $mid = floor(($n-1)/2);
+        return ($values[$mid]+$values[$mid+1-$n%2])/2;
+    }
+    
+    return 0;
+}
+
 function mode($values, $p = 0) {
     // returns modal value or average of $p % at the mode
     
@@ -522,6 +534,45 @@ class PsychoMorph_Image extends PsychoMorph_File {
         $color = imagecolorallocate($image, $rgb[0], $rgb[1], $rgb[2]);
         
         return $color;
+    }
+    
+    public function patch($startx, $endx, $starty, $endy) {
+        // swap start and end if they are in the wrong order
+        if ($startx > $endx) {
+            $s = $startx;
+            $startx = $endx;
+            $endx = $s;
+        }
+        
+        if ($starty > $endy) {
+            $s = $starty;
+            $starty = $endy;
+            $endy = $s;
+        }
+        
+        $startx = max($startx, 0);
+        $starty = max($starty, 0);
+        $endx = min($endx, $this->getWidth());
+        $endy = min($endy, $this->getHeight());
+
+        for ($x = $startx; $x <= $endx; $x++) {
+            for ($y = $starty; $y < $endy; $y++) {
+                $color_index = imagecolorat($this->_image, $x, $y);
+                if ($color_index != $mask_color) {
+                    $r[] = ($color_index >> 16) & 0xFF;
+                    $g[] = ($color_index >> 8) & 0xFF;
+                    $b[] = $color_index & 0xFF;
+                }
+            }
+        }
+        
+        $median = array(
+            round(median($r)), 
+            round(median($g)), 
+            round(median($b))
+        );
+        
+        return $median;
     }
     
     public function rotate($degrees, $rgb = null) {

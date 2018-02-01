@@ -51,6 +51,15 @@ if (!$return['error']) {
         'ext' => $_POST['ext']
     );
     
+    if ($_POST['patch']) {
+        $rgb = $img->getImg()->patch(
+            $_POST['patch'][0], 
+            $_POST['patch'][1], 
+            $_POST['patch'][2], 
+            $_POST['patch'][3]
+        );
+    }
+    
     $img->crop($x, $y, $w, $h, $rgb);
     
     $desc = "crop: {$t}, {$r}, {$b}, {$l}";

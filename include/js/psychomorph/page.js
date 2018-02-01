@@ -8,6 +8,13 @@ if (navigator.userAgent.indexOf('Mac OS X') != -1) {                            
 
 $.Finger.pressDuration == 1000;
 
+$('div.modal').on('change', 'input.patchcolor', function() {
+    var checked = $(this).is(':checked');
+    console.log(checked);
+    $(this).closest('div.modal').find('div.patchcolor').toggle(checked);
+    $(this).closest('div.modal').find('.rgb_chooser, .rgba_text').toggle(!checked);
+});
+
 $(document).on('dblclick', '.ui-dialog-titlebar', function() { 
     console.log('dblclicky');
     var $mydialog = $(this).next('.ui-dialog-content');
@@ -575,23 +582,53 @@ $finder.on('click', function() {
         + "This file format is what the desktop version of Psychomorph uses. "
         + "To see a human-readable version of this file, look at the "
         + $(this).text() + ".txt file.");
+}).on('doubletap', 'li.txt, li.csv', function(e) {                              // open text files in batch (txt/csv)
+    var text = $(this).data('text').trim();
+
+    if (typeof text === "undefined" || text === "") return false;
+    
+    // re-write to use regex to detect probable batch files
+    var rows = text.split(/\s*[\r\n]+\s*/g);
+    if (rows.length == 0) return false;
+    var cols = rows[0].trim().split('\t');
+    if (cols.length == 1) cols = rows[0].trim().split(',');
+    
+    if (cols.length == 10) {
+    //if (text.match(/^(?:[^\t]+\t){9}[^\t]+\t*$/mg)) {
+        batchEdit();
+        $('#batchEditDialog table textarea').eq(0).val(text).blur();
+    } else if (cols.length == 7) {
+    //} else if (text.match(/^(?:[^\t]+\t){6}[^\t]+\t*$/mg)) {
+        batchTrans();
+        $('#batchTransDialog table textarea').eq(0).val(text).blur();
+    } else if (rows.length > 2) {
+        batchAverage();
+        $('#batchAvgDialog textarea').eq(0).val(text);
+    }
 }).on('click', 'li.txt, li.csv, li.pci', function(e) {                          // display text files (txt/csv/pci)
     if ($finder.hasClass('image-view')) { return false; }
 
-    var theURL = $(this).attr('url');
-    $.ajax({
-        url: 'scripts/fileRead',
-        data: { url: theURL },
-        success: function(data) {
-            if (data.error) {
-                $('<div />').html(data.errorText).dialog({
-                    title: 'Error Reading File <code>' + theURL + '</code>',
-                });
-            } else {
-                $('#selectedTem').val(data.text).show();
+    var $this = $(this);
+    var text = $this.data('text');
+
+    if (typeof text !== "undefined" && text !== "") {
+        $('#selectedTem').val(text).show();
+    } else {
+        $.ajax({
+            url: 'scripts/fileRead',
+            data: { url: $this.attr('url') },
+            success: function(data) {
+                if (data.error) {
+                    $('<div />').html(data.errorText).dialog({
+                        title: 'Error Reading File <code>' + theURL + '</code>',
+                    });
+                } else {
+                    $this.data('text', data.text);
+                    $('#selectedTem').val(data.text).show();
+                }
             }
-        }
-    });
+        });
+    }
 }).on('click', 'li.tem', function(e) {                                          // show text of tem file in imgbox on click
     if (!WM.filepreview || $finder.hasClass('image-view')) { return false; }
 
@@ -794,6 +831,7 @@ $('.rgb_chooser').each( function() {
     var $rgba = $('<span class="rgba_text" />');
     $rgba.html('rgb(<span class="r"></span>, <span class="g"></span>, <span class="b"></span></span>)');
     $(this).before($rgba);
+    
 
     $(this).slider({
         values: [127, 127, 127],
@@ -807,6 +845,15 @@ $('.rgb_chooser').each( function() {
             rgba_change($(this), $rgba, ui);
         }
     }).slider('values', [127, 127, 127]);
+    
+    $(this).after('<input type="checkbox" class="patchcolor"> Select color from patch<br>\n' +
+        '<div class="patchcolor">\n' +
+        '   Patch coordinates (top left of the image is 0, 0) <br>\n' +
+        '   top left: <input type="number" step="1" min="0" value="0" name="startx" maxlength="4" />, \n' +
+        '   <input type="number" step="1" min="0" value="0" name="starty" maxlength="4" /> \n' +
+        '   bottom right: <input type="number" step="1" min="0" value="10" name="endx" maxlength="4" />, \n' +
+        '   <input type="number" step="1" min="0" value="10" name="endy" maxlength="4" />\n' +
+        '</div>');
 });
 
 $('.rgba_chooser').each( function() {
@@ -1913,88 +1960,11 @@ $('.batchDialog table').on('keydown', 'textarea', function(e) {
 });
 
 $('#batchEditDialog table').on('blur', 'textarea', function() {
-    var v = this.value;
-    if (~v.indexOf("\t") || ~v.indexOf("\n")) {
-        var $be = $('#batchEditDialog table tbody');
-        var start_col   = $(this).closest('td').index();
-        var start_row   = $(this).closest('tr').index();
-        
-        var header = "image	align	resize	rotate	crop	mask	sym	mirror	order	outname";
-        var rows = v.replace(header,'').trim().split('\n');
-        
-        $.each(rows, function(i, r) {
-            var row_n = start_row + i;
-            
-            if (row_n + 1 > $be.find('tr').length) {
-                $be.append('<tr>' +
-                    '<td><textarea></textarea></td>' +
-                    '<td><textarea></textarea></td>' +
-                    '<td><textarea></textarea></td>' +
-                    '<td><textarea></textarea></td>' +
-                    '<td><textarea></textarea></td>' +
-                    '<td><textarea></textarea></td>' +
-                    '<td><textarea></textarea></td>' +
-                    '<td><textarea></textarea></td>' +
-                    '<td><textarea></textarea></td>' +
-                    '<td><textarea></textarea></td>' +
-                    '</tr>');
-            }
-            
-            var cols = r.replace(/ /g,'').split('\t');
-            $.each(cols, function(j, c) {
-                var col_n = start_col + j;
-                
-                $be.find('tr').eq(row_n).find('td').eq(col_n).find('textarea').val(c);
-            });
-            
-        });
-    }
-    
-    batchEditCheck();
+    batchTableText(this, "Edit");
 });
 
 $('#batchTransDialog table').on('blur', 'textarea', function() {
-    var v = this.value;
-    if (~v.indexOf("\t") || ~v.indexOf("\n")) {
-        var $be = $('#batchTransDialog table tbody');
-        var start_col   = $(this).closest('td').index();
-        var start_row   = $(this).closest('tr').index();
-        
-        var header = "trans-img\tfrom-img\tto-img\tshape\tcolor\ttexture\toutname";
-        var rows = v.replace(header,'').trim().split('\n');
-        
-        $.each(rows, function(i, r) {
-            var row_n = start_row + i;
-            
-            if (row_n + 1 > $be.find('tr').length) {
-                $be.append('<tr>' +
-                    '<td><textarea></textarea></td>' +
-                    '<td><textarea></textarea></td>' +
-                    '<td><textarea></textarea></td>' +
-                    '<td><textarea></textarea></td>' +
-                    '<td><textarea></textarea></td>' +
-                    '<td><textarea></textarea></td>' +
-                    '<td><textarea></textarea></td>' +
-                    '</tr>');
-            }
-            
-            var cols = r.replace(/ /g,'').split(',');
-            //var cols = $.trim(r).split(',');
-            // check if tab-delimited
-            if (cols.length == 1) {
-                //cols = $.trim(r).split('\t');
-                cols = r.replace(/ /g,'').split('\t');
-            }
-            $.each(cols, function(j, c) {
-                var col_n = start_col + j;
-                
-                $be.find('tr').eq(row_n).find('td').eq(col_n).find('textarea').val(c);
-            });
-            
-        });
-    }
-    
-    batchTransCheck();
+    batchTableText(this, "Trans");
 });
 
 $('#batchAvgDialog').delegate('textarea', 'keydown', function(e) {
