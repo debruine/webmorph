@@ -202,6 +202,16 @@ strong {
     overflow-y: scroll;
 }
 
+#resources {
+    max-width: 30em;
+}
+
+#resources img {
+    width: 120px;
+    height: 160px;
+    max-width: none;
+}
+
 /***** TEXT LINKS *****/
 a {
     outline:none;
@@ -2716,6 +2726,13 @@ div.patchcolor {
     
     .toolbar button span.wm {
         background-size: 100% !important;
+    }
+    
+    #resources img {
+        width: 100%;
+        height: auto;
+        max-width: 150px;
+        min-width: 75px;
     }
     
     #averageInterface #avg_image_box {
