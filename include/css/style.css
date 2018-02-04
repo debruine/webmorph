@@ -1050,6 +1050,10 @@ p.msg {
     width:3em;
 }
 
+#scramble_custom_mask {
+    display: none;
+}
+
 #scrambleExample {
     width:600px;
     height:800px;
@@ -1080,6 +1084,14 @@ p.msg {
 
 #scrambleExample div.ui-selected {
     background-color:rgba(0,255,0,0.25);
+}
+
+#scramble_mask_setup {
+    display: none;
+}
+
+#scramble_mask_setup ul {
+    float: left;
 }
 
 #grid_line_color {

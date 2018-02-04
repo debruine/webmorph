@@ -301,6 +301,15 @@ class PsychoMorph_Image extends PsychoMorph_File {
         return $this;
     }
     
+    public function makeClone() {
+        $original_width = $this->getWidth();
+        $original_height = $this->getHeight();
+        $clone = imagecreatetruecolor($original_width, $original_height);
+        imagecopy($clone, $this->_image, 0, 0, 0, 0, $original_width, $original_height);
+        
+        return $clone;
+    }
+    
     public function setImage($img) {
         if ($this->_image) imagedestroy($this->_image);
         $this->_image = $img;
@@ -558,11 +567,9 @@ class PsychoMorph_Image extends PsychoMorph_File {
         for ($x = $startx; $x <= $endx; $x++) {
             for ($y = $starty; $y < $endy; $y++) {
                 $color_index = imagecolorat($this->_image, $x, $y);
-                if ($color_index != $mask_color) {
-                    $r[] = ($color_index >> 16) & 0xFF;
-                    $g[] = ($color_index >> 8) & 0xFF;
-                    $b[] = $color_index & 0xFF;
-                }
+                $r[] = ($color_index >> 16) & 0xFF;
+                $g[] = ($color_index >> 8) & 0xFF;
+                $b[] = $color_index & 0xFF;
             }
         }
         
@@ -633,6 +640,44 @@ class PsychoMorph_Image extends PsychoMorph_File {
         return $this;
     }
     
+    public function _unmaskedSquares($maskcolor = false, $gridsize = 25, $x_offset = 0, $y_offset = 0) {
+        $original_image = $this->getImage();
+        
+        $imgwidth = $this->getWidth();
+        $imgheight = $this->getHeight();
+        
+        $xx = floor(($imgwidth-$x_offset)/$gridsize);
+        $yy = floor(($imgheight-$y_offset)/$gridsize);
+        
+        if ($maskcolor === false) {
+            $mask_color = imagecolorat($original_image, 5, 5);
+        } else {
+            $mask_color = imagecolorallocate($original_image, $maskcolor[0], $maskcolor[1], $maskcolor[2]);
+        }
+        
+        for ($y = 0; $y < $yy; $y++) {
+            for ($x = 0; $x < $xx; $x++) {
+            
+                $source_x = $x * $gridsize + $x_offset;
+                $source_y = $y * $gridsize + $y_offset;
+
+                $has_mask_color = false;
+                for ($sx = $source_x; $sx < $source_x + $gridsize; $sx++) {
+                    for ($sy = $source_y; $sy < $source_y + $gridsize; $sy++) {
+                        $this_color = imagecolorat($original_image, $sx, $sy);
+                        $has_mask_color = $has_mask_color || ($this_color == $mask_color);
+                    }
+                }
+                if (!$has_mask_color) $chosen[$y][] = $x;
+            }
+            if (is_array($chosen[$y])) {
+                $chosen[$y] = implode(",", $chosen[$y]);
+            }
+        }
+        
+        return $chosen;
+    }
+    
     public function scramble($scramble_data) {
         ini_set('memory_limit','1024M');
         
@@ -649,9 +694,13 @@ class PsychoMorph_Image extends PsychoMorph_File {
         $imgwidth = $this->getWidth();
         $imgheight = $this->getHeight();
         
+        if ($scramble_data['mask']) {
+            $scramble_data['chosen'] = $this->_unmaskedSquares(false, $gridsize, $x_offset, $y_offset);
+        }
+        
+        
         // copy over the whole original image
-        $new_image = imagecreatetruecolor($imgwidth, $imgheight);
-        imagecopy($new_image, $original_image, 0, 0, 0, 0, $imgwidth, $imgheight);
+        $new_image = $this->makeClone();
         
         //set up grid structure
         $means = array();

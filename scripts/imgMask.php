@@ -16,7 +16,7 @@ include_once DOC_ROOT . '/include/classes/psychomorph.class.php';
 
 $img = new PsychoMorph_ImageTem($_POST['img']);
 
-$mask = explode(',', $_POST['mask']);
+$mask = $_POST['mask'];
 $blur = $_POST['blur'];
 $reverse = ($_POST['reverse'] == 'true');
 

@@ -365,8 +365,49 @@
     X-offset: <input type='integer' step='1' min='1' value='0' id='scramble_x_offset' maxlength='4' />
     Y-offset: <input type='integer' step='1' min='1' value='0' id='scramble_y_offset' maxlength='4' />
     <br>
+    <input type='checkbox' id='scramble_mask' /> <label for='scramble_mask'>Scramble Only Inside Mask</label>
+        (experimental: mask colour will be detected from the top left square if no mask is chosen)<br>
+        
+        
+    <div id="scramble_mask_setup" class='maskOptions'>
+        <ul>
+            <li><input type='checkbox' id='scramble_mask_reverse' name='mask_reverse' />
+                <label for='scramble_mask_reverse'>Reverse</label></li>
+            <li><input type='checkbox' id='scramble_mask_custom' name='mask_custom' />
+                <label for='scramble_mask_custom'>Custom</label></li>
+        </ul>
+        <ul>
+            <li><input type='checkbox' id='scramble_mask_oval' name='mask_oval' />
+                <label for='scramble_mask_oval'>Oval</label></li>
+            <li><input type='checkbox' id='scramble_mask_face' name='mask_face' />
+                <label for='scramble_mask_face'>Face</label></li>
+            <li><input type='checkbox' id='scramble_mask_neck' name='mask_neck' />
+                <label for='scramble_mask_neck'>Neck</label></li>
+        </ul>
+        <ul>
+            <li><input type='checkbox' id='scramble_mask_ears' name='mask_ears' />
+                <label for='scramble_mask_ears'>Ears</label></li>
+            <li><input type='checkbox' id='scramble_mask_eyes' name='mask_eyes' />
+                <label for='scramble_mask_eyes'>Eyes</label></li>
+            <li><input type='checkbox' id='scramble_mask_brows' name='mask_brows' />
+                <label for='scramble_mask_brows'>Eyebrows</label></li>
+        </ul>
+        <ul>
+            <li><input type='checkbox' id='scramble_mask_nose' name='mask_nose' />
+                <label for='scramble_mask_nose'>Nose</label></li>
+            <li><input type='checkbox' id='scramble_mask_mouth' name='mask_mouth' />
+                <label for='scramble_mask_mouth'>Mouth</label></li>
+            <li><input type='checkbox' id='scramble_mask_teeth' name='mask_teeth' />
+                <label for='scramble_mask_teeth'>Teeth</label></li>
+        </ul>
+        <ul><li>
+            <textarea id='scramble_custom_mask' placeholder='Custom Mask (e.g., 18,19,20,21,22 ; 22,30,29,28,18)'></textarea>
+        </li></ul>
+    </div>
+    
+        
     <input type='checkbox' id='scramble_sym' /> <label for='scramble_sym'>Symmetric Scramble</label>
-    <br>
+    <br style="clear: both;">
     <input type='checkbox' id='grid_lines' checked='checked' /> <label for='grid_lines'>Grid Lines</label> 
     <div id='grid_line_color' class='rgb_chooser'></div>
     <p>Click on the squares you want to scramble. Drag for multiple select.</p>
@@ -418,20 +459,33 @@
         <img id='mask_demo_face' src='/include/images/masks/face' />
         <img id='mask_demo_oval' src='/include/images/masks/oval' />
     </div>
-    <div>
+    <div class='maskOptions'>
         <br>Blur: <input type='number' step='any' min='0' max='30' value='0' name='blur' maxlength='2' />
-        <br><label for='mask_reverse'>Reverse</label>: <input type='checkbox' id='mask_reverse' /> 
         <ul>
-            <li><input type='checkbox' id='mask_trans' />   <label for='mask_trans'>Transparent</label></li>
-            <li><input type='checkbox' id='mask_oval' />    <label for='mask_oval'>Oval</label></li>
-            <li><input type='checkbox' id='mask_face' />    <label for='mask_face'>Face</label></li>
-            <li><input type='checkbox' id='mask_neck' />    <label for='mask_neck'>Neck</label></li>
-            <li><input type='checkbox' id='mask_ears' />    <label for='mask_ears'>Ears</label></li>
-            <li><input type='checkbox' id='mask_eyes' />    <label for='mask_eyes'>Eyes</label></li>
-            <li><input type='checkbox' id='mask_brows' />   <label for='mask_brows'>Eyebrows</label></li>
-            <li><input type='checkbox' id='mask_mouth' />   <label for='mask_mouth'>Mouth</label></li>
-            <li><input type='checkbox' id='mask_teeth' />   <label for='mask_teeth'>Teeth</label></li>
-            <li><input type='checkbox' id='mask_nose' />    <label for='mask_nose'>Nose</label></li>
+            <li><input type='checkbox' id='mask_reverse' name='mask_reverse' />
+                <label for='mask_reverse'>Reverse</label></li>
+            <li><input type='checkbox' id='mask_trans' name='mask_trans'/>
+                <label for='mask_trans'>Transparent</label></li>
+            <li><input type='checkbox' id='mask_oval' name='mask_oval' />
+                <label for='mask_oval'>Oval</label></li>
+            <li><input type='checkbox' id='mask_face' name='mask_face' />
+                <label for='mask_face'>Face</label></li>
+            <li><input type='checkbox' id='mask_neck' name='mask_neck' />
+                <label for='mask_neck'>Neck</label></li>
+            <li><input type='checkbox' id='mask_ears' name='mask_ears' />
+                <label for='mask_ears'>Ears</label></li>
+            <li><input type='checkbox' id='mask_eyes' name='mask_eyes' />
+                <label for='mask_eyes'>Eyes</label></li>
+            <li><input type='checkbox' id='mask_brows' name='mask_brows' />
+                <label for='mask_brows'>Eyebrows</label></li>
+            <li><input type='checkbox' id='mask_nose' name='mask_nose' />
+                <label for='mask_nose'>Nose</label></li>
+            <li><input type='checkbox' id='mask_mouth' name='mask_mouth' />
+                <label for='mask_mouth'>Mouth</label></li>
+            <li><input type='checkbox' id='mask_teeth' name='mask_teeth' />
+                <label for='mask_teeth'>Teeth</label></li>
+            <!--<li><input type='checkbox' id='mask_custom' name='mask_custom' />
+                <label for='mask_custom'>Custom</label></li>-->
         </ul>
     </div>
     <div id='custom_mask_box'>

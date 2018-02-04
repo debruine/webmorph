@@ -26,7 +26,7 @@ $newFileName = array(
     'ext' => $_POST['ext']
 );
 
-if (!($img = new PsychoMorph_Image($_POST['img']))) {
+if (!($img = new PsychoMorph_ImageTem($_POST['img']))) {
     $return['errorText'] = 'The image could not be opened.';
 } else if (!$img->scramble($_POST)) {
     $return['errorText'] = 'The image could not be scrambled.';

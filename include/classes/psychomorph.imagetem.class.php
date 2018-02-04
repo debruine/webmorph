@@ -32,6 +32,12 @@ class PsychoMorph_ImageTem {
     }
     
     public function getImg() { return $this->_img; }
+    public function getImage() { return $this->_img->getImage(); }
+    public function setImage($img) { 
+         $this->_img->setImage($img);
+         
+         return $this;
+    }
     public function getTem() { return $this->_tem; }
     public function getURL() { 
         $urls = array(
@@ -97,6 +103,56 @@ class PsychoMorph_ImageTem {
                 $this->_tem->crop($xOffset, $yOffset);    
             }
         }
+        
+        return $this;
+    }
+    
+    public function scramble($scramble_data) {
+        ini_set('memory_limit','1024M');
+        
+        if ($scramble_data['mask']) {
+            $original_image = $this->_img->makeClone();
+
+            $custom = null;
+            if (!empty($scramble_data['custom'])) {
+                $scramble_data['masktype'] = array('custom');
+                
+                $custom = explode(':', $scramble_data['custom']);
+                foreach ($custom as $j => $m) {
+                    $custom[$j] = explode(';', $m);
+                    foreach($custom[$j] as $i => $m2) {
+                        $custom[$j][$i] = explode(',', $m2);
+                    }
+                }
+            }
+            
+            $scramble_from_mask = count($scramble_data['masktype']) && $this->_tem;
+            
+            if ($scramble_from_mask) {
+                $this->mask($scramble_data['masktype'], 
+                        array(0,255,0,1), 0, 
+                        ($scramble_data['reverse'] == 'true'), 
+                        $custom);
+            }
+            
+            // set chosen squares
+            $scramble_data['chosen'] = $this->getImg()->_unmaskedSquares(
+                $scramble_from_mask ? array(0,255,0,1) : false, 
+                $scramble_data['grid'], 
+                $scramble_data['x'], 
+                $scramble_data['y']
+            );
+            
+            // replace original image
+            $this->setImage($original_image);
+
+            unset($scramble_data['mask']);
+            unset($scramble_data['masktype']);
+            unset($scramble_data['reverse']);
+            unset($scramble_data['custom']);
+        }
+        
+        $this->_img->scramble($scramble_data);
         
         return $this;
     }
@@ -195,9 +251,9 @@ class PsychoMorph_ImageTem {
         $original_width = $img->getWidth();
         $original_height = $img->getHeight();
         
-        
-        $original_image = imagecreatetruecolor($original_width, $original_height);
-        imagecopy($original_image, $img->getImage(), 0, 0, 0, 0, $original_width, $original_height);
+        $original_image = $img->makeClone();
+        //$original_image = imagecreatetruecolor($original_width, $original_height);
+        //imagecopy($original_image, $img->getImage(), 0, 0, 0, 0, $original_width, $original_height);
         
         // set transparent if alpha == 0
         if ($rgba[3] == 0) {

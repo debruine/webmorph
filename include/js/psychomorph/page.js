@@ -8,15 +8,8 @@ if (navigator.userAgent.indexOf('Mac OS X') != -1) {                            
 
 $.Finger.pressDuration == 1000;
 
-$('div.modal').on('change', 'input.patchcolor', function() {
-    var checked = $(this).is(':checked');
-    console.log(checked);
-    $(this).closest('div.modal').find('div.patchcolor').toggle(checked);
-    $(this).closest('div.modal').find('.rgb_chooser, .rgba_text').toggle(!checked);
-});
-
+// minimise dialogs into titlebar
 $(document).on('dblclick', '.ui-dialog-titlebar', function() { 
-    console.log('dblclicky');
     var $mydialog = $(this).next('.ui-dialog-content');
     var $buttons = $(this).closest('.ui-dialog').find('.ui-dialog-buttonpane');
     var myheight = $mydialog.dialog("option", "height"); 
@@ -807,6 +800,12 @@ $('.hue_chooser').slider({
     }
 });
 
+$('div.modal').on('change', 'input.patchcolor', function() {
+    var checked = $(this).is(':checked');
+    $(this).closest('div.modal').find('div.patchcolor').toggle(checked);
+    $(this).closest('div.modal').find('.rgb_chooser, .rgba_text').toggle(!checked);
+});
+
 function rgba_change($chooser, $rgba, ui) {
     var r = ui.values[0];
     var g = ui.values[1];
@@ -827,12 +826,22 @@ function rgba_change($chooser, $rgba, ui) {
     }
 }
 
+$('#cropDialog .rgb_chooser, #maskDialog .rgb_chooser, #alignDialog .rgb_chooser, #rotateDialog .rgb_chooser').each( function() {
+    $(this).after('<input type="checkbox" class="patchcolor"> Select color from patch<br>\n' +
+        '<div class="patchcolor">\n' +
+        '   Patch coordinates (top left of the image is 0, 0) <br>\n' +
+        '   top left: <input type="number" step="1" min="0" value="0" name="startx" maxlength="4" />, \n' +
+        '   <input type="number" step="1" min="0" value="0" name="starty" maxlength="4" /> \n' +
+        '   bottom right: <input type="number" step="1" min="0" value="10" name="endx" maxlength="4" />, \n' +
+        '   <input type="number" step="1" min="0" value="10" name="endy" maxlength="4" />\n' +
+        '</div>');
+});
+
 $('.rgb_chooser').each( function() {
     var $rgba = $('<span class="rgba_text" />');
     $rgba.html('rgb(<span class="r"></span>, <span class="g"></span>, <span class="b"></span></span>)');
     $(this).before($rgba);
     
-
     $(this).slider({
         values: [127, 127, 127],
         min: 0,
@@ -845,15 +854,6 @@ $('.rgb_chooser').each( function() {
             rgba_change($(this), $rgba, ui);
         }
     }).slider('values', [127, 127, 127]);
-    
-    $(this).after('<input type="checkbox" class="patchcolor"> Select color from patch<br>\n' +
-        '<div class="patchcolor">\n' +
-        '   Patch coordinates (top left of the image is 0, 0) <br>\n' +
-        '   top left: <input type="number" step="1" min="0" value="0" name="startx" maxlength="4" />, \n' +
-        '   <input type="number" step="1" min="0" value="0" name="starty" maxlength="4" /> \n' +
-        '   bottom right: <input type="number" step="1" min="0" value="10" name="endx" maxlength="4" />, \n' +
-        '   <input type="number" step="1" min="0" value="10" name="endy" maxlength="4" />\n' +
-        '</div>');
 });
 
 $('.rgba_chooser').each( function() {
@@ -877,12 +877,20 @@ $('.rgba_chooser').each( function() {
     }).slider('values', [127, 127, 127, 255]);
 });
 
+$('#scramble_mask').change( function() {
+    var checked = $(this).is(':checked');
+    
+    $('#scramble_sym, #scrambleDialog p, #scrambleDialog label[for="scramble_sym"]').toggle(!checked);
+    $('#scramble_mask_setup').toggle(checked);
+    
+})
+
 $('#grid_line_color').slider('values', [127,127,127]);
 
 $('#grid_lines').change( function() {
     var line_color;
 
-    if ($(this).prop('checked')) {
+    if ($(this).is(':checked')) {
         $('#scrambleExample div').css({
             'border-top-style': 'solid',
             'border-left-style': 'solid'
@@ -2231,27 +2239,84 @@ $('#show_thumbs').change(function() {
 // error-checking for all integer-type text boxes
 $('input[type=number]').bind('keyup change blur', function(e) {
     var regex = /^(-|\+)?[0-9]{0,4}(\.[0-9]{1,3})?$/;
-    if (!regex.test(this.value)) {
-        $(this).addClass('error');
-    } else {
-        $(this).removeClass('error');
-    }
+    var is_error = !regex.test(this.value);
+    $(this).toggleClass('error', is_error);
 });
 // !#mask_trans
 $('#mask_trans').change(function() {
-    if ($(this).prop('checked')) {
-        $('#maskExample').addClass('trans');
-    } else {
-        $('#maskExample').removeClass('trans');
-    }
+    $('#maskExample').toggleClass('trans', $(this).prop('checked'));
 });
 
 // ! interactive masking
-$('#maskDialog ul input[type=checkbox]').change(function() {
-    var type = $(this).attr('id').replace('mask_', '');
-    var checked = $(this).prop('checked');
-    maskViewCheck(type, checked);
+$('.maskOptions ul input[type=checkbox]').change(function() {
+    var $dialog = $(this).closest('.modal');
+    var type = $(this).attr('name').replace('mask_', '');
+
+    var fList = ['custom', 'oval', 'face', 'neck', 'ears', 'eyes', 'brows', 'mouth', 'teeth', 'nose'];
+    
+    if (fList.indexOf(type) == -1) return false; 
+    
+    var custom = $dialog.find('input[name=mask_custom]').prop('disabled', false);
+    var oval = $dialog.find('input[name=mask_oval]').prop('disabled', false);
+    var face = $dialog.find('input[name=mask_face]').prop('disabled', false);
+    var neck = $dialog.find('input[name=mask_neck]').prop('disabled', false);
+    var ears = $dialog.find('input[name=mask_ears]').prop('disabled', false);
+    var eyes = $dialog.find('input[name=mask_eyes]').prop('disabled', false);
+    var nose = $dialog.find('input[name=mask_nose]').prop('disabled', false);
+    var brows = $dialog.find('input[name=mask_brows]').prop('disabled', false);
+    var mouth = $dialog.find('input[name=mask_mouth]').prop('disabled', false);
+    var teeth = $dialog.find('input[name=mask_teeth]').prop('disabled', false);
+    
+    if (custom.prop('checked')) {
+        oval.prop('checked', false).prop('disabled', true);
+        face.prop('checked', false).prop('disabled', true);
+        neck.prop('checked', false).prop('disabled', true);
+        ears.prop('checked', false).prop('disabled', true);
+        eyes.prop('checked', false).prop('disabled', true);
+        nose.prop('checked', false).prop('disabled', true);
+        brows.prop('checked', false).prop('disabled', true);
+        mouth.prop('checked', false).prop('disabled', true);
+        teeth.prop('checked', false).prop('disabled', true);
+    } else {
+        $dialog.find('textarea').val("");
+    }
+    $dialog.find('textarea').toggle(custom.prop('checked'));
+    
+    if (oval.prop('checked')) {
+        face.prop('checked', false).prop('disabled', true);
+        neck.prop('checked', false).prop('disabled', true);
+        ears.prop('checked', false).prop('disabled', true);
+        eyes.prop('checked', false).prop('disabled', true);
+        nose.prop('checked', false).prop('disabled', true);
+        brows.prop('checked', false).prop('disabled', true);
+        mouth.prop('checked', false).prop('disabled', true);
+        teeth.prop('checked', false).prop('disabled', true);
+    }
+    
+    if (face.prop('checked')) {
+        eyes.prop('checked', false).prop('disabled', true);
+        nose.prop('checked', false).prop('disabled', true);
+        brows.prop('checked', false).prop('disabled', true);
+        mouth.prop('checked', false).prop('disabled', true);
+        teeth.prop('checked', false).prop('disabled', true);
+    }
+    
+    if (mouth.prop('checked')) {
+        teeth.prop('checked', false).prop('disabled', true);
+    }
+    
+    // fix visibility of mask_demo
+    $.each(fList, function(i, v) {
+        var $input = $dialog.find('input[name=mask_' + v + ']');
+        var checked = $input.prop('checked');
+        var disabled = $input.prop('disabled');
+        var id = $input.attr('id');
+        $dialog.find('#mask_demo_' + v).toggle(checked);
+        $dialog.find('label[for=' + id + ']').toggleClass('ui-state-disabled', disabled);
+    });
+    
 });
+
 // !#masktest
 $('#masktest').click( function() {
     //var m = drawMask("145,146,147,148,149,150,151,152,153,154,155,156,157;157,184,183,145"); // halo

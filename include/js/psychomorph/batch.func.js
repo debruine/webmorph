@@ -661,31 +661,39 @@ function batchScramble() {
                             chosen[$(this).data('y')].push($(this).data('x'));
                         });
                         
-                        theData.chosen = [];
-                        $.each(chosen, function(i) {
-                            if (chosen[i].length) {
-                                theData.chosen[i] = chosen[i].join();
-                                means.push(array_mean(chosen[i]));
-                            }
-                        });
-                        
-                        // check if all row means the same for symmetric scramble
-                        if ($('#scramble_sym').prop('checked')) {
-                            $.each(means, function(i,v) {
-                                if (v !== means[0]) {
-                                    canSym = canSym && false;
+                        // check if masked version
+                        if ($('#scramble_mask').is(':checked')) {
+                            theData.mask = true;
+                            theData.masktype = getMaskType('#scrambleDialog'); //.split(",");
+                            theData.reverse = $('#scramble_mask_reverse').prop('checked');
+                            theData.custom = $('#scramble_custom_mask').val();
+                        } else {
+                            theData.chosen = [];
+                            $.each(chosen, function(i) {
+                                if (chosen[i].length) {
+                                    theData.chosen[i] = chosen[i].join();
+                                    means.push(array_mean(chosen[i]));
                                 }
                             });
-                            console.log("canSym: " + canSym);
-
-                            if (!canSym) {
-                                growl('The selected squares are not vertically symmetric.');
-                                return false;
+                            
+                            // check if all row means the same for symmetric scramble
+                            if ($('#scramble_sym').is(':checked')) {
+                                $.each(means, function(i,v) {
+                                    if (v !== means[0]) {
+                                        canSym = canSym && false;
+                                    }
+                                });
+                                console.log("canSym: " + canSym);
+    
+                                if (!canSym) {
+                                    growl('The selected squares are not vertically symmetric.');
+                                    return false;
+                                }
                             }
                         }
                     }
 
-                    if ($('#grid_lines').prop('checked')) {
+                    if ($('#grid_lines').is(':checked')) {
                         theData.line_color = $('#grid_line_color').slider('values');
                     }
                     
@@ -1418,6 +1426,7 @@ function batchMask() {
     batchNewName('#maskDialog', 'masked');
     $('#maskDialog').dialog({
         title: 'Batch Mask ' + files.length + ' Image' + ((files.length == 1) ? '' : 's'),
+        height: Math.min(750, $finder.height()),
         buttons: {
             Cancel: function() { $(this).dialog("close"); },
             "Mask": {
@@ -1449,33 +1458,40 @@ function batchMask() {
     });
 }
 
+function getMaskType(dialog) {
+    var $dialog = $(dialog);
+    var checked_mask = [];
+    if ($dialog.find('input[name=mask_oval]').prop('checked')) {
+        checked_mask.push('oval');
+        // no need to check others if oval is on
+    } else {
+        if ($dialog.find('input[name=mask_face]').prop('checked')) {
+            checked_mask.push('face');
+            // no need to check eyes, nose, mouth, teeth if face is on
+        } else {
+            if ($dialog.find('input[name=mask_eyes]').prop('checked')) checked_mask.push('left_eye', 'right_eye');
+            if ($dialog.find('input[name=mask_brows]').prop('checked')) checked_mask.push('left_brow', 'right_brow');
+            if ($dialog.find('input[name=mask_nose]').prop('checked')) checked_mask.push('nose');
+            if ($dialog.find('input[name=mask_mouth]').prop('checked')) {
+                checked_mask.push('mouth');
+                // no need to check teeth if mouth is on
+            } else {
+                if ($dialog.find('input[name=mask_teeth]').prop('checked')) checked_mask.push('teeth');
+            }
+        }
+        if ($dialog.find('input[name=mask_ears]').prop('checked')) checked_mask.push('left_ear', 'right_ear');
+        if ($dialog.find('input[name=mask_neck]').prop('checked')) checked_mask.push('neck');
+    }
+    //masktype = checked_mask.join(',');
+    
+    return(checked_mask)
+}
+
 function maskImages(masktype, custom) {  console.log('maskImages(' + masktype + ')');
     //get mask color
 
     if (masktype == null) {
-        var checked_mask = [];
-        if ($('#mask_oval').prop('checked')) {
-            checked_mask.push('oval');
-            // no need to check others if oval is on
-        } else {
-            if ($('#mask_face').prop('checked')) {
-                checked_mask.push('face');
-                // no need to check eyes and mouth if face is on
-            } else {
-                if ($('#mask_eyes').prop('checked')) checked_mask.push('left_eye', 'right_eye');
-                if ($('#mask_brows').prop('checked')) checked_mask.push('left_brow', 'right_brow');
-                if ($('#mask_nose').prop('checked')) checked_mask.push('nose');
-                if ($('#mask_mouth').prop('checked')) {
-                    checked_mask.push('mouth');
-                    // no need to check teeth if mouth is on
-                } else {
-                    if ($('#mask_teeth').prop('checked')) checked_mask.push('teeth');
-                }
-            }
-            if ($('#mask_ears').prop('checked')) checked_mask.push('left_ear', 'right_ear');
-            if ($('#mask_neck').prop('checked')) checked_mask.push('neck');
-        }
-        masktype = checked_mask.join(',');
+        masktype = getMaskType('#maskDialog');
     }
     $('#maskDialog input[type!=checkbox]').blur(); // make sure all inputs are blurred so batch name is valid
     var theData = batchNewNameGet('#maskDialog');
@@ -1497,42 +1513,6 @@ function maskImages(masktype, custom) {  console.log('maskImages(' + masktype + 
 
     files = filesGetSelected('.image');
     batchWatch(files, 'imgMask', theData);
-}
-
-function maskViewCheck(type, checked) {
-    if (type == 'trans') {
-        var bgcolor = (checked) ? 'transparent' : $('#maskDialog .colorcheck').css('background-color');
-        $('#maskExample').css('background-color', bgcolor);
-    } else {
-        if (checked) {
-            $('#mask_demo_' + type).show();
-        } else {
-            $('#mask_demo_' + type).hide();
-        }
-    }
-    var fList = [];
-    if (type == 'oval') {
-        fList = ['face', 'neck', 'ears', 'eyes', 'brows', 'mouth', 'teeth', 'nose'];
-    } else if (type == 'face') {
-        fList = ['eyes', 'brows', 'mouth', 'teeth', 'nose'];
-    } else if (type == 'mouth') {
-        fList = ['teeth'];
-    }
-    if (checked) {
-        maskToggle(fList, 'hide');
-    } else {
-        maskToggle(fList, 'show');
-    }
-
-    function maskToggle(featureList, vis) {
-        $.each(featureList, function(i, f) {
-            if (vis == "hide") {
-                $('#mask_' + f).hide();
-            } else {
-                $('#mask_' + f).show();
-            }
-        });
-    }
 }
 
 function batchTableText(the_textarea, batch_type) {
