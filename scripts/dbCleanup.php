@@ -46,15 +46,18 @@ foreach ($users as $user) {
 $_GET['project'] = 0;
 */
 
-if ($_GET['project'] > 0) {
+if ($user == 1 && $_GET['project'] == 'all') {
+    // get all projects
+    $q = new myQuery("SELECT id as project_id, user_id FROM project");
+} else if ($_GET['project'] > 0) {
     // get one authorised project
-    $q = new myQuery("SELECT project_id FROM project_user WHERE project_id='{$_GET['project']}' AND user_id='{$user}'");
-    $projects = $q->get_col("project_id");
+    $q = new myQuery("SELECT project_id, user_id FROM project_user WHERE project_id='{$_GET['project']}' AND user_id='{$user}'");
 } else {
     // get all authorised projects
-    $q = new myQuery("SELECT project_id FROM project_user WHERE user_id='{$user}'");
-    $projects = $q->get_col("project_id");
+    $q = new myQuery("SELECT project_id, user_id FROM project_user WHERE user_id='{$user}'");
 }
+$projects = $q->get_col("project_id");
+$users = $q->get_key_val("project_id", "user_id");
 
 $dircontents = array();
 
@@ -95,6 +98,7 @@ foreach ($dircontents as $file) {
     $project_id = $exp_path[0];
     unset($exp_path[0]);
     $name = "/" . implode("/", $exp_path);
+    $user = $users[$project_id];
     $q = new myQuery("INSERT INTO img (id, user_id, dt, name, project_id) VALUES (NULL, $user, NOW(), '$name', '$project_id')");
     $added_to_db[] = $project_id . $name;
 }

@@ -1,7 +1,12 @@
 <!-- !- what's new Dialog -->
 <div id='whatsnewDialog' class='modal' title='What&apos;s New?'>
     <dl>
-        <dt>(01-02-2018) Masking Colour from Image Patch</dt>
+        <dt>(2018-02-04) Masked Scrambles</dt>
+        <dd>You can now scramble inside of a mask, rathe than choosing set 
+        squares to scramble. Choose a mask style or set the mask colour from the 
+        top left corner of the image.</dd>
+        
+        <dt>(2018-02-01) Masking Colour from Image Patch</dt>
         <dd>In the batch align, rotate, crop and mask functions, you can now 
         specify the masking colour from an image path by defining the coordinates 
         of the top left and bottom right corners of the path. For example, if 
@@ -9,16 +14,16 @@
         patch coordinates to 0, 0 and 2000, 10 (if you set the coordinates outside 
         the range of the image size, it will default to the width of the image).</dd>
         
-        <dt>(29-01-2018) Batch Functions</dt>
+        <dt>(2018-01-29) Batch Functions</dt>
         <dd>I've made several updates to batch functions so they are easier to 
         use. You can now also upload your batch files as tab-delimited .txt files 
         and load them by double-clicking them in the finder.</dd>
         
-        <dt>(19-06-2017) Dragging Finder Files</dt>
+        <dt>(2017-06-19) Dragging Finder Files</dt>
         <dd>I've reinstated drag and drop, but will probably refine this in the 
         future to get webmorph to work better with touch screens.</dd>
         
-        <dt>(19-06-2017) Various Bug Fixes</dt>
+        <dt>(2017-06-19) Various Bug Fixes</dt>
         <dd><ul>
             <li>Fit points move with the image if you zoom during 3-point delineation.</li>
             <li>Tem files are updated in the finder when you save a new delineation.</li>
@@ -28,7 +33,7 @@
             <li>3-point delineation can now be undone/redone.</li>
         </ul></dd>
         
-        <dt>(10-03-2017) Dragging Finder Files</dt>
+        <dt>(2017-03-10) Dragging Finder Files</dt>
         <dd>Dragging files in the finder to move 
         them between folders was causing too many glitches, especially with touch 
         screens, so I've removed this function. You can still move files between 
