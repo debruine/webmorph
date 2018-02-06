@@ -34,6 +34,12 @@ PAGE BODY and LAYOUT
     user-select: none; 
 }
 
+br.clear {
+    clear: both;
+    margin: 0;
+    padding: 0;
+}
+
 .shadow {
     box-shadow:0 0 4px rgba(0,0,0,0.5);
 }
@@ -707,7 +713,7 @@ p.msg {
     max-width: 55em;
 }
 
-#login-button,#register-button,#reset-password-button {
+#guest-login-button, #login-button,#register-button,#reset-password-button {
     float:right;
     margin: 0.5em 0 0 0.5em;
 }

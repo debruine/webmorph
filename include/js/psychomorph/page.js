@@ -304,6 +304,7 @@ $('#login_password').keyup( function(e) {
 });
 $('#login-button').button().click( userLogin );
 $('#logout').not('.disabled').click( userLogout );
+$('#guest-login-button').button().click( userGuestLogin );
 
 $('#destimages').resizable({
     handles: "e",

@@ -4,6 +4,7 @@
 
 require_once $_SERVER['DOCUMENT_ROOT'] . '/include/main_func.php';
 auth();
+noguest();
 
 $return = array(
     'error' => false,

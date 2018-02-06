@@ -79,9 +79,13 @@
             </tr>
             <tr>
                 <td colspan="2">
+                    
+                    <input type='button' data-role="button" id='guest-login-button' value='Guest Login' />
+                    <input type='button' data-role="button" id='login-button' class='ui-button ui-state-focus' value='Login' />
+                    <br class='clear'>
                     <input type='button' data-role="button" id='reset-password-button' value='Reset Password' />
                     <input type='button' data-role="button" id='register-button' value='Request Account' />
-                    <input type='button' data-role="button" id='login-button' class='ui-button ui-state-focus' value='Login' />
+                    
                 </td>
             </tr>
 <!--

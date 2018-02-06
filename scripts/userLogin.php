@@ -41,6 +41,10 @@ if (empty($email)) {
         } else if ($res['status'] == 'disabled') {
             $return['error'] = true;
             $return['errorText'] .=  "<li>Your account has been disabled.</li>";
+        } else if ($res['status'] == 'guest') {
+            $return['error'] = true;
+            $return['errorText'] .=  "<li>You logged in with a guest account. 
+            Your project was deleted when you logged out. Please apply for a beta account.</li>";
         } else if ($res['status'] == 'rejected') {
             $return['error'] = true;
             $return['errorText'] .=  "<li>Your account has been rejected. This 

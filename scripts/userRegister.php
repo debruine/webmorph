@@ -148,6 +148,8 @@ CREATE TABLE user (
 ALTER TABLE user ADD status ENUM("requested", "disabled", "user", "admin", "superuser") DEFAULT "requested";
 UPDATE user SET status="user";
 
+ALTER TABLE user CHANGE status status enum('rejected','requested','disabled','guest', 'user','admin','superuser'); 
+
 */
 
 ?>

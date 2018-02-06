@@ -36,6 +36,18 @@
         }
     }
     
+    // send to return_location if guest is not high enough for this page
+    function noguest($error = 'Guest accounts cannot do this.') {
+        $q = new myQuery("SELECT status FROM user WHERE id='{$_SESSION[user_id]}'");
+        if ($q->get_one() == 'guest') {
+            scriptReturn(array(
+                'error' => true,
+                'errorText' => $error
+            ));
+            exit();
+        }
+    }
+    
     // check permission
     function perm($perm) {
         $valid_perms = array("pca");
@@ -315,6 +327,93 @@
 /***************************************************/
 /* !Other Functions */
 /***************************************************/
+
+    function recursive_delete($dir) {
+        global $return;
+        
+        // only delete directories in the images path
+        if (strpos($dir, IMAGEBASEDIR) === 0) {
+            $dir = str_replace(IMAGEBASEDIR, '', $dir); 
+        }
+        
+        $deletedir = realpath(IMAGEBASEDIR . $dir);
+        
+        if (strpos($deletedir, IMAGEBASEDIR) !== 0) {
+            $return['delete']['error'][] = $dir . ' is not in the image directory';
+        } else if (is_dir($deletedir)) {
+            $handle = opendir($deletedir);
+            while (false !== ($entry = readdir($handle))) {
+                if ($entry != "." && $entry != "..") {
+                    $ext = pathinfo($entry, PATHINFO_EXTENSION);
+                    $path = $deletedir . '/' . $entry;
+                    if (!is_dir($path)) {
+                        unlink($path);
+                        $return['delete']['files'][] = $path;
+                    } else {
+                        recursive_delete($path);
+                    }
+                }
+            }
+            closedir($handle);
+            rmdir($deletedir);
+            $return['delete']['dirs'][] = $deletedir;
+        } else {
+            $return['delete']['error'] = $dir . ' does not exist';
+        }
+    }
+
+    // add default images to a project
+    function addProjImages($proj_id, $userid = 0) {
+        if ($userid == 0) { $userid = $_SESSION['user_id']; }
+        $mydir = IMAGEBASEDIR . $proj_id;
+        
+        mkdir($mydir . '/.tmp', DIRPERMS);
+        mkdir($mydir . '/.trash', DIRPERMS);
+        
+        mkdir($mydir . '/composites', DIRPERMS);
+        $faces = array(
+            "f_african",
+            "f_easian",
+            "f_multi",
+            "f_wasian",
+            "f_white",
+            "m_african",
+            "m_easian",
+            "m_multi",
+            "m_wasian",
+            "m_white",
+        );
+        
+        foreach ($faces as $face) {
+            copy(DOC_ROOT . "/include/examples/{$face}.jpg", "{$mydir}/composites/{$face}.jpg");
+            copy(DOC_ROOT . "/include/examples/{$face}.tem", "{$mydir}/composites/{$face}.tem");
+        }
+        
+        mkdir($mydir . '/3d', DIRPERMS);
+        $d3s = array(
+            "average_easian_female", 
+            "average_easian_male", 
+            "average_white_female", 
+            "average_white_male"
+        );
+        
+        foreach ($d3s as $d3) {
+            copy(DOC_ROOT . "/include/3d/{$d3}.jpg", "{$mydir}/3d/{$d3}.jpg");
+            copy(DOC_ROOT . "/include/3d/{$d3}.obj", "{$mydir}/3d/{$d3}.obj");
+        }
+
+        // add templates
+        mkdir($mydir . '/templates', DIRPERMS);
+        $templates = array(
+            "batchAvg",
+            "batchTrans",
+            "batchEdit"
+        );
+        foreach ($templates as $template) {
+            copy(DOC_ROOT . '/include/examples/webmorph_template_{$template}.txt', 
+                 $mydir . '/templates/_{$template}_template.txt');
+        }
+    }
      
      // make a list of tag words sized according to frequency
      // tags = array of word => frequency pairs

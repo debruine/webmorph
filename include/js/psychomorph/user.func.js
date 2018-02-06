@@ -197,6 +197,21 @@ function userLogin() { console.log('userLogin()');
     });
 }
 
+function userGuestLogin() { console.log('userGuestLogin()');
+    $.ajax({
+        url: 'scripts/userGuestLogin',
+        success: function(data) {
+            if (data.error) {
+                $('#login_error').html(data.errorText);
+                $('#footer-text').html('');
+            } else {
+                console.log('Logged in as guest user ' + data.user);
+                userLoad();
+            }
+        }
+    });
+}
+
 function userLoad() { console.log('userLoad()');
     var hash = {},
         $file;
