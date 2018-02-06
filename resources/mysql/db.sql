@@ -1,8 +1,8 @@
--- MySQL dump 10.15  Distrib 10.0.14-MariaDB, for osx10.10 (x86_64)
+-- MySQL dump 10.16  Distrib 10.2.12-MariaDB, for osx10.13 (x86_64)
 --
 -- Host: localhost    Database: psychomorph
 -- ------------------------------------------------------
--- Server version	10.0.14-MariaDB
+-- Server version	10.2.12-MariaDB
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -50,7 +50,7 @@ CREATE TABLE `fm` (
   `user_id` int(8) unsigned DEFAULT NULL,
   `name` varchar(32) DEFAULT NULL,
   `description` varchar(255) DEFAULT NULL,
-  `equation` text,
+  `equation` text DEFAULT NULL,
   UNIQUE KEY `user_id` (`user_id`,`name`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -72,7 +72,7 @@ CREATE TABLE `img` (
   `height` int(6) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `project_name` (`project_id`,`name`)
-) ENGINE=MyISAM AUTO_INCREMENT=123980 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=124210 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -151,10 +151,13 @@ CREATE TABLE `project` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `user_id` int(8) unsigned DEFAULT NULL,
   `name` varchar(32) NOT NULL,
-  `notes` text,
+  `notes` text DEFAULT NULL,
   `dt` datetime DEFAULT NULL,
+  `filemtime` int(10) DEFAULT NULL,
+  `files` int(8) DEFAULT NULL,
+  `size` bigint(20) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=102 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -167,6 +170,7 @@ DROP TABLE IF EXISTS `project_user`;
 CREATE TABLE `project_user` (
   `project_id` int(11) unsigned DEFAULT NULL,
   `user_id` int(8) unsigned DEFAULT NULL,
+  `perm` enum('all','read-only') DEFAULT 'all',
   UNIQUE KEY `project_id` (`project_id`,`user_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -197,8 +201,8 @@ CREATE TABLE `tem` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `user_id` int(4) NOT NULL,
   `name` varchar(255) NOT NULL,
-  `notes` text,
-  `public` tinyint(1) DEFAULT '0',
+  `notes` text DEFAULT NULL,
+  `public` tinyint(1) DEFAULT 0,
   `3ptdelin1` int(4) DEFAULT NULL,
   `3ptdelin2` int(4) DEFAULT NULL,
   `3ptdelin3` int(4) DEFAULT NULL,
@@ -207,7 +211,7 @@ CREATE TABLE `tem` (
   `width` int(4) DEFAULT NULL,
   `height` int(4) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=17 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=37 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -223,8 +227,8 @@ CREATE TABLE `tem_convert` (
   `old_tem` int(11) DEFAULT NULL,
   `x` varchar(255) DEFAULT NULL,
   `y` varchar(255) DEFAULT NULL,
-  UNIQUE KEY `new_tem` (`new_tem`,`old_tem`,`n`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+  UNIQUE KEY `old_tem` (`old_tem`,`new_tem`,`n`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -274,8 +278,10 @@ CREATE TABLE `user` (
   `school` tinyint(1) DEFAULT NULL,
   `firstname` varchar(255) DEFAULT NULL,
   `lastname` varchar(255) DEFAULT NULL,
-  `pca` tinyint(1) DEFAULT '0',
-  `allocation` int(8) unsigned DEFAULT '1024',
+  `pca` tinyint(1) DEFAULT 0,
+  `allocation` int(8) unsigned DEFAULT 1024,
+  `status` enum('rejected','requested','disabled','user','admin','superuser') DEFAULT NULL,
+  `reason` tinytext DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `email` (`email`)
 ) ENGINE=MyISAM AUTO_INCREMENT=91 DEFAULT CHARSET=latin1;
@@ -290,4 +296,4 @@ CREATE TABLE `user` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2016-01-06 11:57:29
+-- Dump completed on 2018-02-06 10:21:33
