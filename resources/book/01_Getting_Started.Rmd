@@ -28,13 +28,19 @@ This web application is a single-page app (which has some advantages for using i
 
 ## Projects
 
-When you first log in, you are taken to the Projects page. This page will show all your projects and an overview of their storage and your total allocation.
+When you first log in, you are taken to the Projects page (<span class="cmd">6</span>). This page will show all your projects and an overview of their storage and your total allocation.
+
+### New Project
+
+Choose New Project (<span class="shiftcmd">N</span>) from the File menu. Then enter the project name and a description.
 
 Double-click on a project name or description in the project list to edit it.
 
+### Project Users
+
 Click on the last column to add or delete users. Start typing a name or email address and wait for the auto-complete to show you a list of matching users.
 <!-- FIX: make process nicer -->
-Select the user you want to add and press Return. The list will reload and then you can click on the last column to check they have been added. An "A" next to the name means they have all permissions to add, delete, and change files. Click on the "A" to change it to "R" for read-only permissions. Click on the "-" to remove this user. Adding users to your project doesn't affect their allocation and you can't remove yourself from a project.
+Select the user you want to add and press Enter. The list will reload and then you can click on the last column to check they have been added. An "A" next to the name means they have all permissions to add, delete, and change files. Click on the "A" to change it to "R" for read-only permissions. Click on the "-" to remove this user. Adding users to your project doesn't affect their allocation and you can't remove yourself from a project.
 
 Click on `Go` to load your first project. 
 
@@ -54,19 +60,32 @@ You can upload text files (.txt) to WebMorph for your own records. Their text al
 
 The "templates" folder contains tab-separated text files that are used for [batch processing](#batch-processing).
 
+### Built-in Image Sets
+
+WebMorph provides a few open source (CC-BY) image sets for you to use. They are available at FigShare, but also directly through the webmorph interface. 
+
+* `London Face Set (Composites)` is the same as the `composites` directory that every new project has.
+    DeBruine, Lisa (2016): Young adult composite faces. figshare. Figure. https://doi.org/10.6084/m9.figshare.4055130.v1 
+* `London Face Set (Neutral)` is images of 102 adult faces with a neutral expression plus templates.
+    DeBruine, Lisa; Jones, Benedict (2017): Face Research Lab London Set. figshare. Dataset. https://doi.org/10.6084/m9.figshare.5047666.v3 
+* `London Face Set (Smiling)` is the same 102 faces with smiling expressions. There are no templates.
+* `3D` are composite images of male and female East Asian and White young adult faces. These can be used to demonstrate the new 3D functions.
+
+Navigate to the place where you want to add the image set and choose the set from Built-In Image Sets in the File menu. Copying the files over can take up to 30 seconds, so be patient (I'm working on fixing this).
+
 ### Adding Folders and Files
 
-Create a new folder in the base of your project by clicking underneath all of the folder names to close nay open folders. Then choose New Folder from the File menu (shift-cmd-N). Type the new folder name into the pop-up window and click Save.
+Create a new folder in the base of your project by clicking underneath all of the folder names to close nay open folders. Then choose New Folder (<span class="shiftcmd">N</span>) from the File menu. Type the new folder name into the pop-up window and click Save.
 
-Add files from your computer by choosing Upload from the File menu (cmd-U). You can select multiple files, but not folders to upload. You cannot upload from a zip file yet.
+Add files from your computer by choosing Upload (<span class="cmd">U</span>) from the File menu. You can select multiple files, but not folders to upload. You cannot upload from a zip file yet.
 
 ### Uploading from Webcam
 
-You can also upload images from a webcam (shift-cmd-U). This will bring up a window with the image from your webcam (you may need to give webmorph access first through some permissions pop-ups). Line up your face approximately with the superimposed template and press return to capture the image. Type in a file name and click Save to save it.
+You can also upload images from a webcam (<span class="shiftcmd">U</span>). This will bring up a window with the image from your webcam (you may need to give webmorph access first through some permissions pop-ups). Line up your face approximately with the superimposed template and press return to capture the image. Type in a file name and click Save to save it.
 
 ### Deleting Files
 
-Select files (cms-click or shift-click to select multiple files, or use cmd-A to select all files in a folder) and choose Move to Trash from the File menu (cmd-delete). Shift-cmd-delete skips the confirmation dialog.
+Select files (<span class="cmd">click</span> or <span class="shift">click</span> to select multiple files, or use <span class="cmd">A</span> to select all files in a folder) and choose Move to Trash (<span class="cmd">delete</span>) from the File menu. <span class="shiftcmd">delete</span> skips the confirmation dialog.
 
 <div class="warning">
 At the moment, you can only delete empty folders, so you will be prompted to delete all files in a folder first. I know this is pretty tedious and will work on a way to safely delete folders. Deleting a lot of files can also be quite slow and I'm looking into it.
@@ -74,7 +93,7 @@ At the moment, you can only delete empty folders, so you will be prompted to del
 
 ### Moving/Renaming files
 
-The best way to move files is to cut (cmd-X) or copy (cmd-C) and paste (cmd-V) selected files.
+The best way to move files is to cut (<span class="cmd">X</span>) or copy (<span class="cmd">C</span>) and paste (<span class="cmd">V</span>) selected files.
 
 <div class="warning">
 You can drag files into another folder, but this can be buggy and I might remove it soon.
@@ -83,7 +102,7 @@ You can drag files into another folder, but this can be buggy and I might remove
 Select a file or folder and press Enter, edit the name, and press Enter to accept the new name (or click outside the file to cancel). If you change an image file's name, its associate tem file name will also change.
 
 <div class="info">
-If the finder interface starts to look weird or isn't updating the way you think it should, that's probably a bug. Choose Refresh under the View menu (cmd-R) to reload the Finder.
+If the finder interface starts to look weird or isn't updating the way you think it should, that's probably a bug. Choose Refresh (<span class="cmd">R</span>) under the View menu to reload the Finder.
 </div>
 
 ## Delineate
@@ -92,20 +111,20 @@ Double-click on an image or .tem file to open it in the delineation window. The 
 
 ### Fit Template
 
-If an image file does not have an associated template, you will be prompted to 3-point delineate it. A prompt will show in the delineation toolbar to remind you where to click (usually left eye, right eye, and centre of the bottom of the upper lip). If you mess this up, just repeat it by choosing Fit Template from the Template menu (opt-F).
+If an image file does not have an associated template, you will be prompted to 3-point delineate it. A prompt will show in the delineation toolbar to remind you where to click (usually left eye, right eye, and centre of the bottom of the upper lip). If you mess this up, just repeat it by choosing Fit Template (<span class="opt">F</span>) from the Template menu.
 
 ### Change Size
 
 You may want to change the size of the image first. You can do this with the buttons in the delineation toolbar or command keys. 
 
-* cmd-plus: increase size
-* cmd-minus: decrease size
-* cmd-0: original size
-* cmd-M: fit to the window
+* <span class="cmd">+</span>: increase size
+* <span class="cmd">-</span>: decrease size
+* <span class="cmd">0</span>: original size
+* <span class="cmd">M</span>: fit to the window
 
 ### Auto-Delineation
 
-You can automatically delineate a face with the 83-point Face++ template by choosing Auto-Delineate from the Template menu (opt-D). You can auto-delineate a batch of images by selecting them in the Finder and doing the same.
+You can automatically delineate a face with the 83-point Face++ template by choosing Auto-Delineate (<span class="opt">D</span>) from the Template menu. You can auto-delineate a batch of images by selecting them in the Finder and doing the same.
 
 <div class="warning">
 Don't auto-delineate image that already have template. Delete those files first. If any images in a batch fail (check the Queue menu item), this might be because Face++ is limiting the number of concurrent sessions. Just try to auto-delineate those images again in a minute or two.
@@ -115,26 +134,112 @@ Don't auto-delineate image that already have template. Delete those files first.
 
 Click on each point and drag it to fit the template to the face. The point number, label, x and y coordinate are shown in the bottom left of the window when you move points. The name of the image is in the bottom right.
 
-```{r fig-delin, fig.cap = "Delineation window."}
+```{r fig-delin, echo = FALSE, fig.cap = "Delineation window."}
 knitr::include_graphics("images/start_delineate.png")
 ```
 
 * Drag each point to delineate the shape of the image.
-* shift-click on a point to select or unselect it.
-* cmd-click or opt-click on a point to select or unselect the whole line.
+* <span class="shift">click</span> on a point to select or unselect it.
+* <span class="cmd">click</span> or <span class="opt">click</span> on a point to select or unselect the whole line.
 * Hold shift and drag over the image select all points inside the box.
 * Move a group of selected points by moving any selected point with the mouse or using the arrow keys.
-* opt+ and opt- to increase or decrease the size of a selected group of delineation points.
-* opt-← and opt-→ to rotate a selected group of delineation points.
-* cmd-A (or double-click on the image) to unselect all points.
+* <span class="opt">+</span> and <span class="opt">-</span> to increase or decrease the size of a selected group of delineation points.
+* <span class="opt">←</span> and <span class="opt">→</span> to rotate a selected group of delineation points.
+* <span class="cmd">A</span> (or double-click on the image) to unselect all points.
 
 
 ### Save Template
 
-Choose Save from the File menu (cmd-S) to save the template. It will automatically save with the same name as the associated image.
+Choose Save (<span class="cmd">S</span>) from the File menu to save the template. It will automatically save with the same name as the associated image.
 
-If you want to scroll through a folder of images, click the Next image (fast forward) button on the delineation toolbar (cmd-→).
+If you want to scroll through a folder of images, click the Next image (fast forward) button on the delineation toolbar (<span class="cmd">→</span>).
 
+## Average
+
+Once you have a few images delineated, you're ready to make an average. Select Average (<span class="cmd">4</span>) under the Window menu.
+
+```{r fig-average, echo = FALSE, fig.cap = "Average window."}
+knitr::include_graphics("images/start_average.png")
+```
+
+In this window, only images with associated template files are visible. You can select multiple images, or , if your images are in different folders or you want to include an image more than once (e.g., and average that is 2/3 face A and 1/3 face B), you can drag the images to the average box to add them. Select a listed image and click the delete button to remove it. 
+
+Once your images are selected, click the Average button to create a composite image. The bottom status feed will give you an indicative amount of time this will take, but actual times can be shorter or longer depending on server load.
+
+### Texture 
+
+By default, WebMorph averages are made with texture on. You can change this default in the Images tab of the Preferences (<span class="cmd">,</span>).
+
+```{r fig-texture, echo = FALSE, fig.cap = "An average of 5 faces. The image on the left has texture on; the image on the right has texture off."}
+knitr::include_graphics("images/start_texture.png")
+```
+
+This applies a representative texture to the average, resulting in composite images with more realistic texture instead of the very smooth, bland texture most other averaging programs create. See the papers below for methodological details.
+
+ * B. Tiddeman, M. Stirrat and D. Perrett (2005). Towards realism in facial prototyping: results of a wavelet MRF method. Theory and Practice of Computer Graphics.
+ * B. Tiddeman, D.M. Burt and D. Perrett (2001). Computer Graphics in Facial Perception Research. IEEE Computer Graphics and Applications, 21(5), 42-50.
+ 
+### Sample Contours
+
+By default, WebMorph averages are made with sample contours on. You can change this default in the Images tab of the Preferences (<span class="cmd">,</span>).
+
+This interpolates more control points along the lines. This can improve the accuracy of averages and transforms. If you see a ‘feathery’ appearance along lines that have many, close-together points, try turning this off.
+
+
+### Saving Averages
+
+Click on the folder you want to save the image into and then click the Save button. Add the image name after the folder path. If you add an image extension (.jpg, .png) it will be saved as that file type. If you omit the extension, it will be set to your default extension. You can change this default in the Images tab of the Preferences (<span class="cmd">,</span>).
+
+You can try out a few averages before you decide which to save. Averages go in the Recently Created Images box where you can click on them to reload them in the average box and save them.
+
+## Transform
+
+Now that you have some averages, you can use the to transform images. Select Transform (<span class="cmd">5</span>) under the Window menu.
+
+```{r fig-transform, echo = FALSE, fig.cap = "Transform window."}
+knitr::include_graphics("images/start_transform.png")
+```
+
+The transform interface requires three images: the image to transform, the negative end of the transform dimension, and the positive end of the transform dimension. For example, if you want to alter the sexual dimorphism of an individual's face shape, you would load the individual face in the image to transform box, an average female face in the left transform dimension box, and an average male face in the right transform box.
+
+<div class="info">
+We usually try to keep all other demographic and visual aspects of the transform dimension faces the same as the face to transform, as far as possible. Here, we use composite images that are the same (broad) ethnic group as the individual face. They are also young adults and have front-facing, neutral expressions.
+</div>
+
+Add image to the boxes by dragging the image, or selecting and image in the Finder and double-clicking the box it should go into in the transform interface. 
+
+Choose the percentage of shape, colour, and texture to transform. For example, 100% adds 100% of the difference between the negative and positive transform dimension images to the individual image, while -50% subtracts 50% of that difference. 
+
+<div class="warning">
+Remember, transforming adds or subtracts a percentage of the difference between the transform dimension images to the base image. A 100% transform will not make the base image look exactly like the right transform image.
+</div>
+
+You can set shape or colour to 0% to do a colour-only or shape-only transform. Much of the published research on perceptions of masculine and feminine faces uses 50% shape-only transformations like the example above.
+
+### Transform Multiple Images
+
+If you load images into the transform dimension boxes and select more than one image in the Finder, the Transform button changes to Transform All. This sets up a batch file, which will apply this transform to all the selected images.
+
+### Continuum
+
+You can make a continuum, such as transforming from one person to another, using the continuum settings. Set the start and end percentages for shape, colour and texture; the number of steps in your continuum, and the file name to save the images to. Each step will have numbers appended to it.
+
+```{r fig-continuum, echo = FALSE, fig.cap = "Continuum interface."}
+knitr::include_graphics("images/start_continuum.png")
+```
+
+After you click Transform, the individual frames are sent to the Queue and will appear in the Finder as they are created.
+
+You can then select all your continuum images, choose Moving Gif from the Tools menu, and create an animated image.
+
+```{r fig-moving-gif, echo = FALSE, fig.cap = "Moving Gif."}
+knitr::include_graphics("images/_movie.gif")
+```
+
+
+## 3D
+
+The 3D functions are currently quite basic. You can upload OBJ files and associated BMP or JPEG textures and view them in the delineator. You can also morph between two objects that have the same geometry.
 
 
 

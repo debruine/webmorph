@@ -36,3 +36,31 @@
   border: 1px solid var(--purple);
   background-position: 0.5em -.25em;
 }
+
+span.shift, span.cmd, span.shiftcmd, span.opt, span.shiftopt, span.shiftcmdopt {
+    font-family:'Fira Code',Monaco,"Andale Mono",monospace;
+}
+
+span.cmd:before {
+    content:"\2318";
+}
+
+span.shiftcmd:before {
+    content:"\21E7\2318";
+}
+
+span.opt:before {
+    content:"\2325";
+}
+
+span.shift:before {
+    content:"\21E7";
+}
+
+span.shiftopt:before {
+    content:"\21E7\2325";
+}
+
+span.shiftcmdopt:before {
+    content:"\21E7\2318\2325";
+}
