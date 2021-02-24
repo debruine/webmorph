@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Chapter 1 Getting Started | WebMorph Manual</title>
+  <meta name="description" content="Manual for WebMorph, a web-based version of Psychomorph, with several additional functions." />
+  <meta name="generator" content="bookdown 0.21 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Chapter 1 Getting Started | WebMorph Manual" />
+  <meta property="og:type" content="book" />
+  
+  
+  <meta property="og:description" content="Manual for WebMorph, a web-based version of Psychomorph, with several additional functions." />
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Chapter 1 Getting Started | WebMorph Manual" />
+  
+  <meta name="twitter:description" content="Manual for WebMorph, a web-based version of Psychomorph, with several additional functions." />
+  
+
+
+
+<meta name="date" content="2021-02-24" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="index.html"/>
+<link rel="next" href="batch-processes.html"/>
+<script src="libs/header-attrs-2.6/header-attrs.js"></script>
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<link rel="stylesheet" href="include/style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">WebMorph Manual</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Overview</a>
+<ul>
+<li class="chapter" data-level="0.1" data-path="index.html"><a href="index.html#citation"><i class="fa fa-check"></i><b>0.1</b> Citation</a></li>
+</ul></li>
+<li class="chapter" data-level="1" data-path="getting-started.html"><a href="getting-started.html"><i class="fa fa-check"></i><b>1</b> Getting Started</a>
+<ul>
+<li class="chapter" data-level="1.1" data-path="getting-started.html"><a href="getting-started.html#accounts"><i class="fa fa-check"></i><b>1.1</b> Accounts</a>
+<ul>
+<li class="chapter" data-level="1.1.1" data-path="getting-started.html"><a href="getting-started.html#academic-accounts"><i class="fa fa-check"></i><b>1.1.1</b> Academic Accounts</a></li>
+<li class="chapter" data-level="1.1.2" data-path="getting-started.html"><a href="getting-started.html#waitlist"><i class="fa fa-check"></i><b>1.1.2</b> Waitlist</a></li>
+<li class="chapter" data-level="1.1.3" data-path="getting-started.html"><a href="getting-started.html#guest-accounts"><i class="fa fa-check"></i><b>1.1.3</b> Guest Accounts</a></li>
+<li class="chapter" data-level="1.1.4" data-path="getting-started.html"><a href="getting-started.html#log-in"><i class="fa fa-check"></i><b>1.1.4</b> Log in</a></li>
+</ul></li>
+<li class="chapter" data-level="1.2" data-path="getting-started.html"><a href="getting-started.html#projects"><i class="fa fa-check"></i><b>1.2</b> Projects</a></li>
+<li class="chapter" data-level="1.3" data-path="getting-started.html"><a href="getting-started.html#finder"><i class="fa fa-check"></i><b>1.3</b> Finder</a>
+<ul>
+<li class="chapter" data-level="1.3.1" data-path="getting-started.html"><a href="getting-started.html#adding-folders-and-files"><i class="fa fa-check"></i><b>1.3.1</b> Adding Folders and Files</a></li>
+<li class="chapter" data-level="1.3.2" data-path="getting-started.html"><a href="getting-started.html#uploading-from-webcam"><i class="fa fa-check"></i><b>1.3.2</b> Uploading from Webcam</a></li>
+<li class="chapter" data-level="1.3.3" data-path="getting-started.html"><a href="getting-started.html#deleting-files"><i class="fa fa-check"></i><b>1.3.3</b> Deleting Files</a></li>
+<li class="chapter" data-level="1.3.4" data-path="getting-started.html"><a href="getting-started.html#movingrenaming-files"><i class="fa fa-check"></i><b>1.3.4</b> Moving/Renaming files</a></li>
+</ul></li>
+<li class="chapter" data-level="1.4" data-path="getting-started.html"><a href="getting-started.html#delineate"><i class="fa fa-check"></i><b>1.4</b> Delineate</a>
+<ul>
+<li class="chapter" data-level="1.4.1" data-path="getting-started.html"><a href="getting-started.html#fit-template"><i class="fa fa-check"></i><b>1.4.1</b> Fit Template</a></li>
+<li class="chapter" data-level="1.4.2" data-path="getting-started.html"><a href="getting-started.html#change-size"><i class="fa fa-check"></i><b>1.4.2</b> Change Size</a></li>
+<li class="chapter" data-level="1.4.3" data-path="getting-started.html"><a href="getting-started.html#auto-delineation"><i class="fa fa-check"></i><b>1.4.3</b> Auto-Delineation</a></li>
+<li class="chapter" data-level="1.4.4" data-path="getting-started.html"><a href="getting-started.html#delineation"><i class="fa fa-check"></i><b>1.4.4</b> Delineation</a></li>
+<li class="chapter" data-level="1.4.5" data-path="getting-started.html"><a href="getting-started.html#save-template"><i class="fa fa-check"></i><b>1.4.5</b> Save Template</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="batch-processes.html"><a href="batch-processes.html"><i class="fa fa-check"></i><b>2</b> Batch Processes</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="batch-processes.html"><a href="batch-processes.html#batch-average"><i class="fa fa-check"></i><b>2.1</b> Batch Average</a></li>
+<li class="chapter" data-level="2.2" data-path="batch-processes.html"><a href="batch-processes.html#batch-transform"><i class="fa fa-check"></i><b>2.2</b> Batch Transform</a></li>
+<li class="chapter" data-level="2.3" data-path="batch-processes.html"><a href="batch-processes.html#batch-edit"><i class="fa fa-check"></i><b>2.3</b> Batch Edit</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="templates.html"><a href="templates.html"><i class="fa fa-check"></i><b>3</b> Templates</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="templates.html"><a href="templates.html#change-default-template"><i class="fa fa-check"></i><b>3.1</b> Change Default Template</a></li>
+<li class="chapter" data-level="3.2" data-path="templates.html"><a href="templates.html#convert-templates"><i class="fa fa-check"></i><b>3.2</b> Convert Templates</a></li>
+<li class="chapter" data-level="3.3" data-path="templates.html"><a href="templates.html#create-a-new-template"><i class="fa fa-check"></i><b>3.3</b> Create a New Template</a></li>
+</ul></li>
+<li class="divider"></li>
+<li><a rel="license" href="https://creativecommons.org/licenses/by-sa/4.0/"
+    target="blank"><img alt="Creative Commons License"
+    style="border-width:0"
+    src="https://i.creativecommons.org/l/by-sa/4.0/88x31.png" /></a><li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">WebMorph Manual</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="getting-started" class="section level1" number="1">
+<h1><span class="header-section-number">Chapter 1</span> Getting Started</h1>
+<div id="accounts" class="section level2" number="1.1">
+<h2><span class="header-section-number">1.1</span> Accounts</h2>
+<div id="academic-accounts" class="section level3" number="1.1.1">
+<h3><span class="header-section-number">1.1.1</span> Academic Accounts</h3>
+<p>If you have an academic email address, you should be able to sign up for a free account and be authorised automatically. If your email isn’t automatically recognised as academic, email Lisa and ask to be authorised. You will receive your password in an email (check the spam folder if it doesn’t arrive in a few minutes).</p>
+<div class="info">
+<p>These accounts have 265 MB of permanent storage. Contact Lisa if you really need more, but you can always download your files and re-upload them later.</p>
+</div>
+</div>
+<div id="waitlist" class="section level3" number="1.1.2">
+<h3><span class="header-section-number">1.1.2</span> Waitlist</h3>
+<p>There is a currently a waitlist for non-academics. The reason is that letting anyone who wants an account have one would overwhelm the system. We don’t currently have any funding, but am to apply for some and expand our capacity as soon as possible.</p>
+</div>
+<div id="guest-accounts" class="section level3" number="1.1.3">
+<h3><span class="header-section-number">1.1.3</span> Guest Accounts</h3>
+<p>Anyone can access a guest account. These accounts have limited temporary storage (128 MB) and no permanent storage. You need to download any files you want to keep before you log out.</p>
+</div>
+<div id="log-in" class="section level3" number="1.1.4">
+<h3><span class="header-section-number">1.1.4</span> Log in</h3>
+<p>Once you have your password, log in from the main website page.</p>
+<div class="info">
+<p>This web application is a single-page app (which has some advantages for using it on a tablet), but emulates a multi-page app using “fragment identifiers.” For example, you can access a file called “f_multi.jpg” in the folder called “composites” in the Finder interface for project 1 at “<a href="https://webmorph.org/#F1/composites/f_multi.jpg" class="uri">https://webmorph.org/#F1/composites/f_multi.jpg</a>” (or you could if you were logged in a someone with permission to access that project)</p>
+</div>
+</div>
+</div>
+<div id="projects" class="section level2" number="1.2">
+<h2><span class="header-section-number">1.2</span> Projects</h2>
+<p>When you first log in, you are taken to the Projects page. This page will show all your projects and an overview of their storage and your total allocation.</p>
+<p>Double-click on a project name or description in the project list to edit it.</p>
+<p>Click on the last column to add or delete users. Start typing a name or email address and wait for the auto-complete to show you a list of matching users.
+<!-- FIX: make process nicer -->
+Select the user you want to add and press Return. The list will reload and then you can click on the last column to check they have been added. An “A” next to the name means they have all permissions to add, delete, and change files. Click on the “A” to change it to “R” for read-only permissions. Click on the “-” to remove this user. Adding users to your project doesn’t affect their allocation and you can’t remove yourself from a project.</p>
+<p>Click on <code>Go</code> to load your first project.</p>
+</div>
+<div id="finder" class="section level2" number="1.3">
+<h2><span class="header-section-number">1.3</span> Finder</h2>
+<p>Projects open in the Finder interface, which is a file navigation interface like the Mac OS Finder or Windows Explorer. New projects come with two folders: <code>composites</code> and <code>templates</code>. You can also see the Trash (which you can hide under the View menu).</p>
+<p>Click on the <code>composites</code> folder and select an image. You should see some file information, including the image dimensions, the date the file was created, and whether it has an embedded template.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="getting-started.html#cb1-1" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">include_graphics</span>(<span class="st">&quot;images/start_finder.png&quot;</span>)</span></code></pre></div>
+<div class="figure"><span id="fig:fig-finder"></span>
+<img src="images/start_finder.png" alt="Finder window" width="626" />
+<p class="caption">
+Figure 1.1: Finder window
+</p>
+</div>
+<p>If you click on a template file (e.g., “f_multi.tem”) you will see similar file information, as well as a small window with the template text. You will probably not ever need to work with these numbers directly, but they are human-readable.</p>
+<p>You can upload text files (.txt) to WebMorph for your own records. Their text also displays in the small window if you click on them, but you can’t edit them in WebMorph.</p>
+<p>The “templates” folder contains tab-separated text files that are used for <a href="#batch-processing">batch processing</a>.</p>
+<div id="adding-folders-and-files" class="section level3" number="1.3.1">
+<h3><span class="header-section-number">1.3.1</span> Adding Folders and Files</h3>
+<p>Create a new folder in the base of your project by clicking underneath all of the folder names to close nay open folders. Then choose New Folder from the File menu (shift-cmd-N). Type the new folder name into the pop-up window and click Save.</p>
+<p>Add files from your computer by choosing Upload from the File menu (cmd-U). You can select multiple files, but not folders to upload. You cannot upload from a zip file yet.</p>
+</div>
+<div id="uploading-from-webcam" class="section level3" number="1.3.2">
+<h3><span class="header-section-number">1.3.2</span> Uploading from Webcam</h3>
+<p>You can also upload images from a webcam (shift-cmd-U). This will bring up a window with the image from your webcam (you may need to give webmorph access first through some permissions pop-ups). Line up your face approximately with the superimposed template and press return to capture the image. Type in a file name and click Save to save it.</p>
+</div>
+<div id="deleting-files" class="section level3" number="1.3.3">
+<h3><span class="header-section-number">1.3.3</span> Deleting Files</h3>
+<p>Select files (cms-click or shift-click to select multiple files, or use cmd-A to select all files in a folder) and choose Move to Trash from the File menu (cmd-delete). Shift-cmd-delete skips the confirmation dialog.</p>
+<div class="warning">
+<p>At the moment, you can only delete empty folders, so you will be prompted to delete all files in a folder first. I know this is pretty tedious and will work on a way to safely delete folders. Deleting a lot of files can also be quite slow and I’m looking into it.</p>
+</div>
+</div>
+<div id="movingrenaming-files" class="section level3" number="1.3.4">
+<h3><span class="header-section-number">1.3.4</span> Moving/Renaming files</h3>
+<p>The best way to move files is to cut (cmd-X) or copy (cmd-C) and paste (cmd-V) selected files.</p>
+<div class="warning">
+<p>You can drag files into another folder, but this can be buggy and I might remove it soon.</p>
+</div>
+<p>Select a file or folder and press Enter, edit the name, and press Enter to accept the new name (or click outside the file to cancel). If you change an image file’s name, its associate tem file name will also change.</p>
+<div class="info">
+<p>If the finder interface starts to look weird or isn’t updating the way you think it should, that’s probably a bug. Choose Refresh under the View menu (cmd-R) to reload the Finder.</p>
+</div>
+</div>
+</div>
+<div id="delineate" class="section level2" number="1.4">
+<h2><span class="header-section-number">1.4</span> Delineate</h2>
+<p>Double-click on an image or .tem file to open it in the delineation window. The delineation toolbar should be visible. If it’s not, choose Delineation Toolbar in the View menu. The question mark button in the toolbar shows a pop-up of helpful hints.</p>
+<div id="fit-template" class="section level3" number="1.4.1">
+<h3><span class="header-section-number">1.4.1</span> Fit Template</h3>
+<p>If an image file does not have an associated template, you will be prompted to 3-point delineate it. A prompt will show in the delineation toolbar to remind you where to click (usually left eye, right eye, and centre of the bottom of the upper lip). If you mess this up, just repeat it by choosing Fit Template from the Template menu (opt-F).</p>
+</div>
+<div id="change-size" class="section level3" number="1.4.2">
+<h3><span class="header-section-number">1.4.2</span> Change Size</h3>
+<p>You may want to change the size of the image first. You can do this with the buttons in the delineation toolbar or command keys.</p>
+<ul>
+<li>cmd-plus: increase size</li>
+<li>cmd-minus: decrease size</li>
+<li>cmd-0: original size</li>
+<li>cmd-M: fit to the window</li>
+</ul>
+</div>
+<div id="auto-delineation" class="section level3" number="1.4.3">
+<h3><span class="header-section-number">1.4.3</span> Auto-Delineation</h3>
+<p>You can automatically delineate a face with the 83-point Face++ template by choosing Auto-Delineate from the Template menu (opt-D). You can auto-delineate a batch of images by selecting them in the Finder and doing the same.</p>
+<div class="warning">
+<p>Don’t auto-delineate image that already have template. Delete those files first. If any images in a batch fail (check the Queue menu item), this might be because Face++ is limiting the number of concurrent sessions. Just try to auto-delineate those images again in a minute or two.</p>
+</div>
+</div>
+<div id="delineation" class="section level3" number="1.4.4">
+<h3><span class="header-section-number">1.4.4</span> Delineation</h3>
+<p>Click on each point and drag it to fit the template to the face. The point number, label, x and y coordinate are shown in the bottom left of the window when you move points. The name of the image is in the bottom right.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="getting-started.html#cb2-1" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">include_graphics</span>(<span class="st">&quot;images/start_delineate.png&quot;</span>)</span></code></pre></div>
+<div class="figure"><span id="fig:fig-delin"></span>
+<img src="images/start_delineate.png" alt="Delineation window." width="1002" />
+<p class="caption">
+Figure 1.2: Delineation window.
+</p>
+</div>
+<ul>
+<li>Drag each point to delineate the shape of the image.</li>
+<li>shift-click on a point to select or unselect it.</li>
+<li>cmd-click or opt-click on a point to select or unselect the whole line.</li>
+<li>Hold shift and drag over the image select all points inside the box.</li>
+<li>Move a group of selected points by moving any selected point with the mouse or using the arrow keys.</li>
+<li>opt+ and opt- to increase or decrease the size of a selected group of delineation points.</li>
+<li>opt-← and opt-→ to rotate a selected group of delineation points.</li>
+<li>cmd-A (or double-click on the image) to unselect all points.</li>
+</ul>
+</div>
+<div id="save-template" class="section level3" number="1.4.5">
+<h3><span class="header-section-number">1.4.5</span> Save Template</h3>
+<p>Choose Save from the File menu (cmd-S) to save the template. It will automatically save with the same name as the associated image.</p>
+<p>If you want to scroll through a folder of images, click the Next image (fast forward) button on the delineation toolbar (cmd-→).</p>
+
+</div>
+</div>
+</div>
+<div class="webmorph_footer">
+
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="index.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="batch-processes.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"all": ["facebook", "google", "twitter", "linkedin", "weibo", "instapaper"],
+"google": false
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": {},
+"toc": {
+"collapse": "section",
+"scroll_highlight": true
+}
+});
+});
+</script>
+
+</body>
+
+</html>

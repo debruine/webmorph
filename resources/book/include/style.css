@@ -1,0 +1,38 @@
+/* (edit style.css for your own book styles) */
+
+/* set styles for alert boxes */
+
+.danger, .warning, .info , .alert, .try {
+  padding: 1em 1em 0.25em 3.5em;
+  margin-bottom: 10px;
+  background-color: hsla(0, 0%, 100%, .1);
+  background-position: 0.5em 0.5em;
+  background-size: 2.5em;
+  background-repeat: no-repeat;
+  border-radius: 0.5em;
+}
+
+.danger {
+  background-image: url("../images/alerts/danger.svg");
+  background-color: hsla(315, 42%, 42%, .10);
+  border: 1px solid var(--pink);
+}
+
+.warning {
+  background-image: url("../images/alerts/warning.svg");
+  background-color: hsla(49, 87%, 70%, .1);
+  border: 1px solid var(--yellow);
+}
+
+.info {
+  background-image: url("../images/alerts/info.svg");
+  background-color: hsla(209, 42%, 47%, .1);
+  border: 1px solid var(--blue);
+}
+
+.try {
+  background-image: url("../images/alerts/rainbow.svg");
+  background-color: hsla(248, 28%, 48%, .1);
+  border: 1px solid var(--purple);
+  background-position: 0.5em -.25em;
+}

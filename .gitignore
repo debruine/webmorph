@@ -7,3 +7,4 @@ include/config.php
 .DS_Store
 *.DS_Store
 demo/
+.Rproj.user

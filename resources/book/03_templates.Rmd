@@ -1,0 +1,19 @@
+# Templates
+
+## Change Default Template
+
+The template used for new templates will be your default template, which starts as the 189-point FRL-face template, but you can change this in the Preferences (cmd-,).
+
+## Convert Templates
+
+
+
+## Create a New Template
+
+This is a buggy process right now, so it might take a few tries. 
+
+Start with an image that has no saved template. You can fit the current template, and then delete it by clicking cmd-A to select all points and cmd-delete.
+
+First, add new points using shift-cmd-click.Use opt-L to start drawing a new line; the cursor will change to a wand. Hover over points until they turn red (you need to move the cursor icon around a bit to find the right point) and click to add them to a line. Click 'enter' to end the line; it will turn from red to blue. Use shift-opt-L to delete a line by clicking on any point attached to the line.
+
+Under the Template menu, choose New/Edit Template. You can set the name, description, and 3 points for initial fitting. I recommend always setting the first three points to the centre of the left eye, centre of the right eye, and centre of the bottom of the top lip to make fitting delineation easier.
