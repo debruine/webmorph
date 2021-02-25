@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Chapter 3 Templates | WebMorph Manual</title>
+  <title>Chapter 4 3D | WebMorph Manual</title>
   <meta name="description" content="Manual for WebMorph, a web-based version of Psychomorph, with several additional functions." />
   <meta name="generator" content="bookdown 0.21 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Chapter 3 Templates | WebMorph Manual" />
+  <meta property="og:title" content="Chapter 4 3D | WebMorph Manual" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Chapter 3 Templates | WebMorph Manual" />
+  <meta name="twitter:title" content="Chapter 4 3D | WebMorph Manual" />
   
   <meta name="twitter:description" content="Manual for WebMorph, a web-based version of Psychomorph, with several additional functions." />
   
@@ -30,8 +30,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="batch-processes.html"/>
-<link rel="next" href="d-1.html"/>
+<link rel="prev" href="templates.html"/>
+<link rel="next" href="preferences.html"/>
 <script src="libs/header-attrs-2.6/header-attrs.js"></script>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -206,67 +206,10 @@
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="templates" class="section level1" number="3">
-<h1><span class="header-section-number">Chapter 3</span> Templates</h1>
-<div id="change-default-template" class="section level2" number="3.1">
-<h2><span class="header-section-number">3.1</span> Change Default Template</h2>
-<p>The template used for new templates will be your default template, which starts as the 189-point FRL-face template, but you can change this in the <a href="preferences.html#prefs-default-template">Preferences</a> (<span class="cmd">,</span>). You can see your current template under Current Templates in the Templates menu.</p>
-<div class="figure"><span id="fig:fig-tem-current"></span>
-<img src="images/tem_current.png" alt="Current template and other options." width="584" />
-<p class="caption">
-Figure 3.1: Current template and other options.
-</p>
-</div>
-</div>
-<div id="convert-templates" class="section level2" number="3.2">
-<h2><span class="header-section-number">3.2</span> Convert Templates</h2>
-<p>You can convert between a few types of templates, such as FRL-Face (the default 189-point front face template) and PL-Face (a 179-point template commonly used in Dave Perret’s Perception Lab). You can convert <em>to</em> the auto-delineation template (Face++) but not back yet (it’s much easier to remove points from a template than add them.</p>
-<div class="figure"><span id="fig:fig-tem-convert"></span>
-<img src="images/tem_convert.png" alt="Tem conversion options" width="645" />
-<p class="caption">
-Figure 3.2: Tem conversion options
-</p>
-</div>
-<p>Conversions are usually approximate, as some points are just guessed based on the placement of other points (there is no machine vision going on here), so you should always look through your converted templates and fix any inaccuracies.</p>
-</div>
-<div id="new-template" class="section level2" number="3.3">
-<h2><span class="header-section-number">3.3</span> Register a New Template</h2>
-<p>You can register a template you uploaded from another version of
-WebMorph or Psychomorph, or a new one you created here. Registering a template allows you to use it to delineate new images and lets you set the point names and symmetry points.</p>
-<div id="from-a-saved-template" class="section level3" number="3.3.1">
-<h3><span class="header-section-number">3.3.1</span> From a Saved Template</h3>
-<ul>
-<li>Load the image with the template you want to register.</li>
-<li>Select the three points you want to use for 3-point
-delineation by shift-clicking on them. This only works if you
-select exactly 3 points. I recommend always setting the first three points to the centre of the left eye, centre of the right eye, and centre of the bottom of the top lip to make fitting delineation easier.</li>
-<li>Choose New/Edit Template from the Template menu</li>
-<li>Make sure that “Register this as a new template” is checked,
-unless you are editing one of your previously saved templates.
-You can’t edit the public templates that you don’t own
-(e.g., FRL-face, FRL-body, Face++).</li>
-<li>Give the template a useful name and notes. The 3 points for
-3-point delineation will be automatically filled in from the points
-you selected. You can change or re-order them here.</li>
-<li>After you save the template, choose “Set Point Labels” from the
-Template menu. Each point will be selected in turn (and an arrow will
-point at it). Type the name into the box at the top of the screen
-and press return.</li>
-</ul>
-</div>
-<div id="from-scratch" class="section level3" number="3.3.2">
-<h3><span class="header-section-number">3.3.2</span> From Scratch</h3>
-<p>If you want to make a template from scratch, start with an image that has no saved template. You can fit the current template, and then delete it by clicking <span class="cmd">A</span> to select all points and <span class="cmd">delete</span>. This is a buggy process right now, so it might take a few tries.</p>
-<p>First, add new points using <span class="shiftcmd">click</span>. Use <span class="opt">L</span> to start drawing a new line; the cursor will change to a wand. Hover over points until they turn red (you need to move the cursor icon around a bit to find the right point) and click to add them to a line. Click ‘enter’ to end the line; it will turn from red to blue. Use <span class="shiftopt">L</span> to delete a line by clicking on any point attached to the line.</p>
-<div class="figure"><span id="fig:fig-tem-new"></span>
-<img src="images/tem_new.png" alt="Save a new template." width="604" />
-<p class="caption">
-Figure 3.3: Save a new template.
-</p>
-</div>
+<div id="d-1" class="section level1" number="4">
+<h1><span class="header-section-number">Chapter 4</span> 3D</h1>
+<p><img src="images/_3d_movie.gif" alt="spinning 3d head"></p>
 
-</div>
-</div>
 </div>
 <div class="webmorph_footer">
 
@@ -276,8 +219,8 @@ Figure 3.3: Save a new template.
           </div>
         </div>
       </div>
-<a href="batch-processes.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="d-1.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="templates.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="preferences.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>

@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Chapter 3 Templates | WebMorph Manual</title>
+  <title>Chapter 5 Preferences | WebMorph Manual</title>
   <meta name="description" content="Manual for WebMorph, a web-based version of Psychomorph, with several additional functions." />
   <meta name="generator" content="bookdown 0.21 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Chapter 3 Templates | WebMorph Manual" />
+  <meta property="og:title" content="Chapter 5 Preferences | WebMorph Manual" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Chapter 3 Templates | WebMorph Manual" />
+  <meta name="twitter:title" content="Chapter 5 Preferences | WebMorph Manual" />
   
   <meta name="twitter:description" content="Manual for WebMorph, a web-based version of Psychomorph, with several additional functions." />
   
@@ -30,8 +30,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="batch-processes.html"/>
-<link rel="next" href="d-1.html"/>
+<link rel="prev" href="d-1.html"/>
+<link rel="next" href="news.html"/>
 <script src="libs/header-attrs-2.6/header-attrs.js"></script>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -206,64 +206,130 @@
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="templates" class="section level1" number="3">
-<h1><span class="header-section-number">Chapter 3</span> Templates</h1>
-<div id="change-default-template" class="section level2" number="3.1">
-<h2><span class="header-section-number">3.1</span> Change Default Template</h2>
-<p>The template used for new templates will be your default template, which starts as the 189-point FRL-face template, but you can change this in the <a href="preferences.html#prefs-default-template">Preferences</a> (<span class="cmd">,</span>). You can see your current template under Current Templates in the Templates menu.</p>
-<div class="figure"><span id="fig:fig-tem-current"></span>
-<img src="images/tem_current.png" alt="Current template and other options." width="584" />
-<p class="caption">
-Figure 3.1: Current template and other options.
-</p>
+<div id="preferences" class="section level1" number="5">
+<h1><span class="header-section-number">Chapter 5</span> Preferences</h1>
+<div id="personal" class="section level2" number="5.1">
+<h2><span class="header-section-number">5.1</span> Personal</h2>
+<p>We ask for your personal information to help with the development of WebMorph. This is optional, apart from a working email address, which you will need to be able to get and reset your password. We’re always happy to hear from you about what sort of things would make WebMorph better or easier to use.</p>
+<div id="default-project" class="section level3" number="5.1.1">
+<h3><span class="header-section-number">5.1.1</span> Default Project</h3>
+<p>This used to do something, but doesn’t anymore.</p>
+</div>
+<div id="theme-colour" class="section level3" number="5.1.2">
+<h3><span class="header-section-number">5.1.2</span> Theme Colour</h3>
+<p>Set a theme color for the interface. 0 is a light neutral color
+scheme. Go all the way to the right for a dark color scheme (this is experimental and might be a little ugly or have inappropriate contrast).</p>
 </div>
 </div>
-<div id="convert-templates" class="section level2" number="3.2">
-<h2><span class="header-section-number">3.2</span> Convert Templates</h2>
-<p>You can convert between a few types of templates, such as FRL-Face (the default 189-point front face template) and PL-Face (a 179-point template commonly used in Dave Perret’s Perception Lab). You can convert <em>to</em> the auto-delineation template (Face++) but not back yet (it’s much easier to remove points from a template than add them.</p>
-<div class="figure"><span id="fig:fig-tem-convert"></span>
-<img src="images/tem_convert.png" alt="Tem conversion options" width="645" />
-<p class="caption">
-Figure 3.2: Tem conversion options
-</p>
+<div id="images" class="section level2" number="5.2">
+<h2><span class="header-section-number">5.2</span> Images</h2>
+<div id="show-thumbnail-images" class="section level3" number="5.2.1">
+<h3><span class="header-section-number">5.2.1</span> Show thumbnail images</h3>
+<p>This shows small thumbnails in the finder. If you have many images in your project, this can slow down finder loading.</p>
 </div>
-<p>Conversions are usually approximate, as some points are just guessed based on the placement of other points (there is no machine vision going on here), so you should always look through your converted templates and fix any inaccuracies.</p>
-</div>
-<div id="new-template" class="section level2" number="3.3">
-<h2><span class="header-section-number">3.3</span> Register a New Template</h2>
-<p>You can register a template you uploaded from another version of
-WebMorph or Psychomorph, or a new one you created here. Registering a template allows you to use it to delineate new images and lets you set the point names and symmetry points.</p>
-<div id="from-a-saved-template" class="section level3" number="3.3.1">
-<h3><span class="header-section-number">3.3.1</span> From a Saved Template</h3>
+<div id="prefs-default-image-format" class="section level3" number="5.2.2">
+<h3><span class="header-section-number">5.2.2</span> Default image format</h3>
+<p>The image format in which to save new images. You can always change the image format in any individual Batch process dialog.</p>
 <ul>
-<li>Load the image with the template you want to register.</li>
-<li>Select the three points you want to use for 3-point
-delineation by shift-clicking on them. This only works if you
-select exactly 3 points. I recommend always setting the first three points to the centre of the left eye, centre of the right eye, and centre of the bottom of the top lip to make fitting delineation easier.</li>
-<li>Choose New/Edit Template from the Template menu</li>
-<li>Make sure that “Register this as a new template” is checked,
-unless you are editing one of your previously saved templates.
-You can’t edit the public templates that you don’t own
-(e.g., FRL-face, FRL-body, Face++).</li>
-<li>Give the template a useful name and notes. The 3 points for
-3-point delineation will be automatically filled in from the points
-you selected. You can change or re-order them here.</li>
-<li>After you save the template, choose “Set Point Labels” from the
-Template menu. Each point will be selected in turn (and an arrow will
-point at it). Type the name into the box at the top of the screen
-and press return.</li>
+<li><code>JPG</code>: This is the default, as it has relatively small file size
+(we use the best-quality JPEG compression of 100), so a 1350x1800
+pixel image will be about 0.5 MB. JPGs can contain embedded
+information about the image.</li>
+<li><code>PNG</code>: This is uncompressed (we use the best-quality PNG
+compression of 0), so a 1350x1800 pixel image will be about 7.0 MB.
+This file type is good for very small images or for images where
+exact color is important. PNGs can also use transparency, so images
+with transparent masks are always saved as PNGs.
+</li></li>
+<li><code>GIF</code>: This is uncompressed, but images are smaller than PNGs, so
+a 1350x1800 pixel image will be about 1.0 MB. Transparency is
+possible, but not as sophisticated as in PNGs. We mainly use GIFs
+as the frames for animated GIFs.</li>
 </ul>
 </div>
-<div id="from-scratch" class="section level3" number="3.3.2">
-<h3><span class="header-section-number">3.3.2</span> From Scratch</h3>
-<p>If you want to make a template from scratch, start with an image that has no saved template. You can fit the current template, and then delete it by clicking <span class="cmd">A</span> to select all points and <span class="cmd">delete</span>. This is a buggy process right now, so it might take a few tries.</p>
-<p>First, add new points using <span class="shiftcmd">click</span>. Use <span class="opt">L</span> to start drawing a new line; the cursor will change to a wand. Hover over points until they turn red (you need to move the cursor icon around a bit to find the right point) and click to add them to a line. Click ‘enter’ to end the line; it will turn from red to blue. Use <span class="shiftopt">L</span> to delete a line by clicking on any point attached to the line.</p>
-<div class="figure"><span id="fig:fig-tem-new"></span>
-<img src="images/tem_new.png" alt="Save a new template." width="604" />
-<p class="caption">
-Figure 3.3: Save a new template.
-</p>
+<div id="batch-default-names" class="section level3" number="5.2.3">
+<h3><span class="header-section-number">5.2.3</span> Batch default names</h3>
+<ul>
+<li>Folder (e.g., <code>/sym/filename</code>): Images created under the Batch menu
+are put in a new folder inside the original folder and the image
+names are kept the same as the originals</li>
+<li>Prefix (e.g., <code>/sym_filename</code>): Images created under the Batch menu
+are put in the original folder and the image names are given a prefix</li>
+<li>Suffix (e.g., <code>/filename_sym</code>): Images created under the Batch menu
+are put in the original folder and the image names are given a suffix</li>
+</ul>
 </div>
+<div id="prefs-texture-averages" class="section level3" number="5.2.4">
+<h3><span class="header-section-number">5.2.4</span> Texture Averages</h3>
+<p>This applies a representative texture to the average, resulting in
+composite images with more realistic texture instead of the very
+smooth, bland texture most other averaging programs create. See the
+papers below for methodological details.</p>
+<ul>
+<li><p>B. Tiddeman, M. Stirrat and D. Perrett (2005).
+Towards realism in facial prototyping: results of a wavelet MRF method.
+<i>Theory and Practice of Computer Graphics</i>.</p></li>
+<li><p>B. Tiddeman, D.M. Burt and D. Perrett (2001).
+Computer Graphics in Facial Perception Research.
+<i>IEEE Computer Graphics and Applications</i>, 21(5), 42-50.</p></li>
+</ul>
+</div>
+<div id="prefs-sample-contours" class="section level3" number="5.2.5">
+<h3><span class="header-section-number">5.2.5</span> Sample Contours</h3>
+<p>This interpolates more control points along the lines. This can
+improve the accuracy of averages and transforms. If you see a
+“feathery” appearance along lines that have many,
+close-together points, try turning this off.</p>
+</div>
+<div id="prefs-normalisation" class="section level3" number="5.2.6">
+<h3><span class="header-section-number">5.2.6</span> Normalisation</h3>
+<ul>
+<li>None: averages will have all coordinates as the exact
+mathematical average of the coordinates in the component templates</li>
+<li>2-point: all images are first aligned to the 2 alignment
+points designated in the Default alignment preference. Their
+position is set to their position in the first image in the average</li>
+<li>Rigid-body: procrustes aligns all images to the position of
+the first image in the average list</li>
+</ul>
+</div>
+<div id="prefs-warp-types" class="section level3" number="5.2.7">
+<h3><span class="header-section-number">5.2.7</span> Warp Types</h3>
+<ul>
+<li>Multiscale: Implements multi-scale affine interpolation for image
+warping. This is the default, with a good balance between speed and
+accuracy</li>
+<li>Linear: Implements triangulated linear interpolation for image
+warping. Linear warping is least accurate, often resulting in image
+artifacts, but is very fast.</li>
+<li>Multiscale RB: Implements multi-scale rigid body interpolation
+for image warping. This decreases image artifacts in some circumstances, but is much slower.</li>
+</ul>
+</div>
+<div id="prefs-mask-color" class="section level3" number="5.2.8">
+<h3><span class="header-section-number">5.2.8</span> Mask Color</h3>
+<p>This is the default color for masking, cropping, and rotation.
+Don’t worry, you can always change it in the batch mask, crop and
+rotate dialogs.</p>
+</div>
+</div>
+<div id="templates-1" class="section level2" number="5.3">
+<h2><span class="header-section-number">5.3</span> Templates</h2>
+<div id="prefs-default-template" class="section level3" number="5.3.1">
+<h3><span class="header-section-number">5.3.1</span> Default Template</h3>
+<p>This is the template that is used when you fit a new template to an image that doesn’t have a template yet. WebMorph comes with several templates and defaults to the 189-point FRL-Face template for forward-facing faces. You can also <a href="templates.html#new-template">define your own templates</a>.</p>
+</div>
+<div id="prefs-default-alignment" class="section level3" number="5.3.2">
+<h3><span class="header-section-number">5.3.2</span> Default Alignment</h3>
+<p>Set the parameters to use for batch alignment and 2-point normalisation.You can override this in the Batch Align dialog.</p>
+<p>Typically, the two points are the left and right eye points. You also need to specify an image size. Images normalised with these setting will be rotated and resized such that the two points are in the specified place, and the image will be cropped to the specified size.</p>
+<div class="info">
+<p>The default settings for the FRL-Face template are x = 496.98 and y = 825.688 for the left eye point (0) and x = 853.02 and y = 825.688 for the right eye point (1). I know this is weird, but it was taken from a composite image that the Face Research Lab used for years to standardise all images, since the only way you can do this in PsychoMorph is using an existing template.</p>
+</div>
+</div>
+<div id="delineation-apprearance" class="section level3" number="5.3.3">
+<h3><span class="header-section-number">5.3.3</span> Delineation Apprearance</h3>
+<p>Change the colours of the unselected and selected delineation crosses, and the lines, as well as the thickness of the lines. This can be useful if you’re delineating images with very dark or light colours.</p>
 
 </div>
 </div>
@@ -276,8 +342,8 @@ Figure 3.3: Save a new template.
           </div>
         </div>
       </div>
-<a href="batch-processes.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="d-1.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="d-1.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="news.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>

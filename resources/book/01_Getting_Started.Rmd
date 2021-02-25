@@ -46,11 +46,13 @@ Click on `Go` to load your first project.
 
 ## Finder
 
-Projects open in the Finder interface, which is a file navigation interface like the Mac OS Finder or Windows Explorer. New projects come with two folders: `composites` and `templates`. You can also see the Trash (which you can hide under the View menu).
+Projects open in the Finder interface, which is a file navigation interface like the Mac OS Finder or Windows Explorer. Click on the folders and files to navigate like you would in the Finder on your computer. You can also navigate with the arrow keys.
+
+New projects come with two folders: `composites` and `templates`. You can also see the Trash (which you can hide under the View menu). 
 
 Click on the `composites` folder and select an image. You should see some file information, including the image dimensions, the date the file was created, and whether it has an embedded template.
 
-```{r fig-finder, fig.cap = "Finder window"}
+```{r fig-finder, echo = FALSE, fig.cap = "Finder window"}
 knitr::include_graphics("images/start_finder.png")
 ```
 
@@ -132,7 +134,7 @@ Don't auto-delineate image that already have template. Delete those files first.
 
 ### Delineation
 
-Click on each point and drag it to fit the template to the face. The point number, label, x and y coordinate are shown in the bottom left of the window when you move points. The name of the image is in the bottom right.
+Click on each point and drag it to fit the template to the face. The point number, label, x and y coordinate are shown in the bottom left of the window when you move points. The name of the image is in the bottom right. 
 
 ```{r fig-delin, echo = FALSE, fig.cap = "Delineation window."}
 knitr::include_graphics("images/start_delineate.png")
@@ -154,6 +156,24 @@ Choose Save (<span class="cmd">S</span>) from the File menu to save the template
 
 If you want to scroll through a folder of images, click the Next image (fast forward) button on the delineation toolbar (<span class="cmd">→</span>).
 
+### Size and Normalisation
+
+The size of the average will be taken from the first image in 
+the average list.
+
+If images are different sizes, you may want to change the default 
+normalisation (under [Preferences](#prefs-normalisation) (<span class="cmd">,</span>) Images) 
+from "None" to "2-point" or "Rigid-body".
+
+* None: averages will have all coordinates as the exact 
+mathematical average of the coordinates in the component templates
+* 2-point: all images are first aligned to the 2 alignment 
+points designated in the Default alignment preference. Their 
+position is set to their position in the first image in the average
+* Rigid-body: procrustes aligns all images to the position of 
+the first image in the average list
+
+
 ## Average
 
 Once you have a few images delineated, you're ready to make an average. Select Average (<span class="cmd">4</span>) under the Window menu.
@@ -168,7 +188,7 @@ Once your images are selected, click the Average button to create a composite im
 
 ### Texture 
 
-By default, WebMorph averages are made with texture on. You can change this default in the Images tab of the Preferences (<span class="cmd">,</span>).
+By default, WebMorph averages are made with texture on. You can change this default in the Images tab of the [Preferences](#prefs-texture-averages) (<span class="cmd">,</span>).
 
 ```{r fig-texture, echo = FALSE, fig.cap = "An average of 5 faces. The image on the left has texture on; the image on the right has texture off."}
 knitr::include_graphics("images/start_texture.png")
@@ -181,14 +201,14 @@ This applies a representative texture to the average, resulting in composite ima
  
 ### Sample Contours
 
-By default, WebMorph averages are made with sample contours on. You can change this default in the Images tab of the Preferences (<span class="cmd">,</span>).
+By default, WebMorph averages are made with sample contours on. You can change this default in the Images tab of the [Preferences](#prefs-sample-contours) (<span class="cmd">,</span>).
 
 This interpolates more control points along the lines. This can improve the accuracy of averages and transforms. If you see a ‘feathery’ appearance along lines that have many, close-together points, try turning this off.
 
 
 ### Saving Averages
 
-Click on the folder you want to save the image into and then click the Save button. Add the image name after the folder path. If you add an image extension (.jpg, .png) it will be saved as that file type. If you omit the extension, it will be set to your default extension. You can change this default in the Images tab of the Preferences (<span class="cmd">,</span>).
+Click on the folder you want to save the image into and then click the Save button. Add the image name after the folder path. If you add an image extension (.jpg, .png) it will be saved as that file type. If you omit the extension, it will be set to your default extension. You can change this default in the Images tab of the [Preferences](#prefs-default-image-format) (<span class="cmd">,</span>).
 
 You can try out a few averages before you decide which to save. Averages go in the Recently Created Images box where you can click on them to reload them in the average box and save them.
 
@@ -230,16 +250,12 @@ knitr::include_graphics("images/start_continuum.png")
 
 After you click Transform, the individual frames are sent to the Queue and will appear in the Finder as they are created.
 
-You can then select all your continuum images, choose Moving Gif from the Tools menu, and create an animated image.
-
-```{r fig-moving-gif, echo = FALSE, fig.cap = "Moving Gif."}
-knitr::include_graphics("images/_movie.gif")
-```
-
 
 ## 3D
 
-The 3D functions are currently quite basic. You can upload OBJ files and associated BMP or JPEG textures and view them in the delineator. You can also morph between two objects that have the same geometry.
+The 3D functions are currently under development. You can upload OBJ files and associated BMP or JPEG textures and view them in the 3D Window (<span class="cmd">3</span>). You can also morph between two objects that have the same geometry.
 
-
+```{r fig-3d, echo = FALSE, fig.cap = "3D Window."}
+knitr::include_graphics("images/start_3d.png")
+```
 
