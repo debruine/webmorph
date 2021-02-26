@@ -1,3 +1,11 @@
 # 3D
 
+The 3D functions are currently under development. You can upload OBJ files and associated BMP or JPEG textures and view them in the 3D Window (<span class="cmd">3</span>). You can also morph between two objects that have the same geometry.
+
+```{r fig-3d, echo = FALSE, fig.cap = "3D Window."}
+knitr::include_graphics("images/start_3d.png")
+```
+
+You can capture frames from moving 3D objects and create animated gifs.
+
 <img src="images/_3d_movie.gif" alt="spinning 3d head">

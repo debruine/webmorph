@@ -21,9 +21,10 @@
   <meta name="twitter:description" content="Manual for WebMorph, a web-based version of Psychomorph, with several additional functions." />
   
 
+<meta name="author" content="Lisa DeBruine" />
 
 
-<meta name="date" content="2021-02-25" />
+<meta name="date" content="2021-02-26" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -50,6 +51,8 @@
 
 
 
+<script src="libs/kePrint-0.0.1/kePrint.js"></script>
+<link href="libs/lightable-0.0.1/lightable.css" rel="stylesheet" />
 
 
 
@@ -71,7 +74,8 @@
 <li class="divider"></li>
 <li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Overview</a>
 <ul>
-<li class="chapter" data-level="0.1" data-path="index.html"><a href="index.html#citations"><i class="fa fa-check"></i><b>0.1</b> Citations</a></li>
+<li class="chapter" data-level="0.1" data-path="index.html"><a href="index.html#bugs-and-suggestions"><i class="fa fa-check"></i><b>0.1</b> Bugs and Suggestions</a></li>
+<li class="chapter" data-level="0.2" data-path="index.html"><a href="index.html#citations"><i class="fa fa-check"></i><b>0.2</b> Citations</a></li>
 </ul></li>
 <li class="chapter" data-level="1" data-path="getting-started.html"><a href="getting-started.html"><i class="fa fa-check"></i><b>1</b> Getting Started</a>
 <ul>
@@ -93,7 +97,8 @@
 <li class="chapter" data-level="1.3.2" data-path="getting-started.html"><a href="getting-started.html#adding-folders-and-files"><i class="fa fa-check"></i><b>1.3.2</b> Adding Folders and Files</a></li>
 <li class="chapter" data-level="1.3.3" data-path="getting-started.html"><a href="getting-started.html#uploading-from-webcam"><i class="fa fa-check"></i><b>1.3.3</b> Uploading from Webcam</a></li>
 <li class="chapter" data-level="1.3.4" data-path="getting-started.html"><a href="getting-started.html#deleting-files"><i class="fa fa-check"></i><b>1.3.4</b> Deleting Files</a></li>
-<li class="chapter" data-level="1.3.5" data-path="getting-started.html"><a href="getting-started.html#movingrenaming-files"><i class="fa fa-check"></i><b>1.3.5</b> Moving/Renaming files</a></li>
+<li class="chapter" data-level="1.3.5" data-path="getting-started.html"><a href="getting-started.html#moving-files"><i class="fa fa-check"></i><b>1.3.5</b> Moving Files</a></li>
+<li class="chapter" data-level="1.3.6" data-path="getting-started.html"><a href="getting-started.html#renaming-files"><i class="fa fa-check"></i><b>1.3.6</b> Renaming Files</a></li>
 </ul></li>
 <li class="chapter" data-level="1.4" data-path="getting-started.html"><a href="getting-started.html#delineate"><i class="fa fa-check"></i><b>1.4</b> Delineate</a>
 <ul>
@@ -115,7 +120,6 @@
 <li class="chapter" data-level="1.6.1" data-path="getting-started.html"><a href="getting-started.html#transform-multiple-images"><i class="fa fa-check"></i><b>1.6.1</b> Transform Multiple Images</a></li>
 <li class="chapter" data-level="1.6.2" data-path="getting-started.html"><a href="getting-started.html#continuum"><i class="fa fa-check"></i><b>1.6.2</b> Continuum</a></li>
 </ul></li>
-<li class="chapter" data-level="1.7" data-path="getting-started.html"><a href="getting-started.html#d"><i class="fa fa-check"></i><b>1.7</b> 3D</a></li>
 </ul></li>
 <li class="chapter" data-level="2" data-path="batch-processes.html"><a href="batch-processes.html"><i class="fa fa-check"></i><b>2</b> Batch Processes</a>
 <ul>
@@ -139,7 +143,7 @@
 </ul></li>
 <li class="chapter" data-level="2.3" data-path="batch-processes.html"><a href="batch-processes.html#other-functions"><i class="fa fa-check"></i><b>2.3</b> Other Functions</a>
 <ul>
-<li class="chapter" data-level="2.3.1" data-path="batch-processes.html"><a href="batch-processes.html#calculate-facialmetrics"><i class="fa fa-check"></i><b>2.3.1</b> Calculate FacialMetrics</a></li>
+<li class="chapter" data-level="2.3.1" data-path="batch-processes.html"><a href="batch-processes.html#facialmetrics"><i class="fa fa-check"></i><b>2.3.1</b> Calculate FacialMetrics</a></li>
 <li class="chapter" data-level="2.3.2" data-path="batch-processes.html"><a href="batch-processes.html#lab-pixels"><i class="fa fa-check"></i><b>2.3.2</b> Lab* Pixels</a></li>
 <li class="chapter" data-level="2.3.3" data-path="batch-processes.html"><a href="batch-processes.html#image-grid"><i class="fa fa-check"></i><b>2.3.3</b> Image Grid</a></li>
 <li class="chapter" data-level="2.3.4" data-path="batch-processes.html"><a href="batch-processes.html#multiple-continua"><i class="fa fa-check"></i><b>2.3.4</b> Multiple Continua</a></li>
@@ -148,15 +152,27 @@
 </ul></li>
 <li class="chapter" data-level="3" data-path="templates.html"><a href="templates.html"><i class="fa fa-check"></i><b>3</b> Templates</a>
 <ul>
-<li class="chapter" data-level="3.1" data-path="templates.html"><a href="templates.html#change-default-template"><i class="fa fa-check"></i><b>3.1</b> Change Default Template</a></li>
-<li class="chapter" data-level="3.2" data-path="templates.html"><a href="templates.html#convert-templates"><i class="fa fa-check"></i><b>3.2</b> Convert Templates</a></li>
-<li class="chapter" data-level="3.3" data-path="templates.html"><a href="templates.html#new-template"><i class="fa fa-check"></i><b>3.3</b> Register a New Template</a>
+<li class="chapter" data-level="3.1" data-path="templates.html"><a href="templates.html#default-tem"><i class="fa fa-check"></i><b>3.1</b> Change Default Template</a></li>
+<li class="chapter" data-level="3.2" data-path="templates.html"><a href="templates.html#delneation"><i class="fa fa-check"></i><b>3.2</b> Delneation</a>
 <ul>
-<li class="chapter" data-level="3.3.1" data-path="templates.html"><a href="templates.html#from-a-saved-template"><i class="fa fa-check"></i><b>3.3.1</b> From a Saved Template</a></li>
-<li class="chapter" data-level="3.3.2" data-path="templates.html"><a href="templates.html#from-scratch"><i class="fa fa-check"></i><b>3.3.2</b> From Scratch</a></li>
+<li class="chapter" data-level="3.2.1" data-path="templates.html"><a href="templates.html#close-mouth"><i class="fa fa-check"></i><b>3.2.1</b> Close Mouth</a></li>
+</ul></li>
+<li class="chapter" data-level="3.3" data-path="templates.html"><a href="templates.html#batch-template-functions"><i class="fa fa-check"></i><b>3.3</b> Batch Template Functions</a>
+<ul>
+<li class="chapter" data-level="3.3.1" data-path="templates.html"><a href="templates.html#convert-templates"><i class="fa fa-check"></i><b>3.3.1</b> Convert Templates</a></li>
+<li class="chapter" data-level="3.3.2" data-path="templates.html"><a href="templates.html#tps-files"><i class="fa fa-check"></i><b>3.3.2</b> TPS Files</a></li>
+<li class="chapter" data-level="3.3.3" data-path="templates.html"><a href="templates.html#tem-from-embedded"><i class="fa fa-check"></i><b>3.3.3</b> Tem from Embedded</a></li>
+<li class="chapter" data-level="3.3.4" data-path="templates.html"><a href="templates.html#modify-delineation"><i class="fa fa-check"></i><b>3.3.4</b> Modify Delineation</a></li>
+</ul></li>
+<li class="chapter" data-level="3.4" data-path="templates.html"><a href="templates.html#new-template"><i class="fa fa-check"></i><b>3.4</b> New Templates</a>
+<ul>
+<li class="chapter" data-level="3.4.1" data-path="templates.html"><a href="templates.html#from-a-saved-template"><i class="fa fa-check"></i><b>3.4.1</b> From a Saved Template</a></li>
+<li class="chapter" data-level="3.4.2" data-path="templates.html"><a href="templates.html#from-scratch"><i class="fa fa-check"></i><b>3.4.2</b> From Scratch</a></li>
+<li class="chapter" data-level="3.4.3" data-path="templates.html"><a href="templates.html#set-point-labels"><i class="fa fa-check"></i><b>3.4.3</b> Set Point Labels</a></li>
+<li class="chapter" data-level="3.4.4" data-path="templates.html"><a href="templates.html#template-sym"><i class="fa fa-check"></i><b>3.4.4</b> Setting Symmetry Points</a></li>
 </ul></li>
 </ul></li>
-<li class="chapter" data-level="4" data-path="d-1.html"><a href="d-1.html"><i class="fa fa-check"></i><b>4</b> 3D</a></li>
+<li class="chapter" data-level="4" data-path="d.html"><a href="d.html"><i class="fa fa-check"></i><b>4</b> 3D</a></li>
 <li class="chapter" data-level="5" data-path="preferences.html"><a href="preferences.html"><i class="fa fa-check"></i><b>5</b> Preferences</a>
 <ul>
 <li class="chapter" data-level="5.1" data-path="preferences.html"><a href="preferences.html#personal"><i class="fa fa-check"></i><b>5.1</b> Personal</a>
@@ -182,7 +198,14 @@
 <li class="chapter" data-level="5.3.3" data-path="preferences.html"><a href="preferences.html#delineation-apprearance"><i class="fa fa-check"></i><b>5.3.3</b> Delineation Apprearance</a></li>
 </ul></li>
 </ul></li>
-<li class="chapter" data-level="6" data-path="news.html"><a href="news.html"><i class="fa fa-check"></i><b>6</b> News</a></li>
+<li class="appendix"><span><b>Appendices</b></span></li>
+<li class="chapter" data-level="A" data-path="keyboard-shortcuts.html"><a href="keyboard-shortcuts.html"><i class="fa fa-check"></i><b>A</b> Keyboard Shortcuts</a>
+<ul>
+<li class="chapter" data-level="A.1" data-path="keyboard-shortcuts.html"><a href="keyboard-shortcuts.html#command"><i class="fa fa-check"></i><b>A.1</b> Command</a></li>
+<li class="chapter" data-level="A.2" data-path="keyboard-shortcuts.html"><a href="keyboard-shortcuts.html#shift-command"><i class="fa fa-check"></i><b>A.2</b> Shift-Command</a></li>
+</ul></li>
+<li class="chapter" data-level="B" data-path="news.html"><a href="news.html"><i class="fa fa-check"></i><b>B</b> News</a></li>
+<li class="chapter" data-level="C" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i><b>C</b> References</a></li>
 <li class="divider"></li>
 <li><a rel="license" href="https://creativecommons.org/licenses/by-sa/4.0/"
     target="blank"><img alt="Creative Commons License"
@@ -257,25 +280,78 @@ Figure 2.4: Batch Mask.
 </p>
 </div>
 <p>You can combine masks. The interface will let you visualise what each mask is. Reversing a mask puts the colour inside the mask instead of outside (although the masking interface still shows an external mask, sorry). If you set the mask to transparent, the masked images will be PNGs with transparency.</p>
-<div class="warning">
+<div class="bug">
 <p>The blur function doesn’t work as well as PsychMorph’s and you usually can’t tell the difference with images that are large.</p>
 </div>
+<p>You can create a custom mask by unselecting all of the built-in masks and directly typing the points to use in the text box that appears. For example, with the custom 10-point template <a href="templates.html#from-scratch">“outline”</a>, you can mask the face with this: <code>0,1,2,3,4,5,6,7,8,9,0</code>. Notice how the first point is also appended to the end. If you don’t do this, masks will have a jagged corner.</p>
+<div class="figure"><span id="fig:fig-batch-mask-custom"></span>
+<img src="images/batch_mask_custom.png" alt="Custom Masks.  The image on the left didn't include the starting point at the end." width="708" />
+<p class="caption">
+Figure 2.5: Custom Masks. The image on the left didn’t include the starting point at the end.
+</p>
+</div>
+<p>You can build a mask by clicking on the delineation points you want to add in the Template interface. Load an image with the correct template and choose Custom Mask Builder from the Template menu. Click on points to add them to the text box. Separate points with commas, lines with semicolons, and mask areas with colons.</p>
+<div class="bug">
+<p>You can’t get out of the Custom Mask Builder interface. Until I fix it, just reload the page to get out.</p>
+</div>
+<p>For example, this will create one mask that masks the pupils, as the points 2-9 delineate the left pupil and points 10-17 delineate the right pupil. Reverse the mask to replace the pupils with the mask colour.</p>
+<pre><code>2,3,4,5,6,7,8,9,2 : 10,17,16,15,14,13,12,11,10</code></pre>
 </div>
 <div id="mirror" class="section level3" number="2.1.5">
 <h3><span class="header-section-number">2.1.5</span> Mirror</h3>
-<p>Batch mirror mirror-reverses the images and their templates. Templates need to have their symmetry points defined in order to do this. For example, in the FRL-Face template, point 0 is the left pupil and point 1 is the right pupil, so in the mirror-reversed version, the x-coordinates are all flipped and the identities of matching points are swapped so that the pupil point on the left side of the image is 0 in both original and mirror-reversed versions. This is the first step to creating a symmetric face.</p>
+<p>Batch mirror mirror-reverses the images and their templates. Templates need to have their symmetry points defined in order to do this. Most of the built-in templates in WebMorph have this, but you will need to <a href="templates.html#template-sym">do this yourself</a> for any custom templates.</p>
+<p>For example, in the FRL-Face template, point 0 is the left pupil and point 1 is the right pupil, so in the mirror-reversed version, the x-coordinates are all flipped and the identities of matching points are swapped so that the pupil point on the left side of the image is 0 in both original and mirror-reversed versions. This is the first step to creating a symmetric face.</p>
 </div>
 <div id="resize" class="section level3" number="2.1.6">
 <h3><span class="header-section-number">2.1.6</span> Resize</h3>
+<p>Resize images by percent or pixel. If you only enter one of width or height, the other dimension is scaled to the same aspect ratio as the original image. You will see a table of the original and new dimensions to check before you click Resize.</p>
+<div class="figure"><span id="fig:fig-batch-resize"></span>
+<img src="images/batch_resize.png" alt="Batch Resize" width="632" />
+<p class="caption">
+Figure 2.6: Batch Resize
+</p>
+</div>
 </div>
 <div id="rotate" class="section level3" number="2.1.7">
 <h3><span class="header-section-number">2.1.7</span> Rotate</h3>
+<p>Set the number of degrees to rotate (e.g. 90 degrees rotates the images one-quarter of a turn clockwise).</p>
+<p>If your rotated image is squint, you need to set a background colour to fill in the triangles in the edges. If you choose “Select color from patch,” each image’s background will be taken from the average of the specified pixels.</p>
+<div class="figure"><span id="fig:fig-batch-rotate"></span>
+<img src="images/batch_rotate.png" alt="Batch Rotate 45 degrees with Select color from patch" width="1000" />
+<p class="caption">
+Figure 2.7: Batch Rotate 45 degrees with Select color from patch
+</p>
+</div>
 </div>
 <div id="scramble" class="section level3" number="2.1.8">
 <h3><span class="header-section-number">2.1.8</span> Scramble</h3>
+<p>Some vision research uses scrambled images as controls. They will have the same distribution of colour as the unscrambled image, but scrambling introduces horizontal and vertical structure that isn’t present in the original image, so we recommend to place grid lines on both the original and scrambled images.</p>
+<p>Scramble an image by choosing the grid size and offset, then select/unselect the squares to scramble by clicking or dragging on the image.</p>
+<p>If your selected squares are symmetric, you can choose a symmetric scramble, where the squares on the left side are scrambled, and the squares on the right side are in a mirrored pattern. This looks pretty creepy, but maintains the bilateral symmetry of the original image in the scrambled version. Each face in a set is scrambled</p>
+<div class="figure"><span id="fig:fig-batch-scramble"></span>
+<img src="images/batch_scramble.png" alt="Batch Scramble" width="1482" />
+<p class="caption">
+Figure 2.8: Batch Scramble
+</p>
+</div>
+<p>The symmetric image scrambling methods were first published in Conway et al. <span class="citation">(<a href="references.html#ref-conway_2008" role="doc-biblioref">2008</a>)</span>, so please do cite that paper if you use this method.</p>
+<p>You can scramble only inside a masked area, although this is experimental and sometimes is glitchy. Set the grid size fairly small and turn off grid lines to create a pixelated look.</p>
+<div class="figure"><span id="fig:fig-batch-scramble-mask"></span>
+<img src="images/batch_scramble_mask.png" alt="Batch Scramble inside a mask." width="1404" />
+<p class="caption">
+Figure 2.9: Batch Scramble inside a mask.
+</p>
+</div>
 </div>
 <div id="symmetrise" class="section level3" number="2.1.9">
 <h3><span class="header-section-number">2.1.9</span> Symmetrise</h3>
+<p>You can symmetrise an image in shape, color, or both. Just like batch mirroring, templates need to have their symmetry points defined in order to do this. Most of the built-in templates in WebMorph have this, but you will need to <a href="templates.html#template-sym">do this yourself</a> for any custom templates.</p>
+<div class="figure"><span id="fig:fig-batch-sym"></span>
+<img src="images/batch_sym.png" alt="Batch Symmetrise. Original image, symmetric shape, symmetric colour, and both." width="1507" />
+<p class="caption">
+Figure 2.10: Batch Symmetrise. Original image, symmetric shape, symmetric colour, and both.
+</p>
+</div>
 </div>
 </div>
 <div id="batch-files" class="section level2" number="2.2">
@@ -288,27 +364,45 @@ Figure 2.4: Batch Mask.
 <p>In the example below, the first average is made from two images (m_multi and f_multi) and will be saved in a folder called avg_test as androgynous.jpg. The second example will be made from 4 images, 3 of which are the same (so will be 1/4 f_multi and 3/4 m_multi).</p>
 <table>
 <thead>
-<tr class="header">
-<th align="left">/avg_test/androgynous.jpg</th>
-<th align="left">/avg_test/3male1female.jpg</th>
+<tr>
+<th style="text-align:left;">
+/avg_test/androgynous.jpg
+</th>
+<th style="text-align:left;">
+/avg_test/3male1female.jpg
+</th>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
-<td align="left">/composites/m_multi.jpg</td>
-<td align="left">/composites/f_multi.jpg</td>
+<tr>
+<td style="text-align:left;">
+/composites/m_multi.jpg
+</td>
+<td style="text-align:left;">
+/composites/f_multi.jpg
+</td>
 </tr>
-<tr class="even">
-<td align="left">/composites/f_multi.jpg</td>
-<td align="left">/composites/m_multi.jpg</td>
+<tr>
+<td style="text-align:left;">
+/composites/f_multi.jpg
+</td>
+<td style="text-align:left;">
+/composites/m_multi.jpg
+</td>
 </tr>
-<tr class="odd">
-<td align="left"></td>
-<td align="left">/composites/m_multi.jpg</td>
+<tr>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+/composites/m_multi.jpg
+</td>
 </tr>
-<tr class="even">
-<td align="left"></td>
-<td align="left">/composites/m_multi.jpg</td>
+<tr>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+/composites/m_multi.jpg
+</td>
 </tr>
 </tbody>
 </table>
@@ -317,71 +411,146 @@ Figure 2.4: Batch Mask.
 <h3><span class="header-section-number">2.2.2</span> Batch Transform</h3>
 <p><a href="https://webmorph.org/include/examples/templates/_batchTrans.txt">Batch Transform Template</a></p>
 <table>
-<colgroup>
-<col width="19%" />
-<col width="19%" />
-<col width="19%" />
-<col width="4%" />
-<col width="4%" />
-<col width="6%" />
-<col width="24%" />
-</colgroup>
 <thead>
-<tr class="header">
-<th align="left">trans-img</th>
-<th align="left">from-img</th>
-<th align="left">to-img</th>
-<th align="left">shape</th>
-<th align="left">color</th>
-<th align="left">texture</th>
-<th align="left">outname</th>
+<tr>
+<th style="text-align:left;">
+trans-img
+</th>
+<th style="text-align:left;">
+from-img
+</th>
+<th style="text-align:left;">
+to-img
+</th>
+<th style="text-align:left;">
+shape
+</th>
+<th style="text-align:left;">
+color
+</th>
+<th style="text-align:left;">
+texture
+</th>
+<th style="text-align:left;">
+outname
+</th>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
-<td align="left">/composites/f_multi.jpg</td>
-<td align="left">/composites/m_multi.jpg</td>
-<td align="left">/composites/f_multi.jpg</td>
-<td align="left">50</td>
-<td align="left">0</td>
-<td align="left">0</td>
-<td align="left">/trans_test/female_fem50.jpg</td>
+<tr>
+<td style="text-align:left;">
+/composites/f_multi.jpg
+</td>
+<td style="text-align:left;">
+/composites/m_multi.jpg
+</td>
+<td style="text-align:left;">
+/composites/f_multi.jpg
+</td>
+<td style="text-align:left;">
+50
+</td>
+<td style="text-align:left;">
+0
+</td>
+<td style="text-align:left;">
+0
+</td>
+<td style="text-align:left;">
+/trans_test/female_fem50.jpg
+</td>
 </tr>
-<tr class="even">
-<td align="left">/composites/f_multi.jpg</td>
-<td align="left">/composites/m_multi.jpg</td>
-<td align="left">/composites/f_multi.jpg</td>
-<td align="left">-50</td>
-<td align="left">0</td>
-<td align="left">0</td>
-<td align="left">/trans_test/female_masc50.jpg</td>
+<tr>
+<td style="text-align:left;">
+/composites/f_multi.jpg
+</td>
+<td style="text-align:left;">
+/composites/m_multi.jpg
+</td>
+<td style="text-align:left;">
+/composites/f_multi.jpg
+</td>
+<td style="text-align:left;">
+-50
+</td>
+<td style="text-align:left;">
+0
+</td>
+<td style="text-align:left;">
+0
+</td>
+<td style="text-align:left;">
+/trans_test/female_masc50.jpg
+</td>
 </tr>
-<tr class="odd">
-<td align="left">/composites/m_multi.jpg</td>
-<td align="left">/composites/m_multi.jpg</td>
-<td align="left">/composites/f_multi.jpg</td>
-<td align="left">50</td>
-<td align="left">0</td>
-<td align="left">0</td>
-<td align="left">/trans_test/male_fem50.jpg</td>
+<tr>
+<td style="text-align:left;">
+/composites/m_multi.jpg
+</td>
+<td style="text-align:left;">
+/composites/m_multi.jpg
+</td>
+<td style="text-align:left;">
+/composites/f_multi.jpg
+</td>
+<td style="text-align:left;">
+50
+</td>
+<td style="text-align:left;">
+0
+</td>
+<td style="text-align:left;">
+0
+</td>
+<td style="text-align:left;">
+/trans_test/male_fem50.jpg
+</td>
 </tr>
-<tr class="even">
-<td align="left">/composites/m_multi.jpg</td>
-<td align="left">/composites/m_multi.jpg</td>
-<td align="left">/composites/f_multi.jpg</td>
-<td align="left">-50</td>
-<td align="left">0</td>
-<td align="left">0</td>
-<td align="left">/trans_test/male_masc50.jpg</td>
+<tr>
+<td style="text-align:left;">
+/composites/m_multi.jpg
+</td>
+<td style="text-align:left;">
+/composites/m_multi.jpg
+</td>
+<td style="text-align:left;">
+/composites/f_multi.jpg
+</td>
+<td style="text-align:left;">
+-50
+</td>
+<td style="text-align:left;">
+0
+</td>
+<td style="text-align:left;">
+0
+</td>
+<td style="text-align:left;">
+/trans_test/male_masc50.jpg
+</td>
 </tr>
-<tr class="odd">
-<td align="left">/composites/f_white.jpg</td>
-<td align="left">/composites/f_multi.jpg</td>
-<td align="left">/composites/f_white.jpg</td>
-<td align="left">25%</td>
-<td align="left">25%</td>
-<td align="left">25%</td>
-<td align="left">/trans_test/f_wh_caric.jpg</td>
+<tr>
+<td style="text-align:left;">
+/composites/f_white.jpg
+</td>
+<td style="text-align:left;">
+/composites/f_multi.jpg
+</td>
+<td style="text-align:left;">
+/composites/f_white.jpg
+</td>
+<td style="text-align:left;">
+25%
+</td>
+<td style="text-align:left;">
+25%
+</td>
+<td style="text-align:left;">
+25%
+</td>
+<td style="text-align:left;">
+/trans_test/f_wh_caric.jpg
+</td>
 </tr>
 </tbody>
 </table>
@@ -389,579 +558,969 @@ Figure 2.4: Batch Mask.
 <div id="batch-edit" class="section level3" number="2.2.3">
 <h3><span class="header-section-number">2.2.3</span> Batch Edit</h3>
 <p><a href="https://webmorph.org/include/examples/templates/_batchEdit.txt">Batch Edit Template</a></p>
+<p>The batch edit function lets you align, resize, rotate, crop, mask, symmetrise, and/or mirror images in any order. Every row must have a valid <code>image</code> name of an image that exists in your project, and a valid <code>outname</code> that can’t overwrite an existing image.</p>
+<ul>
+<li>image: The path to the image file: e.g., <code>/male/avg.jpg</code></li>
+<li>align: <code>pt1, pt2, x1, y1, x2, y2, width, height, [color]</code>
+e.g., <code>0,1,497,825,853,825,1350,1800,rgb(0,0,0)</code> or <code>DEFAULT</code></li>
+<li>resize: <code>width, height</code>
+e.g., <code>50%,50%</code> or <code>300px,400px</code> or <code>null,400px</code></li>
+<li>rotate: <code>degrees, [color]</code>
+e.g., <code>90,rgb(255,255,255)</code></li>
+<li>crop: <code>top, right, bottom, left, [color]</code>
+e.g., <code>-100,100,-100,100,rgb(0,0,0)</code></li>
+<li>mask: <code>(mask names or custom mask), blur, [color]</code>
+e.g., <code>(face,neck,ears),0,rgb(255,255,255)</code> or <code>(face),10,transparent</code></li>
+<li>sym: <code>shape</code> and/or <code>color</code></li>
+<li>mirror: <code>true</code> or leave blank</li>
+<li>order: defaults to <code>align,resize,rotate,crop,mask,sym,mirror</code></li>
+<li>outname: The path to save the result to: e.g., <code>/male/edited/avg.jpg</code>
+The file needs all 10 columns with their headers, but I’ll show each batch function below with only the relevant columns.</li>
+</ul>
+<div id="align-1" class="section level4" number="2.2.3.1">
+<h4><span class="header-section-number">2.2.3.1</span> Align</h4>
+<p>Align using your <a href="preferences.html#prefs-default-alignment">default alignment</a> (<code>DEFAULT</code>), the default FRL-face alignment (<code>FRL</code>), or the specified alignment in the order <code>point 1, point 2, x1, y1, x2, y2, width, height</code>.</p>
 <table>
-<colgroup>
-<col width="11%" />
-<col width="12%" />
-<col width="5%" />
-<col width="7%" />
-<col width="12%" />
-<col width="11%" />
-<col width="5%" />
-<col width="3%" />
-<col width="15%" />
-<col width="15%" />
-</colgroup>
 <thead>
-<tr class="header">
-<th align="left">image</th>
-<th align="left">align</th>
-<th align="left">resize</th>
-<th align="left">rotate</th>
-<th align="left">crop</th>
-<th align="left">mask</th>
-<th align="left">sym</th>
-<th align="left">mirror</th>
-<th align="left">order</th>
-<th align="left">outname</th>
+<tr>
+<th style="text-align:left;">
+image
+</th>
+<th style="text-align:left;">
+align
+</th>
+<th style="text-align:left;">
+outname
+</th>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
-<td align="left">/composites/f_multi.jpg</td>
-<td align="left">DEFAULT</td>
-<td align="left">FALSE</td>
-<td align="left">FALSE</td>
-<td align="left">FALSE</td>
-<td align="left">FALSE</td>
-<td align="left">FALSE</td>
-<td align="left">FALSE</td>
-<td align="left"></td>
-<td align="left">/edit_test/align_default.jpg</td>
+<tr>
+<td style="text-align:left;">
+/composites/f_multi.jpg
+</td>
+<td style="text-align:left;">
+DEFAULT
+</td>
+<td style="text-align:left;">
+/edit_test/align_default.jpg
+</td>
 </tr>
-<tr class="even">
-<td align="left">/composites/f_easian.jpg</td>
-<td align="left">FRL</td>
-<td align="left">FALSE</td>
-<td align="left">FALSE</td>
-<td align="left">FALSE</td>
-<td align="left">FALSE</td>
-<td align="left">FALSE</td>
-<td align="left">FALSE</td>
-<td align="left"></td>
-<td align="left">/edit_test/align_frl.jpg</td>
+<tr>
+<td style="text-align:left;">
+/composites/f_easian.jpg
+</td>
+<td style="text-align:left;">
+FRL
+</td>
+<td style="text-align:left;">
+/edit_test/align_frl.jpg
+</td>
 </tr>
-<tr class="odd">
-<td align="left">/composites/f_african.jpg</td>
-<td align="left">0,1,200,300,400,300,600,600</td>
-<td align="left">FALSE</td>
-<td align="left">FALSE</td>
-<td align="left">FALSE</td>
-<td align="left">FALSE</td>
-<td align="left">FALSE</td>
-<td align="left">FALSE</td>
-<td align="left"></td>
-<td align="left">/edit_test/align_square.jpg</td>
-</tr>
-<tr class="even">
-<td align="left">/composites/f_white.jpg</td>
-<td align="left">FALSE</td>
-<td align="left">50%</td>
-<td align="left">FALSE</td>
-<td align="left">FALSE</td>
-<td align="left">FALSE</td>
-<td align="left">FALSE</td>
-<td align="left">FALSE</td>
-<td align="left"></td>
-<td align="left">/edit_test/resize_50_percent.jpg</td>
-</tr>
-<tr class="odd">
-<td align="left">/composites/f_wasian.jpg</td>
-<td align="left">FALSE</td>
-<td align="left">null,400px</td>
-<td align="left">FALSE</td>
-<td align="left">FALSE</td>
-<td align="left">FALSE</td>
-<td align="left">FALSE</td>
-<td align="left">FALSE</td>
-<td align="left"></td>
-<td align="left">/edit_test/resize_400px_tall.jpg</td>
-</tr>
-<tr class="even">
-<td align="left">/composites/m_multi.jpg</td>
-<td align="left">FALSE</td>
-<td align="left">200px,200px</td>
-<td align="left">FALSE</td>
-<td align="left">FALSE</td>
-<td align="left">FALSE</td>
-<td align="left">FALSE</td>
-<td align="left">FALSE</td>
-<td align="left"></td>
-<td align="left">/edit_test/resize_200x200px.jpg</td>
-</tr>
-<tr class="odd">
-<td align="left">/composites/m_easian.jpg</td>
-<td align="left">FALSE</td>
-<td align="left">300px,null</td>
-<td align="left">FALSE</td>
-<td align="left">FALSE</td>
-<td align="left">FALSE</td>
-<td align="left">FALSE</td>
-<td align="left">FALSE</td>
-<td align="left"></td>
-<td align="left">/edit_test/resize_300px_wide.jpg</td>
-</tr>
-<tr class="even">
-<td align="left">/composites/m_african.jpg</td>
-<td align="left">FALSE</td>
-<td align="left">50%,25%</td>
-<td align="left">FALSE</td>
-<td align="left">FALSE</td>
-<td align="left">FALSE</td>
-<td align="left">FALSE</td>
-<td align="left">FALSE</td>
-<td align="left"></td>
-<td align="left">/edit_test/resize_50x25_percent.jpg</td>
-</tr>
-<tr class="odd">
-<td align="left">/composites/m_white.jpg</td>
-<td align="left">FALSE</td>
-<td align="left">FALSE</td>
-<td align="left">90</td>
-<td align="left">FALSE</td>
-<td align="left">FALSE</td>
-<td align="left">FALSE</td>
-<td align="left">FALSE</td>
-<td align="left"></td>
-<td align="left">/edit_test/rotate_90.jpg</td>
-</tr>
-<tr class="even">
-<td align="left">/composites/m_wasian.jpg</td>
-<td align="left">FALSE</td>
-<td align="left">FALSE</td>
-<td align="left">45,rgb(255,0,0)</td>
-<td align="left">FALSE</td>
-<td align="left">FALSE</td>
-<td align="left">FALSE</td>
-<td align="left">FALSE</td>
-<td align="left"></td>
-<td align="left">/edit_test/rotate_45red.jpg</td>
-</tr>
-<tr class="odd">
-<td align="left">/composites/f_multi.jpg</td>
-<td align="left">FALSE</td>
-<td align="left">FALSE</td>
-<td align="left">-90</td>
-<td align="left">FALSE</td>
-<td align="left">FALSE</td>
-<td align="left">FALSE</td>
-<td align="left">FALSE</td>
-<td align="left"></td>
-<td align="left">/edit_test/rotate_neg90.jpg</td>
-</tr>
-<tr class="even">
-<td align="left">/composites/f_multi.jpg</td>
-<td align="left">FALSE</td>
-<td align="left">FALSE</td>
-<td align="left">FALSE</td>
-<td align="left">-300,0,-300,0</td>
-<td align="left">FALSE</td>
-<td align="left">FALSE</td>
-<td align="left">FALSE</td>
-<td align="left"></td>
-<td align="left">/edit_test/crop_short.jpg</td>
-</tr>
-<tr class="odd">
-<td align="left">/composites/f_multi.jpg</td>
-<td align="left">FALSE</td>
-<td align="left">FALSE</td>
-<td align="left">FALSE</td>
-<td align="left">100,100,100,100,rgb(0,255,0)</td>
-<td align="left">FALSE</td>
-<td align="left">FALSE</td>
-<td align="left">FALSE</td>
-<td align="left"></td>
-<td align="left">/edit_test/crop_green_border.jpg</td>
-</tr>
-<tr class="even">
-<td align="left">/composites/f_multi.jpg</td>
-<td align="left">FALSE</td>
-<td align="left">FALSE</td>
-<td align="left">FALSE</td>
-<td align="left">FALSE</td>
-<td align="left">(face),10,rgb(255,0,0)</td>
-<td align="left">FALSE</td>
-<td align="left">FALSE</td>
-<td align="left"></td>
-<td align="left">/edit_test/mask_red.jpg</td>
-</tr>
-<tr class="odd">
-<td align="left">/composites/f_multi.jpg</td>
-<td align="left">FALSE</td>
-<td align="left">FALSE</td>
-<td align="left">FALSE</td>
-<td align="left">FALSE</td>
-<td align="left">(face),0,rgb(0,255,0)</td>
-<td align="left">FALSE</td>
-<td align="left">FALSE</td>
-<td align="left"></td>
-<td align="left">/edit_test/mask_green.jpg</td>
-</tr>
-<tr class="even">
-<td align="left">/composites/f_multi.jpg</td>
-<td align="left">FALSE</td>
-<td align="left">FALSE</td>
-<td align="left">FALSE</td>
-<td align="left">FALSE</td>
-<td align="left">(face,neck,ears),0</td>
-<td align="left">FALSE</td>
-<td align="left">FALSE</td>
-<td align="left"></td>
-<td align="left">/edit_test/mask_face_neck_ears.jpg</td>
-</tr>
-<tr class="odd">
-<td align="left">/composites/f_multi.jpg</td>
-<td align="left">FALSE</td>
-<td align="left">FALSE</td>
-<td align="left">FALSE</td>
-<td align="left">FALSE</td>
-<td align="left">(neck),0</td>
-<td align="left">FALSE</td>
-<td align="left">FALSE</td>
-<td align="left"></td>
-<td align="left">/edit_test/mask_neck.jpg</td>
-</tr>
-<tr class="even">
-<td align="left">/composites/f_multi.jpg</td>
-<td align="left">FALSE</td>
-<td align="left">FALSE</td>
-<td align="left">FALSE</td>
-<td align="left">FALSE</td>
-<td align="left">(left_eye),0</td>
-<td align="left">FALSE</td>
-<td align="left">FALSE</td>
-<td align="left"></td>
-<td align="left">/edit_test/mask_left_eye.jpg</td>
-</tr>
-<tr class="odd">
-<td align="left">/composites/f_multi.jpg</td>
-<td align="left">FALSE</td>
-<td align="left">FALSE</td>
-<td align="left">FALSE</td>
-<td align="left">FALSE</td>
-<td align="left">(right_eye),0</td>
-<td align="left">FALSE</td>
-<td align="left">FALSE</td>
-<td align="left"></td>
-<td align="left">/edit_test/mask_right_eye.jpg</td>
-</tr>
-<tr class="even">
-<td align="left">/composites/f_multi.jpg</td>
-<td align="left">FALSE</td>
-<td align="left">FALSE</td>
-<td align="left">FALSE</td>
-<td align="left">FALSE</td>
-<td align="left">(eyes),0</td>
-<td align="left">FALSE</td>
-<td align="left">FALSE</td>
-<td align="left"></td>
-<td align="left">/edit_test/mask_eyes.jpg</td>
-</tr>
-<tr class="odd">
-<td align="left">/composites/f_multi.jpg</td>
-<td align="left">FALSE</td>
-<td align="left">FALSE</td>
-<td align="left">FALSE</td>
-<td align="left">FALSE</td>
-<td align="left">(left_brow),0</td>
-<td align="left">FALSE</td>
-<td align="left">FALSE</td>
-<td align="left"></td>
-<td align="left">/edit_test/mask_left_brow.jpg</td>
-</tr>
-<tr class="even">
-<td align="left">/composites/f_multi.jpg</td>
-<td align="left">FALSE</td>
-<td align="left">FALSE</td>
-<td align="left">FALSE</td>
-<td align="left">FALSE</td>
-<td align="left">(right_brow),0</td>
-<td align="left">FALSE</td>
-<td align="left">FALSE</td>
-<td align="left"></td>
-<td align="left">/edit_test/mask_right_brow.jpg</td>
-</tr>
-<tr class="odd">
-<td align="left">/composites/f_multi.jpg</td>
-<td align="left">FALSE</td>
-<td align="left">FALSE</td>
-<td align="left">FALSE</td>
-<td align="left">FALSE</td>
-<td align="left">(brows),0</td>
-<td align="left">FALSE</td>
-<td align="left">FALSE</td>
-<td align="left"></td>
-<td align="left">/edit_test/mask_brows.jpg</td>
-</tr>
-<tr class="even">
-<td align="left">/composites/f_multi.jpg</td>
-<td align="left">FALSE</td>
-<td align="left">FALSE</td>
-<td align="left">FALSE</td>
-<td align="left">FALSE</td>
-<td align="left">(left_ear),0</td>
-<td align="left">FALSE</td>
-<td align="left">FALSE</td>
-<td align="left"></td>
-<td align="left">/edit_test/mask_left_ear.jpg</td>
-</tr>
-<tr class="odd">
-<td align="left">/composites/f_multi.jpg</td>
-<td align="left">FALSE</td>
-<td align="left">FALSE</td>
-<td align="left">FALSE</td>
-<td align="left">FALSE</td>
-<td align="left">(right_ear),0</td>
-<td align="left">FALSE</td>
-<td align="left">FALSE</td>
-<td align="left"></td>
-<td align="left">/edit_test/mask_right_ear.jpg</td>
-</tr>
-<tr class="even">
-<td align="left">/composites/f_multi.jpg</td>
-<td align="left">FALSE</td>
-<td align="left">FALSE</td>
-<td align="left">FALSE</td>
-<td align="left">FALSE</td>
-<td align="left">(ears),0</td>
-<td align="left">FALSE</td>
-<td align="left">FALSE</td>
-<td align="left"></td>
-<td align="left">/edit_test/mask_ears.jpg</td>
-</tr>
-<tr class="odd">
-<td align="left">/composites/f_multi.jpg</td>
-<td align="left">FALSE</td>
-<td align="left">FALSE</td>
-<td align="left">FALSE</td>
-<td align="left">FALSE</td>
-<td align="left">(nose),0</td>
-<td align="left">FALSE</td>
-<td align="left">FALSE</td>
-<td align="left"></td>
-<td align="left">/edit_test/mask_nose.jpg</td>
-</tr>
-<tr class="even">
-<td align="left">/composites/f_multi.jpg</td>
-<td align="left">FALSE</td>
-<td align="left">FALSE</td>
-<td align="left">FALSE</td>
-<td align="left">FALSE</td>
-<td align="left">(mouth),0</td>
-<td align="left">FALSE</td>
-<td align="left">FALSE</td>
-<td align="left"></td>
-<td align="left">/edit_test/mask_mouth.jpg</td>
-</tr>
-<tr class="odd">
-<td align="left">/composites/f_multi.jpg</td>
-<td align="left">FALSE</td>
-<td align="left">FALSE</td>
-<td align="left">FALSE</td>
-<td align="left">FALSE</td>
-<td align="left">FALSE</td>
-<td align="left">shape,color</td>
-<td align="left">FALSE</td>
-<td align="left"></td>
-<td align="left">/edit_test/sym_shape_color.jpg</td>
-</tr>
-<tr class="even">
-<td align="left">/composites/f_multi.jpg</td>
-<td align="left">FALSE</td>
-<td align="left">FALSE</td>
-<td align="left">FALSE</td>
-<td align="left">FALSE</td>
-<td align="left">FALSE</td>
-<td align="left">shape</td>
-<td align="left">FALSE</td>
-<td align="left"></td>
-<td align="left">/edit_test/sym_shape.jpg</td>
-</tr>
-<tr class="odd">
-<td align="left">/composites/f_multi.jpg</td>
-<td align="left">FALSE</td>
-<td align="left">FALSE</td>
-<td align="left">FALSE</td>
-<td align="left">FALSE</td>
-<td align="left">FALSE</td>
-<td align="left">color</td>
-<td align="left">FALSE</td>
-<td align="left"></td>
-<td align="left">/edit_test/sym_color.jpg</td>
-</tr>
-<tr class="even">
-<td align="left">/composites/f_multi.jpg</td>
-<td align="left">FALSE</td>
-<td align="left">FALSE</td>
-<td align="left">FALSE</td>
-<td align="left">FALSE</td>
-<td align="left">FALSE</td>
-<td align="left">FALSE</td>
-<td align="left">TRUE</td>
-<td align="left"></td>
-<td align="left">/edit_test/mirror.jpg</td>
-</tr>
-<tr class="odd">
-<td align="left">/composites/f_multi.jpg</td>
-<td align="left">FRL</td>
-<td align="left">50%</td>
-<td align="left">90</td>
-<td align="left">10,10,10,10,rgb(255,0,0)</td>
-<td align="left">(face),0,rgb(255,255,255)</td>
-<td align="left">shape,color</td>
-<td align="left">FALSE</td>
-<td align="left"></td>
-<td align="left">/edit_test/multi_1a.jpg</td>
-</tr>
-<tr class="even">
-<td align="left">/composites/f_multi.jpg</td>
-<td align="left">FRL</td>
-<td align="left">50%</td>
-<td align="left">90</td>
-<td align="left">10,10,10,10,rgb(255,0,0)</td>
-<td align="left">(face),0,rgb(255,255,255)</td>
-<td align="left">shape,color</td>
-<td align="left">FALSE</td>
-<td align="left">align,resize,rotate,crop,mask,sym</td>
-<td align="left">/edit_test/multi_1b.jpg</td>
-</tr>
-<tr class="odd">
-<td align="left">/composites/f_multi.jpg</td>
-<td align="left">FRL</td>
-<td align="left">50%</td>
-<td align="left">90</td>
-<td align="left">10,10,10,10,rgb(255,0,0)</td>
-<td align="left">(face),0,rgb(255,255,255)</td>
-<td align="left">shape,color</td>
-<td align="left">FALSE</td>
-<td align="left">resize,rotate,crop,mask,sym,align</td>
-<td align="left">/edit_test/multi_2.jpg</td>
-</tr>
-<tr class="even">
-<td align="left">/composites/f_multi.jpg</td>
-<td align="left">FRL</td>
-<td align="left">50%</td>
-<td align="left">90</td>
-<td align="left">10,10,10,10,rgb(255,0,0)</td>
-<td align="left">(face),0,rgb(255,255,255)</td>
-<td align="left">shape,color</td>
-<td align="left">FALSE</td>
-<td align="left">crop,resize,sym,align</td>
-<td align="left">/edit_test/multi_3.jpg</td>
-</tr>
-<tr class="odd">
-<td align="left">/composites/f_multi.jpg</td>
-<td align="left">0,1,200,300,400,300,600,600</td>
-<td align="left">50%</td>
-<td align="left">90</td>
-<td align="left">10,10,10,10,rgb(255,0,0)</td>
-<td align="left">(face),0,rgb(255,255,255)</td>
-<td align="left">shape,color</td>
-<td align="left">FALSE</td>
-<td align="left">crop</td>
-<td align="left">/edit_test/multi_4.jpg</td>
-</tr>
-<tr class="even">
-<td align="left">/composites/f_multi.jpg</td>
-<td align="left">0,1,200,300,400,300,600,600</td>
-<td align="left">50%</td>
-<td align="left">90</td>
-<td align="left">10,10,10,10,rgb(255,0,0)</td>
-<td align="left">(face),0,rgb(255,255,255)</td>
-<td align="left">shape,color</td>
-<td align="left">FALSE</td>
-<td align="left">crop,crop</td>
-<td align="left">/edit_test/multi_5.jpg</td>
+<tr>
+<td style="text-align:left;">
+/composites/f_african.jpg
+</td>
+<td style="text-align:left;">
+0,1,200,300,400,300,600,600
+</td>
+<td style="text-align:left;">
+/edit_test/align_square.jpg
+</td>
 </tr>
 </tbody>
 </table>
+</div>
+<div id="resize-1" class="section level4" number="2.2.3.2">
+<h4><span class="header-section-number">2.2.3.2</span> Resize</h4>
+<p>Resize images with a single percentage, or width and height as pixels or percentages. To omit width or height, use <code>null</code>.</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left;">
+image
+</th>
+<th style="text-align:left;">
+resize
+</th>
+<th style="text-align:left;">
+outname
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+/composites/f_white.jpg
+</td>
+<td style="text-align:left;">
+50%
+</td>
+<td style="text-align:left;">
+/edit_test/resize_50_percent.jpg
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+/composites/f_wasian.jpg
+</td>
+<td style="text-align:left;">
+null,400px
+</td>
+<td style="text-align:left;">
+/edit_test/resize_400px_tall.jpg
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+/composites/m_multi.jpg
+</td>
+<td style="text-align:left;">
+200px,200px
+</td>
+<td style="text-align:left;">
+/edit_test/resize_200x200px.jpg
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+/composites/m_easian.jpg
+</td>
+<td style="text-align:left;">
+300px,null
+</td>
+<td style="text-align:left;">
+/edit_test/resize_300px_wide.jpg
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+/composites/m_african.jpg
+</td>
+<td style="text-align:left;">
+50%,25%
+</td>
+<td style="text-align:left;">
+/edit_test/resize_50x25_percent.jpg
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="rotate-1" class="section level4" number="2.2.3.3">
+<h4><span class="header-section-number">2.2.3.3</span> Rotate</h4>
+<p>Rotate images with the degrees to rotate. If you need to set a non-default background color, add this after the rotation value in the format <code>rgb(r, g, b)</code>.</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left;">
+image
+</th>
+<th style="text-align:left;">
+rotate
+</th>
+<th style="text-align:left;">
+outname
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+/composites/m_white.jpg
+</td>
+<td style="text-align:left;">
+90
+</td>
+<td style="text-align:left;">
+/edit_test/rotate_90.jpg
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+/composites/m_wasian.jpg
+</td>
+<td style="text-align:left;">
+45,rgb(255,0,0)
+</td>
+<td style="text-align:left;">
+/edit_test/rotate_45red.jpg
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+/composites/f_multi.jpg
+</td>
+<td style="text-align:left;">
+-90
+</td>
+<td style="text-align:left;">
+/edit_test/rotate_neg90.jpg
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="crop-1" class="section level4" number="2.2.3.4">
+<h4><span class="header-section-number">2.2.3.4</span> Crop</h4>
+<p>Crop images by setting the top, right, bottom and left pixels. Set a non-default background color in the format <code>rgb(r, g, b)</code>.</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left;">
+image
+</th>
+<th style="text-align:left;">
+crop
+</th>
+<th style="text-align:left;">
+outname
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+/composites/f_multi.jpg
+</td>
+<td style="text-align:left;">
+-300,0,-300,0
+</td>
+<td style="text-align:left;">
+/edit_test/crop_short.jpg
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+/composites/f_multi.jpg
+</td>
+<td style="text-align:left;">
+100,100,100,100,rgb(0,255,0)
+</td>
+<td style="text-align:left;">
+/edit_test/crop_green_border.jpg
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="mask-1" class="section level4" number="2.2.3.5">
+<h4><span class="header-section-number">2.2.3.5</span> Mask</h4>
+<p>Put the mask names inside parentheses (comma-delimited), then the blur level (0-10), and an optional background color in the format <code>rgb(r, g, b)</code>.</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left;">
+image
+</th>
+<th style="text-align:left;">
+mask
+</th>
+<th style="text-align:left;">
+outname
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+/composites/f_multi.jpg
+</td>
+<td style="text-align:left;">
+(face),10,rgb(255,0,0)
+</td>
+<td style="text-align:left;">
+/edit_test/mask_red.jpg
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+/composites/f_multi.jpg
+</td>
+<td style="text-align:left;">
+(face),0,rgb(0,255,0)
+</td>
+<td style="text-align:left;">
+/edit_test/mask_green.jpg
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+/composites/f_multi.jpg
+</td>
+<td style="text-align:left;">
+(face,neck,ears),0
+</td>
+<td style="text-align:left;">
+/edit_test/mask_face_neck_ears.jpg
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+/composites/f_multi.jpg
+</td>
+<td style="text-align:left;">
+(neck),0
+</td>
+<td style="text-align:left;">
+/edit_test/mask_neck.jpg
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+/composites/f_multi.jpg
+</td>
+<td style="text-align:left;">
+(left_eye),0
+</td>
+<td style="text-align:left;">
+/edit_test/mask_left_eye.jpg
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+/composites/f_multi.jpg
+</td>
+<td style="text-align:left;">
+(right_eye),0
+</td>
+<td style="text-align:left;">
+/edit_test/mask_right_eye.jpg
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+/composites/f_multi.jpg
+</td>
+<td style="text-align:left;">
+(eyes),0
+</td>
+<td style="text-align:left;">
+/edit_test/mask_eyes.jpg
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+/composites/f_multi.jpg
+</td>
+<td style="text-align:left;">
+(left_brow),0
+</td>
+<td style="text-align:left;">
+/edit_test/mask_left_brow.jpg
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+/composites/f_multi.jpg
+</td>
+<td style="text-align:left;">
+(right_brow),0
+</td>
+<td style="text-align:left;">
+/edit_test/mask_right_brow.jpg
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+/composites/f_multi.jpg
+</td>
+<td style="text-align:left;">
+(brows),0
+</td>
+<td style="text-align:left;">
+/edit_test/mask_brows.jpg
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+/composites/f_multi.jpg
+</td>
+<td style="text-align:left;">
+(left_ear),0
+</td>
+<td style="text-align:left;">
+/edit_test/mask_left_ear.jpg
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+/composites/f_multi.jpg
+</td>
+<td style="text-align:left;">
+(right_ear),0
+</td>
+<td style="text-align:left;">
+/edit_test/mask_right_ear.jpg
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+/composites/f_multi.jpg
+</td>
+<td style="text-align:left;">
+(ears),0
+</td>
+<td style="text-align:left;">
+/edit_test/mask_ears.jpg
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+/composites/f_multi.jpg
+</td>
+<td style="text-align:left;">
+(nose),0
+</td>
+<td style="text-align:left;">
+/edit_test/mask_nose.jpg
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+/composites/f_multi.jpg
+</td>
+<td style="text-align:left;">
+(mouth),0
+</td>
+<td style="text-align:left;">
+/edit_test/mask_mouth.jpg
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="sym" class="section level4" number="2.2.3.6">
+<h4><span class="header-section-number">2.2.3.6</span> Sym</h4>
+<p>Symmetrise with <code>shape</code> and/or <code>color</code>, separated by a comma.</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left;">
+image
+</th>
+<th style="text-align:left;">
+sym
+</th>
+<th style="text-align:left;">
+outname
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+/composites/f_multi.jpg
+</td>
+<td style="text-align:left;">
+shape,color
+</td>
+<td style="text-align:left;">
+/edit_test/sym_shape_color.jpg
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+/composites/f_multi.jpg
+</td>
+<td style="text-align:left;">
+shape
+</td>
+<td style="text-align:left;">
+/edit_test/sym_shape.jpg
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+/composites/f_multi.jpg
+</td>
+<td style="text-align:left;">
+color
+</td>
+<td style="text-align:left;">
+/edit_test/sym_color.jpg
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="mirror-1" class="section level4" number="2.2.3.7">
+<h4><span class="header-section-number">2.2.3.7</span> Mirror</h4>
+<p>Mirror with <code>TRUE</code>, <code>FALSE</code>, or leave blank.</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left;">
+image
+</th>
+<th style="text-align:left;">
+mirror
+</th>
+<th style="text-align:left;">
+outname
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+/composites/f_multi.jpg
+</td>
+<td style="text-align:left;">
+TRUE
+</td>
+<td style="text-align:left;">
+/edit_test/mirror.jpg
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="multiple" class="section level4" number="2.2.3.8">
+<h4><span class="header-section-number">2.2.3.8</span> Multiple</h4>
+<p>You can apply several edits to a single image in one step.</p>
+<div style="border: 0px;overflow-x: scroll; width:100%; ">
+<table>
+<thead>
+<tr>
+<th style="text-align:left;">
+image
+</th>
+<th style="text-align:left;">
+align
+</th>
+<th style="text-align:left;">
+resize
+</th>
+<th style="text-align:left;">
+rotate
+</th>
+<th style="text-align:left;">
+crop
+</th>
+<th style="text-align:left;">
+mask
+</th>
+<th style="text-align:left;">
+sym
+</th>
+<th style="text-align:left;">
+mirror
+</th>
+<th style="text-align:left;">
+order
+</th>
+<th style="text-align:left;">
+outname
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+/composites/f_multi.jpg
+</td>
+<td style="text-align:left;">
+FRL
+</td>
+<td style="text-align:left;">
+50%
+</td>
+<td style="text-align:left;">
+90
+</td>
+<td style="text-align:left;">
+10,10,10,10,rgb(255,0,0)
+</td>
+<td style="text-align:left;">
+(face),0,rgb(255,255,255)
+</td>
+<td style="text-align:left;">
+shape,color
+</td>
+<td style="text-align:left;">
+FALSE
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+/edit_test/multi_1a.jpg
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+/composites/f_multi.jpg
+</td>
+<td style="text-align:left;">
+FRL
+</td>
+<td style="text-align:left;">
+50%
+</td>
+<td style="text-align:left;">
+90
+</td>
+<td style="text-align:left;">
+10,10,10,10,rgb(255,0,0)
+</td>
+<td style="text-align:left;">
+(face),0,rgb(255,255,255)
+</td>
+<td style="text-align:left;">
+shape,color
+</td>
+<td style="text-align:left;">
+FALSE
+</td>
+<td style="text-align:left;">
+align,resize,rotate,crop,mask,sym
+</td>
+<td style="text-align:left;">
+/edit_test/multi_1b.jpg
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+/composites/f_multi.jpg
+</td>
+<td style="text-align:left;">
+FRL
+</td>
+<td style="text-align:left;">
+50%
+</td>
+<td style="text-align:left;">
+90
+</td>
+<td style="text-align:left;">
+10,10,10,10,rgb(255,0,0)
+</td>
+<td style="text-align:left;">
+(face),0,rgb(255,255,255)
+</td>
+<td style="text-align:left;">
+shape,color
+</td>
+<td style="text-align:left;">
+FALSE
+</td>
+<td style="text-align:left;">
+resize,rotate,crop,mask,sym,align
+</td>
+<td style="text-align:left;">
+/edit_test/multi_2.jpg
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+/composites/f_multi.jpg
+</td>
+<td style="text-align:left;">
+FRL
+</td>
+<td style="text-align:left;">
+50%
+</td>
+<td style="text-align:left;">
+90
+</td>
+<td style="text-align:left;">
+10,10,10,10,rgb(255,0,0)
+</td>
+<td style="text-align:left;">
+(face),0,rgb(255,255,255)
+</td>
+<td style="text-align:left;">
+shape,color
+</td>
+<td style="text-align:left;">
+FALSE
+</td>
+<td style="text-align:left;">
+crop,resize,sym,align
+</td>
+<td style="text-align:left;">
+/edit_test/multi_3.jpg
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+/composites/f_multi.jpg
+</td>
+<td style="text-align:left;">
+0,1,200,300,400,300,600,600
+</td>
+<td style="text-align:left;">
+50%
+</td>
+<td style="text-align:left;">
+90
+</td>
+<td style="text-align:left;">
+10,10,10,10,rgb(255,0,0)
+</td>
+<td style="text-align:left;">
+(face),0,rgb(255,255,255)
+</td>
+<td style="text-align:left;">
+shape,color
+</td>
+<td style="text-align:left;">
+FALSE
+</td>
+<td style="text-align:left;">
+crop
+</td>
+<td style="text-align:left;">
+/edit_test/multi_4.jpg
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+/composites/f_multi.jpg
+</td>
+<td style="text-align:left;">
+0,1,200,300,400,300,600,600
+</td>
+<td style="text-align:left;">
+50%
+</td>
+<td style="text-align:left;">
+90
+</td>
+<td style="text-align:left;">
+10,10,10,10,rgb(255,0,0)
+</td>
+<td style="text-align:left;">
+(face),0,rgb(255,255,255)
+</td>
+<td style="text-align:left;">
+shape,color
+</td>
+<td style="text-align:left;">
+FALSE
+</td>
+<td style="text-align:left;">
+crop,crop
+</td>
+<td style="text-align:left;">
+/edit_test/multi_5.jpg
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 </div>
 </div>
 <div id="other-functions" class="section level2" number="2.3">
 <h2><span class="header-section-number">2.3</span> Other Functions</h2>
-<div id="calculate-facialmetrics" class="section level3" number="2.3.1">
+<div id="facialmetrics" class="section level3" number="2.3.1">
 <h3><span class="header-section-number">2.3.1</span> Calculate FacialMetrics</h3>
-<p>Create CSV files with the Lab* values for each pixel. Check ‘ignore mask’ to omit pixel values that are the same as the top left pixel color. A CSV file will be created for each image with columns x, y, L , a, and b, with the x and y-coordinates of each pixel and their L*, a and b colour values.</p>
-<table>
-<caption><span id="tab:lab">Table 2.1: </span>Example rows from an Lab colour file.</caption>
-<thead>
-<tr class="header">
-<th align="right">x</th>
-<th align="right">y</th>
-<th align="right">L</th>
-<th align="right">a</th>
-<th align="right">b</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td align="right">96</td>
-<td align="right">80</td>
-<td align="right">90.0460</td>
-<td align="right">-64.7454</td>
-<td align="right">54.8329</td>
-</tr>
-<tr class="even">
-<td align="right">96</td>
-<td align="right">83</td>
-<td align="right">90.1418</td>
-<td align="right">-63.9054</td>
-<td align="right">53.6131</td>
-</tr>
-<tr class="odd">
-<td align="right">96</td>
-<td align="right">84</td>
-<td align="right">90.1522</td>
-<td align="right">-63.9010</td>
-<td align="right">54.5343</td>
-</tr>
-<tr class="even">
-<td align="right">96</td>
-<td align="right">85</td>
-<td align="right">90.1522</td>
-<td align="right">-63.9010</td>
-<td align="right">54.5343</td>
-</tr>
-<tr class="odd">
-<td align="right">96</td>
-<td align="right">86</td>
-<td align="right">90.1522</td>
-<td align="right">-63.9010</td>
-<td align="right">54.5343</td>
-</tr>
-<tr class="even">
-<td align="right">96</td>
-<td align="right">87</td>
-<td align="right">89.8794</td>
-<td align="right">-63.2933</td>
-<td align="right">53.3068</td>
-</tr>
-<tr class="odd">
-<td align="right">96</td>
-<td align="right">89</td>
-<td align="right">90.0148</td>
-<td align="right">-64.9838</td>
-<td align="right">54.7882</td>
-</tr>
-<tr class="even">
-<td align="right">96</td>
-<td align="right">90</td>
-<td align="right">90.0041</td>
-<td align="right">-65.1015</td>
-<td align="right">55.2222</td>
-</tr>
-<tr class="odd">
-<td align="right">96</td>
-<td align="right">91</td>
-<td align="right">90.0148</td>
-<td align="right">-64.9838</td>
-<td align="right">54.7882</td>
-</tr>
-</tbody>
-</table>
+<p>Use the x and y coordinates of templates to calculate facial metrics.</p>
+<p>There are two built-in metrics:</p>
+<ul>
+<li><p>FWH: face width-to height ratio, face height is the distance between the upper lip and the highest point of the eyelids, face width is the maximum distance between the left and right facial boundary (i.e., bizygomatic width) <span class="citation">(following <a href="references.html#ref-FWH" role="doc-biblioref">Lefevre et al. 2013</a>)</span></p>
+<pre><code>abs(max(x[113],x[112],x[114])-min(x[110],x[111],x[109]))/abs(y[90]-min(y[20],y[25]))</code></pre></li>
+<li><p>Eye-spacing: the distance between the centres of the pupils (this isn’t very useful, but mainly there to remind you of the equation for the distance between two points)</p>
+<pre><code>sqrt(pow(x[0]-x[1], 2) + pow(y[0]-y[1],2))</code></pre></li>
+</ul>
+<p>Click calculate after choosing a metric to add its calculation to a table for downloading.</p>
+<p>You can also write your own equations. refer to points by their number, e.g., <code>x[0]</code> or <code>y[1]</code>. You can find the point numbers by hovering over them in the Delineate window.</p>
+<p>Allowed functions in equations are: <code>abs</code>, <code>min</code>, <code>max</code>, <code>tan</code>, <code>sin</code>, <code>cos</code>, <code>atan</code>, <code>asin</code>, <code>acos</code>, <code>sqrt</code>, <code>pow</code> and <code>rad2deg</code>. Units are in pixels. The origin (0,0) is in the upper left corner.</p>
+<p>Max and min values of template points can be useful for knowing how much you can crop a set of images without going into the templates. Here are the relevant points for the FRL-Face template.</p>
+<ul>
+<li>Top: y of the highest halo point, <code>y[151]</code></li>
+<li>Bottom: minimum y of the adams apple points, <code>max(y[183], y[184])</code></li>
+<li>Left: x of left halo point outside the ear, <code>x[147]</code></li>
+<li>Right: x of right halo point outside the ear, <code>x[155]</code></li>
+</ul>
+<p>If you’re using the <a href="templates.html#default-tem">Hand template</a>, you can calculate 2D4D (the ratio of the second to fourth digit) with the following equation:</p>
+<pre><code>sqrt(pow(x[2]-x[3], 2) + pow(y[2]-y[3],2)) / sqrt(pow(x[6]-x[7], 2) + pow(y[6]-y[7],2))</code></pre>
+<p>For anything more complicated, it’s probably better to download all the x and y coordinates and process them yourself. There is a button for getting all the coordinates from a set of templates into one spreadsheet.</p>
 </div>
 <div id="lab-pixels" class="section level3" number="2.3.2">
 <h3><span class="header-section-number">2.3.2</span> Lab* Pixels</h3>
+<p>Create CSV files with <a href="https://en.wikipedia.org/wiki/CIELAB_color_space" target="_blank">CIELAB color values</a> for each pixel. Check ‘ignore mask’ to omit pixel values that are the same as the top left pixel color. A CSV file will be created for each image with columns x, y, L , a, and b, with the x and y-coordinates of each pixel and their L*, a* and b* colour values.</p>
+<table>
+<caption>
+<span id="tab:lab">Table 2.1: </span>Example rows from an Lab colour file.
+</caption>
+<thead>
+<tr>
+<th style="text-align:right;">
+x
+</th>
+<th style="text-align:right;">
+y
+</th>
+<th style="text-align:right;">
+L
+</th>
+<th style="text-align:right;">
+a
+</th>
+<th style="text-align:right;">
+b
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:right;">
+96
+</td>
+<td style="text-align:right;">
+80
+</td>
+<td style="text-align:right;">
+90.0460
+</td>
+<td style="text-align:right;">
+-64.7454
+</td>
+<td style="text-align:right;">
+54.8329
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+96
+</td>
+<td style="text-align:right;">
+83
+</td>
+<td style="text-align:right;">
+90.1418
+</td>
+<td style="text-align:right;">
+-63.9054
+</td>
+<td style="text-align:right;">
+53.6131
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+96
+</td>
+<td style="text-align:right;">
+84
+</td>
+<td style="text-align:right;">
+90.1522
+</td>
+<td style="text-align:right;">
+-63.9010
+</td>
+<td style="text-align:right;">
+54.5343
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+96
+</td>
+<td style="text-align:right;">
+85
+</td>
+<td style="text-align:right;">
+90.1522
+</td>
+<td style="text-align:right;">
+-63.9010
+</td>
+<td style="text-align:right;">
+54.5343
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+96
+</td>
+<td style="text-align:right;">
+86
+</td>
+<td style="text-align:right;">
+90.1522
+</td>
+<td style="text-align:right;">
+-63.9010
+</td>
+<td style="text-align:right;">
+54.5343
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+96
+</td>
+<td style="text-align:right;">
+87
+</td>
+<td style="text-align:right;">
+89.8794
+</td>
+<td style="text-align:right;">
+-63.2933
+</td>
+<td style="text-align:right;">
+53.3068
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+96
+</td>
+<td style="text-align:right;">
+89
+</td>
+<td style="text-align:right;">
+90.0148
+</td>
+<td style="text-align:right;">
+-64.9838
+</td>
+<td style="text-align:right;">
+54.7882
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+96
+</td>
+<td style="text-align:right;">
+90
+</td>
+<td style="text-align:right;">
+90.0041
+</td>
+<td style="text-align:right;">
+-65.1015
+</td>
+<td style="text-align:right;">
+55.2222
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+96
+</td>
+<td style="text-align:right;">
+91
+</td>
+<td style="text-align:right;">
+90.0148
+</td>
+<td style="text-align:right;">
+-64.9838
+</td>
+<td style="text-align:right;">
+54.7882
+</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div id="image-grid" class="section level3" number="2.3.3">
 <h3><span class="header-section-number">2.3.3</span> Image Grid</h3>
@@ -969,7 +1528,7 @@ Figure 2.4: Batch Mask.
 <div class="figure"><span id="fig:fig-batch-grid"></span>
 <img src="images/batch_grid.png" alt="Image Grid." width="1209" />
 <p class="caption">
-Figure 2.5: Image Grid.
+Figure 2.11: Image Grid.
 </p>
 </div>
 </div>
@@ -979,7 +1538,7 @@ Figure 2.5: Image Grid.
 <div class="figure"><span id="fig:fig-batch-multiple-continua"></span>
 <img src="images/batch_multiple_continua.png" alt="Multiple Continua." width="578" />
 <p class="caption">
-Figure 2.6: Multiple Continua.
+Figure 2.12: Multiple Continua.
 </p>
 </div>
 </div>

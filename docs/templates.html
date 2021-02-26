@@ -21,9 +21,10 @@
   <meta name="twitter:description" content="Manual for WebMorph, a web-based version of Psychomorph, with several additional functions." />
   
 
+<meta name="author" content="Lisa DeBruine" />
 
 
-<meta name="date" content="2021-02-25" />
+<meta name="date" content="2021-02-26" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -31,7 +32,7 @@
   
   
 <link rel="prev" href="batch-processes.html"/>
-<link rel="next" href="d-1.html"/>
+<link rel="next" href="d.html"/>
 <script src="libs/header-attrs-2.6/header-attrs.js"></script>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -50,6 +51,8 @@
 
 
 
+<script src="libs/kePrint-0.0.1/kePrint.js"></script>
+<link href="libs/lightable-0.0.1/lightable.css" rel="stylesheet" />
 
 
 
@@ -71,7 +74,8 @@
 <li class="divider"></li>
 <li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Overview</a>
 <ul>
-<li class="chapter" data-level="0.1" data-path="index.html"><a href="index.html#citations"><i class="fa fa-check"></i><b>0.1</b> Citations</a></li>
+<li class="chapter" data-level="0.1" data-path="index.html"><a href="index.html#bugs-and-suggestions"><i class="fa fa-check"></i><b>0.1</b> Bugs and Suggestions</a></li>
+<li class="chapter" data-level="0.2" data-path="index.html"><a href="index.html#citations"><i class="fa fa-check"></i><b>0.2</b> Citations</a></li>
 </ul></li>
 <li class="chapter" data-level="1" data-path="getting-started.html"><a href="getting-started.html"><i class="fa fa-check"></i><b>1</b> Getting Started</a>
 <ul>
@@ -93,7 +97,8 @@
 <li class="chapter" data-level="1.3.2" data-path="getting-started.html"><a href="getting-started.html#adding-folders-and-files"><i class="fa fa-check"></i><b>1.3.2</b> Adding Folders and Files</a></li>
 <li class="chapter" data-level="1.3.3" data-path="getting-started.html"><a href="getting-started.html#uploading-from-webcam"><i class="fa fa-check"></i><b>1.3.3</b> Uploading from Webcam</a></li>
 <li class="chapter" data-level="1.3.4" data-path="getting-started.html"><a href="getting-started.html#deleting-files"><i class="fa fa-check"></i><b>1.3.4</b> Deleting Files</a></li>
-<li class="chapter" data-level="1.3.5" data-path="getting-started.html"><a href="getting-started.html#movingrenaming-files"><i class="fa fa-check"></i><b>1.3.5</b> Moving/Renaming files</a></li>
+<li class="chapter" data-level="1.3.5" data-path="getting-started.html"><a href="getting-started.html#moving-files"><i class="fa fa-check"></i><b>1.3.5</b> Moving Files</a></li>
+<li class="chapter" data-level="1.3.6" data-path="getting-started.html"><a href="getting-started.html#renaming-files"><i class="fa fa-check"></i><b>1.3.6</b> Renaming Files</a></li>
 </ul></li>
 <li class="chapter" data-level="1.4" data-path="getting-started.html"><a href="getting-started.html#delineate"><i class="fa fa-check"></i><b>1.4</b> Delineate</a>
 <ul>
@@ -115,7 +120,6 @@
 <li class="chapter" data-level="1.6.1" data-path="getting-started.html"><a href="getting-started.html#transform-multiple-images"><i class="fa fa-check"></i><b>1.6.1</b> Transform Multiple Images</a></li>
 <li class="chapter" data-level="1.6.2" data-path="getting-started.html"><a href="getting-started.html#continuum"><i class="fa fa-check"></i><b>1.6.2</b> Continuum</a></li>
 </ul></li>
-<li class="chapter" data-level="1.7" data-path="getting-started.html"><a href="getting-started.html#d"><i class="fa fa-check"></i><b>1.7</b> 3D</a></li>
 </ul></li>
 <li class="chapter" data-level="2" data-path="batch-processes.html"><a href="batch-processes.html"><i class="fa fa-check"></i><b>2</b> Batch Processes</a>
 <ul>
@@ -139,7 +143,7 @@
 </ul></li>
 <li class="chapter" data-level="2.3" data-path="batch-processes.html"><a href="batch-processes.html#other-functions"><i class="fa fa-check"></i><b>2.3</b> Other Functions</a>
 <ul>
-<li class="chapter" data-level="2.3.1" data-path="batch-processes.html"><a href="batch-processes.html#calculate-facialmetrics"><i class="fa fa-check"></i><b>2.3.1</b> Calculate FacialMetrics</a></li>
+<li class="chapter" data-level="2.3.1" data-path="batch-processes.html"><a href="batch-processes.html#facialmetrics"><i class="fa fa-check"></i><b>2.3.1</b> Calculate FacialMetrics</a></li>
 <li class="chapter" data-level="2.3.2" data-path="batch-processes.html"><a href="batch-processes.html#lab-pixels"><i class="fa fa-check"></i><b>2.3.2</b> Lab* Pixels</a></li>
 <li class="chapter" data-level="2.3.3" data-path="batch-processes.html"><a href="batch-processes.html#image-grid"><i class="fa fa-check"></i><b>2.3.3</b> Image Grid</a></li>
 <li class="chapter" data-level="2.3.4" data-path="batch-processes.html"><a href="batch-processes.html#multiple-continua"><i class="fa fa-check"></i><b>2.3.4</b> Multiple Continua</a></li>
@@ -148,15 +152,27 @@
 </ul></li>
 <li class="chapter" data-level="3" data-path="templates.html"><a href="templates.html"><i class="fa fa-check"></i><b>3</b> Templates</a>
 <ul>
-<li class="chapter" data-level="3.1" data-path="templates.html"><a href="templates.html#change-default-template"><i class="fa fa-check"></i><b>3.1</b> Change Default Template</a></li>
-<li class="chapter" data-level="3.2" data-path="templates.html"><a href="templates.html#convert-templates"><i class="fa fa-check"></i><b>3.2</b> Convert Templates</a></li>
-<li class="chapter" data-level="3.3" data-path="templates.html"><a href="templates.html#new-template"><i class="fa fa-check"></i><b>3.3</b> Register a New Template</a>
+<li class="chapter" data-level="3.1" data-path="templates.html"><a href="templates.html#default-tem"><i class="fa fa-check"></i><b>3.1</b> Change Default Template</a></li>
+<li class="chapter" data-level="3.2" data-path="templates.html"><a href="templates.html#delneation"><i class="fa fa-check"></i><b>3.2</b> Delneation</a>
 <ul>
-<li class="chapter" data-level="3.3.1" data-path="templates.html"><a href="templates.html#from-a-saved-template"><i class="fa fa-check"></i><b>3.3.1</b> From a Saved Template</a></li>
-<li class="chapter" data-level="3.3.2" data-path="templates.html"><a href="templates.html#from-scratch"><i class="fa fa-check"></i><b>3.3.2</b> From Scratch</a></li>
+<li class="chapter" data-level="3.2.1" data-path="templates.html"><a href="templates.html#close-mouth"><i class="fa fa-check"></i><b>3.2.1</b> Close Mouth</a></li>
+</ul></li>
+<li class="chapter" data-level="3.3" data-path="templates.html"><a href="templates.html#batch-template-functions"><i class="fa fa-check"></i><b>3.3</b> Batch Template Functions</a>
+<ul>
+<li class="chapter" data-level="3.3.1" data-path="templates.html"><a href="templates.html#convert-templates"><i class="fa fa-check"></i><b>3.3.1</b> Convert Templates</a></li>
+<li class="chapter" data-level="3.3.2" data-path="templates.html"><a href="templates.html#tps-files"><i class="fa fa-check"></i><b>3.3.2</b> TPS Files</a></li>
+<li class="chapter" data-level="3.3.3" data-path="templates.html"><a href="templates.html#tem-from-embedded"><i class="fa fa-check"></i><b>3.3.3</b> Tem from Embedded</a></li>
+<li class="chapter" data-level="3.3.4" data-path="templates.html"><a href="templates.html#modify-delineation"><i class="fa fa-check"></i><b>3.3.4</b> Modify Delineation</a></li>
+</ul></li>
+<li class="chapter" data-level="3.4" data-path="templates.html"><a href="templates.html#new-template"><i class="fa fa-check"></i><b>3.4</b> New Templates</a>
+<ul>
+<li class="chapter" data-level="3.4.1" data-path="templates.html"><a href="templates.html#from-a-saved-template"><i class="fa fa-check"></i><b>3.4.1</b> From a Saved Template</a></li>
+<li class="chapter" data-level="3.4.2" data-path="templates.html"><a href="templates.html#from-scratch"><i class="fa fa-check"></i><b>3.4.2</b> From Scratch</a></li>
+<li class="chapter" data-level="3.4.3" data-path="templates.html"><a href="templates.html#set-point-labels"><i class="fa fa-check"></i><b>3.4.3</b> Set Point Labels</a></li>
+<li class="chapter" data-level="3.4.4" data-path="templates.html"><a href="templates.html#template-sym"><i class="fa fa-check"></i><b>3.4.4</b> Setting Symmetry Points</a></li>
 </ul></li>
 </ul></li>
-<li class="chapter" data-level="4" data-path="d-1.html"><a href="d-1.html"><i class="fa fa-check"></i><b>4</b> 3D</a></li>
+<li class="chapter" data-level="4" data-path="d.html"><a href="d.html"><i class="fa fa-check"></i><b>4</b> 3D</a></li>
 <li class="chapter" data-level="5" data-path="preferences.html"><a href="preferences.html"><i class="fa fa-check"></i><b>5</b> Preferences</a>
 <ul>
 <li class="chapter" data-level="5.1" data-path="preferences.html"><a href="preferences.html#personal"><i class="fa fa-check"></i><b>5.1</b> Personal</a>
@@ -182,7 +198,14 @@
 <li class="chapter" data-level="5.3.3" data-path="preferences.html"><a href="preferences.html#delineation-apprearance"><i class="fa fa-check"></i><b>5.3.3</b> Delineation Apprearance</a></li>
 </ul></li>
 </ul></li>
-<li class="chapter" data-level="6" data-path="news.html"><a href="news.html"><i class="fa fa-check"></i><b>6</b> News</a></li>
+<li class="appendix"><span><b>Appendices</b></span></li>
+<li class="chapter" data-level="A" data-path="keyboard-shortcuts.html"><a href="keyboard-shortcuts.html"><i class="fa fa-check"></i><b>A</b> Keyboard Shortcuts</a>
+<ul>
+<li class="chapter" data-level="A.1" data-path="keyboard-shortcuts.html"><a href="keyboard-shortcuts.html#command"><i class="fa fa-check"></i><b>A.1</b> Command</a></li>
+<li class="chapter" data-level="A.2" data-path="keyboard-shortcuts.html"><a href="keyboard-shortcuts.html#shift-command"><i class="fa fa-check"></i><b>A.2</b> Shift-Command</a></li>
+</ul></li>
+<li class="chapter" data-level="B" data-path="news.html"><a href="news.html"><i class="fa fa-check"></i><b>B</b> News</a></li>
+<li class="chapter" data-level="C" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i><b>C</b> References</a></li>
 <li class="divider"></li>
 <li><a rel="license" href="https://creativecommons.org/licenses/by-sa/4.0/"
     target="blank"><img alt="Creative Commons License"
@@ -208,7 +231,7 @@
             <section class="normal" id="section-">
 <div id="templates" class="section level1" number="3">
 <h1><span class="header-section-number">Chapter 3</span> Templates</h1>
-<div id="change-default-template" class="section level2" number="3.1">
+<div id="default-tem" class="section level2" number="3.1">
 <h2><span class="header-section-number">3.1</span> Change Default Template</h2>
 <p>The template used for new templates will be your default template, which starts as the 189-point FRL-face template, but you can change this in the <a href="preferences.html#prefs-default-template">Preferences</a> (<span class="cmd">,</span>). You can see your current template under Current Templates in the Templates menu.</p>
 <div class="figure"><span id="fig:fig-tem-current"></span>
@@ -217,24 +240,66 @@
 Figure 3.1: Current template and other options.
 </p>
 </div>
+<p>One unusual template is for hands. You fit the hand template by clicking in the base of the second digit, the tip of the third digit, and the base of the fourth digit. You can use this to <a href="batch-processes.html#facialmetrics">calculate 2D4D</a> for scanned hand images. I’m not sure this line of research means much, but this is a tool that can do it if you must.</p>
+<div class="figure"><span id="fig:fig-tem-hand"></span>
+<img src="images/tem_hand.png" alt="Hand Template. Don't measure hands like this; use a flatbed scanner. Or just don't do 2D4D research." width="610" />
+<p class="caption">
+Figure 3.2: Hand Template. Don’t measure hands like this; use a flatbed scanner. Or just don’t do 2D4D research.
+</p>
 </div>
-<div id="convert-templates" class="section level2" number="3.2">
-<h2><span class="header-section-number">3.2</span> Convert Templates</h2>
+</div>
+<div id="delneation" class="section level2" number="3.2">
+<h2><span class="header-section-number">3.2</span> Delneation</h2>
+<div id="close-mouth" class="section level3" number="3.2.1">
+<h3><span class="header-section-number">3.2.1</span> Close Mouth</h3>
+<p>In the FRL-Face template, the bottom of the top lip is a red line, while the to of the bottom lip is a blue line (think “blue” = “depressed”). If the face has lips together, you can just delineate the bottom blue line and choose Close Mouth (<span class="opt">C</span>) to move the red line exactly underneath.</p>
+<div class="figure"><span id="fig:fig-tem-close-mouth"></span>
+<img src="images/tem_close_mouth.png" alt="The red line is the bottom of the top lip." width="552" />
+<p class="caption">
+Figure 3.3: The red line is the bottom of the top lip.
+</p>
+</div>
+</div>
+</div>
+<div id="batch-template-functions" class="section level2" number="3.3">
+<h2><span class="header-section-number">3.3</span> Batch Template Functions</h2>
+<p>There are several functions under the Template menu that you can apply to all selected templates.</p>
+<div id="convert-templates" class="section level3" number="3.3.1">
+<h3><span class="header-section-number">3.3.1</span> Convert Templates</h3>
 <p>You can convert between a few types of templates, such as FRL-Face (the default 189-point front face template) and PL-Face (a 179-point template commonly used in Dave Perret’s Perception Lab). You can convert <em>to</em> the auto-delineation template (Face++) but not back yet (it’s much easier to remove points from a template than add them.</p>
 <div class="figure"><span id="fig:fig-tem-convert"></span>
 <img src="images/tem_convert.png" alt="Tem conversion options" width="645" />
 <p class="caption">
-Figure 3.2: Tem conversion options
+Figure 3.4: Tem conversion options
 </p>
 </div>
 <p>Conversions are usually approximate, as some points are just guessed based on the placement of other points (there is no machine vision going on here), so you should always look through your converted templates and fix any inaccuracies.</p>
 </div>
-<div id="new-template" class="section level2" number="3.3">
-<h2><span class="header-section-number">3.3</span> Register a New Template</h2>
+<div id="tps-files" class="section level3" number="3.3.2">
+<h3><span class="header-section-number">3.3.2</span> TPS Files</h3>
+<p>A TPS file is a way to represent shape data of several images in one file. These are used by geometric morphometric programs like <a href="https://iholzleitner.github.io/facefuns/" target="_blank">facefuns</a>. You can create a TPS file by selecting the templates you want to add (any non-template selected files will be ignored) and choosing Create TPS File from the Template Menu. This will save a .tps file in that folder that you can download.</p>
+</div>
+<div id="tem-from-embedded" class="section level3" number="3.3.3">
+<h3><span class="header-section-number">3.3.3</span> Tem from Embedded</h3>
+<p>If a JPEG image is created in webmorph, the template is embedded in the image, so you can recover it even if you deleted the template file. This information, along with the image history, is stored in the EXIF, which can be removed.</p>
+<div class="bug">
+<p>All images say that “Tem Embed” is false in the image preview. This is a bug. Also, the built-in images don’t have embedded templates. I will fix this when I get time.</p>
+</div>
+</div>
+<div id="modify-delineation" class="section level3" number="3.3.4">
+<h3><span class="header-section-number">3.3.4</span> Modify Delineation</h3>
+<p>You can batch delete points from selected templates. This is useful if you want to keep only the points appropriate for a geometric morphometric analysis (<a href="https://iholzleitner.github.io/facefuns/" target="_blank">facefuns</a> also has a function to do this).</p>
+<div class="bug">
+<p>The lines usually get messed up when you delete points, so I just delete all the lines, which are seldom used for geometric morphometrics.</p>
+</div>
+</div>
+</div>
+<div id="new-template" class="section level2" number="3.4">
+<h2><span class="header-section-number">3.4</span> New Templates</h2>
 <p>You can register a template you uploaded from another version of
 WebMorph or Psychomorph, or a new one you created here. Registering a template allows you to use it to delineate new images and lets you set the point names and symmetry points.</p>
-<div id="from-a-saved-template" class="section level3" number="3.3.1">
-<h3><span class="header-section-number">3.3.1</span> From a Saved Template</h3>
+<div id="from-a-saved-template" class="section level3" number="3.4.1">
+<h3><span class="header-section-number">3.4.1</span> From a Saved Template</h3>
 <ul>
 <li>Load the image with the template you want to register.</li>
 <li>Select the three points you want to use for 3-point
@@ -248,20 +313,46 @@ You can’t edit the public templates that you don’t own
 <li>Give the template a useful name and notes. The 3 points for
 3-point delineation will be automatically filled in from the points
 you selected. You can change or re-order them here.</li>
-<li>After you save the template, choose “Set Point Labels” from the
-Template menu. Each point will be selected in turn (and an arrow will
-point at it). Type the name into the box at the top of the screen
-and press return.</li>
 </ul>
+<div class="figure"><span id="fig:fig-tem-new"></span>
+<img src="images/tem_new.png" alt="Save a new template." width="600" />
+<p class="caption">
+Figure 3.5: Save a new template.
+</p>
 </div>
-<div id="from-scratch" class="section level3" number="3.3.2">
-<h3><span class="header-section-number">3.3.2</span> From Scratch</h3>
+</div>
+<div id="from-scratch" class="section level3" number="3.4.2">
+<h3><span class="header-section-number">3.4.2</span> From Scratch</h3>
 <p>If you want to make a template from scratch, start with an image that has no saved template. You can fit the current template, and then delete it by clicking <span class="cmd">A</span> to select all points and <span class="cmd">delete</span>. This is a buggy process right now, so it might take a few tries.</p>
 <p>First, add new points using <span class="shiftcmd">click</span>. Use <span class="opt">L</span> to start drawing a new line; the cursor will change to a wand. Hover over points until they turn red (you need to move the cursor icon around a bit to find the right point) and click to add them to a line. Click ‘enter’ to end the line; it will turn from red to blue. Use <span class="shiftopt">L</span> to delete a line by clicking on any point attached to the line.</p>
-<div class="figure"><span id="fig:fig-tem-new"></span>
-<img src="images/tem_new.png" alt="Save a new template." width="604" />
+<div class="figure"><span id="fig:fig-tem-edit"></span>
+<img src="images/tem_edit.png" alt="Editng points and lines" width="941" />
 <p class="caption">
-Figure 3.3: Save a new template.
+Figure 3.6: Editng points and lines
+</p>
+</div>
+<p>Save your template and follow the instructions above for registering a new template.</p>
+</div>
+<div id="set-point-labels" class="section level3" number="3.4.3">
+<h3><span class="header-section-number">3.4.3</span> Set Point Labels</h3>
+<p>After you save the template, choose “Set Point Labels” from the
+Template menu. Each point will be selected in turn (and an arrow will
+point at it). Type the name into the box at the top of the screen
+and press return.</p>
+<div class="figure"><span id="fig:fig-tem-labels"></span>
+<img src="images/tem_labels.png" alt="Setting template point labels." width="1157" />
+<p class="caption">
+Figure 3.7: Setting template point labels.
+</p>
+</div>
+</div>
+<div id="template-sym" class="section level3" number="3.4.4">
+<h3><span class="header-section-number">3.4.4</span> Setting Symmetry Points</h3>
+<p>To set symmetry points for mirroring or symmetrising images, choose Set Symmetry Points from the Template menu. Look for the highlighted point and cmd-click on its corresponding point on the other side. You can move points out of the way to check if they are overlapping. If a point is on the midline, its corresponding point is itself. If you make a mistake, click cmd-Z to go back a point.</p>
+<div class="figure"><span id="fig:fig-tem-sym"></span>
+<img src="images/tem_sym.png" alt="Setting symmetry points." width="572" />
+<p class="caption">
+Figure 3.8: Setting symmetry points.
 </p>
 </div>
 
@@ -277,7 +368,7 @@ Figure 3.3: Save a new template.
         </div>
       </div>
 <a href="batch-processes.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="d-1.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="d.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>

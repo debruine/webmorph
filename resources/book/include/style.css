@@ -1,8 +1,17 @@
 /* (edit style.css for your own book styles) */
 
+:root {
+  --pink: #983E82;   /* hsl(315, 42%, 42%) */
+  --orange: #E2A458; /* hsl( 33, 70%, 62%) */
+  --yellow: #F5DC70; /* hsl( 49, 87%, 70%) */
+  --green: #59935B;  /* hsl(122, 25%, 46%) */
+  --blue: #467AAC;   /* hsl(209, 42%, 47%) */
+  --purple: #61589C; /* hsl(248, 28%, 48%) */
+}
+
 /* set styles for alert boxes */
 
-.danger, .warning, .info , .alert, .try {
+.danger, .warning, .info , .alert, .try, .bug {
   padding: 1em 1em 0.25em 3.5em;
   margin-bottom: 10px;
   background-color: hsla(0, 0%, 100%, .1);
@@ -35,6 +44,12 @@
   background-color: hsla(248, 28%, 48%, .1);
   border: 1px solid var(--purple);
   background-position: 0.5em -.25em;
+}
+
+.bug {
+  background-image: url("../images/alerts/bug.svg");
+  background-color: hsla(30, 87%, 70%, .1);
+  border: 1px solid var(--orange);
 }
 
 span.shift, span.cmd, span.shiftcmd, span.opt, span.shiftopt, span.shiftcmdopt {

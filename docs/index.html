@@ -21,9 +21,10 @@
   <meta name="twitter:description" content="Manual for WebMorph, a web-based version of Psychomorph, with several additional functions." />
   
 
+<meta name="author" content="Lisa DeBruine" />
 
 
-<meta name="date" content="2021-02-25" />
+<meta name="date" content="2021-02-26" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -50,6 +51,8 @@
 
 
 
+<script src="libs/kePrint-0.0.1/kePrint.js"></script>
+<link href="libs/lightable-0.0.1/lightable.css" rel="stylesheet" />
 
 
 
@@ -71,7 +74,8 @@
 <li class="divider"></li>
 <li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Overview</a>
 <ul>
-<li class="chapter" data-level="0.1" data-path="index.html"><a href="index.html#citations"><i class="fa fa-check"></i><b>0.1</b> Citations</a></li>
+<li class="chapter" data-level="0.1" data-path="index.html"><a href="index.html#bugs-and-suggestions"><i class="fa fa-check"></i><b>0.1</b> Bugs and Suggestions</a></li>
+<li class="chapter" data-level="0.2" data-path="index.html"><a href="index.html#citations"><i class="fa fa-check"></i><b>0.2</b> Citations</a></li>
 </ul></li>
 <li class="chapter" data-level="1" data-path="getting-started.html"><a href="getting-started.html"><i class="fa fa-check"></i><b>1</b> Getting Started</a>
 <ul>
@@ -93,7 +97,8 @@
 <li class="chapter" data-level="1.3.2" data-path="getting-started.html"><a href="getting-started.html#adding-folders-and-files"><i class="fa fa-check"></i><b>1.3.2</b> Adding Folders and Files</a></li>
 <li class="chapter" data-level="1.3.3" data-path="getting-started.html"><a href="getting-started.html#uploading-from-webcam"><i class="fa fa-check"></i><b>1.3.3</b> Uploading from Webcam</a></li>
 <li class="chapter" data-level="1.3.4" data-path="getting-started.html"><a href="getting-started.html#deleting-files"><i class="fa fa-check"></i><b>1.3.4</b> Deleting Files</a></li>
-<li class="chapter" data-level="1.3.5" data-path="getting-started.html"><a href="getting-started.html#movingrenaming-files"><i class="fa fa-check"></i><b>1.3.5</b> Moving/Renaming files</a></li>
+<li class="chapter" data-level="1.3.5" data-path="getting-started.html"><a href="getting-started.html#moving-files"><i class="fa fa-check"></i><b>1.3.5</b> Moving Files</a></li>
+<li class="chapter" data-level="1.3.6" data-path="getting-started.html"><a href="getting-started.html#renaming-files"><i class="fa fa-check"></i><b>1.3.6</b> Renaming Files</a></li>
 </ul></li>
 <li class="chapter" data-level="1.4" data-path="getting-started.html"><a href="getting-started.html#delineate"><i class="fa fa-check"></i><b>1.4</b> Delineate</a>
 <ul>
@@ -115,7 +120,6 @@
 <li class="chapter" data-level="1.6.1" data-path="getting-started.html"><a href="getting-started.html#transform-multiple-images"><i class="fa fa-check"></i><b>1.6.1</b> Transform Multiple Images</a></li>
 <li class="chapter" data-level="1.6.2" data-path="getting-started.html"><a href="getting-started.html#continuum"><i class="fa fa-check"></i><b>1.6.2</b> Continuum</a></li>
 </ul></li>
-<li class="chapter" data-level="1.7" data-path="getting-started.html"><a href="getting-started.html#d"><i class="fa fa-check"></i><b>1.7</b> 3D</a></li>
 </ul></li>
 <li class="chapter" data-level="2" data-path="batch-processes.html"><a href="batch-processes.html"><i class="fa fa-check"></i><b>2</b> Batch Processes</a>
 <ul>
@@ -139,7 +143,7 @@
 </ul></li>
 <li class="chapter" data-level="2.3" data-path="batch-processes.html"><a href="batch-processes.html#other-functions"><i class="fa fa-check"></i><b>2.3</b> Other Functions</a>
 <ul>
-<li class="chapter" data-level="2.3.1" data-path="batch-processes.html"><a href="batch-processes.html#calculate-facialmetrics"><i class="fa fa-check"></i><b>2.3.1</b> Calculate FacialMetrics</a></li>
+<li class="chapter" data-level="2.3.1" data-path="batch-processes.html"><a href="batch-processes.html#facialmetrics"><i class="fa fa-check"></i><b>2.3.1</b> Calculate FacialMetrics</a></li>
 <li class="chapter" data-level="2.3.2" data-path="batch-processes.html"><a href="batch-processes.html#lab-pixels"><i class="fa fa-check"></i><b>2.3.2</b> Lab* Pixels</a></li>
 <li class="chapter" data-level="2.3.3" data-path="batch-processes.html"><a href="batch-processes.html#image-grid"><i class="fa fa-check"></i><b>2.3.3</b> Image Grid</a></li>
 <li class="chapter" data-level="2.3.4" data-path="batch-processes.html"><a href="batch-processes.html#multiple-continua"><i class="fa fa-check"></i><b>2.3.4</b> Multiple Continua</a></li>
@@ -148,15 +152,27 @@
 </ul></li>
 <li class="chapter" data-level="3" data-path="templates.html"><a href="templates.html"><i class="fa fa-check"></i><b>3</b> Templates</a>
 <ul>
-<li class="chapter" data-level="3.1" data-path="templates.html"><a href="templates.html#change-default-template"><i class="fa fa-check"></i><b>3.1</b> Change Default Template</a></li>
-<li class="chapter" data-level="3.2" data-path="templates.html"><a href="templates.html#convert-templates"><i class="fa fa-check"></i><b>3.2</b> Convert Templates</a></li>
-<li class="chapter" data-level="3.3" data-path="templates.html"><a href="templates.html#new-template"><i class="fa fa-check"></i><b>3.3</b> Register a New Template</a>
+<li class="chapter" data-level="3.1" data-path="templates.html"><a href="templates.html#default-tem"><i class="fa fa-check"></i><b>3.1</b> Change Default Template</a></li>
+<li class="chapter" data-level="3.2" data-path="templates.html"><a href="templates.html#delneation"><i class="fa fa-check"></i><b>3.2</b> Delneation</a>
 <ul>
-<li class="chapter" data-level="3.3.1" data-path="templates.html"><a href="templates.html#from-a-saved-template"><i class="fa fa-check"></i><b>3.3.1</b> From a Saved Template</a></li>
-<li class="chapter" data-level="3.3.2" data-path="templates.html"><a href="templates.html#from-scratch"><i class="fa fa-check"></i><b>3.3.2</b> From Scratch</a></li>
+<li class="chapter" data-level="3.2.1" data-path="templates.html"><a href="templates.html#close-mouth"><i class="fa fa-check"></i><b>3.2.1</b> Close Mouth</a></li>
+</ul></li>
+<li class="chapter" data-level="3.3" data-path="templates.html"><a href="templates.html#batch-template-functions"><i class="fa fa-check"></i><b>3.3</b> Batch Template Functions</a>
+<ul>
+<li class="chapter" data-level="3.3.1" data-path="templates.html"><a href="templates.html#convert-templates"><i class="fa fa-check"></i><b>3.3.1</b> Convert Templates</a></li>
+<li class="chapter" data-level="3.3.2" data-path="templates.html"><a href="templates.html#tps-files"><i class="fa fa-check"></i><b>3.3.2</b> TPS Files</a></li>
+<li class="chapter" data-level="3.3.3" data-path="templates.html"><a href="templates.html#tem-from-embedded"><i class="fa fa-check"></i><b>3.3.3</b> Tem from Embedded</a></li>
+<li class="chapter" data-level="3.3.4" data-path="templates.html"><a href="templates.html#modify-delineation"><i class="fa fa-check"></i><b>3.3.4</b> Modify Delineation</a></li>
+</ul></li>
+<li class="chapter" data-level="3.4" data-path="templates.html"><a href="templates.html#new-template"><i class="fa fa-check"></i><b>3.4</b> New Templates</a>
+<ul>
+<li class="chapter" data-level="3.4.1" data-path="templates.html"><a href="templates.html#from-a-saved-template"><i class="fa fa-check"></i><b>3.4.1</b> From a Saved Template</a></li>
+<li class="chapter" data-level="3.4.2" data-path="templates.html"><a href="templates.html#from-scratch"><i class="fa fa-check"></i><b>3.4.2</b> From Scratch</a></li>
+<li class="chapter" data-level="3.4.3" data-path="templates.html"><a href="templates.html#set-point-labels"><i class="fa fa-check"></i><b>3.4.3</b> Set Point Labels</a></li>
+<li class="chapter" data-level="3.4.4" data-path="templates.html"><a href="templates.html#template-sym"><i class="fa fa-check"></i><b>3.4.4</b> Setting Symmetry Points</a></li>
 </ul></li>
 </ul></li>
-<li class="chapter" data-level="4" data-path="d-1.html"><a href="d-1.html"><i class="fa fa-check"></i><b>4</b> 3D</a></li>
+<li class="chapter" data-level="4" data-path="d.html"><a href="d.html"><i class="fa fa-check"></i><b>4</b> 3D</a></li>
 <li class="chapter" data-level="5" data-path="preferences.html"><a href="preferences.html"><i class="fa fa-check"></i><b>5</b> Preferences</a>
 <ul>
 <li class="chapter" data-level="5.1" data-path="preferences.html"><a href="preferences.html#personal"><i class="fa fa-check"></i><b>5.1</b> Personal</a>
@@ -182,7 +198,14 @@
 <li class="chapter" data-level="5.3.3" data-path="preferences.html"><a href="preferences.html#delineation-apprearance"><i class="fa fa-check"></i><b>5.3.3</b> Delineation Apprearance</a></li>
 </ul></li>
 </ul></li>
-<li class="chapter" data-level="6" data-path="news.html"><a href="news.html"><i class="fa fa-check"></i><b>6</b> News</a></li>
+<li class="appendix"><span><b>Appendices</b></span></li>
+<li class="chapter" data-level="A" data-path="keyboard-shortcuts.html"><a href="keyboard-shortcuts.html"><i class="fa fa-check"></i><b>A</b> Keyboard Shortcuts</a>
+<ul>
+<li class="chapter" data-level="A.1" data-path="keyboard-shortcuts.html"><a href="keyboard-shortcuts.html#command"><i class="fa fa-check"></i><b>A.1</b> Command</a></li>
+<li class="chapter" data-level="A.2" data-path="keyboard-shortcuts.html"><a href="keyboard-shortcuts.html#shift-command"><i class="fa fa-check"></i><b>A.2</b> Shift-Command</a></li>
+</ul></li>
+<li class="chapter" data-level="B" data-path="news.html"><a href="news.html"><i class="fa fa-check"></i><b>B</b> News</a></li>
+<li class="chapter" data-level="C" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i><b>C</b> References</a></li>
 <li class="divider"></li>
 <li><a rel="license" href="https://creativecommons.org/licenses/by-sa/4.0/"
     target="blank"><img alt="Creative Commons License"
@@ -208,27 +231,26 @@
             <section class="normal" id="section-">
 <div id="header">
 <h1 class="title">WebMorph Manual</h1>
-<p class="date"><em>2021-02-25</em></p>
+<p class="author"><em>Lisa DeBruine</em></p>
+<p class="date"><em>2021-02-26</em></p>
 </div>
 <div id="overview" class="section level1 unnumbered">
 <h1>Overview</h1>
 <p><a href="https://webmorph.org">WebMorph</a> is a web-based version of <a href="http://users.aber.ac.uk/bpt/jpsychomorph/">Psychomorph</a>, with several additional functions. While WebMorph is optimized for averaging and transforming faces, you can delineate and average any type of image. WebMorph also has several batch functions for processing large numbers of images automatically and can even create moving gifs of your transforms.</p>
-<p>WebMorph is made possible by the kind help of <a href="http://users.aber.ac.uk/bpt/">Bernie Tiddeman</a>, who developed and maintains the desktop version of <a href="http://users.aber.ac.uk/bpt/jpsychomorph/">Psychomorph</a>. WebMorph uses the open-source Java library <a href="http://users.aber.ac.uk/bpt/jpsychomorph/version6/javadoc/">FaceMorphLib</a> and is developed and maintained by Lisa DeBruine.</p>
+<p>WebMorph is made possible by the kind help of <a href="http://users.aber.ac.uk/bpt/">Bernie Tiddeman</a>, who developed and maintains the desktop version of <a href="http://users.aber.ac.uk/bpt/jpsychomorph/">Psychomorph</a>. WebMorph uses the open-source Java library <a href="http://users.aber.ac.uk/bpt/jpsychomorph/version6/javadoc/">FaceMorphLib</a> and is developed and maintained by Lisa DeBruine. Much of the development of WebMorph, especially the 3D functions, was funded by <a href="http://cordis.europa.eu/project/rcn/198451_en.html">ERC grant #647910 KINSHIP</a>.</p>
 <p>WebMorph is currently in beta testing and is likely to remain so for some time. This means that there will be bugs and you cannot rely on the website being functional 100% of the time. Lisa will try to fix any problems as fast as possible, but she is the only person working on this project, so please be patient. If you’re curious about the code or want to help with development, this project is open source at <a href="https://github.com/debruine/webmorph">GitHub</a>.</p>
-<div id="citations" class="section level2" number="0.1">
-<h2><span class="header-section-number">0.1</span> Citations</h2>
-<p>Lisa DeBruine. (2017, December 4). Webmorph (Version v0.0.0.9001). Zenodo. doi: <a href="https://dx.dio.org/10.5281/zenodo.1073696" target="_blank">10.5281/zenodo.1073696</a></p>
+<div id="bugs-and-suggestions" class="section level2" number="0.1">
+<h2><span class="header-section-number">0.1</span> Bugs and Suggestions</h2>
+<div class="bug">
+<p>If you spot any errors in WebMorph or this manual, or have a suggestion, please add it to the <a href="https://github.com/debruine/webmorph/issues" target="_blank">list of issues</a>.</p>
+</div>
+</div>
+<div id="citations" class="section level2" number="0.2">
+<h2><span class="header-section-number">0.2</span> Citations</h2>
+<p>Lisa DeBruine. <span class="citation">(<a href="references.html#ref-webmorph" role="doc-biblioref">2018</a>)</span>. Webmorph (Beta Release 2). Zenodo. doi: <a href="https://dx.dio.org/10.5281/zenodo.1073696" target="_blank">10.5281/zenodo.1073696</a></p>
 <p>To cite the morphing and transforming methods, see <a href="http://users.aber.ac.uk/bpt/jpsychomorph/" target="_blank">Bernie Tiddeman’s webpage</a>.</p>
-<p>The symmetric image scrambling methods were first published in:</p>
-<ul>
-<li>CA Conway, BC Jones, LM DeBruine, AC Little &amp; A Sahraie (2008). Transient pupil constrictions to faces are sensitive to orientation and species. <i>Journal of Vision</i>, 8(3): 17. doi: <a href="http://dx.doi.org/10.1167/8.3.17" target="_blank">10.1167/8.3.17</a></li>
-</ul>
-<p>The built-in image sets are available with a CC-BY 4.0 license.</p>
-<ul>
-<li>DeBruine, Lisa &amp; Jones, Benedict (2017).
-Face Research Lab London Set. <i>figshare</i>.
-doi: <a href="https://doi.org/10.6084/m9.figshare.5047666.v3" target="_blank">10.6084/m9.figshare.5047666.v3</a></li>
-</ul>
+<p>The symmetric image scrambling methods were first published in Conway et al. <span class="citation">(<a href="references.html#ref-conway_2008" role="doc-biblioref">2008</a>)</span>.</p>
+<p>The built-in image sets <span class="citation">(<a href="references.html#ref-FRL_London" role="doc-biblioref">DeBruine and Jones 2017</a>)</span> are available with a CC-BY 4.0 license.</p>
 
 </div>
 </div>

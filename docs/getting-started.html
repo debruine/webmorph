@@ -21,9 +21,10 @@
   <meta name="twitter:description" content="Manual for WebMorph, a web-based version of Psychomorph, with several additional functions." />
   
 
+<meta name="author" content="Lisa DeBruine" />
 
 
-<meta name="date" content="2021-02-25" />
+<meta name="date" content="2021-02-26" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -50,6 +51,8 @@
 
 
 
+<script src="libs/kePrint-0.0.1/kePrint.js"></script>
+<link href="libs/lightable-0.0.1/lightable.css" rel="stylesheet" />
 
 
 
@@ -71,7 +74,8 @@
 <li class="divider"></li>
 <li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Overview</a>
 <ul>
-<li class="chapter" data-level="0.1" data-path="index.html"><a href="index.html#citations"><i class="fa fa-check"></i><b>0.1</b> Citations</a></li>
+<li class="chapter" data-level="0.1" data-path="index.html"><a href="index.html#bugs-and-suggestions"><i class="fa fa-check"></i><b>0.1</b> Bugs and Suggestions</a></li>
+<li class="chapter" data-level="0.2" data-path="index.html"><a href="index.html#citations"><i class="fa fa-check"></i><b>0.2</b> Citations</a></li>
 </ul></li>
 <li class="chapter" data-level="1" data-path="getting-started.html"><a href="getting-started.html"><i class="fa fa-check"></i><b>1</b> Getting Started</a>
 <ul>
@@ -93,7 +97,8 @@
 <li class="chapter" data-level="1.3.2" data-path="getting-started.html"><a href="getting-started.html#adding-folders-and-files"><i class="fa fa-check"></i><b>1.3.2</b> Adding Folders and Files</a></li>
 <li class="chapter" data-level="1.3.3" data-path="getting-started.html"><a href="getting-started.html#uploading-from-webcam"><i class="fa fa-check"></i><b>1.3.3</b> Uploading from Webcam</a></li>
 <li class="chapter" data-level="1.3.4" data-path="getting-started.html"><a href="getting-started.html#deleting-files"><i class="fa fa-check"></i><b>1.3.4</b> Deleting Files</a></li>
-<li class="chapter" data-level="1.3.5" data-path="getting-started.html"><a href="getting-started.html#movingrenaming-files"><i class="fa fa-check"></i><b>1.3.5</b> Moving/Renaming files</a></li>
+<li class="chapter" data-level="1.3.5" data-path="getting-started.html"><a href="getting-started.html#moving-files"><i class="fa fa-check"></i><b>1.3.5</b> Moving Files</a></li>
+<li class="chapter" data-level="1.3.6" data-path="getting-started.html"><a href="getting-started.html#renaming-files"><i class="fa fa-check"></i><b>1.3.6</b> Renaming Files</a></li>
 </ul></li>
 <li class="chapter" data-level="1.4" data-path="getting-started.html"><a href="getting-started.html#delineate"><i class="fa fa-check"></i><b>1.4</b> Delineate</a>
 <ul>
@@ -115,7 +120,6 @@
 <li class="chapter" data-level="1.6.1" data-path="getting-started.html"><a href="getting-started.html#transform-multiple-images"><i class="fa fa-check"></i><b>1.6.1</b> Transform Multiple Images</a></li>
 <li class="chapter" data-level="1.6.2" data-path="getting-started.html"><a href="getting-started.html#continuum"><i class="fa fa-check"></i><b>1.6.2</b> Continuum</a></li>
 </ul></li>
-<li class="chapter" data-level="1.7" data-path="getting-started.html"><a href="getting-started.html#d"><i class="fa fa-check"></i><b>1.7</b> 3D</a></li>
 </ul></li>
 <li class="chapter" data-level="2" data-path="batch-processes.html"><a href="batch-processes.html"><i class="fa fa-check"></i><b>2</b> Batch Processes</a>
 <ul>
@@ -139,7 +143,7 @@
 </ul></li>
 <li class="chapter" data-level="2.3" data-path="batch-processes.html"><a href="batch-processes.html#other-functions"><i class="fa fa-check"></i><b>2.3</b> Other Functions</a>
 <ul>
-<li class="chapter" data-level="2.3.1" data-path="batch-processes.html"><a href="batch-processes.html#calculate-facialmetrics"><i class="fa fa-check"></i><b>2.3.1</b> Calculate FacialMetrics</a></li>
+<li class="chapter" data-level="2.3.1" data-path="batch-processes.html"><a href="batch-processes.html#facialmetrics"><i class="fa fa-check"></i><b>2.3.1</b> Calculate FacialMetrics</a></li>
 <li class="chapter" data-level="2.3.2" data-path="batch-processes.html"><a href="batch-processes.html#lab-pixels"><i class="fa fa-check"></i><b>2.3.2</b> Lab* Pixels</a></li>
 <li class="chapter" data-level="2.3.3" data-path="batch-processes.html"><a href="batch-processes.html#image-grid"><i class="fa fa-check"></i><b>2.3.3</b> Image Grid</a></li>
 <li class="chapter" data-level="2.3.4" data-path="batch-processes.html"><a href="batch-processes.html#multiple-continua"><i class="fa fa-check"></i><b>2.3.4</b> Multiple Continua</a></li>
@@ -148,15 +152,27 @@
 </ul></li>
 <li class="chapter" data-level="3" data-path="templates.html"><a href="templates.html"><i class="fa fa-check"></i><b>3</b> Templates</a>
 <ul>
-<li class="chapter" data-level="3.1" data-path="templates.html"><a href="templates.html#change-default-template"><i class="fa fa-check"></i><b>3.1</b> Change Default Template</a></li>
-<li class="chapter" data-level="3.2" data-path="templates.html"><a href="templates.html#convert-templates"><i class="fa fa-check"></i><b>3.2</b> Convert Templates</a></li>
-<li class="chapter" data-level="3.3" data-path="templates.html"><a href="templates.html#new-template"><i class="fa fa-check"></i><b>3.3</b> Register a New Template</a>
+<li class="chapter" data-level="3.1" data-path="templates.html"><a href="templates.html#default-tem"><i class="fa fa-check"></i><b>3.1</b> Change Default Template</a></li>
+<li class="chapter" data-level="3.2" data-path="templates.html"><a href="templates.html#delneation"><i class="fa fa-check"></i><b>3.2</b> Delneation</a>
 <ul>
-<li class="chapter" data-level="3.3.1" data-path="templates.html"><a href="templates.html#from-a-saved-template"><i class="fa fa-check"></i><b>3.3.1</b> From a Saved Template</a></li>
-<li class="chapter" data-level="3.3.2" data-path="templates.html"><a href="templates.html#from-scratch"><i class="fa fa-check"></i><b>3.3.2</b> From Scratch</a></li>
+<li class="chapter" data-level="3.2.1" data-path="templates.html"><a href="templates.html#close-mouth"><i class="fa fa-check"></i><b>3.2.1</b> Close Mouth</a></li>
+</ul></li>
+<li class="chapter" data-level="3.3" data-path="templates.html"><a href="templates.html#batch-template-functions"><i class="fa fa-check"></i><b>3.3</b> Batch Template Functions</a>
+<ul>
+<li class="chapter" data-level="3.3.1" data-path="templates.html"><a href="templates.html#convert-templates"><i class="fa fa-check"></i><b>3.3.1</b> Convert Templates</a></li>
+<li class="chapter" data-level="3.3.2" data-path="templates.html"><a href="templates.html#tps-files"><i class="fa fa-check"></i><b>3.3.2</b> TPS Files</a></li>
+<li class="chapter" data-level="3.3.3" data-path="templates.html"><a href="templates.html#tem-from-embedded"><i class="fa fa-check"></i><b>3.3.3</b> Tem from Embedded</a></li>
+<li class="chapter" data-level="3.3.4" data-path="templates.html"><a href="templates.html#modify-delineation"><i class="fa fa-check"></i><b>3.3.4</b> Modify Delineation</a></li>
+</ul></li>
+<li class="chapter" data-level="3.4" data-path="templates.html"><a href="templates.html#new-template"><i class="fa fa-check"></i><b>3.4</b> New Templates</a>
+<ul>
+<li class="chapter" data-level="3.4.1" data-path="templates.html"><a href="templates.html#from-a-saved-template"><i class="fa fa-check"></i><b>3.4.1</b> From a Saved Template</a></li>
+<li class="chapter" data-level="3.4.2" data-path="templates.html"><a href="templates.html#from-scratch"><i class="fa fa-check"></i><b>3.4.2</b> From Scratch</a></li>
+<li class="chapter" data-level="3.4.3" data-path="templates.html"><a href="templates.html#set-point-labels"><i class="fa fa-check"></i><b>3.4.3</b> Set Point Labels</a></li>
+<li class="chapter" data-level="3.4.4" data-path="templates.html"><a href="templates.html#template-sym"><i class="fa fa-check"></i><b>3.4.4</b> Setting Symmetry Points</a></li>
 </ul></li>
 </ul></li>
-<li class="chapter" data-level="4" data-path="d-1.html"><a href="d-1.html"><i class="fa fa-check"></i><b>4</b> 3D</a></li>
+<li class="chapter" data-level="4" data-path="d.html"><a href="d.html"><i class="fa fa-check"></i><b>4</b> 3D</a></li>
 <li class="chapter" data-level="5" data-path="preferences.html"><a href="preferences.html"><i class="fa fa-check"></i><b>5</b> Preferences</a>
 <ul>
 <li class="chapter" data-level="5.1" data-path="preferences.html"><a href="preferences.html#personal"><i class="fa fa-check"></i><b>5.1</b> Personal</a>
@@ -182,7 +198,14 @@
 <li class="chapter" data-level="5.3.3" data-path="preferences.html"><a href="preferences.html#delineation-apprearance"><i class="fa fa-check"></i><b>5.3.3</b> Delineation Apprearance</a></li>
 </ul></li>
 </ul></li>
-<li class="chapter" data-level="6" data-path="news.html"><a href="news.html"><i class="fa fa-check"></i><b>6</b> News</a></li>
+<li class="appendix"><span><b>Appendices</b></span></li>
+<li class="chapter" data-level="A" data-path="keyboard-shortcuts.html"><a href="keyboard-shortcuts.html"><i class="fa fa-check"></i><b>A</b> Keyboard Shortcuts</a>
+<ul>
+<li class="chapter" data-level="A.1" data-path="keyboard-shortcuts.html"><a href="keyboard-shortcuts.html#command"><i class="fa fa-check"></i><b>A.1</b> Command</a></li>
+<li class="chapter" data-level="A.2" data-path="keyboard-shortcuts.html"><a href="keyboard-shortcuts.html#shift-command"><i class="fa fa-check"></i><b>A.2</b> Shift-Command</a></li>
+</ul></li>
+<li class="chapter" data-level="B" data-path="news.html"><a href="news.html"><i class="fa fa-check"></i><b>B</b> News</a></li>
+<li class="chapter" data-level="C" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i><b>C</b> References</a></li>
 <li class="divider"></li>
 <li><a rel="license" href="https://creativecommons.org/licenses/by-sa/4.0/"
     target="blank"><img alt="Creative Commons License"
@@ -252,6 +275,9 @@ Select the user you want to add and press Enter. The list will reload and then y
 <div id="finder" class="section level2" number="1.3">
 <h2><span class="header-section-number">1.3</span> Finder</h2>
 <p>Projects open in the Finder interface, which is a file navigation interface like the Mac OS Finder or Windows Explorer. Click on the folders and files to navigate like you would in the Finder on your computer. You can also navigate with the arrow keys.</p>
+<div class="info">
+<p>If the finder interface starts to look weird or isn’t updating the way you think it should, that’s probably a bug. Choose Refresh (<span class="cmd">R</span>) under the View menu to reload the Finder.</p>
+</div>
 <p>New projects come with two folders: <code>composites</code> and <code>templates</code>. You can also see the Trash (which you can hide under the View menu).</p>
 <p>Click on the <code>composites</code> folder and select an image. You should see some file information, including the image dimensions, the date the file was created, and whether it has an embedded template.</p>
 <div class="figure"><span id="fig:fig-finder"></span>
@@ -267,11 +293,9 @@ Figure 1.1: Finder window
 <h3><span class="header-section-number">1.3.1</span> Built-in Image Sets</h3>
 <p>WebMorph provides a few open source (CC-BY) image sets for you to use. They are available at FigShare, but also directly through the webmorph interface.</p>
 <ul>
-<li><code>London Face Set (Composites)</code> is the same as the <code>composites</code> directory that every new project has.
-DeBruine, Lisa (2016): Young adult composite faces. figshare. Figure. <a href="https://doi.org/10.6084/m9.figshare.4055130.v1" class="uri">https://doi.org/10.6084/m9.figshare.4055130.v1</a></li>
-<li><code>London Face Set (Neutral)</code> is images of 102 adult faces with a neutral expression plus templates.
-DeBruine, Lisa; Jones, Benedict (2017): Face Research Lab London Set. figshare. Dataset. <a href="https://doi.org/10.6084/m9.figshare.5047666.v3" class="uri">https://doi.org/10.6084/m9.figshare.5047666.v3</a></li>
-<li><code>London Face Set (Smiling)</code> is the same 102 faces with smiling expressions. There are no templates.</li>
+<li><code>London Face Set (Composites)</code> <span class="citation">(<a href="references.html#ref-FRL_Composite" role="doc-biblioref">DeBruine 2016</a>)</span> is the same as the <code>composites</code> directory that every new project has.</li>
+<li><code>London Face Set (Neutral)</code> <span class="citation">(<a href="references.html#ref-FRL_London" role="doc-biblioref">DeBruine and Jones 2017</a>)</span> is images of 102 adult faces with a neutral expression plus templates.</li>
+<li><code>London Face Set (Smiling)</code> <span class="citation">(<a href="references.html#ref-FRL_London" role="doc-biblioref">DeBruine and Jones 2017</a>)</span> is the same 102 faces with smiling expressions. There are no templates.</li>
 <li><code>3D</code> are composite images of male and female East Asian and White young adult faces. These can be used to demonstrate the new 3D functions.</li>
 </ul>
 <p>Navigate to the place where you want to add the image set and choose the set from Built-In Image Sets in the File menu. Copying the files over can take up to 30 seconds, so be patient (I’m working on fixing this).</p>
@@ -287,26 +311,23 @@ DeBruine, Lisa; Jones, Benedict (2017): Face Research Lab London Set. figshare. 
 </div>
 <div id="deleting-files" class="section level3" number="1.3.4">
 <h3><span class="header-section-number">1.3.4</span> Deleting Files</h3>
-<p>Select files (<span class="cmd">click</span> or <span class="shift">click</span> to select multiple files, or use <span class="cmd">A</span> to select all files in a folder) and choose Move to Trash (<span class="cmd">delete</span>) from the File menu. <span class="shiftcmd">delete</span> skips the confirmation dialog.</p>
-<div class="warning">
-<p>At the moment, you can only delete empty folders, so you will be prompted to delete all files in a folder first. I know this is pretty tedious and will work on a way to safely delete folders. Deleting a lot of files can also be quite slow and I’m looking into it.</p>
+<p>Select a folder or files (<span class="cmd">click</span> or <span class="shift">click</span> to select multiple files) and choose Move to Trash (<span class="cmd">delete</span>) from the File menu. <span class="shiftcmd">delete</span> skips the confirmation dialog.</p>
 </div>
-</div>
-<div id="movingrenaming-files" class="section level3" number="1.3.5">
-<h3><span class="header-section-number">1.3.5</span> Moving/Renaming files</h3>
+<div id="moving-files" class="section level3" number="1.3.5">
+<h3><span class="header-section-number">1.3.5</span> Moving Files</h3>
 <p>The best way to move files is to cut (<span class="cmd">X</span>) or copy (<span class="cmd">C</span>) and paste (<span class="cmd">V</span>) selected files.</p>
 <div class="warning">
 <p>You can drag files into another folder, but this can be buggy and I might remove it soon.</p>
 </div>
-<p>Select a file or folder and press Enter, edit the name, and press Enter to accept the new name (or click outside the file to cancel). If you change an image file’s name, its associate tem file name will also change.</p>
-<div class="info">
-<p>If the finder interface starts to look weird or isn’t updating the way you think it should, that’s probably a bug. Choose Refresh (<span class="cmd">R</span>) under the View menu to reload the Finder.</p>
 </div>
+<div id="renaming-files" class="section level3" number="1.3.6">
+<h3><span class="header-section-number">1.3.6</span> Renaming Files</h3>
+<p>Select a file or folder and press Enter, edit the name, and press Enter to accept the new name (or click outside the file to cancel). If you change an image file’s name, its associated template file name will also change.</p>
 </div>
 </div>
 <div id="delineate" class="section level2" number="1.4">
 <h2><span class="header-section-number">1.4</span> Delineate</h2>
-<p>Double-click on an image or .tem file to open it in the delineation window. The delineation toolbar should be visible. If it’s not, choose Delineation Toolbar in the View menu. The question mark button in the toolbar shows a pop-up of helpful hints.</p>
+<p>Double-click on an image or template file to open it in the delineation window. The delineation toolbar should be visible. If it’s not, choose Delineation Toolbar in the View menu. The question mark button in the toolbar shows a pop-up of helpful hints.</p>
 <div id="fit-template" class="section level3" number="1.4.1">
 <h3><span class="header-section-number">1.4.1</span> Fit Template</h3>
 <p>If an image file does not have an associated template, you will be prompted to 3-point delineate it. A prompt will show in the delineation toolbar to remind you where to click (usually left eye, right eye, and centre of the bottom of the upper lip). If you mess this up, just repeat it by choosing Fit Template (<span class="opt">F</span>) from the Template menu.</p>
@@ -404,7 +425,7 @@ Figure 1.4: An average of 5 faces. The image on the left has texture on; the ima
 </div>
 <div id="saving-averages" class="section level3" number="1.5.3">
 <h3><span class="header-section-number">1.5.3</span> Saving Averages</h3>
-<p>Click on the folder you want to save the image into and then click the Save button. Add the image name after the folder path. If you add an image extension (.jpg, .png) it will be saved as that file type. If you omit the extension, it will be set to your default extension. You can change this default in the Images tab of the <a href="preferences.html#prefs-default-image-format">Preferences</a> (<span class="cmd">,</span>).</p>
+<p>Click on the folder you want to save the image into and then click the Save button. Add the image name after the folder path. If you add an image extension (.jpg, .png, or .gif) it will be saved as that file type. If you omit the extension, it will be set to your default extension. You can change this default in the Images tab of the <a href="preferences.html#prefs-default-image-format">Preferences</a> (<span class="cmd">,</span>).</p>
 <p>You can try out a few averages before you decide which to save. Averages go in the Recently Created Images box where you can click on them to reload them in the average box and save them.</p>
 </div>
 </div>
@@ -441,18 +462,8 @@ Figure 1.6: Continuum interface.
 </p>
 </div>
 <p>After you click Transform, the individual frames are sent to the Queue and will appear in the Finder as they are created.</p>
-</div>
-</div>
-<div id="d" class="section level2" number="1.7">
-<h2><span class="header-section-number">1.7</span> 3D</h2>
-<p>The 3D functions are currently under development. You can upload OBJ files and associated BMP or JPEG textures and view them in the 3D Window (<span class="cmd">3</span>). You can also morph between two objects that have the same geometry.</p>
-<div class="figure"><span id="fig:fig-3d"></span>
-<img src="images/start_3d.png" alt="3D Window." width="1054" />
-<p class="caption">
-Figure 1.7: 3D Window.
-</p>
-</div>
 
+</div>
 </div>
 </div>
 <div class="webmorph_footer">
