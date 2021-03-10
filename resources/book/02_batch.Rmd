@@ -10,7 +10,7 @@ library(kableExtra)
 Select multiple images in the Finder and use the functions under the Batch menu to apply transformations to all of the selected images. The individual processes will be added to the Queue and complete in the background.
 
 <div class="try">
-I am writing an [R package](https://facelab.github.io/webmorph/) to do much of this on your own computer, which can often be faster than the webmorph server. 
+I am writing an [R package](https://facelab.github.io/webmorphR/) to do much of this on your own computer, which can often be faster than the webmorph server. 
 </div>
 
 ### Rename

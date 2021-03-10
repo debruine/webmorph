@@ -1,6 +1,6 @@
 --- 
 title: WebMorph Manual
-date: "2021-02-26"
+date: "2021-03-10"
 author: "Lisa DeBruine"
 site: bookdown::bookdown_site
 documentclass: book
