@@ -28,6 +28,7 @@ fig:fig-tem-sym
 fig:fig-3d
 bugs-and-suggestions
 citations
+ethical-issues
 getting-started
 accounts
 academic-accounts
