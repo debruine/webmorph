@@ -40,9 +40,9 @@ We are committed to ethical face research. This means:
 
 1. Make sure that the use of face photographs respects participant consent and personal data privacy. Images that are "freely" available on the internet are a grey area and the ethical issues should be carefully considered and approved by the relevant ethics board.
 
-2. Do not use face images in research where there is a possibility of confusing and real-world consequences for the pictured individuals. For example, do not post identifiable images of real people on real dating sites without the *explicit* consent of the pictured individuals for that specific research.
+2. Do not use face images in research where there is a possibility of real-world consequences for the pictured individuals. For example, do not post identifiable images of real people on real dating sites without the *explicit* consent of the pictured individuals for that specific research.
 
-3. We will never support the use of face image analysis to predict traits and behaviour, or as automatic screening. For example, face images cannot be used to predict criminality or decide who should proceed to the interview stage in a job application. This type of application is unethical because the predictive data is always biased. Face image analysis is useful for researching what aspects of face images give rise to the *perception* of traits like trustworthiness, but should not be confused with the ability to detect actual behaviour.
+3. We will never support the use of face image analysis to predict behaviour, or as automatic screening. For example, face images cannot be used to predict criminality or decide who should proceed to the interview stage in a job application. This type of application is unethical because the predictive data is always biased. Face image analysis is useful for researching what aspects of face images give rise to the *perception* of traits like trustworthiness, but should not be confused with the ability to detect actual behaviour.
 
 
 
