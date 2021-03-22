@@ -156,7 +156,7 @@
         CA Conway, BC Jones, LM DeBruine, AC Little & A Sahraie (2008). Transient 
         pupil constrictions to faces are sensitive to orientation and species. 
         <i>Journal of Vision</i>, 8(3): 17. 
-        <a href="http://dx.doi.org/10.1167/8.3.17" target="_blank">doi: 10.1167/8.3.17</a>
+        <a href="https://doi.org/10.1167/8.3.17" target="_blank">doi: 10.1167/8.3.17</a>
     </p>
     
     <p class="cite">
@@ -171,7 +171,7 @@
         <img src="/include/examples/m_white">
         <img src="/include/examples/m_multi"><br>
         DeBruine, Lisa (2016). Young adult composite faces. <i>figshare</i>. 
-        <a href="https://dx.doi.org/10.6084/m9.figshare.4055130.v1" 
+        <a href="https://doi.org/10.6084/m9.figshare.4055130.v1" 
             target="_blank">doi:10.6084/m9.figshare.4055130.v1</a>
     </p>
     
